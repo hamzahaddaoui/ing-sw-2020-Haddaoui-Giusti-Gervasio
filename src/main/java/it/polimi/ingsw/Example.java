@@ -8,6 +8,5 @@ public class Example {
 
 
 
-        int c = 10;
     }
 }
