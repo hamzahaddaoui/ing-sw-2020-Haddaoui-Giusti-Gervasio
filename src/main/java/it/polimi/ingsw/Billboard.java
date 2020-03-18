@@ -9,8 +9,26 @@ public class Billboard {
         0 0 0 0 0  ]
     */
     private boolean [][] domes = new boolean[5][5];
+    private boolean [][] players = new boolean[5][5];
 
     public void Billboard (){
 
     }
+
+    private boolean checkSpace(int positionX, int positionY){
+        return false;
+    }
+
+    public boolean setPlayerPosition(int positionX, int positionY){
+        if (checkSpace(positionX, positionY)) {
+            //controllo sia libero
+            players[positionX][positionY] = true;
+            return true;
+        }
+        else return false;
+    }
+
+    public boolean movePlayer(int positionX, int positionY){return false;}
+
+
 }

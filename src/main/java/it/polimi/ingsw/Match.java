@@ -4,10 +4,10 @@ public class Match {
     private static Match MatchID;
     private static int playersNum = 0;
     private static Player players[];
-    private Billboard billboard;
+    private Billboard billboardID;
 
     private Match(){
-        billboard = new Billboard();
+        billboardID = new Billboard();
     }
 
     public static Match MatchID(Player playerID, int n) {
@@ -25,8 +25,18 @@ public class Match {
     }
 
     public void matchStart(){
-        if (playersNum == 2){ //o 3
+        Worker worker1, worker2;
 
+        if (playersNum == 2){ //o 3
+            for(Player player: players){
+
+                worker1 = new Worker(billboardID);
+                worker2 = new Worker(billboardID);
+                player.placeWorkers(worker1, worker2);
+
+
+                //scelta carta divinità
+            }
         }
     }
 
