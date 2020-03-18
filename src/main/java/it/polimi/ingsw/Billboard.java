@@ -16,6 +16,7 @@ public class Billboard {
     }
 
     private boolean checkSpace(int positionX, int positionY){
+        //do something
         return false;
     }
 
@@ -28,7 +29,10 @@ public class Billboard {
         else return false;
     }
 
-    public boolean movePlayer(int positionX, int positionY){return false;}
+    public boolean movePlayer(int prevPosX, int prevPosY, int finalPosX, int finalPosY){
+        //check worker move correctness
+        return false;
+    }
 
 
 }

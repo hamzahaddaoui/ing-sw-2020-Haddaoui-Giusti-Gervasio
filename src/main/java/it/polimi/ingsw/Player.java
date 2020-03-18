@@ -26,4 +26,24 @@ public class Player {
 
         positionedWorkers = true;
     }
+
+    public void moveWorker(){
+        int x = 0, y = 0;
+        Worker worker = null;
+        if(!positionedWorkers) return; //eccezione
+
+        //richiesta di quale worker spostare, e dove
+        worker.setPosition(x,y);
+    }
+
+    public void build(){
+
+    }
+
+    public void buildDome(){
+
+    }
+
+
+
 }

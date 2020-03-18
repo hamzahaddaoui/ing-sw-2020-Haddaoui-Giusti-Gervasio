@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 public class Worker {
     private int positionX, positionY;
     private Billboard billboardID;
+    private boolean placedWorker;
 
     public Worker(Billboard billboardID) {
         this.billboardID = billboardID;
@@ -10,7 +11,10 @@ public class Worker {
 
 
     public void setPosition(int positionX, int positionY) {
-        billboardID.setPlayerPosition(positionX,positionY);
+        if (!placedWorker) billboardID.setPlayerPosition(positionX,positionY);
+
+        else billboardID.movePlayer(this.positionX,this.positionY, positionX, positionY);
+
         this.positionX = positionX;
         this.positionY = positionY;
     }
@@ -20,7 +24,7 @@ public class Worker {
         return positionX;
     }
 
-    public int getPositionY(int positionY) {
+    public int getPositionY() {
         return positionY;
     }
 
