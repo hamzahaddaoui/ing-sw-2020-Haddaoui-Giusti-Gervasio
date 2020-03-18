@@ -5,7 +5,6 @@ public class Example {
         boolean [][][] map = new boolean[5][5][3];
         int num = 55;
 
-
         System.out.println("Hello World prova Dario!");
 
         System.out.println("Hello World prova Leo!");
@@ -16,5 +15,9 @@ public class Example {
         System.out.println("Hello World prova Dario!");
 
         int b=12;
+
+
+
+
     }
 }
