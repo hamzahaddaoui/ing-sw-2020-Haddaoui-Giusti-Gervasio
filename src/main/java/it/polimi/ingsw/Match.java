@@ -1,42 +1,41 @@
 package it.polimi.ingsw;
 
+import java.util.HashSet;
+
 public class Match {
     private Match MatchID;
     private int playersNum;
     private int playersCount;
     private boolean isStarted;
-    private Player players[];
+    private HashSet<giocatori> players = new HashSet<giocatori>();
     private Billboard billboardID;
 
     public Match(int n){
-        players = new Player[n];
         playersNum = n;
         billboardID = new Billboard();
     }
 
     public void addPlayer(Player player){
-        players[playersCount] = player;
+        if (isStarted) return; //eccezione
+        giocatori gioc = new giocatori();
+        gioc.player = player;
+        gioc.worker1 = new Worker(billboardID);
+        gioc.worker2 = new Worker(billboardID);
+        players.add(gioc);
+        player.initWorkers(gioc.worker1, gioc.worker2);
         playersCount++;
+        if (playersCount == playersNum){
+            isStarted = true;
+        }
     }
 
     public int getPlayersNum() {
         return playersNum;
     }
 
-    public void matchStart(){
+    class giocatori {
+        Player player;
         Worker worker1, worker2;
-        isStarted = true;
-        if (playersNum >= 2){ //o 3
-            for(Player player: players){
-
-                worker1 = new Worker(billboardID);
-                worker2 = new Worker(billboardID);
-                player.placeWorkers(worker1, worker2);
-
-
-                //scelta carta divinità
-            }
-        }
     }
 
 }

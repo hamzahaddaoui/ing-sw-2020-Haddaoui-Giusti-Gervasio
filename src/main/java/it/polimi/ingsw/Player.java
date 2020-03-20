@@ -11,6 +11,11 @@ public class Player {
         matchID = MatchCreator.create(this, 2);
     }
 
+    public void initWorkers(Worker worker1, Worker worker2){
+        this.worker1 = worker1;
+        this.worker2 = worker2;
+    }
+
     public void placeWorkers(Worker worker1, Worker worker2){
         int x = 0,y = 0;
         if (positionedWorkers) return; //lancia eccezione
@@ -26,12 +31,14 @@ public class Player {
         positionedWorkers = true;
     }
 
-    public void moveWorker(){
+    public void doSomething(){
         int x = 0, y = 0;
         Worker worker = null;
         if(!positionedWorkers) return; //eccezione
 
+
         //richiesta di quale worker spostare, e dove
+
         worker.setPosition(x,y);
     }
 

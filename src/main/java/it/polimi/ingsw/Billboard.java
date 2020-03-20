@@ -34,5 +34,9 @@ public class Billboard {
         return false;
     }
 
+    public availableMovements(){
+
+    }
+
 
 }
