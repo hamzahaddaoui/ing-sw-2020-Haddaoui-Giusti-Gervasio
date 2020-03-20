@@ -3,13 +3,12 @@ package it.polimi.ingsw;
 public class Player {
     private String nickname;
     private Worker worker1, worker2;
-    boolean positionedWorkers;
-
+    private boolean positionedWorkers;
     private Match matchID;
 
     public Player(String nickname) {
         this.nickname = nickname;
-        matchID = Match.MatchID(this, 2);
+        matchID = MatchCreator.create(this, 2);
     }
 
     public void placeWorkers(Worker worker1, Worker worker2){
