@@ -5,14 +5,14 @@ import java.util.HashSet;
 
 public class Match {
     static final int PLAYERS_NUM = 2;
-
     private int playersCount;
-
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private ArrayList<Player> players = new ArrayList<Player>(2);
+    private ArrayList<GodCards> cards = new ArrayList<>(2);
     private Player currentPlayer;
-    private Billboard billboardID;
-
     private boolean isStarted;
+    private boolean isFull;
+
+    private Billboard billboardID;
 
     public Match(int n){
         billboardID = new Billboard();
@@ -20,7 +20,6 @@ public class Match {
 
     public void addPlayer(Player player){
         players.add(player);
-        player.initWorkers(new Worker(), new Worker());
         playersCount++;
     }
 
@@ -30,6 +29,27 @@ public class Match {
         return currentPlayer;
     }
 
+    public void addCard(GodCards card){
+        if (cards.size()==PLAYERS_NUM) return;
+        else cards.add(card);
+    }
+
+    public void removeCard(GodCards card){
+        if (cards.size()==0) return;
+        else cards.remove(card);
+    }
+
+    public boolean deckFull(){
+        if (cards.size() == PLAYERS_NUM) return true;
+        else return false;
+    }
+
+    public ArrayList<GodCards> getCards(){
+        return cards;
+    }
+
+
+
     public Player nextTurn(){
         if (players.indexOf(currentPlayer)== PLAYERS_NUM-1){
             currentPlayer = players.get(0);
@@ -38,5 +58,11 @@ public class Match {
         return currentPlayer;
     }
 
+    public Billboard getBillboardID() {
+        return billboardID;
+    }
 
+    public int getPlayersCount() {
+        return playersCount;
+    }
 }

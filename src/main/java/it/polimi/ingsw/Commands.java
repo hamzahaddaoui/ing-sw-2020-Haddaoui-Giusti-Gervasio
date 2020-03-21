@@ -8,4 +8,5 @@ public interface Commands {
     public void buildBlock();
     public void buildDome();
     public HashSet<Position> checkAvailableMovements();
+    public HashSet<Position> checkAvailableBuilds();
 }
