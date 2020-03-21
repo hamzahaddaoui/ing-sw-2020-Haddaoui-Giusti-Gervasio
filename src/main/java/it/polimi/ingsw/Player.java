@@ -1,10 +1,14 @@
 package it.polimi.ingsw;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Player {
     private String nickname;
-    private Worker worker1, worker2;
+    private ArrayList<Worker> workers = new ArrayList<>();
     private Match matchID;
     private Commands commands;
+    private Worker currentWorker;
 
     private boolean positionedWorkers;
 
@@ -14,7 +18,15 @@ public class Player {
     }
 
     protected void initWorkers(Worker worker1, Worker worker2){
-        this.worker1 = worker1;
-        this.worker2 = worker2;
+        workers.add(worker1);
+        workers.add(worker2);
+    }
+
+    public ArrayList<Worker> getWorkers() {
+        return workers;
+    }
+
+    public void chooseWorker(Worker worker) {
+        this.currentWorker = worker;
     }
 }
