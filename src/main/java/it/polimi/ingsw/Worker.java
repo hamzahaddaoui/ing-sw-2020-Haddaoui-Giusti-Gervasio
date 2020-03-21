@@ -1,7 +1,8 @@
 package it.polimi.ingsw;
 
 public class Worker {
-    private int positionX, positionY;
+    //Colori degli operai
+    private Position position;
     private Billboard billboardID;
     private boolean placedWorker;
 
@@ -9,27 +10,18 @@ public class Worker {
         this.billboardID = billboardID;
     }
 
-
-    public void setPosition(int positionX, int positionY) {
-        if (!placedWorker) billboardID.setPlayerPosition(positionX,positionY);
-
-        else billboardID.movePlayer(this.positionX,this.positionY, positionX, positionY);
-
-        this.positionX = positionX;
-        this.positionY = positionY;
+    public void setPosition(Position position) {
+        if (placedWorker){
+            billboardID.resetPlayerPosition(this.position);
+        }
+        else{
+            placedWorker = true;
+        }
+        billboardID.setPlayerPosition(position);
+        this.position = position;
     }
 
-
-    public int getPositionX() {
-        return positionX;
+    public Position getPosition() {
+        return position;
     }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
-
-
-
-
 }

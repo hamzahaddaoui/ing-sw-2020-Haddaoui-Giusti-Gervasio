@@ -1,42 +1,52 @@
 package it.polimi.ingsw;
 
 public class Billboard {
-    private int [][] towerHeight = new int[5][5];
-    /*[ 0 0 0 0 0
-        0 0 0 0 0
-        0 0 0 0 0
-        0 0 0 0 0
-        0 0 0 0 0  ]
-    */
-    private boolean [][] domes = new boolean[5][5];
-    private boolean [][] players = new boolean[5][5];
+    static final int ROWS = 5;
+    static final int COLOUMNS = 5;
 
-    public void Billboard (){
+    private int [][] towerHeight = new int[ROWS][COLOUMNS];
+    private boolean [][] domePosition = new boolean[ROWS][COLOUMNS];
+    private boolean [][] playerPosition = new boolean[ROWS][COLOUMNS];
 
+    public int[][] getTowerHeight() {
+        return towerHeight;
     }
 
-    private boolean checkSpace(int positionX, int positionY){
-        //do something
-        return false;
+    public int getTowerHeight(Position position) {
+        return towerHeight[position.getX()][position.getY()];
     }
 
-    public boolean setPlayerPosition(int positionX, int positionY){
-        if (checkSpace(positionX, positionY)) {
-            //controllo sia libero
-            players[positionX][positionY] = true;
-            return true;
-        }
-        else return false;
+    public boolean[][] getDome() {
+        return domePosition;
     }
 
-    public boolean movePlayer(int prevPosX, int prevPosY, int finalPosX, int finalPosY){
-        //check worker move correctness
-        return false;
-    }
-
-    public availableMovements(){
-
+    public boolean getDome(Position position) {
+        return domePosition[position.getX()][position.getY()];
     }
 
 
+    public boolean[][] getPlayerPosition() {
+        return playerPosition;
+    }
+
+    public boolean getPlayerPosition(Position position) {
+        return playerPosition[position.getX()][position.getY()];
+    }
+
+
+    public void setTowerHeight(Position position, int level) {
+        towerHeight[position.getX()][position.getY()] = level;
+    }
+
+    public void setDome(Position position){
+        domePosition[position.getX()][position.getY()] = true;
+    }
+
+    public void setPlayerPosition(Position position){
+        playerPosition[position.getX()][position.getY()] = true;
+    }
+
+    public void resetPlayerPosition(Position position){
+        playerPosition[position.getX()][position.getY()] = false;
+    }
 }
