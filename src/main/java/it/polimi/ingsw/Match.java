@@ -50,12 +50,13 @@ public class Match {
         return cards;
     }
 
-
     public Player nextTurn(){
         if (players.indexOf(currentPlayer)== PLAYERS_NUM-1){
             currentPlayer = players.get(0);
         }
         else currentPlayer = players.get(players.indexOf(currentPlayer)+1);
+        //
+        isStarted = true;
         return currentPlayer;
     }
 
