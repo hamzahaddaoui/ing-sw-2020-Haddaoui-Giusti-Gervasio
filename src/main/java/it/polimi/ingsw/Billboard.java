@@ -6,12 +6,12 @@ public class Billboard {
 
     private int [][] towerHeight;
     private boolean [][] domePosition ;
-    private boolean [][] playerPosition;
+    private Player [][] playerPosition;
 
     public Billboard() {
         this.towerHeight = new int[ROWS][COLOUMNS];
         this.domePosition = new boolean[ROWS][COLOUMNS];
-        this.playerPosition = new boolean[ROWS][COLOUMNS];
+        this.playerPosition = new Player[ROWS][COLOUMNS];
     }
 
 
@@ -32,28 +32,32 @@ public class Billboard {
     }
 
 
-    public boolean[][] getPlayerPosition() {
+    public Player[][] getPlayerPosition() {
         return playerPosition;
     }
 
-    public boolean getPlayerPosition(Position position) {
+    public Player getPlayerPosition(Position position) {
         return playerPosition[position.getX()][position.getY()];
     }
 
 
     public void setTowerHeight(Position position, int level) {
         towerHeight[position.getX()][position.getY()] = level;
+        Model.notifyObserver();
     }
 
     public void setDome(Position position){
         domePosition[position.getX()][position.getY()] = true;
+        Model.notifyObserver();
     }
 
-    public void setPlayerPosition(Position position){
-        playerPosition[position.getX()][position.getY()] = true;
+    public void setPlayerPosition(Position position, Player player){
+        playerPosition[position.getX()][position.getY()] = player;
+        Model.notifyObserver();
     }
 
     public void resetPlayerPosition(Position position){
-        playerPosition[position.getX()][position.getY()] = false;
+        playerPosition[position.getX()][position.getY()] = null;
+        Model.notifyObserver();
     }
 }

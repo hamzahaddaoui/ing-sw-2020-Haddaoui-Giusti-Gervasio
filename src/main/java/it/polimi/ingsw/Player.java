@@ -13,8 +13,16 @@ public class Player {
         this.nickname = nickname;
     }
 
+    public void createMatch(int playersNum){
+        if(Model.getMatch()==null){
+            Model.setMatch(new Match());
+        }
+        setMatchID(Model.getMatch());
+    }
+
     public void setMatchID(Match matchID) {
         this.matchID = matchID;
+        matchID.addPlayer(this);
     }
 
     public Match getMatchID(){
@@ -45,7 +53,4 @@ public class Player {
     public Worker getCurrentWorker () {
         return currentWorker;
     }
-
-
-
 }

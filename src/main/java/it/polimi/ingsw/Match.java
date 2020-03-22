@@ -1,7 +1,6 @@
 package it.polimi.ingsw;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Match {
     static final int PLAYERS_NUM = 2;
@@ -21,6 +20,7 @@ public class Match {
         players.add(player);
         playersCount++;
     }
+
 
     public Player matchStart(){
         isStarted = true;
