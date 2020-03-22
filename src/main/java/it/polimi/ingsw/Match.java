@@ -24,7 +24,6 @@ public class Match {
         }
     }
 
-
     private Player matchStart(){
         isStarted = true;
         currentPlayer = players.get(0);
