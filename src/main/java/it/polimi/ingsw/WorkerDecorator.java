@@ -3,19 +3,19 @@ package it.polimi.ingsw;
 
 import java.util.HashSet;
 
-public class BasicCommands extends AbstractObject {
-    protected AbstractObject worker;
+public class WorkerDecorator extends Worker {
+    protected Worker worker;
     public int movesBeforeBuild = 1;
     public int numOfBuilds = 1;
     public int movesAfterBuild = 0;
     public boolean doneStandardMoves = false;
 
-    public void placeWorkers() {
-
+    public void placeWorker() {
+        return;
     }
 
 
-    public void moveWorkers() {
+    public void moveWorker() {
 
     }
 

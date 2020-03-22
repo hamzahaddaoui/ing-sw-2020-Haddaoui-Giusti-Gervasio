@@ -1,5 +1,5 @@
 package it.polimi.ingsw;
-import org.graalvm.compiler.core.common.util.AbstractTypeReader;
+
 
 import java.util.ArrayList;
 
@@ -32,19 +32,24 @@ public class Player {
     }
 
     public void setCard(GodCards card){
-
         this.card = card;
-
     }
 
     public GodCards getCard(){
         return this.card;
     }
 
-    protected void setWorkers(AbstractObject worker1, AbstractObject worker2){
-        worker = new Apollo(worker1);
-        workers.add(worker1);
-        workers.add(worker2);
+    protected void setWorker(){
+        WorkerDecorator worker;
+        switch(card){
+            case Apollo:
+                worker = new ApolloDecorator(new SimpleWorker());
+                break;
+            default:
+                worker = null;
+        }
+        workers.add(worker);
+        worker.placeWorker();
     }
 
     public ArrayList<Worker> getWorkers() {
