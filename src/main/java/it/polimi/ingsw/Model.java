@@ -14,8 +14,8 @@ public class Model {
         observer = ob;
     }
 
-    public static void notifyObserver(){
-        observer.update();
+    public static void notifyObserver(String message){
+        observer.update(message);
     }
 
     public static void createPlayer(String nickname){

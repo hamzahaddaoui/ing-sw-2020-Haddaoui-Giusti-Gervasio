@@ -19,10 +19,13 @@ public class Match {
     public void addPlayer(Player player){
         players.add(player);
         playersCount++;
+        if (playersCount == PLAYERS_NUM){
+            matchStart();
+        }
     }
 
 
-    public Player matchStart(){
+    private Player matchStart(){
         isStarted = true;
         currentPlayer = players.get(0);
         return currentPlayer;
@@ -38,7 +41,7 @@ public class Match {
         else cards.remove(card);
     }
 
-    public boolean deckFull(){
+    public boolean isDeckFull(){
         if (cards.size() == PLAYERS_NUM) return true;
         else return false;
     }
