@@ -4,9 +4,16 @@ public class Billboard {
     static final int ROWS = 5;
     static final int COLOUMNS = 5;
 
-    private int [][] towerHeight = new int[ROWS][COLOUMNS];
-    private boolean [][] domePosition = new boolean[ROWS][COLOUMNS];
-    private boolean [][] playerPosition = new boolean[ROWS][COLOUMNS];
+    private int [][] towerHeight;
+    private boolean [][] domePosition ;
+    private boolean [][] playerPosition;
+
+    public Billboard() {
+        this.towerHeight = new int[ROWS][COLOUMNS];
+        this.domePosition = new boolean[ROWS][COLOUMNS];
+        this.playerPosition = new boolean[ROWS][COLOUMNS];
+    }
+
 
     public int[][] getTowerHeight() {
         return towerHeight;

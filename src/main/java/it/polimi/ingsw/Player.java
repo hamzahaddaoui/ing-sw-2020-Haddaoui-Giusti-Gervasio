@@ -1,13 +1,10 @@
 package it.polimi.ingsw;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Player {
     private String nickname;
     private ArrayList<Worker> workers = new ArrayList<>();
     private Match matchID;
-    private Commands commands;
     private Worker currentWorker;
     private GodCards card;
     private boolean positionedWorkers;
@@ -20,6 +17,10 @@ public class Player {
         this.matchID = matchID;
     }
 
+    public Match getMatchID(){
+        return matchID;
+    }
+
     public void setCard(GodCards card){
         this.card = card;
     }
@@ -27,7 +28,6 @@ public class Player {
     public GodCards getCard(){
         return this.card;
     }
-
 
     protected void setWorkers(Worker worker1, Worker worker2){
         workers.add(worker1);
@@ -38,15 +38,14 @@ public class Player {
         return workers;
     }
 
-    public void chooseWorker (Worker worker) {
+    public void setCurrentWorker (Worker worker) {
         this.currentWorker = worker;
     }
+
     public Worker getCurrentWorker () {
         return currentWorker;
     }
 
-    public Match getMatchID(){
-        return matchID;
-    }
+
 
 }

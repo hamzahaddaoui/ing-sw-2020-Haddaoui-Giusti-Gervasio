@@ -10,11 +10,10 @@ public class Match {
     private ArrayList<GodCards> cards = new ArrayList<>(2);
     private Player currentPlayer;
     private boolean isStarted;
-    private boolean isFull;
 
     private Billboard billboardID;
 
-    public Match(int n){
+    public Match(){
         billboardID = new Billboard();
     }
 
@@ -47,7 +46,6 @@ public class Match {
     public ArrayList<GodCards> getCards(){
         return cards;
     }
-
 
 
     public Player nextTurn(){
