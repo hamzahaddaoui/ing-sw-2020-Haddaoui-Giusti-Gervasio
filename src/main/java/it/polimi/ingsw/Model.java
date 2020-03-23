@@ -14,6 +14,8 @@ public class Model {
         observer = ob;
     }
 
+    public static void removeObserver(MVCObserver ob){}
+
     public static void notifyObserver(String message){
         observer.update(message);
     }
