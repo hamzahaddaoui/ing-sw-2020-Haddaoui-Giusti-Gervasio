@@ -8,7 +8,7 @@ public class WorkerDecorator extends Worker {
     public int movesBeforeBuild = 1;
     public int numOfBuilds = 1;
     public int movesAfterBuild = 0;
-    public boolean doneStandardMoves = false;
+    public boolean doneStandard = false;
 
     public void placeWorker() {
         return;
@@ -35,12 +35,12 @@ public class WorkerDecorator extends Worker {
     }
 
 
-    public HashSet<Position> checkAvailableBuildsBlocks() {
+    public HashSet<Position> checkAvailableBuildBlocks() {
         return null;
     }
 
 
-    public HashSet<Position> checkAvailableBuildsDomes() {
+    public HashSet<Position> checkAvailableBuildDomes() {
         return null;
     }
 
@@ -65,7 +65,7 @@ public class WorkerDecorator extends Worker {
     }
 
 
-    public boolean hasDoneStandardMoves() {
+    public boolean hasDoneStandard() {
         return false;
     }
 

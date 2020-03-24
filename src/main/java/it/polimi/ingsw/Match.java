@@ -24,6 +24,10 @@ public class Match {
         }
     }
 
+    public ArrayList<Player> getPlayers(){
+        return players;
+    }
+
     private Player matchStart(){
         isStarted = true;
         currentPlayer = players.get(0);
