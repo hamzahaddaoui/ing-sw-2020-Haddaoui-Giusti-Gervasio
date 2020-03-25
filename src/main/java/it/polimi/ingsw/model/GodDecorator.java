@@ -1,10 +1,13 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
+
+import it.polimi.ingsw.utilities.Position;
 
 import java.util.HashSet;
 
-public class WorkerDecorator extends Worker {
-    protected Worker worker;
+public class GodDecorator extends GameEntity {
+    protected GameEntity player;
+
     public int movesBeforeBuild = 1;
     public int numOfBuilds = 1;
     public int movesAfterBuild = 0;

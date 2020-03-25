@@ -1,6 +1,8 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
-public class SimpleWorker extends Worker{
+import it.polimi.ingsw.utilities.Position;
+
+public class Worker{
     //Colori degli operai
     private Position position;
     private boolean movedUp;

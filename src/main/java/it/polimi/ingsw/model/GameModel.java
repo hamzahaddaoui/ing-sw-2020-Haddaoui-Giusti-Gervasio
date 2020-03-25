@@ -1,8 +1,10 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
+
+import it.polimi.ingsw.utilities.MVCObserver;
 
 import java.util.ArrayList;
 
-public class Model {
+public class GameModel {
     private static MVCObserver observer;
     private static ArrayList<Player> playersList;
     private static Match match;

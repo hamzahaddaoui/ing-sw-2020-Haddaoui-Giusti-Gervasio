@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.utilities;
 
 public class Position {
     private int x, y;

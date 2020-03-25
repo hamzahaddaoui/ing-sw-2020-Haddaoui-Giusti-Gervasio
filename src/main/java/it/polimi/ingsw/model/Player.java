@@ -1,25 +1,22 @@
-package it.polimi.ingsw;
-
+package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Player {
+public class Player extends GameEntity{
     private String nickname;
     private ArrayList<Worker> workers = new ArrayList<>();
     private Match matchID;
     private Worker currentWorker;
-    private GodCards card;
-    private boolean positionedWorkers;
 
     public Player(String nickname) {
         this.nickname = nickname;
     }
 
     public void createMatch(int playersNum){
-        if(Model.getMatch()==null){
-            Model.setMatch(new Match());
+        if(GameModel.getMatch()==null){
+            GameModel.setMatch(new Match());
         }
-        setMatchID(Model.getMatch());
+        setMatchID(GameModel.getMatch());
     }
 
     public void setMatchID(Match matchID) {
@@ -31,25 +28,9 @@ public class Player {
         return matchID;
     }
 
-    public void setCard(GodCards card){
-        this.card = card;
-    }
-
-    public GodCards getCard(){
-        return this.card;
-    }
-
     protected void setWorker(){
-        WorkerDecorator worker;
-        switch(card){
-            case Apollo:
-                worker = new ApolloDecorator(new SimpleWorker());
-                break;
-            default:
-                worker = null;
-        }
-        workers.add(worker);
-        worker.placeWorker();
+       workers.add(new Worker());
+       workers.add(new Worker());
     }
 
     public ArrayList<Worker> getWorkers() {

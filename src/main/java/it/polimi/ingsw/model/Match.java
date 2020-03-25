@@ -1,11 +1,11 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
 public class Match {
     static final int PLAYERS_NUM = 2;
     private int playersCount;
-    private ArrayList<Player> players = new ArrayList<Player>(2);
+    private ArrayList<Player> players = new ArrayList<>(2);
     private ArrayList<GodCards> cards = new ArrayList<>(2);
     private Player currentPlayer;
     private boolean isStarted;
@@ -43,6 +43,11 @@ public class Match {
         if (cards.size()==0) return;
         else cards.remove(card);
     }
+
+    public void setCard(GodCards card){
+        players.set(players.indexOf(currentPlayer), (Player) card.create(currentPlayer));
+    }
+
 
     public boolean isDeckFull(){
         if (cards.size() == PLAYERS_NUM) return true;
