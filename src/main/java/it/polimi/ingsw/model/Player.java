@@ -1,47 +1,48 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.utilities.Position;
+
 import java.util.ArrayList;
 
-public class Player extends GameEntity{
+public class Player{
+    private int ID; //id connessione del giocatore
     private String nickname;
-    private ArrayList<Worker> workers = new ArrayList<>();
-    private Match matchID;
+    private ArrayList<Worker> workers = new ArrayList<>(2);
     private Worker currentWorker;
 
-    public Player(String nickname) {
+    public void setCommands(Commands commands) {
+        this.commands = commands;
+    }
+
+    private Commands commands;
+
+    protected Player(String nickname) {
         this.nickname = nickname;
+        workers.add(new Worker());
+        workers.add(new Worker());
     }
 
-    public void createMatch(int playersNum){
-        if(GameModel.getMatch()==null){
-            GameModel.setMatch(new Match());
-        }
-        setMatchID(GameModel.getMatch());
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setMatchID(Match matchID) {
-        this.matchID = matchID;
-        matchID.addPlayer(this);
+    public void setID(int playerID) {
+        this.ID = playerID;
     }
 
-    public Match getMatchID(){
-        return matchID;
-    }
-
-    protected void setWorker(){
-       workers.add(new Worker());
-       workers.add(new Worker());
+    public int getID() {
+        return ID;
     }
 
     public ArrayList<Worker> getWorkers() {
         return workers;
     }
 
-    public void setCurrentWorker (Worker worker) {
-        this.currentWorker = worker;
+    public void setCurrentWorker(Worker worker) {
+        currentWorker = worker;
     }
 
-    public Worker getCurrentWorker () {
+    public Worker getCurrentWorker() {
         return currentWorker;
     }
 }

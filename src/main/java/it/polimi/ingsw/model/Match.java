@@ -1,42 +1,61 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.decorators.ApolloDecorator;
+
 import java.util.ArrayList;
 
 public class Match {
-    static final int PLAYERS_NUM = 2;
-    private int playersCount;
-    private ArrayList<Player> players = new ArrayList<>(2);
-    private ArrayList<GodCards> cards = new ArrayList<>(2);
-    private Player currentPlayer;
-    private boolean isStarted;
+    private int playersNum; //number of players of the match
+    private int playersCurrentCount;
 
+    private ArrayList<Player> players = new ArrayList<>(2);
+    private Player currentPlayer;
+    private ArrayList<GodCards> cards = new ArrayList<>(2);
     private Billboard billboardID;
 
-    public Match(){
+    private boolean matchStarted;
+
+    public Match(int playersNum){
+        this.playersNum = playersNum;
         billboardID = new Billboard();
     }
 
     public void addPlayer(Player player){
         players.add(player);
-        playersCount++;
-        if (playersCount == PLAYERS_NUM){
-            matchStart();
-        }
+        playersCurrentCount++;
     }
 
     public ArrayList<Player> getPlayers(){
         return players;
     }
 
-    private Player matchStart(){
-        isStarted = true;
+    public Billboard getBillboardID() {
+        return billboardID;
+    }
+
+    public int getPlayersNum() {
+        return playersNum;
+    }
+
+    public int getPlayersCurrentCount() {
+        return playersCurrentCount;
+    }
+
+    public boolean isMatchStarted() {
+        return matchStarted;
+    }
+
+    private void matchStart(){
+        matchStarted = true;
         currentPlayer = players.get(0);
+    }
+
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
     public void addCard(GodCards card){
-        if (cards.size()==PLAYERS_NUM) return;
-        else cards.add(card);
+        cards.add(card);
     }
 
     public void removeCard(GodCards card){
@@ -44,35 +63,21 @@ public class Match {
         else cards.remove(card);
     }
 
-    public void setCard(GodCards card){
-        players.set(players.indexOf(currentPlayer), (Player) card.create(currentPlayer));
-    }
-
-
-    public boolean isDeckFull(){
-        if (cards.size() == PLAYERS_NUM) return true;
-        else return false;
-    }
-
     public ArrayList<GodCards> getCards(){
         return cards;
     }
 
-    public Player nextTurn(){
-        if (players.indexOf(currentPlayer)== PLAYERS_NUM-1){
+    public boolean isDeckFull(){
+        if (cards.size() == playersNum) return true;
+        else return false;
+    }
+
+    public void nextTurn(){
+        if (players.indexOf(currentPlayer)== playersNum-1){
             currentPlayer = players.get(0);
         }
         else currentPlayer = players.get(players.indexOf(currentPlayer)+1);
         //
-        isStarted = true;
-        return currentPlayer;
-    }
-
-    public Billboard getBillboardID() {
-        return billboardID;
-    }
-
-    public int getPlayersCount() {
-        return playersCount;
+        matchStarted = true;
     }
 }
