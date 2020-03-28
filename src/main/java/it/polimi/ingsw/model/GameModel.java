@@ -1,25 +1,24 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.decorators.ApolloDecorator;
-import it.polimi.ingsw.utilities.MVCObserver;
-import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.Message;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import it.polimi.ingsw.utilities.Observer;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 public class GameModel {
-    private static MVCObserver observer;
+    private static Observer<Message> observer;
     private static List<Match> activeMatches = new ArrayList<>();
 
-    public static void addObserver(MVCObserver obs){
+    public static void addObserver(Observer<Message> obs){
         observer = obs;
     }
 
-    public static void removeObserver(MVCObserver obs){}
+    public static void removeObserver(Observer<Message> obs){}
 
-    public static void notifyObserver(String message){
+    public static void notifyObserver(Message message){
         observer.update(message);
     }
 
@@ -34,7 +33,7 @@ public class GameModel {
         }
     }
 
-    public boolean isNickAvailable(String nickname){
+    public static boolean isNickAvailable(String nickname){
         /*Match match;
         match = getCurrentMatch();
         ArrayList<Player> player;
@@ -71,12 +70,19 @@ public class GameModel {
         match.nextTurn();
     }
 
-    public static void selectPlayerCard(Match match){
+    public static void selectPlayerCard(Match match, GodCards card){
+        match.getCurrentPlayer().setCommands(card);
+        match.removeCard(card);
+        match.nextTurn();
+    }
+
+    public static void playerCommand(Match match){
+
     }
 
 
 
-    public int[][][] getBillboard(){
+    public static int[][][] getBillboard(){
         return null;
     }
 }

@@ -10,8 +10,8 @@ public class Player{
     private ArrayList<Worker> workers = new ArrayList<>(2);
     private Worker currentWorker;
 
-    public void setCommands(Commands commands) {
-        this.commands = commands;
+    public void setCommands(GodCards card) {
+        this.commands = card.apply(this.commands);
     }
 
     private Commands commands;

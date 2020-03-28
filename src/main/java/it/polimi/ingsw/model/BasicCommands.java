@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.decorators;
+package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.Billboard;
 import it.polimi.ingsw.model.Commands;
