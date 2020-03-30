@@ -13,6 +13,7 @@ public class ApolloDecorator extends CommandsDecorator {
     private int movesAfterBuild = 1;
     private boolean doneStandard = false;
     private boolean positionedWorkers = false;
+
     /**
      * decorate the object Command with Apollo's special power
      *
@@ -26,26 +27,51 @@ public class ApolloDecorator extends CommandsDecorator {
         return card;
     }
 
-
+    /**
+     * method that allows the stardard placing movement
+     * also if the selected position is free
+     * @param worker is the player's selected worker
+     * @param position is the position that player have inserted
+     * @param billboard is reference to the gameboard
+     */
     @Override
-    public void placeWorker(Position position) {
-        super.placeWorker(position);
+    public void placeWorker(Worker worker, Position position, Billboard billboard) {
+        super.placeWorker(worker,position,billboard);
     }
 
+    /**
+     * method that allows the stardard player movement
+     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
+     * if the position that is selected is free
+     * @param worker is the player's selected worker
+     * @param position is the position that player have inserted
+     * @param billboard is reference to the gameboard
+     */
     @Override
-    public void moveWorker(Position position) {
-        super.moveWorker(position);
+    public void moveWorker(Worker worker, Position position, Billboard billboard) {
+        super.moveWorker(worker,position,billboard);
     }
 
+    /**
+     * method that allows the standard building block action
+     * the player can build a block on an unoccupied space neighbouring the worker
+     * @param worker is the player's selected worker
+     * @param position is the position that player have inserted
+     * @param billboard is the reference to the gameboard
+     */
     @Override
-    public void build(Position position) {
-        super.build(position);
+    public void build(Worker worker, Position position, Billboard billboard) {
+        super.build(worker,position,billboard);
     }
 
+    /**
+     * return the spaces that are available after a check on billboard
+     * @param billboard  is the reference to the gameboard
+     */
     @Override
-    public void availableCells() {
-        switch(PlayerState):
-        case MOVE:
+    public void availableCells( Billboard billboard) {
+        // switch(PlayerState):
+        // case MOVE:
 
 
     }
