@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.decorators;
 
-import it.polimi.ingsw.model.Commands;
-import it.polimi.ingsw.model.CommandsDecorator;
-import it.polimi.ingsw.model.GodCards;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.HashSet;
@@ -25,28 +23,24 @@ public class ApolloDecorator extends CommandsDecorator {
         return card;
     }
 
-
     @Override
-    public void placeWorker(Position position) {
-        super.placeWorker(position);
+    public void placeWorker(Worker worker, Position position, Billboard billboard) {
+        super.placeWorker(worker, position, billboard);
     }
 
     @Override
-    public void moveWorker(Position position) {
-        super.moveWorker(position);
+    public void moveWorker(Worker worker, Position position, Billboard billboard) {
+        super.moveWorker(worker, position, billboard);
     }
 
     @Override
-    public void build(Position position) {
-        super.build(position);
+    public void build(Worker worker, Position position, Billboard billboard) {
+        super.build(worker, position, billboard);
     }
 
     @Override
-    public void availableCells() {
-        switch(PlayerState):
-        case MOVE:
-
-
+    public void availableCells(Billboard billboard) {
+        super.availableCells(billboard);
     }
 
     public void buildBlock() {

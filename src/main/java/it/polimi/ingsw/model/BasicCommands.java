@@ -4,20 +4,23 @@ import it.polimi.ingsw.utilities.Position;
 
 public class BasicCommands implements Commands {
 
-    private Billboard billboard;
-
     @Override
-    public void placeWorker(Position position) {
+    public void placeWorker(Worker worker, Position position, Billboard billboard) {
 
     }
 
     @Override
-    public void moveWorker(Position position) {
+    public void moveWorker(Worker worker, Position position, Billboard billboard) {
 
     }
 
     @Override
-    public void build(Position position) {
+    public void build(Worker worker, Position position, Billboard billboard) {
+
+    }
+
+    @Override
+    public void availableCells(Billboard billboard) {
 
     }
 }

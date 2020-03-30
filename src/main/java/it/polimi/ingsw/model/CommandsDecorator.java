@@ -7,25 +7,24 @@ public class CommandsDecorator implements Commands {
     static final GodCards card = null;
     protected Commands commands;
 
+
     @Override
-    public void placeWorker(Position position) {
-        commands.placeWorker(position);
+    public void placeWorker(Worker worker, Position position, Billboard billboard) {
+
     }
 
     @Override
-    public void moveWorker(Position position) {
-        commands.moveWorker(position);
+    public void moveWorker(Worker worker, Position position, Billboard billboard) {
+
     }
 
     @Override
-    public void build(Position position) {
-        commands.build(position);
+    public void build(Worker worker, Position position, Billboard billboard) {
+
     }
 
     @Override
-    public void availableCells() {
-        commands.availableCells();
+    public void availableCells(Billboard billboard) {
+
     }
-
-
 }
