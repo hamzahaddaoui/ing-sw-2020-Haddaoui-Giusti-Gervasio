@@ -13,7 +13,6 @@ public class ApolloDecorator extends CommandsDecorator {
     private int movesAfterBuild = 1;
     private boolean doneStandard = false;
     private boolean positionedWorkers = false;
-
     /**
      * decorate the object Command with Apollo's special power
      *
