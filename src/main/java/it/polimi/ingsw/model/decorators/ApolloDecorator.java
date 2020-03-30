@@ -23,70 +23,40 @@ public class ApolloDecorator extends CommandsDecorator {
         this.commands=commands;
     }
 
-    /**
-    * Getter method of Card
-    *
-    * @return GodCards is the type of Divinity card
-     **/
     public GodCards getCard () {
         return card;
     }
 
-    /**
-     * method that allows the stardard placing movement
-     * also if the selected position is free
-     * @param worker is the player's selected worker
-     * @param position is the position that player have inserted
-     * @param billboard is reference to the gameboard
-     */
+
     @Override
-    public void placeWorker(Worker worker, Position position, Billboard billboard) {
-        super.placeWorker(worker,position,billboard);
+    public void placeWorker(Position position) {
+        super.placeWorker(position);
     }
 
-    /**
-     * method that allows the stardard player movement
-     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
-     * if the position that is selected is free
-     * @param worker is the player's selected worker
-     * @param position is the position that player have inserted
-     * @param billboard is reference to the gameboard
-     */
     @Override
-    public void moveWorker(Worker worker, Position position, Billboard billboard) {
-        super.moveWorker(worker,position,billboard);
+    public void moveWorker(Position position) {
+        super.moveWorker(position);
     }
 
-    /**
-     * method that allows the standard building block action
-     * the player can build a block on an unoccupied space neighbouring the worker
-     * @param worker is the player's selected worker
-     * @param position is the position that player have inserted
-     * @param billboard is the reference to the gameboard
-     */
     @Override
-    public void build(Worker worker, Position position, Billboard billboard) {
-        super.build(worker,position,billboard);
+    public void build(Position position) {
+        super.build(position);
     }
 
-    /**
-     * return the spaces that are available after a check on billboard
-     * @param billboard  is the reference to the gameboard
-     */
     @Override
-    public void availableCells( Billboard billboard) {
-       // switch(PlayerState):
-       // case MOVE:
+    public void availableCells() {
+        switch(PlayerState):
+        case MOVE:
 
 
     }
 
-    public void buildBlock(Billboard billboard) {
+    public void buildBlock() {
 
     }
 
 
-    public void buildDome(Billboard billboard) {
+    public void buildDome() {
 
     }
 
