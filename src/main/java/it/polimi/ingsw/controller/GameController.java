@@ -49,3 +49,11 @@ public class GameController implements Observer<Message> {
                 if (!isDeckFull()) match.state++;*/
     }
 }
+
+
+/* selezione worker 0-1-2-3... (integer)
+    selezione posizione (Position)
+    selezione boolean
+ */
+
+

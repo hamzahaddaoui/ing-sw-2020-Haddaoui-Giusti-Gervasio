@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Billboard;
-import it.polimi.ingsw.model.Commands;
 import it.polimi.ingsw.utilities.Position;
 
 public class BasicCommands implements Commands {

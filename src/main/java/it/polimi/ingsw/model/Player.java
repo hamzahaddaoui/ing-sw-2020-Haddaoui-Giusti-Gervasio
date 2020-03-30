@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.utilities.Position;
-
 import java.util.ArrayList;
 
 public class Player{
@@ -9,12 +7,18 @@ public class Player{
     private String nickname;
     private ArrayList<Worker> workers = new ArrayList<>(2);
     private Worker currentWorker;
+    private Commands commands;
+
+
+
 
     public void setCommands(GodCards card) {
-        this.commands = card.apply(this.commands);
+        this.commands = card.apply(new BasicCommands());
     }
 
-    private Commands commands;
+    public Commands getCommands() {
+        return commands;
+    }
 
     protected Player(String nickname) {
         this.nickname = nickname;
@@ -44,5 +48,9 @@ public class Player{
 
     public Worker getCurrentWorker() {
         return currentWorker;
+    }
+
+    public void move(){
+
     }
 }

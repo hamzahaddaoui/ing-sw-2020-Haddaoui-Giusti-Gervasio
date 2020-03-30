@@ -5,15 +5,14 @@ import it.polimi.ingsw.model.CommandsDecorator;
 import it.polimi.ingsw.model.GodCards;
 import it.polimi.ingsw.utilities.Position;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
 
-    private int movesBeforeBuild = 1;
+    private int movesBeforeBuild = 2;
     private int numOfBuilds = 1;
-    private int movesAfterBuild = 0;
+    private int movesAfterBuild = 1;
     private boolean doneStandard = false;
     private boolean positionedWorkers = false;
 
@@ -29,20 +28,26 @@ public class ApolloDecorator extends CommandsDecorator {
 
     @Override
     public void placeWorker(Position position) {
-
+        super.placeWorker(position);
     }
 
     @Override
     public void moveWorker(Position position) {
-
+        super.moveWorker(position);
     }
 
     @Override
     public void build(Position position) {
-
+        super.build(position);
     }
 
+    @Override
+    public void availableCells() {
+        switch(PlayerState):
+        case MOVE:
 
+
+    }
 
     public void buildBlock() {
 

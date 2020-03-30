@@ -59,7 +59,7 @@ public class GameModel {
 
     public static void createMatch(int playerNum){
         activeMatches.add(new Match(playerNum));
-        activeMatches.get(0).setCurrentState(WAITING_FOR_PLAYERS);
+        //activeMatches.get(0).setCurrentState(MatchState.WAITING_FOR_PLAYERS);
     }
 
     public static void addRemoveCardToMatch(Match match, GodCards card){
@@ -77,11 +77,20 @@ public class GameModel {
         match.nextTurn();
     }
 
-    public static void playerCommand(Match match){
-
+    public static void playerCommand(Match match, Player player){
     }
 
+    /*
+    * FUNZIONE CHE PUò CHIAMARE LA VIEW
+    * E RESTITUISCE L'ELENCO DELLE CELLE SELEZIONABILI
+    *
+    * */
 
+    public static void availableCells(Match match, Integer playerID){
+        //associo idplayer a player
+        Player player = null;
+        player.getCommands().availableCells();
+    }
 
     public static int[][][] getBillboard(){
         return null;
