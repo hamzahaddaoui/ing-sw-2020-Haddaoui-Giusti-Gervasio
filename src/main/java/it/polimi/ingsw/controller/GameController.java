@@ -20,7 +20,7 @@ public class GameController implements Observer<Message> {
             }
         }
 
-        /*switch(message.getMatchID().currentState){
+        /*switch(message.getMatchID().getCurrentState){
 
         }*/
 

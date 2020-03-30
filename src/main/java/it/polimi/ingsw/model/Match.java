@@ -12,20 +12,21 @@ public class Match {
     private Player currentPlayer;
     private ArrayList<GodCards> cards = new ArrayList<>(2);
     private Billboard billboardID;
+    private MatchState currentState;
 
     private boolean matchStarted;
 
-    public Match(int playersNum){
+    public Match(int playersNum) {
         this.playersNum = playersNum;
         billboardID = new Billboard();
     }
 
-    public void addPlayer(Player player){
+    public void addPlayer(Player player) {
         players.add(player);
         playersCurrentCount++;
     }
 
-    public ArrayList<Player> getPlayers(){
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 
@@ -45,7 +46,7 @@ public class Match {
         return matchStarted;
     }
 
-    private void matchStart(){
+    private void matchStart() {
         matchStarted = true;
         currentPlayer = players.get(0);
     }
@@ -54,30 +55,38 @@ public class Match {
         return currentPlayer;
     }
 
-    public void addCard(GodCards card){
+    public void addCard(GodCards card) {
         cards.add(card);
     }
 
-    public void removeCard(GodCards card){
-        if (cards.size()==0) return;
+    public void removeCard(GodCards card) {
+        if (cards.size() == 0) return;
         else cards.remove(card);
     }
 
-    public ArrayList<GodCards> getCards(){
+    public ArrayList<GodCards> getCards() {
         return cards;
     }
 
-    public boolean isDeckFull(){
+    public boolean isDeckFull() {
         if (cards.size() == playersNum) return true;
         else return false;
     }
 
-    public void nextTurn(){
-        if (players.indexOf(currentPlayer)== playersNum-1){
+    public void nextTurn() {
+        if (players.indexOf(currentPlayer) == playersNum - 1) {
             currentPlayer = players.get(0);
-        }
-        else currentPlayer = players.get(players.indexOf(currentPlayer)+1);
+        } else currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
         //
         matchStarted = true;
+    }
+
+
+    public MatchState getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(MatchState currentState) {
+        this.currentState = currentState;
     }
 }
