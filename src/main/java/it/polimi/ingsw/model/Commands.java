@@ -11,4 +11,6 @@ public interface Commands {
     public void build(Worker worker, Position position, Billboard billboard);
 
     public void availableCells(Billboard billboard);
+
+
 }
