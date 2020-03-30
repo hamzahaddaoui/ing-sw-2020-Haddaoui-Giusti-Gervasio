@@ -59,6 +59,7 @@ public class GameModel {
 
     public static void createMatch(int playerNum){
         activeMatches.add(new Match(playerNum));
+        activeMatches.get(0).setCurrentState(WAITING_FOR_PLAYERS);
     }
 
     public static void addRemoveCardToMatch(Match match, GodCards card){
