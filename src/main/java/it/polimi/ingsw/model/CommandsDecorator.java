@@ -67,8 +67,8 @@ public class CommandsDecorator implements Commands {
      * @return
      */
     @Override
-    public List<Position> getAvailableCells(Billboard billboard) {
-        commands.getAvailableCells(billboard);
+    public List<Position> getAvailableCells(Worker worker, Billboard billboard) {
+        commands.getAvailableCells(worker, billboard);
         return null;
     }
 
