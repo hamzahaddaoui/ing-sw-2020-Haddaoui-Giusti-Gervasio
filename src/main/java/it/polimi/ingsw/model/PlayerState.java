@@ -1,9 +1,14 @@
 package it.polimi.ingsw.model;
 
 public enum PlayerState {
+    SELECTING_CARD,
     PLACING,
-    GENERIC_BUILD,//DIFFERENZIO PER EFESTO? HA SENSO?
-    BLOCK_BUILD,//mah non credo
-    DOME_BUILD,
+    GENERIC_BUILD,
+    /*se io costruisco nella cella 2x3
+    * se la cella ha altezza 3 -> dome
+    * altrimenti blocco
+    *
+    * tranne per atlante.
+    * */
     MOVE,
 }

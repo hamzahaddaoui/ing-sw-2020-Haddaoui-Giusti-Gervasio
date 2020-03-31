@@ -32,9 +32,9 @@ public class GameModel extends Observable {
     }
 
     /**
-     * @param nickname contains the nickname choosen by the user
-     * Checks if the match waiting to start has that nickname available.
+     * Checks if the match waiting to start has a certain nickname available.
      *
+     * @param nickname contains the nickname choosen by the user
      * @return false if the nickname is not available, true in any other case
      */
     public static boolean isNickAvailable(String nickname){
@@ -52,6 +52,10 @@ public class GameModel extends Observable {
 
     /**
      * Add a player to the "waiting to start" match
+     *
+     * @param playerID the ID of the player associated with that nickname and the waiting to start match
+     * @param nickname the nickname of the player
+     * @return a boolean value which indicates if the number of players is reached
      */
     public static boolean addPlayer(Integer playerID, String nickname){
         Player player = new Player(playerID, nickname);
@@ -61,9 +65,9 @@ public class GameModel extends Observable {
     }
 
     /**
-     * @param playerNum number of players of the match
-     * Creates a new instance of match, with the specified number of players
+     * Creates a new instance of match, with the specified number of player,
      * with an assigned unique ID
+     * @param playerNum number of players of the match
      */
     public static void createMatch(int playerNum){
         int matchID = 0;
@@ -72,11 +76,11 @@ public class GameModel extends Observable {
     }
 
     /**
-     * @param matchID specified matchID 
-     * @param card special card selected by the current user
      * Add (or removes) a specific card to the match deck,
      * according to the number of players of the match
      *
+     * @param matchID specified matchID
+     * @param card special card selected by the current user
      * @return true if the cards deck is full (cards number is equal to players number)
      */
     public static boolean addRemoveCardToMatch(Integer matchID, String card){
@@ -93,6 +97,8 @@ public class GameModel extends Observable {
     }
 
     /**
+     * This method returns the playerID of the current player of the given match
+     *
      * @param matchID specified matchID
      * @return the current player of the specified match
      */
@@ -102,9 +108,10 @@ public class GameModel extends Observable {
     }
 
     /**
+     *  Link the current player of the selected match, to the specified GodCard.
+     *
      * @param matchID selected match
      * @param card special card selected by the current user
-     * Link the current player of the selected match, to the specified GodCard.
      */
     public static void selectPlayerCard(Integer matchID, String card){
         Match match = activeMatches.get(matchID);
@@ -115,15 +122,17 @@ public class GameModel extends Observable {
     }
 
     /**
-     * @param matchID selected match
-     *
      * Make the next player gain the control of the match, by passing the turn
+     *
+     * @param matchID selected match
      */
     public static void nextMatchTurn(Integer matchID){
         activeMatches.get(matchID).nextTurn();
     }
 
     /**
+     * Get available cells for move/build related to the given player,
+     *
      * @param matchID selected match
      * @param playerID player liked to the match
      *
@@ -150,6 +159,15 @@ public class GameModel extends Observable {
 
         return null;
     }
+
+
+    public static void playerPositioning(Match matchID, Integer playerID, Position position){
+        Match match = activeMatches.get(matchID);
+        List<Player> player = match.getPlayers().stream().filter(player1 -> player1.getID()==playerID).collect(Collectors.toList());
+        if (player.size()==1 && match.getCurrentPlayer()==player.get(0))
+            player.get(0).mossa(position, match.getBillboardID());
+    }
+
 
     /*
     public workerSelection() -> seleziona quale worker usare

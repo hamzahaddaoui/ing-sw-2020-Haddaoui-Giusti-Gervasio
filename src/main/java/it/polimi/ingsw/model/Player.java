@@ -57,12 +57,11 @@ public class Player{
         this.state = state;
     }
 
+    public void mossa(Position position, Billboard billboard){
+        //a seconda dello stato corrente chiama le diverse funzioni di commands
+        //se placing worker
+        //placeWorker(currentWorker, position, billboard);
+        //etc...
 
-
-
-
-
-
-
-
+    }
 }

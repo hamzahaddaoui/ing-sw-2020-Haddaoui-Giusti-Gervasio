@@ -5,6 +5,7 @@ import it.polimi.ingsw.utilities.Position;
 public class Worker{
     //Colori degli operai
     private Position position;
+
     private boolean movedUp;
 
     public Worker(Position position){
@@ -20,4 +21,8 @@ public class Worker{
     }
 
     public boolean hasMovedUp(){ return movedUp;}
+
+    public void setMovedUp(boolean movedUp) {
+        this.movedUp = movedUp;
+    }
 }
