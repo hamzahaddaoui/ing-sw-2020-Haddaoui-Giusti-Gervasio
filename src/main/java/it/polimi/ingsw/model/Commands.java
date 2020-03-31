@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.utilities.Position;
 
+import java.util.List;
+
 public interface Commands {
 
     public void placeWorker(Worker worker, Position position, Billboard billboard);
@@ -10,7 +12,7 @@ public interface Commands {
 
     public void build(Worker worker, Position position, Billboard billboard);
 
-    public void availableCells(Billboard billboard);
+    public List<Position> getAvailableCells(Billboard billboard);
 
 
 }

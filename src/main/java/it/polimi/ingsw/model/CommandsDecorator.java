@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.utilities.Position;
 
+import java.util.List;
+
 public class CommandsDecorator implements Commands {
     static final GodCards card = null;
     protected Commands commands;
@@ -62,10 +64,12 @@ public class CommandsDecorator implements Commands {
      * return the spaces that are available after a check on billboard
      *
      * @param billboard  is the reference to the gameboard
+     * @return
      */
     @Override
-    public void availableCells(Billboard billboard) {
-        commands.availableCells(billboard);
+    public List<Position> getAvailableCells(Billboard billboard) {
+        commands.getAvailableCells(billboard);
+        return null;
     }
 
 

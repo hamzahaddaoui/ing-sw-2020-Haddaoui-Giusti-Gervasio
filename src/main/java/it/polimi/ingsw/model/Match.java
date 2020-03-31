@@ -1,10 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.decorators.ApolloDecorator;
-
 import java.util.ArrayList;
 
 public class Match {
+    private int ID;
     private int playersNum; //number of players of the match
     private int playersCurrentCount;
 
@@ -14,24 +13,17 @@ public class Match {
     private Billboard billboardID;
     private MatchState currentState;
 
-    private boolean matchStarted;
+    private boolean started;
+    private boolean numReached;
 
-    public Match(int playersNum) {
+    public Match(int matchID, int playersNum) {
         this.playersNum = playersNum;
+        this.ID = matchID;
         billboardID = new Billboard();
     }
 
-    public void addPlayer(Player player) {
-        players.add(player);
-        playersCurrentCount++;
-    }
-
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
-
-    public Billboard getBillboardID() {
-        return billboardID;
+    public int getID() {
+        return ID;
     }
 
     public int getPlayersNum() {
@@ -42,45 +34,21 @@ public class Match {
         return playersCurrentCount;
     }
 
-    public boolean isMatchStarted() {
-        return matchStarted;
-    }
-
-    private void matchStart() {
-        matchStarted = true;
-        currentPlayer = players.get(0);
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public void addCard(GodCards card) {
-        cards.add(card);
-    }
-
-    public void removeCard(GodCards card) {
-        if (cards.size() == 0) return;
-        else cards.remove(card);
-    }
-
     public ArrayList<GodCards> getCards() {
         return cards;
     }
 
-    public boolean isDeckFull() {
-        if (cards.size() == playersNum) return true;
-        else return false;
+    public Billboard getBillboardID() {
+        return billboardID;
     }
-
-    public void nextTurn() {
-        if (players.indexOf(currentPlayer) == playersNum - 1) {
-            currentPlayer = players.get(0);
-        } else currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
-        //
-        matchStarted = true;
-    }
-
 
     public MatchState getCurrentState() {
         return currentState;
@@ -89,4 +57,59 @@ public class Match {
     public void setCurrentState(MatchState currentState) {
         this.currentState = currentState;
     }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public boolean isNumReached() {
+        return numReached;
+    }
+
+    public boolean isDeckFull() {
+        if (cards.size() == playersNum) return true;
+        else return false;
+    }
+
+    //to do - write javadoc
+
+    public void addPlayer(Player player) {
+        players.add(player);
+        currentPlayer = player;
+        playersCurrentCount++;
+        if(playersNum == playersCurrentCount) numReached = true;
+    }
+
+    public void addCard(GodCards card) {
+        cards.add(card);
+    }
+
+    public void removeCard(GodCards card) {
+        cards.remove(card);
+    }
+
+    private void matchStart() {
+        started = true;
+        currentPlayer = players.get(0);
+    }
+
+    public void nextTurn() {
+        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+        /*if (players.indexOf(currentPlayer) == playersNum - 1) {
+            currentPlayer = players.get(0);
+        } else currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
+        */
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

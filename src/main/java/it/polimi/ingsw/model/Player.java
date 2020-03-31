@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.utilities.Position;
+
 import java.util.ArrayList;
 
 public class Player{
@@ -8,34 +10,23 @@ public class Player{
     private ArrayList<Worker> workers = new ArrayList<>(2);
     private Worker currentWorker;
     private Commands commands;
+    private PlayerState state;
 
-
-
-
-    public void setCommands(GodCards card) {
-        this.commands = card.apply(new BasicCommands());
-    }
-
-    public Commands getCommands() {
-        return commands;
-    }
-
-    protected Player(String nickname) {
+    protected Player(int ID,String nickname) {
+        this.ID = ID;
         this.nickname = nickname;
-        workers.add(new Worker());
-        workers.add(new Worker());
     }
 
     public String getNickname() {
         return nickname;
     }
 
-    public void setID(int playerID) {
-        this.ID = playerID;
-    }
-
     public int getID() {
         return ID;
+    }
+
+    public void setWorkers(Position position){
+        workers.add(new Worker(position));
     }
 
     public ArrayList<Worker> getWorkers() {
@@ -50,7 +41,28 @@ public class Player{
         return currentWorker;
     }
 
-    public void move(){
-
+    public void setCommands(GodCards card) {
+        this.commands = card.apply(new BasicCommands());
     }
+
+    public Commands Commands() {
+        return commands;
+    }
+
+    public PlayerState getState() {
+        return state;
+    }
+
+    public void setState(PlayerState state) {
+        this.state = state;
+    }
+
+
+
+
+
+
+
+
+
 }

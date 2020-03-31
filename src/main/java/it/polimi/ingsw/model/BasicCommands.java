@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.utilities.Position;
 
+import java.util.List;
+
 public class BasicCommands implements Commands {
 
     private Billboard billboard;
@@ -65,7 +67,7 @@ public class BasicCommands implements Commands {
      * @param billboard  is the reference to the gameboard
      */
     @Override
-    public void availableCells(Billboard billboard) {
-
+    public List<Position> getAvailableCells(Billboard billboard) {
+        return null;
     }
 }

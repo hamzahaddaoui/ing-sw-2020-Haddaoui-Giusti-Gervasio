@@ -7,6 +7,10 @@ public class Worker{
     private Position position;
     private boolean movedUp;
 
+    public Worker(Position position){
+        this.position = position;
+    }
+
     public void setPosition(Position position) {
         this.position = position;
     }

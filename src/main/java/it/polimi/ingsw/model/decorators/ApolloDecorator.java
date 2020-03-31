@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.HashSet;
+import java.util.List;
 
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
@@ -68,13 +69,15 @@ public class ApolloDecorator extends CommandsDecorator {
      * return the spaces that are available after a check on billboard
      *
      * @param billboard  is the reference to the gameboard
+     * @return
      */
     @Override
-    public void availableCells( Billboard billboard) {
+    public List<Position> getAvailableCells(Billboard billboard) {
         // switch(PlayerState):
         // case MOVE:
 
 
+        return null;
     }
 
     /**
