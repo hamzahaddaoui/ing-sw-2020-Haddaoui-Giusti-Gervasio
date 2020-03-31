@@ -12,24 +12,16 @@ public class MinotaurDecorator extends CommandsDecorator {
     }
 
     /**
-     * method that allows the stardard placing movement
-     * also if the selected position is free
-     * @param worker is the player's selected worker
-     * @param position is the position that player have inserted
-     * @param billboard is reference to the gameboard
-     */
-    @Override
-    public void placeWorker(Worker worker, Position position, Billboard billboard) {
-        super.placeWorker(worker,position,billboard);
-    }
-
-    /**
-     * method that allows the stardard player movement
-     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
-     * if the position that is selected is free
-     * @param worker is the player's selected worker
-     * @param position is the position that player have inserted
-     * @param billboard is reference to the gameboard
+     * Method that allows the specific player movement of Minotaur.
+     * <p>
+     * He can move in an opponent's worker space, only if the next box in the same direction is free.
+     * Then, the opponent's worker is forced to move there.
+     * <p>
+     * {@link #getAvailableCells(Billboard)}
+     *
+     * @param worker      the player's selected worker, not null
+     * @param position    the position that player have inserted, not null
+     * @param billboard   the reference to the gameboard, not null
      */
     @Override
     public void moveWorker(Worker worker, Position position, Billboard billboard) {
@@ -37,28 +29,66 @@ public class MinotaurDecorator extends CommandsDecorator {
     }
 
     /**
-     * method that allows the standard building block action
-     * the player can build a block on an unoccupied space neighbouring the worker
-     * @param worker is the player's selected worker
-     * @param position is the position that player have inserted
-     * @param billboard is the reference to the gameboard
+     * Return the spaces that are available after a check on billboard.
+     * <p>
+     * This is used both in the phase of moving and building.
+     * <p>
+     *  //metodi della Billboard da definire
+     *  {@link #checkNextPosition(Position, Position, Billboard)}
+     *
+     * @param billboard        the reference to the gameboard, not null
+     * @return List<Position>  the spaces that are available
      */
     @Override
-    public void build(Worker worker, Position position, Billboard billboard) {
-        super.build(worker,position,billboard);
+    public List<Position> getAvailableCells(Worker worker, Billboard billboard) {
+        // switch(PlayerState):
+        // case MOVE:
+        // check che sulla posizione del worker, se non è sul bordo -> checkNextPosition(opponentPosition,worker.getPosition(),billboard)
+        // se torna true allora considero anche quella posizione, altrimenti no
+        // return
+
+        return null;
     }
 
     /**
-     * return the spaces that are available after a check on billboard
-     * @param billboard  is the reference to the gameboard
-     * @return
+     * Check the next position of the opponent's worker.
+     * <p>
+     * {@link Billboard#getDome(Position)}
+     * {@link Billboard#getPlayerPosition(Position)}
+     * {@link Position#getX()}
+     * {@link Position#getY()}
+     * {@link Position#set(int, int)}
+     * 
+     * @param opponentPosition  the position of your opponent's worker, not null
+     * @param myPosition        the position of you current worker, not null
+     * @param billboard         the reference to the gameboard, not null
+     * @return                  true if is available, otherwise false
+     * @throws IllegalArgumentException if the opponentPosition and myPosition are the same
+     * @throws IllegalArgumentException if the opponentPosition is a perimeter space
      */
-    @Override
-    public List<Position> getAvailableCells(Billboard billboard) {
-        // switch(PlayerState):
-        // case MOVE:
+    public boolean checkNextPosition(Position opponentPosition, Position myPosition, Billboard billboard) {
+        Position nextPosition = null;
 
+        if (myPosition.getX()==opponentPosition.getX()) {
+            if (opponentPosition.getY()>myPosition.getX())
+                nextPosition.set(myPosition.getX(),opponentPosition.getY()+1);
+            else nextPosition.set(myPosition.getX(),opponentPosition.getY()-1);
+        }
+        else if (myPosition.getY()==opponentPosition.getY()) {
+            if (opponentPosition.getX()>myPosition.getX())
+                nextPosition.set(opponentPosition.getX()+1,myPosition.getY());
+            else nextPosition.set(opponentPosition.getX()-1,myPosition.getY());
+        }
+        else if (myPosition.getX()==opponentPosition.getX()+1 && myPosition.getY()==opponentPosition.getY()+1)
+            nextPosition.set(opponentPosition.getX()-1,opponentPosition.getY()-1);
+        else if (myPosition.getX()==opponentPosition.getX()-1 && myPosition.getY()==opponentPosition.getY()+1)
+            nextPosition.set(opponentPosition.getX()+1,opponentPosition.getY()-1);
+        else if (myPosition.getX()==opponentPosition.getX()+1 && myPosition.getY()==opponentPosition.getY()-1)
+            nextPosition.set(opponentPosition.getX()-1,opponentPosition.getY()+1);
+        else if (myPosition.getX()==opponentPosition.getX()-1 && myPosition.getY()==opponentPosition.getY()-1)
+            nextPosition.set(opponentPosition.getX()+1,opponentPosition.getY()+1);
 
-        return null;
+        if(billboard.getDome(nextPosition)==false && billboard.getPlayerPosition(nextPosition)==null) return true;
+        else return false;
     }
 }

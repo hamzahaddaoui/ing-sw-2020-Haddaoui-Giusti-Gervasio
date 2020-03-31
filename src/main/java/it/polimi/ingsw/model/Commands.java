@@ -12,7 +12,7 @@ public interface Commands {
 
     public void build(Worker worker, Position position, Billboard billboard);
 
-    public List<Position> getAvailableCells(Billboard billboard);
+    public List<Position> getAvailableCells(Worker worker, Billboard billboard);
 
 
 }
