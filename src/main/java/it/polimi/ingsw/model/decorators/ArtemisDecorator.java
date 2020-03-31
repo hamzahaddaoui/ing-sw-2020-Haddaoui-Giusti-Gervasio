@@ -75,7 +75,7 @@ public class ArtemisDecorator extends CommandsDecorator {
      * @return
      */
     @Override
-    public List<Position> getAvailableCells(Billboard billboard) {
+    public List<Position> getAvailableCells(Worker worker, Billboard billboard) {
         // switch(PlayerState):
         // case MOVE:
 

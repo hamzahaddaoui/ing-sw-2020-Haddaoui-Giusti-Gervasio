@@ -3,9 +3,9 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.utilities.Position;
 
 public class Worker{
-    //Colori degli operai
-    private Position position;
 
+    private Position position;
+    private String color;
     private boolean movedUp;
 
     public Worker(Position position){
@@ -24,5 +24,10 @@ public class Worker{
 
     public void setMovedUp(boolean movedUp) {
         this.movedUp = movedUp;
+    }
+
+
+    public String getColor() {
+        return color;
     }
 }

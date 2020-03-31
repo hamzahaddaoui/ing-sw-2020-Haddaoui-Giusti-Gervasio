@@ -8,13 +8,24 @@ public class Billboard {
     static final int COLOUMNS = 5;
 
     private int [][] towerHeight;
+    /*
+    0 if the space is empty
+    1 if the space is on the first floor
+    2 if the space is on the second floor
+    3 if the space is on the third floor
+     */
+
     private boolean [][] domePosition ;
-    private Player [][] playerPosition;
+    /*
+    false if in the space there isn't the dome
+    true if in the space there is the dome
+     */
+    private  String[][] playerColor;
 
     public Billboard() {
         this.towerHeight = new int[ROWS][COLOUMNS];
         this.domePosition = new boolean[ROWS][COLOUMNS];
-        this.playerPosition = new Player[ROWS][COLOUMNS];
+        this.playerColor = new String[ROWS][COLOUMNS];
     }
 
 
@@ -26,6 +37,10 @@ public class Billboard {
         return towerHeight[position.getX()][position.getY()];
     }
 
+    public void setTowerHeight(Position position, int level) {
+        towerHeight[position.getX()][position.getY()] = level;
+    }
+
     public boolean[][] getDome() {
         return domePosition;
     }
@@ -34,33 +49,26 @@ public class Billboard {
         return domePosition[position.getX()][position.getY()];
     }
 
-
-    public Player[][] getPlayerPosition() {
-        return playerPosition;
-    }
-
-    public Player getPlayerPosition(Position position) {
-        return playerPosition[position.getX()][position.getY()];
-    }
-
-
-    public void setTowerHeight(Position position, int level) {
-        towerHeight[position.getX()][position.getY()] = level;
-
-    }
-
     public void setDome(Position position){
         domePosition[position.getX()][position.getY()] = true;
-
     }
 
-    public void setPlayerPosition(Position position, Player player){
-        playerPosition[position.getX()][position.getY()] = player;
-
+    public String[][] getPlayerColor() {
+        return playerColor;
     }
 
-    public void resetPlayerPosition(Position position){
-        playerPosition[position.getX()][position.getY()] = null;
-
+    public String getPlayerColor(Position position) {
+        if((position.getX()>=0)&&(position.getY()>=0))
+            return playerColor[position.getX()][position.getY()];
+        else throw new IllegalArgumentException("Error");
     }
+
+    public void setPlayerColor(Position position, Worker worker){
+        playerColor[position.getX()][position.getY()] = worker.getColor();
+    }
+
+    public void resetPlayerColor(Position position){
+        playerColor[position.getX()][position.getY()] = null;
+    }
+
 }

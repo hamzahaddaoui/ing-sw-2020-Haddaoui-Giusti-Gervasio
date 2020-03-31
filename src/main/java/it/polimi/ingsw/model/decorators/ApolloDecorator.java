@@ -72,9 +72,8 @@ public class ApolloDecorator extends CommandsDecorator {
      * @return
      */
     @Override
-    public List<Position> getAvailableCells(Billboard billboard) {
-        // switch(PlayerState):
-        // case MOVE:
+    public List<Position> getAvailableCells(Worker worker, Billboard billboard) {
+
 
 
         return null;
