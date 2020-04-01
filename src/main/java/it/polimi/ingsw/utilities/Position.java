@@ -79,7 +79,7 @@ public class Position {
             else
                 return CardinalDirection.SOUTHEAST;
         }
-        if (posA.getX() > posB.getY()){
+        if (posA.getX() < posB.getY()){
             if (posA.getY() > posB.getY())
                 return CardinalDirection.NORTHWEST;
             else
