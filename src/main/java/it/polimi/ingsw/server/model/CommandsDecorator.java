@@ -1,41 +1,34 @@
-package it.polimi.ingsw.model.decorators;
+package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.model.*;
+
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
 
-public class ArtemisDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Artemis;
-
-    /**
-     * decorate the object Command with Artemis's special power
-     *
-     * @param commands  represent the player behaviour
-     */
-    public ArtemisDecorator(Commands commands){
-        this.commands=commands;
-    }
+public class CommandsDecorator implements Commands {
+    static final GodCards card = null;
+    protected Commands commands;
 
     /**
      * method that allows the stardard placing movement
-     * also if the selected position is free
      *  @param position  is the position that player have inserted
      * @param player
      */
     @Override
     public void placeWorker(Position position, Player player) {
-        super.placeWorker(position, player);
+        commands.placeWorker(position, player);
     }
 
     /**
-     * worker may move one additional time but not back to the initial space
+     * method that allows the stardard player movement
+     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
+     * if the position that is selected is free
      *  @param position  is the position that player have inserted
      * @param player
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        super.moveWorker(position, player);
+        commands.moveWorker(position, player);
     }
 
     /**
@@ -46,8 +39,8 @@ public class ArtemisDecorator extends CommandsDecorator {
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build(Player player, Position position) {
-        super.build(player, position);
+    public void build(Position position, Player player) {
+        commands.build(position, player);
     }
 
     /**
@@ -56,10 +49,8 @@ public class ArtemisDecorator extends CommandsDecorator {
      *
      * @param worker  is the player's selected worker
      * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
      */
-    @Override
-    public void buildDome(Worker worker, Position position, Billboard billboard) {
+    public void buildDome(Worker worker, Position position) {
 
     }
 
@@ -71,11 +62,9 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public List<Position> getAvailableCells(Player player) {
-        // switch(PlayerState):
-        // case MOVE:
-
-
+        commands.getAvailableCells(player);
         return null;
     }
+
 
 }

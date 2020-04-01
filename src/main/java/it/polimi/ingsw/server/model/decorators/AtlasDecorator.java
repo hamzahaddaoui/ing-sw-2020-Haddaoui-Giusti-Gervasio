@@ -1,19 +1,19 @@
-package it.polimi.ingsw.model.decorators;
+package it.polimi.ingsw.server.model.decorators;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
 
-public class DemeterDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Demeter;
+public class AtlasDecorator extends CommandsDecorator {
+    static final GodCards card = GodCards.Atlas;
 
     /**
-     * decorate the object Command with Demeter's special power
+     * decorate the object Command with Atlas's special power
      *
-     * @param commands represent the player behaviour
+     * @param commands  represent the player behaviour
      */
-    public DemeterDecorator(Commands commands){
+    public AtlasDecorator(Commands commands){
         this.commands=commands;
     }
 
@@ -37,19 +37,19 @@ public class DemeterDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        super.moveWorker(position, player);
+        //super.moveWorker(worker,position,billboard);
     }
 
     /**
      * method that allows the special building block action
-     * the worker may build one additional time but not on the same space
+     * the worker may build a dome at any level
      *
      * @param player
      * @param position  is the position that player have inserted
      */
     @Override
     public void build(Player player, Position position) {
-        super.build(player, position);
+        //super.build(worker,position,billboard);
     }
 
     /**
@@ -68,15 +68,14 @@ public class DemeterDecorator extends CommandsDecorator {
     /**
      * return the spaces that are available after a check on billboard
      *
-     *
-     * @param player@return
+     * @param billboard  is the reference to the gameboard
+     * @return
      */
     @Override
-    public List<Position> getAvailableCells(Player player) {
+    public List<Position> getAvailableCells(Billboard billboard) {
         // switch(PlayerState):
         // case MOVE:
-
-
         return null;
     }
+
 }

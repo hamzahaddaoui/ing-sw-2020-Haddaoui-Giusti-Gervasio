@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.utilities.Position;
 
@@ -10,7 +10,7 @@ public interface Commands {
 
     public void moveWorker(Position position, Player player);
 
-    public void build(Player player, Position position);
+    public void build(Position position, Player player);
 
     public List<Position> getAvailableCells(Player player);
 

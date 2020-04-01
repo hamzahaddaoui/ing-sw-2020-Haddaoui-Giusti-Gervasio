@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.utilities.Position;
 
@@ -41,7 +41,7 @@ public class BasicCommands implements Commands {
      * @param position   the position that player have inserted, not null
      */
     @Override
-    public void build(Player player, Position position) {
+    public void build(Position position, Player player) {
 
     }
 
@@ -50,12 +50,12 @@ public class BasicCommands implements Commands {
      * method that allows the standard building dome action
      * the player can build a dome on an unoccupied space neighbouring the worker
      *
-     * @param worker     the player's selected worker, not null
+     *
      * @param position   the position that player have inserted, not null
-     * @param billboard  the reference to the gameboard, not null
+     *
      */
 
-    public void buildDome(Worker worker, Position position, Billboard billboard) {
+    public void buildDome(Position position, Player player) {
 
     }
 

@@ -1,6 +1,6 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.model.decorators.*;
+import it.polimi.ingsw.server.model.decorators.*;
 
 public enum GodCards {
     Apollo("Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated",1,1,0) {

@@ -1,6 +1,6 @@
-package it.polimi.ingsw.model.decorators;
+package it.polimi.ingsw.server.model.decorators;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 public class HephaestusDecorator extends CommandsDecorator {

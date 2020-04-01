@@ -1,19 +1,19 @@
-package it.polimi.ingsw.model.decorators;
+package it.polimi.ingsw.server.model.decorators;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
 
-public class AtlasDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Atlas;
+public class ArtemisDecorator extends CommandsDecorator {
+    static final GodCards card = GodCards.Artemis;
 
     /**
-     * decorate the object Command with Atlas's special power
+     * decorate the object Command with Artemis's special power
      *
      * @param commands  represent the player behaviour
      */
-    public AtlasDecorator(Commands commands){
+    public ArtemisDecorator(Commands commands){
         this.commands=commands;
     }
 
@@ -29,27 +29,25 @@ public class AtlasDecorator extends CommandsDecorator {
     }
 
     /**
-     * method that allows the stardard player movement
-     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
-     * if the position that is selected is free
+     * worker may move one additional time but not back to the initial space
      *  @param position  is the position that player have inserted
      * @param player
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        //super.moveWorker(worker,position,billboard);
+        super.moveWorker(position, player);
     }
 
     /**
-     * method that allows the special building block action
-     * the worker may build a dome at any level
+     * method that allows the standard building block action
+     * the player can build a block on an unoccupied space neighbouring the worker
      *
      * @param player
      * @param position  is the position that player have inserted
      */
     @Override
     public void build(Player player, Position position) {
-        //super.build(worker,position,billboard);
+        super.build(player, position);
     }
 
     /**
@@ -68,13 +66,15 @@ public class AtlasDecorator extends CommandsDecorator {
     /**
      * return the spaces that are available after a check on billboard
      *
-     * @param billboard  is the reference to the gameboard
-     * @return
+     *
+     * @param player@return
      */
     @Override
-    public List<Position> getAvailableCells(Billboard billboard) {
+    public List<Position> getAvailableCells(Player player) {
         // switch(PlayerState):
         // case MOVE:
+
+
         return null;
     }
 
