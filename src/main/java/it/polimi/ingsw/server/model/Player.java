@@ -9,6 +9,7 @@ public class Player{
     private String nickname;
     private Match match;
     private ArrayList<Worker> workers = new ArrayList<>(2);
+    //Worker 0 - Worker 1
     private Worker currentWorker;
     private Commands commands;
     private TurnState state;
@@ -39,16 +40,21 @@ public class Player{
         return workers;
     }
 
-    public void setCurrentWorker(Worker worker) {
-        currentWorker = worker;
-    }
-
     public Worker getCurrentWorker() {
         return currentWorker;
     }
 
+    public void setCurrentWorkerID(Integer worker) {
+        currentWorker = workers.get(worker);
+    }
+
+    public int getCurrentWorkerID() {
+        return workers.indexOf(currentWorker);
+    }
+
     public void setCommands(GodCards card) {
         this.commands = card.apply(new BasicCommands());
+        match.removeCard(card);
     }
 
     public Commands Commands() {
@@ -63,11 +69,12 @@ public class Player{
         this.state = state;
     }
 
-    public void mossa(Position position, Billboard billboard){
-        //a seconda dello stato corrente chiama le diverse funzioni di commands
-        //se placing worker
-        //placeWorker(currentWorker, position, billboard);
-        //etc...
-
+    public void playerTurn(Position position){
+        switch(state){
+            case MOVE:
+                Commands().build(position,this);
+            case BUILD:
+                Commands().build(position, this);
+        }
     }
 }

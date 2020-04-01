@@ -83,6 +83,11 @@ public class BasicCommands implements Commands {
         return neighboringCells;
     }
 
+    @Override
+    public void specialFunctionSetUnset(Player player) {
+        return;
+    }
+
     /**
      * method that return a list of neighboring cells for the method getAvailableCells
      *

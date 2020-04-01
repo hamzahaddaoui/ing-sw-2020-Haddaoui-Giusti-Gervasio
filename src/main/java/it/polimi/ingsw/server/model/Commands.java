@@ -14,5 +14,7 @@ public interface Commands {
 
     public List<Position> getAvailableCells(Player player);
 
+    public void specialFunctionSetUnset(Player player);
+
 
 }

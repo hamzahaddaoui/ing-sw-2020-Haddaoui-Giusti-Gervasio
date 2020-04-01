@@ -13,6 +13,19 @@ public class GameModel extends Observable {
     private static Observer<Message> observer;
     private static NavigableMap<Integer, Match> activeMatches = new TreeMap<>(); //id match, match
 
+    public static Match translateMatchID (Integer matchID){
+        return activeMatches
+                .get(matchID);
+    }
+
+    public static Player translatePlayerID (Match match, Integer playerID){
+        return match
+                .getPlayers()
+                .stream()
+                .filter(player1 -> player1.getID()==playerID)
+                .collect(Collectors.toList()).get(0);
+    }
+
     /**
      * Checks if there is an instance of match, waiting to start
      * and returns that match to the caller.
@@ -83,7 +96,7 @@ public class GameModel extends Observable {
      * @return true if the cards deck is full (cards number is equal to players number)
      */
     public static boolean addRemoveCardToMatch(Integer matchID, String card){
-        Match match = activeMatches.get(matchID);
+        Match match = translateMatchID(matchID);
         GodCards godCard = GodCards.valueOf(card);
         if (match.getCards().contains(godCard)) match.removeCard(godCard);
         else match.addCard(godCard);
@@ -102,22 +115,11 @@ public class GameModel extends Observable {
      * @return the current player of the specified match
      */
     public int getCurrentPlayerID(Integer matchID){
-        Match match = activeMatches.get(matchID);
-        return match.getCurrentPlayer().getID();
+        return translateMatchID(matchID).getCurrentPlayer().getID();
     }
 
-    /**
-     *  Link the current player of the selected match, to the specified GodCard.
-     *
-     * @param matchID selected match
-     * @param card special card selected by the current user
-     */
-    public static void selectPlayerCard(Integer matchID, String card){
-        Match match = activeMatches.get(matchID);
-        GodCards godCard = GodCards.valueOf(card);
-        match.getCurrentPlayer().setCommands(godCard);
-        match.removeCard(godCard);
-        match.nextTurn();
+    public static void setCurrentPlayerWorker(Integer matchID, Integer playerID, int worker){
+        translatePlayerID(translateMatchID(matchID), playerID).setCurrentWorkerID(worker);
     }
 
     /**
@@ -126,8 +128,22 @@ public class GameModel extends Observable {
      * @param matchID selected match
      */
     public static void nextMatchTurn(Integer matchID){
-        activeMatches.get(matchID).nextTurn();
+        translateMatchID(matchID).nextTurn();
     }
+
+
+    /**
+     *  Link the current player of the selected match, to the specified GodCard.
+     *
+     * @param matchID selected match
+     * @param card special card selected by the current user
+     */
+    public static void selectPlayerCard(Integer matchID, String card){
+        Match match = translateMatchID(matchID);
+        GodCards godCard = GodCards.valueOf(card);
+        match.getCurrentPlayer().setCommands(godCard);
+    }
+
 
     /**
      * Get available cells for move/build related to the given player,
@@ -137,15 +153,20 @@ public class GameModel extends Observable {
      *
      * @return the list of cells on the billboard, where the player could move
      */
-    public static List<Position> getAvailableCells(Match matchID, Integer playerID){
-        Match match = activeMatches.get(matchID);
-        List<Player> player = match.getPlayers().stream().filter(player1 -> player1.getID()==playerID).collect(Collectors.toList());
-        if (player.size()==1)
-            return player.get(0).Commands().getAvailableCells(match.getCurrentPlayer());
-        else
-            return null; //errore!
+    public static List<Position> getAvailableCells(Integer matchID, Integer playerID){
+        Match match = translateMatchID(matchID);
+        Player player = translatePlayerID(match, playerID);
+        return player.Commands().getAvailableCells(player);
     }
 
+    public static void setUnsetSpecialFunction(Integer matchID, Integer playerID, int worker){
+        Player player =  translatePlayerID(translateMatchID(matchID), playerID);
+        player.Commands().specialFunctionSetUnset(player);
+    }
+
+    public static void playerMoveBuild(Integer matchID, Integer playerID, Position position){
+        translatePlayerID(translateMatchID(matchID), playerID).playerTurn(position);
+    }
 
     /**
      * Make a copy of the state of the billboard, made of 3 layers:
@@ -159,19 +180,5 @@ public class GameModel extends Observable {
         return null;
     }
 
-
-    public static void playerPositioning(Match matchID, Integer playerID, Position position){
-        Match match = activeMatches.get(matchID);
-        List<Player> player = match.getPlayers().stream().filter(player1 -> player1.getID()==playerID).collect(Collectors.toList());
-        if (player.size()==1 && match.getCurrentPlayer()==player.get(0))
-            player.get(0).mossa(position, match.getBillboard());
-    }
-
-
-    /*
-    public workerSelection() -> seleziona quale worker usare
-    public playerPosition() -> invia una posizione per muoversi o costruire
-    public setUnsetSpecialFunction() -> seleziona se disponibile una funzione speciale
-    */
 }
 
