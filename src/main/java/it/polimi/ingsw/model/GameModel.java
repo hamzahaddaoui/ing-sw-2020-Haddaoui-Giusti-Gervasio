@@ -141,7 +141,7 @@ public class GameModel extends Observable {
         Match match = activeMatches.get(matchID);
         List<Player> player = match.getPlayers().stream().filter(player1 -> player1.getID()==playerID).collect(Collectors.toList());
         if (player.size()==1)
-            return player.get(0).Commands().getAvailableCells(match.getCurrentPlayer().getCurrentWorker());
+            return player.get(0).Commands().getAvailableCells(match.getCurrentPlayer());
         else
             return null; //errore!
     }
@@ -164,7 +164,7 @@ public class GameModel extends Observable {
         Match match = activeMatches.get(matchID);
         List<Player> player = match.getPlayers().stream().filter(player1 -> player1.getID()==playerID).collect(Collectors.toList());
         if (player.size()==1 && match.getCurrentPlayer()==player.get(0))
-            player.get(0).mossa(position, match.getBillboardID());
+            player.get(0).mossa(position, match.getBillboard());
     }
 
 
