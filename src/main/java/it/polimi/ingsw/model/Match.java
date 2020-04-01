@@ -10,7 +10,7 @@ public class Match {
     private ArrayList<Player> players = new ArrayList<>(2);
     private Player currentPlayer;
     private ArrayList<GodCards> cards = new ArrayList<>(2);
-    private Billboard billboardID;
+    private Billboard billboard;
     private MatchState currentState;
 
     private boolean started;
@@ -19,7 +19,7 @@ public class Match {
     public Match(int matchID, int playersNum) {
         this.playersNum = playersNum;
         this.ID = matchID;
-        billboardID = new Billboard();
+        billboard = new Billboard();
     }
 
     public int getID() {
@@ -46,8 +46,8 @@ public class Match {
         return cards;
     }
 
-    public Billboard getBillboardID() {
-        return billboardID;
+    public Billboard getBillboard() {
+        return billboard;
     }
 
     public MatchState getCurrentState() {

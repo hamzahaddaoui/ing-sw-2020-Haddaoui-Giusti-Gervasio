@@ -5,21 +5,16 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.List;
 
 public class BasicCommands implements Commands {
-
-    private Billboard billboard;
-
     /**
      * method that allows the stardard placing movement
-     *
-     * @param worker     the player's selected worker, not null
-     * @param position   the position that player have inserted, not null
-     * @param billboard  the reference to the gameboard, not null
+     *  @param position   the position that player have inserted, not null
+     * @param player
      */
     @Override
-    public void placeWorker(Worker worker, Position position, Billboard billboard) {
-        if(billboard.getPlayerColor(position)==null){
-            worker.setPosition(position);
-            billboard.setPlayerColor(position, worker);
+    public void placeWorker(Position position, Player player) {
+        if(player.getMatch().getBillboard().getPlayerColor(position)==null){
+            player.getCurrentWorker().setPosition(position);
+            player.getMatch().getBillboard().setPlayerColor(position, player.getCurrentWorker());
         }
         else{
             throw new IllegalArgumentException("The space is full. Chose another space. /n");
@@ -30,13 +25,11 @@ public class BasicCommands implements Commands {
      * method that allows the stardard player movement
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
-     *
-     * @param worker     the player's selected worker, not null
-     * @param position   the position that player have inserted, not null
-     * @param billboard  the reference to the gameboard, not null
+     *  @param position   the position that player have inserted, not null
+     * @param player
      */
     @Override
-    public void moveWorker(Worker worker, Position position, Billboard billboard) {
+    public void moveWorker(Position position, Player player) {
 
     }
 
@@ -44,12 +37,11 @@ public class BasicCommands implements Commands {
      * method that allows the standard building block action
      * the player can build a block on an unoccupied space neighbouring the worker
      *
-     * @param worker  the player's selected worker, not null
+     * @param player
      * @param position   the position that player have inserted, not null
-     * @param billboard  the reference to the gameboard, not null
      */
     @Override
-    public void build(Worker worker, Position position, Billboard billboard) {
+    public void build(Player player, Position position) {
 
     }
 
@@ -71,18 +63,18 @@ public class BasicCommands implements Commands {
      * method that control the cells that are available according to standard characteristic from the list of
      * neighboring cells
      *
-     * @param worker  the current worker, not null
-     * @param billboard  the reference to the gameboard, not null
+     * @param player  the current worker, not null
      * @return  the list of spaces that are available after a check on billboard
      */
     @Override
-    public List<Position> getAvailableCells(Worker worker, Billboard billboard) {
+    public List<Position> getAvailableCells(Player player) {
         List<Position> neighboringCells=null;//=metodo che restituisce una lista di posizioni vicine ad una data posizione
+        Billboard billboard = player.getMatch().getBillboard();
         int i=0;
         while( i < neighboringCells.size()){
             if(     !(billboard.getPlayerColor(neighboringCells.get(i))==null
-                    && ((billboard.getTowerHeight(neighboringCells.get(i))==billboard.getTowerHeight(worker.getPosition())+1)
-                    || (billboard.getTowerHeight(neighboringCells.get(i))<=billboard.getTowerHeight(worker.getPosition())))
+                    && ((billboard.getTowerHeight(neighboringCells.get(i))==billboard.getTowerHeight(player.getCurrentWorker().getPosition())+1)
+                    || (billboard.getTowerHeight(neighboringCells.get(i))<=billboard.getTowerHeight(player.getCurrentWorker().getPosition())))
                     && (billboard.getDome(neighboringCells.get(i))==false))) {
                 neighboringCells.remove(i);
                 i--;}

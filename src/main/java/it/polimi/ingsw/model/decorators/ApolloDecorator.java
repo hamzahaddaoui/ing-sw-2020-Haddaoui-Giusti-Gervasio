@@ -30,25 +30,21 @@ public class ApolloDecorator extends CommandsDecorator {
 
     /**
      * method that allows the stardard placing movement
-     *
-     * @param worker  is the player's selected worker
-     * @param position  is the position that player have inserted
-     * @param billboard  is reference to the gameboard
+     *  @param position  is the position that player have inserted
+     * @param player
      */
     @Override
-    public void placeWorker(Worker worker, Position position, Billboard billboard) {
+    public void placeWorker(Position position, Player player) {
         //super.placeWorker(worker,position,billboard);
     }
 
     /**
      * worker may move into ah opponent Worker's space by forcing their worker to the space yours just vacated
-     *
-     * @param worker  is the player's selected worker
-     * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
+     *  @param position  is the position that player have inserted
+     * @param player
      */
     @Override
-    public void moveWorker(Worker worker, Position position, Billboard billboard) {
+    public void moveWorker(Position position, Player player) {
        // super.moveWorker(worker,position,billboard);
     }
 
@@ -56,23 +52,22 @@ public class ApolloDecorator extends CommandsDecorator {
      * method that allows the standard building block action
      * the player can build a block on an unoccupied space neighbouring the worker
      *
-     * @param worker  is the player's selected worker
+     * @param player
      * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
      */
     @Override
-    public void build(Worker worker, Position position, Billboard billboard) {
-        super.build(worker,position,billboard);
+    public void build(Player player, Position position) {
+        super.build(player, position);
     }
 
     /**
      * return the spaces that are available after a check on billboard
      *
-     * @param billboard  is the reference to the gameboard
-     * @return
+     *
+     * @param player@return
      */
     @Override
-    public List<Position> getAvailableCells(Worker worker, Billboard billboard) {
+    public List<Position> getAvailableCells(Player player) {
 
 
 

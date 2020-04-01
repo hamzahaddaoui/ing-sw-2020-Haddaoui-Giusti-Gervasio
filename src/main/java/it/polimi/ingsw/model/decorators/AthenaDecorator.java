@@ -20,14 +20,12 @@ public class AthenaDecorator extends CommandsDecorator {
     /**
      * method that allows the stardard placing movement
      * also if the selected position is free
-     *
-     * @param worker  is the player's selected worker
-     * @param position  is the position that player have inserted
-     * @param billboard  is reference to the gameboard
+     *  @param position  is the position that player have inserted
+     * @param player
      */
     @Override
-    public void placeWorker(Worker worker, Position position, Billboard billboard) {
-        super.placeWorker(worker,position,billboard);
+    public void placeWorker(Position position, Player player) {
+        super.placeWorker(position, player);
     }
 
     /**
@@ -35,27 +33,25 @@ public class AthenaDecorator extends CommandsDecorator {
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
      *
-     * @param worker  is the player's selected worker
      * @param position  is the position that player have inserted
-     * @param billboard  is reference to the gameboard
-     ** @throws hasMovedUP()  if the movement of the worker is from down to up
+     * @param player
+     * @throws hasMovedUP()  if the movement of the worker is from down to up
      */
     @Override
-    public void moveWorker(Worker worker, Position position, Billboard billboard) {
-        super.moveWorker(worker,position,billboard);
+    public void moveWorker(Position position, Player player) {
+        super.moveWorker(position, player);
     }
 
     /**
      * method that allows the standard building block action
      * the player can build a block on an unoccupied space neighbouring the worker
      *
-     * @param worker  is the player's selected worker
+     * @param player
      * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
      */
     @Override
-    public void build(Worker worker, Position position, Billboard billboard) {
-        super.build(worker,position,billboard);
+    public void build(Player player, Position position) {
+        super.build(player, position);
     }
 
     /**

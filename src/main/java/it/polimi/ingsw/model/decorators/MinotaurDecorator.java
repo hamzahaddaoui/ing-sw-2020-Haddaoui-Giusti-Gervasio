@@ -18,14 +18,12 @@ public class MinotaurDecorator extends CommandsDecorator {
      * Then, the opponent's worker is forced to move there.
      * <p>
      * {@link #getAvailableCells(Billboard)}
-     *
-     * @param worker      the player's selected worker, not null
-     * @param position    the position that player have inserted, not null
-     * @param billboard   the reference to the gameboard, not null
+     *  @param position    the position that player have inserted, not null
+     * @param player
      */
     @Override
-    public void moveWorker(Worker worker, Position position, Billboard billboard) {
-        super.moveWorker(worker,position,billboard);
+    public void moveWorker(Position position, Player player) {
+        super.moveWorker(position, player);
     }
 
     /**
@@ -36,11 +34,11 @@ public class MinotaurDecorator extends CommandsDecorator {
      *  //metodi della Billboard da definire
      *  {@link #checkNextPosition(Position, Position, Billboard)}
      *
-     * @param billboard        the reference to the gameboard, not null
-     * @return List<Position>  the spaces that are available
+     *
+     * @param player@return List<Position>  the spaces that are available
      */
     @Override
-    public List<Position> getAvailableCells(Worker worker, Billboard billboard) {
+    public List<Position> getAvailableCells(Player player) {
         // switch(PlayerState):
         // case MOVE:
         // check che sulla posizione del worker, se non è sul bordo -> checkNextPosition(opponentPosition,worker.getPosition(),billboard)

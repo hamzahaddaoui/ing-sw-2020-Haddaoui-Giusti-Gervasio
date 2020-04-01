@@ -17,13 +17,12 @@ public class PrometheusDecorator extends CommandsDecorator {
      * method that allows the stardard player movement
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
-     * @param worker is the player's selected worker, not null
      * @param position is the position that player have inserted, not null
-     * @param billboard is reference to the gameboard, not null
+     * @param player
      */
     @Override
-    public void moveWorker(Worker worker, Position position, Billboard billboard) {
-        super.moveWorker(worker,position,billboard);
+    public void moveWorker(Position position, Player player) {
+        super.moveWorker(position, player);
     }
 
     /**
@@ -32,17 +31,16 @@ public class PrometheusDecorator extends CommandsDecorator {
      * The player can build both before and after moving, just if he doesn't move up.
      * Check on the boolean hasMoved to understand if he's building before or after.
      *
-     * @param worker     the player's selected worker, not null
+     * @param player
      * @param position   the position that player have inserted, not null
-     * @param billboard  the reference to the gameboard, not null
      */
     @Override
-    public void build(Worker worker, Position position, Billboard billboard) {
+    public void build(Player player, Position position) {
         if (!hasMoved) {
-            super.build(worker, position, billboard);
+            super.build(player, position);
             hasBuiltBefore = true;
         }
-        else super.build(worker,position,billboard);
+        else super.build(player, position);
     }
 
     /**
@@ -50,12 +48,11 @@ public class PrometheusDecorator extends CommandsDecorator {
      * <p>
      * If the player builds before moving, he can't see higher level spaces.
      *
-     * @param worker     the player's selected worker, not null
-     * @param billboard  the reference to the gameboard, not null
+     * @param player     the player's selected worker, not null
      * @return           the spaces which are available
      */
     @Override
-    public List<Position> getAvailableCells(Worker worker, Billboard billboard) {
+    public List<Position> getAvailableCells(Player player) {
         // switch(PlayerState):
         // case MOVE:
         // se costruisco prima, non posso salire di livello --> check hasBuiltBefore

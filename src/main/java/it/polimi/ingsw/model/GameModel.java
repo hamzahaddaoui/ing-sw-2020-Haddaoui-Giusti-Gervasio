@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class GameModel extends Observable {
     private static Observer<Message> observer;
-    private static NavigableMap<Integer, Match> activeMatches = new TreeMap<>();
+    private static NavigableMap<Integer, Match> activeMatches = new TreeMap<>(); //id match, match
 
     /**
      * Checks if there is an instance of match, waiting to start
@@ -58,9 +58,8 @@ public class GameModel extends Observable {
      * @return a boolean value which indicates if the number of players is reached
      */
     public static boolean addPlayer(Integer playerID, String nickname){
-        Player player = new Player(playerID, nickname);
         Match match = activeMatches.get(activeMatches.lastKey());
-        match.addPlayer(player);
+        match.addPlayer(new Player(playerID, nickname, match));
         return match.isNumReached();
     }
 
@@ -142,7 +141,7 @@ public class GameModel extends Observable {
         Match match = activeMatches.get(matchID);
         List<Player> player = match.getPlayers().stream().filter(player1 -> player1.getID()==playerID).collect(Collectors.toList());
         if (player.size()==1)
-            return player.get(0).Commands().getAvailableCells(match.getCurrentPlayer().getCurrentWorker(), match.getBillboardID());
+            return player.get(0).Commands().getAvailableCells(match.getCurrentPlayer().getCurrentWorker());
         else
             return null; //errore!
     }

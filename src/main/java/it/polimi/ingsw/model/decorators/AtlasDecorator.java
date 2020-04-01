@@ -20,27 +20,23 @@ public class AtlasDecorator extends CommandsDecorator {
     /**
      * method that allows the stardard placing movement
      * also if the selected position is free
-     *
-     * @param worker  is the player's selected worker
-     * @param position  is the position that player have inserted
-     * @param billboard  is reference to the gameboard
+     *  @param position  is the position that player have inserted
+     * @param player
      */
     @Override
-    public void placeWorker(Worker worker, Position position, Billboard billboard) {
-        super.placeWorker(worker,position,billboard);
+    public void placeWorker(Position position, Player player) {
+        super.placeWorker(position, player);
     }
 
     /**
      * method that allows the stardard player movement
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
-     *
-     * @param worker  is the player's selected worker
-     * @param position  is the position that player have inserted
-     * @param billboard  is reference to the gameboard
+     *  @param position  is the position that player have inserted
+     * @param player
      */
     @Override
-    public void moveWorker(Worker worker, Position position, Billboard billboard) {
+    public void moveWorker(Position position, Player player) {
         //super.moveWorker(worker,position,billboard);
     }
 
@@ -48,12 +44,11 @@ public class AtlasDecorator extends CommandsDecorator {
      * method that allows the special building block action
      * the worker may build a dome at any level
      *
-     * @param worker  is the player's selected worker
+     * @param player
      * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
      */
     @Override
-    public void build(Worker worker, Position position, Billboard billboard) {
+    public void build(Player player, Position position) {
         //super.build(worker,position,billboard);
     }
 

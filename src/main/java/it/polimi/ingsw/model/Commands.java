@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface Commands {
 
-    public void placeWorker(Worker worker, Position position, Billboard billboard);
+    public void placeWorker(Position position, Player player);
 
-    public void moveWorker(Worker worker, Position position, Billboard billboard);
+    public void moveWorker(Position position, Player player);
 
-    public void build(Worker worker, Position position, Billboard billboard);
+    public void build(Player player, Position position);
 
-    public List<Position> getAvailableCells(Worker worker, Billboard billboard);
+    public List<Position> getAvailableCells(Player player);
 
 
 }

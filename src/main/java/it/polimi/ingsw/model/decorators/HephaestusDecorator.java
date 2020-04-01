@@ -17,13 +17,12 @@ public class HephaestusDecorator extends CommandsDecorator {
      * <p>
      * {@link Billboard#getTowerHeight(Position)}
      *
-     * @param worker     the player's selected worker, not null
+     * @param player
      * @param position   the position that player have inserted, not null
-     * @param billboard  the reference to the gameboard, not null
      */
     @Override
-    public void build(Worker worker, Position position, Billboard billboard) {
-        super.build(worker, position, billboard);
+    public void build(Player player, Position position) {
+        super.build(player, position);
         if (billboard.getTowerHeight(position) < 3) {
             //scelta opzionale seconda costruzione
         }

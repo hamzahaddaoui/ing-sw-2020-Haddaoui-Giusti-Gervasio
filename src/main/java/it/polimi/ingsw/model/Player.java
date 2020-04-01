@@ -7,14 +7,16 @@ import java.util.ArrayList;
 public class Player{
     private int ID; //id connessione del giocatore
     private String nickname;
+    private Match match;
     private ArrayList<Worker> workers = new ArrayList<>(2);
     private Worker currentWorker;
     private Commands commands;
-    private PlayerState state;
+    private TurnState state;
 
-    protected Player(int ID,String nickname) {
+    protected Player(int ID,String nickname, Match match) {
         this.ID = ID;
         this.nickname = nickname;
+        this.match = match;
     }
 
     public String getNickname() {
@@ -23,6 +25,10 @@ public class Player{
 
     public int getID() {
         return ID;
+    }
+
+    public Match getMatch() {
+        return match;
     }
 
     public void setWorkers(Position position){
@@ -49,11 +55,11 @@ public class Player{
         return commands;
     }
 
-    public PlayerState getState() {
+    public TurnState getState() {
         return state;
     }
 
-    public void setState(PlayerState state) {
+    public void setState(TurnState state) {
         this.state = state;
     }
 

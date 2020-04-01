@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-public enum PlayerState {
+public enum TurnState {
     SELECTING_CARD,
     PLACING,
     GENERIC_BUILD,
