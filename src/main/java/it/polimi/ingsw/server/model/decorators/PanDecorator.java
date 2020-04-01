@@ -1,9 +1,6 @@
-package it.polimi.ingsw.model.decorators;
+package it.polimi.ingsw.server.model.decorators;
 
-import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.utilities.Position;
-
-import java.util.List;
+import it.polimi.ingsw.server.model.*;
 
 public class PanDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Pan;

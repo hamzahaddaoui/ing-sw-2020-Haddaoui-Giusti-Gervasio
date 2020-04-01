@@ -1,34 +1,41 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server.model.decorators;
 
-
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
 
-public class CommandsDecorator implements Commands {
-    static final GodCards card = null;
-    protected Commands commands;
+public class ArtemisDecorator extends CommandsDecorator {
+    static final GodCards card = GodCards.Artemis;
+
+    /**
+     * decorate the object Command with Artemis's special power
+     *
+     * @param commands  represent the player behaviour
+     */
+    public ArtemisDecorator(Commands commands){
+        this.commands=commands;
+    }
 
     /**
      * method that allows the stardard placing movement
+     * also if the selected position is free
      *  @param position  is the position that player have inserted
      * @param player
      */
     @Override
     public void placeWorker(Position position, Player player) {
-        commands.placeWorker(position, player);
+        super.placeWorker(position, player);
     }
 
     /**
-     * method that allows the stardard player movement
-     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
-     * if the position that is selected is free
+     * worker may move one additional time but not back to the initial space
      *  @param position  is the position that player have inserted
      * @param player
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        commands.moveWorker(position, player);
+        super.moveWorker(position, player);
     }
 
     /**
@@ -39,19 +46,20 @@ public class CommandsDecorator implements Commands {
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build(Position position, Player player) {
-        commands.build(position, player);
+    public void build(Player player, Position position) {
+        super.build(player, position);
     }
 
     /**
      * method that allows the standard building dome action
      * the player can build a dome on an unoccupied space neighbouring the worker
      *
-     * @param player
-     * @param position
+     * @param worker  is the player's selected worker
+     * @param position  is the position that player have inserted
+     * @param billboard  is the reference to the gameboard
      */
-
-    public void buildDome(Player player, Position position) {
+    @Override
+    public void buildDome(Worker worker, Position position, Billboard billboard) {
 
     }
 
@@ -63,9 +71,11 @@ public class CommandsDecorator implements Commands {
      */
     @Override
     public List<Position> getAvailableCells(Player player) {
-        commands.getAvailableCells(player);
+        // switch(PlayerState):
+        // case MOVE:
+
+
         return null;
     }
-
 
 }

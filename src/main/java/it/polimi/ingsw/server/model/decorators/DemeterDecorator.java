@@ -1,19 +1,19 @@
-package it.polimi.ingsw.model.decorators;
+package it.polimi.ingsw.server.model.decorators;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
 
-public class ArtemisDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Artemis;
+public class DemeterDecorator extends CommandsDecorator {
+    static final GodCards card = GodCards.Demeter;
 
     /**
-     * decorate the object Command with Artemis's special power
+     * decorate the object Command with Demeter's special power
      *
-     * @param commands  represent the player behaviour
+     * @param commands represent the player behaviour
      */
-    public ArtemisDecorator(Commands commands){
+    public DemeterDecorator(Commands commands){
         this.commands=commands;
     }
 
@@ -29,7 +29,9 @@ public class ArtemisDecorator extends CommandsDecorator {
     }
 
     /**
-     * worker may move one additional time but not back to the initial space
+     * method that allows the stardard player movement
+     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
+     * if the position that is selected is free
      *  @param position  is the position that player have inserted
      * @param player
      */
@@ -39,8 +41,8 @@ public class ArtemisDecorator extends CommandsDecorator {
     }
 
     /**
-     * method that allows the standard building block action
-     * the player can build a block on an unoccupied space neighbouring the worker
+     * method that allows the special building block action
+     * the worker may build one additional time but not on the same space
      *
      * @param player
      * @param position  is the position that player have inserted
@@ -77,5 +79,4 @@ public class ArtemisDecorator extends CommandsDecorator {
 
         return null;
     }
-
 }

@@ -1,19 +1,19 @@
-package it.polimi.ingsw.model.decorators;
+package it.polimi.ingsw.server.model.decorators;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
 
-public class DemeterDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Demeter;
+public class AthenaDecorator extends CommandsDecorator {
+    static final GodCards card = GodCards.Athena;
 
     /**
-     * decorate the object Command with Demeter's special power
+     * decorate the object Command with Athena's special power
      *
-     * @param commands represent the player behaviour
+     * @param commands  represent the player behaviour
      */
-    public DemeterDecorator(Commands commands){
+    public AthenaDecorator(Commands commands){
         this.commands=commands;
     }
 
@@ -32,8 +32,10 @@ public class DemeterDecorator extends CommandsDecorator {
      * method that allows the stardard player movement
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
-     *  @param position  is the position that player have inserted
+     *
+     * @param position  is the position that player have inserted
      * @param player
+     * @throws hasMovedUP()  if the movement of the worker is from down to up
      */
     @Override
     public void moveWorker(Position position, Player player) {
@@ -41,8 +43,8 @@ public class DemeterDecorator extends CommandsDecorator {
     }
 
     /**
-     * method that allows the special building block action
-     * the worker may build one additional time but not on the same space
+     * method that allows the standard building block action
+     * the player can build a block on an unoccupied space neighbouring the worker
      *
      * @param player
      * @param position  is the position that player have inserted
@@ -68,11 +70,11 @@ public class DemeterDecorator extends CommandsDecorator {
     /**
      * return the spaces that are available after a check on billboard
      *
-     *
-     * @param player@return
+     * @param billboard  is the reference to the gameboard
+     * @return
      */
     @Override
-    public List<Position> getAvailableCells(Player player) {
+    public List<Position> getAvailableCells(Billboard billboard) {
         // switch(PlayerState):
         // case MOVE:
 

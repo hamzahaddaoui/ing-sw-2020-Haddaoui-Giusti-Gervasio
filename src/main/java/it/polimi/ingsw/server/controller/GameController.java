@@ -1,7 +1,6 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.server.controller;
 
-import it.polimi.ingsw.model.GameModel;
-import it.polimi.ingsw.server.SocketClientConnection;
+import it.polimi.ingsw.server.model.GameModel;
 import it.polimi.ingsw.utilities.Message;
 import it.polimi.ingsw.utilities.Observer;
 
