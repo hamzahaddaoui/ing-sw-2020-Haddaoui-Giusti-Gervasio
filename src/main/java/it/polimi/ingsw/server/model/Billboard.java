@@ -20,12 +20,12 @@ public class Billboard {
     false if in the space there isn't the dome
     true if in the space there is the dome
      */
-    private  String[][] playerColor;
+    private  Color[][] playerColor;
 
     public Billboard() {
         this.towerHeight = new int[ROWS][COLOUMNS];
         this.domePosition = new boolean[ROWS][COLOUMNS];
-        this.playerColor = new String[ROWS][COLOUMNS];
+        this.playerColor = new Color[ROWS][COLOUMNS];
     }
 
 
@@ -53,11 +53,11 @@ public class Billboard {
         domePosition[position.getX()][position.getY()] = true;
     }
 
-    public String[][] getPlayerColor() {
+    public Color[][] getPlayerColor() {
         return playerColor;
     }
 
-    public String getPlayerColor(Position position) {
+    public Color getPlayerColor(Position position) {
         if((position.getX()>=0)&&(position.getY()>=0))
             return playerColor[position.getX()][position.getY()];
         else throw new IllegalArgumentException("Error");
