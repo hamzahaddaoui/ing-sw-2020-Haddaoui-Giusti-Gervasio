@@ -58,29 +58,29 @@ public class Position {
         return resultPositions;
     }
 
-    public CardinalDirection checkMutualPosition(Position posA, Position posB){
-        if (!posA.neighbourPositions().contains(posB))
+    public CardinalDirection checkMutualPosition(Position position){
+        if (!this.neighbourPositions().contains(position))
             return CardinalDirection.NONE;
-        if (posA.getX()==posB.getX()){
-            if(posA.getX()>posB.getX())
+        if (this.getX()==position.getX()){
+            if(this.getX()>position.getX())
                 return CardinalDirection.NORTH;
             else
                 return CardinalDirection.SOUTH;
         }
-        if (posA.getY()==posB.getY()){
-            if(posA.getY()>posB.getY())
+        if (this.getY()==position.getY()){
+            if(this.getY()>position.getY())
                 return CardinalDirection.EAST;
             else
                 return CardinalDirection.WEST;
         }
-        if (posA.getX() > posB.getY()){
-            if (posA.getY() > posB.getY())
+        if (this.getX() > position.getY()){
+            if (this.getY() > position.getY())
                 return CardinalDirection.NORTHEAST;
             else
                 return CardinalDirection.SOUTHEAST;
         }
-        if (posA.getX() < posB.getY()){
-            if (posA.getY() > posB.getY())
+        if (this.getX() < position.getY()){
+            if (this.getY() > position.getY())
                 return CardinalDirection.NORTHWEST;
             else
                 return CardinalDirection.SOUTHWEST;
