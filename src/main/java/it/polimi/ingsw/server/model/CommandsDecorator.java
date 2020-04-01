@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.utilities.Position;
@@ -28,7 +28,7 @@ public class CommandsDecorator implements Commands {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        commands.moveWorker(position, player);
+        commands.moveWorker(position, ,billboard);
     }
 
     /**
@@ -39,8 +39,8 @@ public class CommandsDecorator implements Commands {
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build(Position position, Player player) {
-        commands.build(position, player);
+    public void build(Player player, Position position) {
+        commands.build(, worker,position);
     }
 
     /**
@@ -49,8 +49,9 @@ public class CommandsDecorator implements Commands {
      *
      * @param worker  is the player's selected worker
      * @param position  is the position that player have inserted
+     * @param billboard  is the reference to the gameboard
      */
-    public void buildDome(Worker worker, Position position) {
+    public void buildDome(Worker worker, Position position, Billboard billboard) {
 
     }
 

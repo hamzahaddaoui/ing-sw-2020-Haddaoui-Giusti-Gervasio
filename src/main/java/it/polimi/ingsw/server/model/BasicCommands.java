@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.utilities.Position;
 
@@ -7,12 +7,14 @@ import java.util.List;
 public class BasicCommands implements Commands {
     /**
      * method that allows the stardard placing movement
-     *  @param position   the position that player have inserted, not null
-     * @param player
+     *
+     * @param position  the position that player have inserted, not null
+     * @param player  that does the placing action
      */
     @Override
     public void placeWorker(Position position, Player player) {
-        if(player.getMatch().getBillboard().getPlayerColor(position)==null){
+        Billboard billboard=player.getMatch().getBillboard();
+        if(billboard.getPlayerColor(position)==null){
             player.getCurrentWorker().setPosition(position);
             player.getMatch().getBillboard().setPlayerColor(position, player.getCurrentWorker());
         }
@@ -41,7 +43,7 @@ public class BasicCommands implements Commands {
      * @param position   the position that player have inserted, not null
      */
     @Override
-    public void build(Position position, Player player) {
+    public void build(Player player, Position position) {
 
     }
 
@@ -50,12 +52,12 @@ public class BasicCommands implements Commands {
      * method that allows the standard building dome action
      * the player can build a dome on an unoccupied space neighbouring the worker
      *
-     *
+     * @param worker     the player's selected worker, not null
      * @param position   the position that player have inserted, not null
-     *
+     * @param billboard  the reference to the gameboard, not null
      */
 
-    public void buildDome(Position position, Player player) {
+    public void buildDome(Worker worker, Position position, Billboard billboard) {
 
     }
 
