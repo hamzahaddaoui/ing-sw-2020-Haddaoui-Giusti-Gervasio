@@ -5,7 +5,7 @@ import it.polimi.ingsw.utilities.Position;
 public class Worker{
 
     private Position position;
-    private String color;
+    private Color color;
     private boolean movedUp;
 
     public Worker(Position position){
@@ -27,7 +27,7 @@ public class Worker{
     }
 
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 }

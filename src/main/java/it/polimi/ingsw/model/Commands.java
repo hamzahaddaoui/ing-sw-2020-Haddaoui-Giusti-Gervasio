@@ -10,7 +10,7 @@ public interface Commands {
 
     public void moveWorker(Position position, Player player);
 
-    public void build(Player player, Position position);
+    public void build(Position position, Player player);
 
     public List<Position> getAvailableCells(Player player);
 
