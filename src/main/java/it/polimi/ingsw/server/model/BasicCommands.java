@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.utilities.Position;
 
@@ -43,7 +43,7 @@ public class BasicCommands implements Commands {
      * @param position   the position that player have inserted, not null
      */
     @Override
-    public void build(Player player, Position position) {
+    public void build(Position position, Player player) {
 
     }
 

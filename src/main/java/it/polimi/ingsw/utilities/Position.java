@@ -32,6 +32,17 @@ public class Position {
         return this.y;
     }
 
+    public List<Position> neighbourPositions (){
+        List<Position> resultPositions = new ArrayList<>();
+        Position current = new Position(0,0);
+        for (current.setX(this.x-1); x <= this.x+1; x++){
+            for (current.setY(this.y-1); y <= this.y+1; y++){
+                resultPositions.add(current);
+            }
+        }
+        return resultPositions;
+    }
+
     public List<Position> neighbourPositions (Position upperLeftConstraint, Position lowerRightConstraint){
         List<Position> resultPositions = new ArrayList<>();
         Position current = new Position(0,0);
@@ -45,6 +56,36 @@ public class Position {
         }
 
         return resultPositions;
+    }
+
+    public CardinalDirection checkMutualPosition(Position posA, Position posB){
+        if (!posA.neighbourPositions().contains(posB))
+            return CardinalDirection.NONE;
+        if (posA.getX()==posB.getX()){
+            if(posA.getX()>posB.getX())
+                return CardinalDirection.NORTH;
+            else
+                return CardinalDirection.SOUTH;
+        }
+        if (posA.getY()==posB.getY()){
+            if(posA.getY()>posB.getY())
+                return CardinalDirection.EAST;
+            else
+                return CardinalDirection.WEST;
+        }
+        if (posA.getX() > posB.getY()){
+            if (posA.getY() > posB.getY())
+                return CardinalDirection.NORTHEAST;
+            else
+                return CardinalDirection.SOUTHEAST;
+        }
+        if (posA.getX() > posB.getY()){
+            if (posA.getY() > posB.getY())
+                return CardinalDirection.NORTHWEST;
+            else
+                return CardinalDirection.SOUTHWEST;
+        }
+        return CardinalDirection.NONE;
     }
 }
 
