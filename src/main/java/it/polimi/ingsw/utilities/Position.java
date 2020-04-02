@@ -102,7 +102,6 @@ public class Position {
         return CardinalDirection.valueOf(Math.toDegrees(Math.atan2(offset.getY(),offset.getX())));
     }
 
-
     public boolean Partialequals(Position position) {
         if (this == position) return true;
         if (position == null || getClass() != position.getClass()) return false;
