@@ -56,9 +56,8 @@ public class BasicCommands implements Commands {
     }
 
 
-    public List<Position> getAvailableCells(Player player) {
-        Position workerPosition=player.getCurrentWorker().getPosition();
-        List<Position> neighboringCells=workerPosition.neighbourPositions(workerPosition,workerPosition);//=metodo che restituisce una lista di posizioni vicine ad una data posizione
+    public List<Position> getAvailableMovement(Player player) {
+        List<Position> neighboringCells=player.getCurrentWorker().getPosition().neighbourPositions();//=metodo che restituisce una lista di posizioni vicine ad una data posizione
         Billboard billboard = player.getMatch().getBillboard();
         int i=0;
         while( i < neighboringCells.size()){
@@ -94,8 +93,19 @@ public class BasicCommands implements Commands {
      * @return  the list of spaces that are available after a check on billboard
      */
     //@Override
-    public List<Position> getAvailableMovement(Player player) {
-        List<Position> neighboringCells=null;//=metodo che restituisce una lista di posizioni vicine ad una data posizione
+    public List<Position> getAvailableCells(Player player) {
+        TurnState playerState=player.getState();
+        if(playerState==TurnState.BUILD){
+            return getAvailableBuilding(player);
+        }
+        else if(playerState==TurnState.MOVE){
+            return getAvailableMovement(player);
+        }
+
+    }
+
+    public List<Position> getAvailableBuilding(Player player) {
+        List<Position> neighboringCells=player.getCurrentWorker().getPosition().neighbourPositions();//=metodo che restituisce una lista di posizioni vicine ad una data posizione
         Billboard billboard = player.getMatch().getBillboard();
         int i=0;
         while( i < neighboringCells.size()){
@@ -115,14 +125,4 @@ public class BasicCommands implements Commands {
         return;
     }
 
-    /**
-     * method that return a list of neighboring cells for the method getAvailableCells
-     *
-     * @param worker  the current worker
-     * @return  the list of neighboring cells
-     */
-    public List<Position> getNeighboringCells(Worker worker){
-        List<Position> neighboringCells = null;
-        return neighboringCells;
-    }
 }
