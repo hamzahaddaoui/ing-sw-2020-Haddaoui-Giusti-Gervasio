@@ -1,9 +1,6 @@
 package it.polimi.ingsw.utilities;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Position {
 
@@ -71,7 +68,8 @@ public class Position {
 
         for (current.setX(start.getX()); x <= end.getX(); x++){
             for (current.setY(start.getY()); y <= end.getY(); y++){
-                resultPositions.add(current);
+                if (!current.equals(this))
+                    resultPositions.add(current);
             }
         }
 
@@ -102,6 +100,22 @@ public class Position {
         Position offset = new Position(position.getX()-this.getX(), position.getY()-this.getY());
 
         return CardinalDirection.valueOf(Math.toDegrees(Math.atan2(offset.getY(),offset.getX())));
+    }
+
+
+    public boolean Partialequals(Position position) {
+        if (this == position) return true;
+        if (position == null || getClass() != position.getClass()) return false;
+        return x == position.x &&
+                y == position.y;
+    }
+
+    public boolean equals(Position position){
+        if (this == position) return true;
+        if (position == null || getClass() != position.getClass()) return false;
+        return x == position.x &&
+                y == position.y &&
+                z == position.z;
     }
 }
 

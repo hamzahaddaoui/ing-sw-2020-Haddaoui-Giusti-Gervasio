@@ -143,10 +143,9 @@ public class BasicCommands implements Commands {
                     .neighbourPositions()
                     .stream()
                     .filter(position -> billboard.getPlayer(position) == null)
-                    .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
-                    .filter(position ->
-                            player.getMatch().isMoveUpActive()
-                            && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
+                    .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
+                            || (player.getMatch().isMoveUpActive()
+                            && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
             return availableMovements;
