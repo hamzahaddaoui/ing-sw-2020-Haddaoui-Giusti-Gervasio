@@ -91,7 +91,7 @@ public class CommandsDecorator implements Commands {
     }
 
     @Override
-    public void reset() {
-        commands.reset();
+    public void reset(Player player) {
+        commands.reset(player);
     }
 }

@@ -25,6 +25,6 @@ public interface Commands {
 
     public void specialFunctionSetUnset();
 
-    public void reset();
+    public void reset(Player player);
 
 }
