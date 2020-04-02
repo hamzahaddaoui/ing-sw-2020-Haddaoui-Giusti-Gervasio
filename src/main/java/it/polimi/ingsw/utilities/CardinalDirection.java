@@ -11,8 +11,7 @@ public enum CardinalDirection {
     NORTHEAST(45.0),
     SOUTHEAST(-45.0),
     NORTHWEST(135.0),
-    SOUTHWEST(-135.0),
-    NONE(0.0);
+    SOUTHWEST(-135.0);
 
     double angle;
     private static Map<Double, CardinalDirection> map = new HashMap<>();

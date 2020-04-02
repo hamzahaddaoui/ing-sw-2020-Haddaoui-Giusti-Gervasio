@@ -3,11 +3,19 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
-import java.util.List;
-import java.util.Set;
+import javax.swing.*;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class MinotaurDecorator extends CommandsDecorator {
+
     static final GodCards card = GodCards.Minotaur;
+
+    protected Set<Position> availablePlacing = new HashSet<>();
+    protected Set<Position> availableMovements = new HashSet<>();
+    protected Set<Position> availableBuildings = new HashSet<>();
+
     public MinotaurDecorator(Commands commands){
         this.commands=commands;
     }
@@ -15,15 +23,40 @@ public class MinotaurDecorator extends CommandsDecorator {
     /**
      * Method that allows the specific player movement of Minotaur.
      * <p>
-     * He can move in an opponent's worker space, only if the next box in the same direction is free.
-     * Then, the opponent's worker is forced to move there.
+     * If in the selected position there's no player, it does the basic moveWorker function.
+     * Else, we store the next position, set the opponent's worker there and then i reset him from the position I
+     * chose so i can set my worker there.
      * <p>
-     *  @param position    the position that player have inserted, not null
-     * @param player
+     *     
+     * @param position    the position that player have inserted, not null
+     * @param player      the player who is making the move, not null
      */
+
     @Override
     public void moveWorker(Position position, Player player) {
-        super.moveWorker(position, player);
+
+        Billboard billboard = player.getMatch().getBillboard();
+        Worker worker = player.getCurrentWorker();
+
+        if (!availableMovements.contains(position))
+            return;
+
+        if (billboard.getPlayer(position)==null)
+            super.moveWorker(position,player);
+        else {
+            Position nextPosition = setNextPosition(position, worker.getPosition());
+
+            nextPosition.setZ(billboard.getTowerHeight(nextPosition));
+            billboard.setPlayer(nextPosition,findOpponentWorker(position, player));
+            findOpponentWorker(position,player).setPosition(nextPosition);
+            billboard.resetPlayer(position);
+            position.setZ(billboard.getTowerHeight(position));
+            billboard.resetPlayer(worker.getPosition());
+            worker.setPosition(position);
+            billboard.setPlayer(position, worker);
+
+            player.setState(TurnState.BUILD);
+        }
     }
 
     /**
@@ -34,25 +67,57 @@ public class MinotaurDecorator extends CommandsDecorator {
      *  //metodi della Billboard da definire
      *  {@link #checkNextPosition(Position, Position, Billboard)}
      *
-     *
-     * @param player@return List<Position>  the spaces that are available
+     * @param player           the player who make the move, not null
+     * @return List<Position>  the spaces that are available
      */
     @Override
     public Set<Position> getAvailableCells(Player player) {
-        // switch(PlayerState):
-        // case MOVE:
-        // check che sulla posizione del worker, se non è sul bordo -> checkNextPosition(opponentPosition,worker.getPosition(),billboard)
-        // se torna true allora considero anche quella posizione, altrimenti no
-        // return
-
-        return null;
+        try{
+            switch (player.getState()){
+                case PLACING:
+                    super.computeAvailablePlacing(player);
+                    return availablePlacing;
+                case MOVE:
+                    computeAvailableMovements(player);
+                    return availableMovements;
+                case BUILD:
+                    super.computeAvailableBuildings(player);
+                    return availableBuildings;
+                default:
+                    return null;
+            }
+        } catch(NullPointerException ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
     }
+
+    //check 1 : casella libera da player oppure occupato da un player avversario la cui casella successiva
+    // è libera
+    @Override
+    public Set<Position> computeAvailableMovements(Player player) {
+        Billboard billboard = player.getMatch().getBillboard();
+        Position currentPosition = player.getCurrentWorker().getPosition();
+
+        availableMovements = currentPosition
+                .neighbourPositions()
+                .stream()
+                .filter(position -> billboard.getPlayer(position)==null ||
+                        (billboard.getPlayer(position) != billboard.getPlayer(currentPosition) &&
+                        checkNextPosition(position,player)))
+                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
+                        (player.getMatch().isMoveUpActive() &&
+                                billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
+                .filter(position -> billboard.getDome(position) == false)
+                .collect(Collectors.toSet());
+        return availableMovements;
+    }
+
 
     /**
      * Check the next position of the opponent's worker.
      * <p>
      * {@link Billboard#getDome(Position)}
-     * {@link Billboard#getPlayer(Position)}
+     * {@link Billboard#getPlayerColor(Position)}
      * {@link Position#getX()}
      * {@link Position#getY()}
      * {@link Position#set(int, int)}
@@ -64,29 +129,52 @@ public class MinotaurDecorator extends CommandsDecorator {
      * @throws IllegalArgumentException if the opponentPosition and myPosition are the same
      * @throws IllegalArgumentException if the opponentPosition is a perimeter space
      */
-    public boolean checkNextPosition(Position opponentPosition, Position myPosition, Billboard billboard) {
-        Position nextPosition = null;
+    private boolean checkNextPosition(Position opponentPosition, Player player) throws IllegalArgumentException, NullPointerException {
 
-        if (myPosition.getX()==opponentPosition.getX()) {
-            if (opponentPosition.getY()>myPosition.getX())
-                nextPosition.set(myPosition.getX(),opponentPosition.getY()+1);
-            else nextPosition.set(myPosition.getX(),opponentPosition.getY()-1);
-        }
-        else if (myPosition.getY()==opponentPosition.getY()) {
-            if (opponentPosition.getX()>myPosition.getX())
-                nextPosition.set(opponentPosition.getX()+1,myPosition.getY());
-            else nextPosition.set(opponentPosition.getX()-1,myPosition.getY());
-        }
-        else if (myPosition.getX()==opponentPosition.getX()+1 && myPosition.getY()==opponentPosition.getY()+1)
-            nextPosition.set(opponentPosition.getX()-1,opponentPosition.getY()-1);
-        else if (myPosition.getX()==opponentPosition.getX()-1 && myPosition.getY()==opponentPosition.getY()+1)
-            nextPosition.set(opponentPosition.getX()+1,opponentPosition.getY()-1);
-        else if (myPosition.getX()==opponentPosition.getX()+1 && myPosition.getY()==opponentPosition.getY()-1)
-            nextPosition.set(opponentPosition.getX()-1,opponentPosition.getY()+1);
-        else if (myPosition.getX()==opponentPosition.getX()-1 && myPosition.getY()==opponentPosition.getY()-1)
-            nextPosition.set(opponentPosition.getX()+1,opponentPosition.getY()+1);
+        try {
+            Billboard billboard = player.getMatch().getBillboard();
+            Position myPosition = player.getCurrentWorker().getPosition();
 
-        if(billboard.getDome(nextPosition)==false && billboard.getPlayer(nextPosition)==null) return true;
-        else return false;
+            Position nextPosition = setNextPosition(opponentPosition, myPosition);
+
+            if (nextPosition!=null &&
+                    !billboard.getDome(nextPosition) &&
+                    billboard.getPlayer(nextPosition) == null) {return true;}
+            else return false;
+
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Null player or position!");
+        }
     }
+
+    //check per la posizione successiva rispetto a quella del worker avversario
+    private Position setNextPosition(Position opponentPosition, Position myPosition) throws IllegalArgumentException,NullPointerException {
+
+        try {
+            if (opponentPosition==myPosition) throw new IllegalArgumentException("Same position!");
+
+            for (Position position : opponentPosition.neighbourPositions()) {
+                if (opponentPosition.checkMutualPosition(position) == myPosition.checkMutualPosition(opponentPosition))
+                    return position;
+            }
+            return null;
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Null positions.");
+        }
+    }
+
+    //data la posizione in cui finisci e il player con cui fai la mossa, ti dice qual è il worker avversario presente, in modo da cambiargli poi posizione
+    private Worker findOpponentWorker (Position position, Player player) {
+        Billboard billboard = player.getMatch().getBillboard();
+
+        for (Player opponent : player.getMatch().getPlayers()) {
+            if (opponent.getCurrentWorker().getColor() == billboard.getPlayer(position)) {
+                for(Worker opponentWorker : opponent.getWorkers())
+                    if (opponentWorker.getPosition()==position)
+                        return opponentWorker;
+            }
+        }
+        return null;
+    }
+
 }
