@@ -159,7 +159,7 @@ public class GameModel extends Observable {
 
     public static void setUnsetSpecialFunction(Integer matchID, Integer playerID, int worker){
         Player player =  translatePlayerID(translateMatchID(matchID), playerID);
-        player.Commands().specialFunctionSetUnset();
+        //player.specialFunctionSetUnset();
     }
 
     public static void playerMoveBuild(Integer matchID, Integer playerID, Position position){
