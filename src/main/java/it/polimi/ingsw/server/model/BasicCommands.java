@@ -13,13 +13,16 @@ public class BasicCommands implements Commands {
      */
     @Override
     public void placeWorker(Position position, Player player) {
-        Billboard billboard=player.getMatch().getBillboard();
-        if(billboard.getPlayerColor(position)==null){
-            player.getCurrentWorker().setPosition(position);
-            player.getMatch().getBillboard().setPlayerColor(position, player.getCurrentWorker());
+        try{
+            Billboard billboard=player.getMatch().getBillboard();
+            if(billboard.getPlayerColor(position)==null){
+                player.getCurrentWorker().setPosition(position);
+                player.getMatch().getBillboard().setPlayerColor(position, player.getCurrentWorker());
+            }
+            else System.out.println("The space is full. Chose another space. /n");
         }
-        else{
-            throw new IllegalArgumentException("The space is full. Chose another space. /n");
+        catch(Exception ex){
+            throw new NullPointerException();
         }
     }
 
@@ -44,9 +47,31 @@ public class BasicCommands implements Commands {
      */
     @Override
     public void build(Position position, Player player) {
+        Worker worker=player.getCurrentWorker();
+        //List<Position> availableBuilding=worker.getPosition().;
+        //if position.altezza >=3 costruisci cupola
+        // else costruisci blocco
+
 
     }
 
+
+    public List<Position> getAvailableCells(Player player) {
+        Position workerPosition=player.getCurrentWorker().getPosition();
+        List<Position> neighboringCells=workerPosition.neighbourPositions(workerPosition,workerPosition);//=metodo che restituisce una lista di posizioni vicine ad una data posizione
+        Billboard billboard = player.getMatch().getBillboard();
+        int i=0;
+        while( i < neighboringCells.size()){
+            if(     !(billboard.getPlayerColor(neighboringCells.get(i))==null
+                    && ((billboard.getTowerHeight(neighboringCells.get(i))==billboard.getTowerHeight(player.getCurrentWorker().getPosition())+1)
+                    || (billboard.getTowerHeight(neighboringCells.get(i))<=billboard.getTowerHeight(player.getCurrentWorker().getPosition())))
+                    && (billboard.getDome(neighboringCells.get(i))==false))) {
+                neighboringCells.remove(i);
+                i--;}
+            i++;
+        }
+        return neighboringCells;
+    }
 
     /**
      * method that allows the standard building dome action
@@ -68,8 +93,8 @@ public class BasicCommands implements Commands {
      * @param player  the current worker, not null
      * @return  the list of spaces that are available after a check on billboard
      */
-    @Override
-    public List<Position> getAvailableCells(Player player) {
+    //@Override
+    public List<Position> getAvailableMovement(Player player) {
         List<Position> neighboringCells=null;//=metodo che restituisce una lista di posizioni vicine ad una data posizione
         Billboard billboard = player.getMatch().getBillboard();
         int i=0;
