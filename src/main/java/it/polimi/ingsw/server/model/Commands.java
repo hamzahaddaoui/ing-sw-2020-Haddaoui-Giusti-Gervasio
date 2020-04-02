@@ -17,11 +17,11 @@ public interface Commands {
 
     public Set<Position> getAvailableCells(Player player);
 
-    public Set<Position> ComputeAvailablePlacing(Player player);
+    public Set<Position> computeAvailablePlacing(Player player);
 
-    public Set<Position> ComputeAvailableMovements(Player player);
+    public Set<Position> computeAvailableMovements(Player player);
 
-    public Set<Position> ComputeAvailableBuildings(Player player);
+    public Set<Position> computeAvailableBuildings(Player player);
 
     public void specialFunctionSetUnset();
 

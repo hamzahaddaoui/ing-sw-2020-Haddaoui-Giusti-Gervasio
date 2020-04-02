@@ -69,18 +69,18 @@ public class CommandsDecorator implements Commands {
     }
 
     @Override
-    public Set<Position> ComputeAvailablePlacing(Player player) {
-        return commands.ComputeAvailablePlacing(player);
+    public Set<Position> computeAvailablePlacing(Player player) {
+        return commands.computeAvailablePlacing(player);
     }
 
     @Override
-    public Set<Position> ComputeAvailableMovements(Player player) {
-        return commands.ComputeAvailableMovements(player);
+    public Set<Position> computeAvailableMovements(Player player) {
+        return commands.computeAvailableMovements(player);
     }
 
     @Override
-    public Set<Position> ComputeAvailableBuildings(Player player) {
-        return commands.ComputeAvailableBuildings(player);
+    public Set<Position> computeAvailableBuildings(Player player) {
+        return commands.computeAvailableBuildings(player);
     }
 
     /**

@@ -88,13 +88,13 @@ public class BasicCommands implements Commands {
         try{
             switch (player.getState()){
                 case PLACING:
-                    ComputeAvailablePlacing(player);
+                    computeAvailablePlacing(player);
                     return availablePlacing;
                 case MOVE:
-                    ComputeAvailableMovements(player);
+                    computeAvailableMovements(player);
                     return availableMovements;
                 case BUILD:
-                    ComputeAvailableBuildings(player);
+                    computeAvailableBuildings(player);
                     return availableBuildings;
                 default:
                     return null;
@@ -110,7 +110,7 @@ public class BasicCommands implements Commands {
      * @param player  is the current player
      * @return  the list of Position where the worker can move on
      */
-    public Set<Position> ComputeAvailablePlacing(Player player) {
+    public Set<Position> computeAvailablePlacing(Player player) {
         try{
             availablePlacing = player
                     .getCurrentWorker()
@@ -132,7 +132,7 @@ public class BasicCommands implements Commands {
      * @param player  is the current player
      * @return  the list of Position where the worker can move on
      */
-    public Set<Position> ComputeAvailableMovements(Player player) {
+    public Set<Position> computeAvailableMovements(Player player) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
             Position currentPosition=player.getCurrentWorker().getPosition();
@@ -163,7 +163,7 @@ public class BasicCommands implements Commands {
      * @param player  is the current player
      * @return  the list of Position where the worker can build on
      */
-    public Set<Position> ComputeAvailableBuildings(Player player) {
+    public Set<Position> computeAvailableBuildings(Player player) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
             availableBuildings = player

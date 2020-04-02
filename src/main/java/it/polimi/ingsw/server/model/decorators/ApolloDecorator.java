@@ -6,6 +6,7 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
@@ -48,7 +49,7 @@ public class ApolloDecorator extends CommandsDecorator {
     public void moveWorker(Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
-
+        Set<Position> availableMovements = computeAvailableMovements(player);
         if (!availableMovements.contains(position))
             return;
 
@@ -86,14 +87,11 @@ public class ApolloDecorator extends CommandsDecorator {
         try{
             switch (player.getState()){
                 case PLACING:
-                    ComputeAvailablePlacing(player);
-                    return availablePlacing;
+                    return computeAvailablePlacing(player);
                 case MOVE:
-                    ComputeAvailableMovement(player);
-                    return availableMovements;
+                    return computeAvailableMovements(player);;
                 case BUILD:
-                    ComputeAvailableBuilding(player);
-                    return availableBuilding;
+                    return computeAvailableBuildings(player);;
                 default:
                     return null;
             }
@@ -108,20 +106,8 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param player  is the current player
      * @return  the list of Position where the worker can move on
      */
-    public Set<Position> ComputeAvailablePlacing(Player player) {
-        try{
-            availablePlacing = player
-                    .getCurrentWorker()
-                    .getPosition()
-                    .neighbourPositions()
-                    .stream()
-                    .filter(position -> player.getMatch().getBillboard().getPlayer(position) == null)
-                    .collect(Collectors.toSet());
-        }
-        catch(Exception ex){
-            throw new NullPointerException("PLAYER IS NULL");
-        }
-        return availablePlacing;
+    public Set<Position> computeAvailablePlacing(Player player) {
+        return super.computeAvailablePlacing(player);
     }
 
     /**
@@ -161,22 +147,9 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param player  is the current player
      * @return  the list of Position where the worker can build on
      */
-    public Set<Position> ComputeAvailableBuilding(Player player) {
-        try{
-            Billboard billboard=player.getMatch().getBillboard();
-            availableBuilding = player
-                    .getCurrentWorker()
-                    .getPosition()
-                    .neighbourPositions()
-                    .stream()
-                    .filter(position -> billboard.getPlayer(position) == null)
-                    .filter(position -> billboard.getDome(position) == false)
-                    .collect(Collectors.toSet());
-            return availableBuilding;
-        }
-        catch(Exception ex){
-            throw new NullPointerException("PLAYER IS NULL");
-        }
+
+    public Set<Position> computeAvailableBuilding(Player player) {
+      super.computeAvailableBuildings(player);
     }
 
     /**
