@@ -167,6 +167,19 @@ public class MinotaurDecorator extends CommandsDecorator {
     private Worker findOpponentWorker (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
+        Worker worker = player
+                .getMatch()
+                .getPlayers()
+                .stream()
+                .map(player1 -> player1
+                                .getWorkers()
+                                .stream()
+                                .filter(worker1 -> worker1.getPosition() == position)
+                                .filter(worker1 -> worker1.getColor()==billboard.getPlayer(position))
+                        .findAny().get())
+                .findAny().get();
+
+
         for (Player opponent : player.getMatch().getPlayers()) {
             if (opponent.getCurrentWorker().getColor() == billboard.getPlayer(position)) {
                 for(Worker opponentWorker : opponent.getWorkers())
