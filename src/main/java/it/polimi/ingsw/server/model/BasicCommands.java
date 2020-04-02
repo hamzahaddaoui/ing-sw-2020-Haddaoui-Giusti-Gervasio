@@ -71,8 +71,11 @@ public class BasicCommands implements Commands {
      */
     @Override
     public void build(Position position, Player player, boolean forceDome) {
-        if (forceDome)
-            player.getMatch().getBillboard().setDome(position);
+        if (forceDome){
+            this.availableBuildings=computeAvailableBuildings(player);
+            if (!availableBuildings.contains(position))
+                return;
+            player.getMatch().getBillboard().setDome(position);}
         else
             build(position, player);
     }

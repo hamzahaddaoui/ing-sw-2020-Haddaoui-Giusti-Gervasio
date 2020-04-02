@@ -32,6 +32,7 @@ public class ApolloDecorator extends CommandsDecorator {
 
     /**
      * worker may move into ah opponent Worker's space by forcing their worker to the space yours just vacated
+     *
      *  @param position  is the position that player have inserted
      * @param player
      */
@@ -53,17 +54,33 @@ public class ApolloDecorator extends CommandsDecorator {
         else{
             exchangePosition(player,position);
         }
+
+        player.setState(TurnState.BUILD);
     }
 
     public void exchangePosition(Player player,Position position){
         Billboard billboard=player.getMatch().getBillboard();
         Worker myWorker= player.getCurrentWorker();
+        Match activematch=player.getMatch();
         Worker opponentWorker= findOpponentWorker(position,player);
         Position provisionalPosition=myWorker.getPosition();
         opponentWorker.setPosition(provisionalPosition);
         billboard.setPlayer(provisionalPosition,opponentWorker);
         myWorker.setPosition(myWorker.getPosition());
         billboard.setPlayer(position,myWorker);
+    }
+
+    private Worker findOpponentWorker (Position position, Player player) {
+        Billboard billboard = player.getMatch().getBillboard();
+
+        for (Player opponent : player.getMatch().getPlayers()) {
+            if (opponent.getCurrentWorker().getColor() == billboard.getPlayer(position)) {
+                for(Worker opponentWorker : opponent.getWorkers())
+                    if (opponentWorker.getPosition()==position)
+                        return opponentWorker;
+            }
+        }
+        return null;
     }
 
     /**
@@ -79,9 +96,9 @@ public class ApolloDecorator extends CommandsDecorator {
                 case PLACING:
                     return computeAvailablePlacing(player);
                 case MOVE:
-                    return computeAvailableMovements(player);;
+                    return computeAvailableMovements(player);
                 case BUILD:
-                    return computeAvailableBuildings(player);;
+                    return computeAvailableBuildings(player);
                 default:
                     return null;
             }
@@ -129,7 +146,7 @@ public class ApolloDecorator extends CommandsDecorator {
     public boolean hasLost() {
         return false;
     }
-
+    
 
     public boolean hasMoved() {
         return false;

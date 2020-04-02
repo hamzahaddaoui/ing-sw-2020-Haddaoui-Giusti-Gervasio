@@ -5,10 +5,17 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ArtemisDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Artemis;
 
+    private int movesBeforeBuild = 2;
+    private int numOfBuilds = 1;
+    private int movesAfterBuild = 0;
+    private boolean doneStandard = false;
+    private boolean positionedWorkers = false;
+    private Position startingPosition=null;
     /**
      * decorate the object Command with Artemis's special power
      *
@@ -18,16 +25,6 @@ public class ArtemisDecorator extends CommandsDecorator {
         this.commands=commands;
     }
 
-    /**
-     * method that allows the stardard placing movement
-     * also if the selected position is free
-     *  @param position  is the position that player have inserted
-     * @param player
-     */
-    @Override
-    public void placeWorker(Position position, Player player) {
-        super.placeWorker(position, player);
-    }
 
     /**
      * worker may move one additional time but not back to the initial space
@@ -36,34 +33,115 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-       // super.moveWorker(position, player);
+        Billboard billboard = player.getMatch().getBillboard();
+        Worker worker = player.getCurrentWorker();
+        Set<Position> availableMovements;
+        if(movesBeforeBuild==2){
+            this.startingPosition=worker.getPosition();
+            availableMovements = computeAvailableMovements(player);}
+        else if(movesBeforeBuild==1)
+            availableMovements = computeAvailableSecondMovements(player);
+        else return;
+        if(availableMovements.contains(position)){
+            position.setZ(billboard.getTowerHeight(position));
+            billboard.resetPlayer(worker.getPosition());
+            worker.setPosition(position);
+            billboard.setPlayer(position, worker);
+            movesBeforeBuild--;
+        }
+
+        if(movesBeforeBuild==0){
+            this.startingPosition=null;
+            player.setState(TurnState.BUILD);}
     }
+
 
     /**
-     * method that allows the standard building block action
-     * the player can build a block on an unoccupied space neighbouring the worker
+     * method that show the list of cells that are available for the standard movement of the player
      *
-     * @param player
-     * @param position  is the position that player have inserted
+     * @param player  is the current player
+     * @return  the list of Position where the worker can move on
      */
-    @Override
-    public void build(Position position, Player player) {
-        super.build(position, player);
+    public Set<Position> computeAvailableMovement(Player player) {
+        try{
+            Billboard billboard=player.getMatch().getBillboard();
+            Position currentPosition=player.getCurrentWorker().getPosition();
+
+            Set<Position> availableMovements = player
+                    .getCurrentWorker()
+                    .getPosition()
+                    .neighbourPositions()
+                    .stream()
+                    .filter(position -> billboard.getPlayer(position) !=player.getCurrentWorker().getColor())
+                    .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
+                    .filter(position ->
+                            player.getMatch().isMoveUpActive()
+                                    && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
+                    .filter(position -> billboard.getDome(position) == false)
+                    .collect(Collectors.toSet());
+            return availableMovements;
+        }
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
+
     }
 
+
+    public Set<Position> computeAvailableSecondMovements(Player player) {
+        try{
+            Billboard billboard=player.getMatch().getBillboard();
+            Position currentPosition=player.getCurrentWorker().getPosition();
+
+            Set<Position> availableMovements = player
+                    .getCurrentWorker()
+                    .getPosition()
+                    .neighbourPositions()
+                    .stream()
+                    .filter(position -> billboard.getPlayer(position) !=player.getCurrentWorker().getColor())
+                    .filter(position -> position != getStartingPosition())
+                    .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
+                    .filter(position ->
+                            player.getMatch().isMoveUpActive()
+                                    && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
+                    .filter(position -> billboard.getDome(position) == false)
+                    .collect(Collectors.toSet());
+            return availableMovements;
+        }
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
+
+    }
     /**
      * return the spaces that are available after a check on billboard
      *
      *
      * @param player@return
      */
-    @Override
     public Set<Position> getAvailableCells(Player player) {
-        // switch(PlayerState):
-        // case MOVE:
-
-
-        return null;
+        try{
+            switch (player.getState()){
+                case PLACING:
+                    return computeAvailablePlacing(player);
+                case MOVE:
+                    return computeAvailableMovements(player);
+                case BUILD:
+                    return computeAvailableBuildings(player);
+                default:
+                    return null;
+            }
+        } catch(NullPointerException ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
     }
 
+
+    public Position getStartingPosition() {
+        return startingPosition;
+    }
+
+    public void setStartingPosition(Position startingPosition) {
+        this.startingPosition = null;
+    }
 }
