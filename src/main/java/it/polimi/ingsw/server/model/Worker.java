@@ -26,7 +26,6 @@ public class Worker{
         this.movedUp = movedUp;
     }
 
-
     public Color getColor() {
         return color;
     }

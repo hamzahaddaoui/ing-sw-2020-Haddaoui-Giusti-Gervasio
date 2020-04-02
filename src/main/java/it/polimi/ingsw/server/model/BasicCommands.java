@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
+import java.util.Set;
 
 public class BasicCommands implements Commands {
     /**
@@ -15,7 +16,7 @@ public class BasicCommands implements Commands {
     public void placeWorker(Position position, Player player) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
-            if(billboard.getPlayerColor(position)==null){
+            if(billboard.getPlayer(position)==null){
                 player.getCurrentWorker().setPosition(position);
                 player.getMatch().getBillboard().setPlayerColor(position, player.getCurrentWorker());
             }
@@ -62,7 +63,7 @@ public class BasicCommands implements Commands {
         Billboard billboard = player.getMatch().getBillboard();
         int i=0;
         while( i < neighboringCells.size()){
-            if(     !(billboard.getPlayerColor(neighboringCells.get(i))==null
+            if(     !(billboard.getPlayer(neighboringCells.get(i))==null
                     && ((billboard.getTowerHeight(neighboringCells.get(i))==billboard.getTowerHeight(player.getCurrentWorker().getPosition())+1)
                     || (billboard.getTowerHeight(neighboringCells.get(i))<=billboard.getTowerHeight(player.getCurrentWorker().getPosition())))
                     && (billboard.getDome(neighboringCells.get(i))==false))) {
@@ -99,7 +100,7 @@ public class BasicCommands implements Commands {
         Billboard billboard = player.getMatch().getBillboard();
         int i=0;
         while( i < neighboringCells.size()){
-            if(     !(billboard.getPlayerColor(neighboringCells.get(i))==null
+            if(     !(billboard.getPlayer(neighboringCells.get(i))==null
                     && ((billboard.getTowerHeight(neighboringCells.get(i))==billboard.getTowerHeight(player.getCurrentWorker().getPosition())+1)
                     || (billboard.getTowerHeight(neighboringCells.get(i))<=billboard.getTowerHeight(player.getCurrentWorker().getPosition())))
                     && (billboard.getDome(neighboringCells.get(i))==false))) {
@@ -112,7 +113,6 @@ public class BasicCommands implements Commands {
 
     @Override
     public void specialFunctionSetUnset(Player player) {
-        return;
     }
 
     /**
@@ -121,8 +121,8 @@ public class BasicCommands implements Commands {
      * @param worker  the current worker
      * @return  the list of neighboring cells
      */
-    public List<Position> getNeighboringCells(Worker worker){
-        List<Position> neighboringCells = null;
+    public Set<Position> getNeighboringCells(Worker worker){
+        Set<Position> neighboringCells = null;
         return neighboringCells;
     }
 }

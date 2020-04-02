@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
+import java.util.Set;
 
 public interface Commands {
 
@@ -12,7 +13,7 @@ public interface Commands {
 
     public void build(Position position, Player player);
 
-    public List<Position> getAvailableCells(Player player);
+    public Set<Position> getAvailableCells(Player player);
 
     public void specialFunctionSetUnset(Player player);
 

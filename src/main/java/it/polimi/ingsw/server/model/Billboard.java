@@ -53,11 +53,11 @@ public class Billboard {
         domePosition[position.getX()][position.getY()] = true;
     }
 
-    public Color[][] getPlayerColor() {
+    public Color[][] getPlayer() {
         return playerColor;
     }
 
-    public Color getPlayerColor(Position position) {
+    public Color getPlayer(Position position) {
             if((position.getX()>=0)&&(position.getY()>=0))
                 return playerColor[position.getX()][position.getY()];
         else throw new IllegalArgumentException("Error");

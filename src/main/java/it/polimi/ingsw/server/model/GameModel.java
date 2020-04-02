@@ -153,7 +153,7 @@ public class GameModel extends Observable {
      *
      * @return the list of cells on the billboard, where the player could move
      */
-    public static List<Position> getAvailableCells(Integer matchID, Integer playerID){
+    public static Set<Position> getAvailableCells(Integer matchID, Integer playerID){
         Match match = translateMatchID(matchID);
         Player player = translatePlayerID(match, playerID);
         return player.Commands().getAvailableCells(player);
