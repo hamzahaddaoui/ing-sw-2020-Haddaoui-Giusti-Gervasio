@@ -1,6 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server.model;
 
 
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class CommandsDecorator implements Commands {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        commands.moveWorker(position, ,billboard);
+        commands.moveWorker(position, player);
     }
 
     /**
@@ -39,19 +40,19 @@ public class CommandsDecorator implements Commands {
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build(Player player, Position position) {
-        commands.build(, worker,position);
+    public void build( Position position, Player player) {
+        commands.build(position, player);
     }
 
     /**
      * method that allows the standard building dome action
      * the player can build a dome on an unoccupied space neighbouring the worker
      *
-     * @param worker  is the player's selected worker
+     * @param player
      * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
+     *
      */
-    public void buildDome(Worker worker, Position position, Billboard billboard) {
+    public void buildDome(Position position, Player player) {
 
     }
 
@@ -65,6 +66,11 @@ public class CommandsDecorator implements Commands {
     public List<Position> getAvailableCells(Player player) {
         commands.getAvailableCells(player);
         return null;
+    }
+
+    @Override
+    public void specialFunctionSetUnset(Player player) {
+        commands.specialFunctionSetUnset(player);
     }
 
 

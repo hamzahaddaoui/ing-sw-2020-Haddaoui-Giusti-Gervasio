@@ -61,6 +61,23 @@ public class Position {
     public CardinalDirection checkMutualPosition(Position position){
         if (!this.neighbourPositions().contains(position))
             return CardinalDirection.NONE;
+
+        Position offset = new Position(position.getX()-this.getX(), position.getY()-this.getY());
+
+        double angle = Math.toDegrees(Math.atan2(offset.getY(),offset.getX()));
+
+        CardinalDirection.   .valueOf(angle);
+
+        switch (angle){
+            case 0.0:
+                break;
+            case 45.0:
+                break;
+            case 90.0:
+                break;
+
+        }
+
         if (this.getX()==position.getX()){
             if(this.getX()>position.getX())
                 return CardinalDirection.NORTH;
