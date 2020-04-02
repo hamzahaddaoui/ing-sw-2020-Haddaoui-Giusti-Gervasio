@@ -5,6 +5,7 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
@@ -57,7 +58,7 @@ public class ApolloDecorator extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        super.build(player, position);
+        super.build(position, player);
     }
 
     /**
@@ -67,23 +68,11 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param player@return
      */
     @Override
-    public List<Position> getAvailableCells(Player player) {
+    public Set<Position> getAvailableCells(Player player) {
 
 
 
         return null;
-    }
-
-    /**
-     * method that allows the standard building dome action
-     * the player can build a dome on an unoccupied space neighbouring the worker
-     * @param worker is the player's selected worker
-     * @param position is the position that player have inserted
-     * @param billboard is the reference to the gameboard
-     */
-    @Override
-    public void buildDome(Worker worker, Position position, Billboard billboard) {
-
     }
 
 

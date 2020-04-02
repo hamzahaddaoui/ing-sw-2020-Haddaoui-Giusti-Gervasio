@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
+import java.util.Set;
 
 public class MinotaurDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Minotaur;
@@ -17,7 +18,6 @@ public class MinotaurDecorator extends CommandsDecorator {
      * He can move in an opponent's worker space, only if the next box in the same direction is free.
      * Then, the opponent's worker is forced to move there.
      * <p>
-     * {@link #getAvailableCells(Billboard)}
      *  @param position    the position that player have inserted, not null
      * @param player
      */
@@ -38,7 +38,7 @@ public class MinotaurDecorator extends CommandsDecorator {
      * @param player@return List<Position>  the spaces that are available
      */
     @Override
-    public List<Position> getAvailableCells(Player player) {
+    public Set<Position> getAvailableCells(Player player) {
         // switch(PlayerState):
         // case MOVE:
         // check che sulla posizione del worker, se non è sul bordo -> checkNextPosition(opponentPosition,worker.getPosition(),billboard)
@@ -52,7 +52,7 @@ public class MinotaurDecorator extends CommandsDecorator {
      * Check the next position of the opponent's worker.
      * <p>
      * {@link Billboard#getDome(Position)}
-     * {@link Billboard#getPlayerPosition(Position)}
+     * {@link Billboard#getPlayer(Position)}
      * {@link Position#getX()}
      * {@link Position#getY()}
      * {@link Position#set(int, int)}
@@ -86,7 +86,7 @@ public class MinotaurDecorator extends CommandsDecorator {
         else if (myPosition.getX()==opponentPosition.getX()-1 && myPosition.getY()==opponentPosition.getY()-1)
             nextPosition.set(opponentPosition.getX()+1,opponentPosition.getY()+1);
 
-        if(billboard.getDome(nextPosition)==false && billboard.getPlayerPosition(nextPosition)==null) return true;
+        if(billboard.getDome(nextPosition)==false && billboard.getPlayer(nextPosition)==null) return true;
         else return false;
     }
 }

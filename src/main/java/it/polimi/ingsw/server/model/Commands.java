@@ -17,6 +17,14 @@ public interface Commands {
 
     public Set<Position> getAvailableCells(Player player);
 
+    public Set<Position> ComputeAvailablePlacing(Player player);
+
+    public Set<Position> ComputeAvailableMovements(Player player);
+
+    public Set<Position> ComputeAvailableBuildings(Player player);
+
     public void specialFunctionSetUnset();
+
+    public void reset();
 
 }
