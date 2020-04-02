@@ -68,10 +68,30 @@ public class CommandsDecorator implements Commands {
         return commands.getAvailableCells(player);
     }
 
+    @Override
+    public Set<Position> ComputeAvailablePlacing(Player player) {
+        return commands.ComputeAvailablePlacing(player);
+    }
+
+    @Override
+    public Set<Position> ComputeAvailableMovements(Player player) {
+        return commands.ComputeAvailableMovements(player);
+    }
+
+    @Override
+    public Set<Position> ComputeAvailableBuildings(Player player) {
+        return commands.ComputeAvailableBuildings(player);
+    }
+
     /**
      * Activates (deactivates) special function related to a certain player
      */
     public void specialFunctionSetUnset(){
         commands.specialFunctionSetUnset();
+    }
+
+    @Override
+    public void reset() {
+        commands.reset();
     }
 }

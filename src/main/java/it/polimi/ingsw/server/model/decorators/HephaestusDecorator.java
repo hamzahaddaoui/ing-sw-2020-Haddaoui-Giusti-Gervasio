@@ -6,25 +6,32 @@ import it.polimi.ingsw.utilities.Position;
 public class HephaestusDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Hephaestus;
 
+    private boolean secondBuild;
+    private Position firstBuildPosition;
+
     public HephaestusDecorator(Commands commands) {
         this.commands = commands;
     }
 
+    @Override
+    public void build(Position position, Player player) {
+        if(firstBuildPosition != null && secondBuild)
+            return;
+    }
+
     /**
-     * Method that allows the specific building block action for Hephaestus.
-     * <p>
-     * The player can build two blocks in the same space, but not a dome.
-     * <p>
-     * {@link Billboard#getTowerHeight(Position)}
+     * Activates (deactivates) special function related to a certain player
      *
-     * @param player
-     * @param position   the position that player have inserted, not null
      */
     @Override
-    public void build(Player player, Position position) {
-        super.build(player, position);
-        if (billboard.getTowerHeight(position) < 3) {
-            //scelta opzionale seconda costruzione
-        }
+    public void specialFunctionSetUnset() {
+        secondBuild ^= true;
     }
+
+    public void reset() {
+        commands.reset();
+        secondBuild = false;
+        firstBuildPosition = null;
+    }
+
 }

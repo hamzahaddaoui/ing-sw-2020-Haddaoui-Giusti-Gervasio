@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
+import java.util.Set;
 
 public class ArtemisDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Artemis;
@@ -46,20 +47,8 @@ public class ArtemisDecorator extends CommandsDecorator {
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build(Player player, Position position) {
-        super.build(player, position);
-    }
-
-    /**
-     * method that allows the standard building dome action
-     * the player can build a dome on an unoccupied space neighbouring the worker
-     *
-     * @param worker  is the player's selected worker
-     * @param position  is the position that player have inserted
-     */
-    @Override
-    public void buildDome(Player player, Position position) {
-        super.buildDome(player, position);
+    public void build(Position position, Player player) {
+        super.build(position, player);
     }
 
     /**
@@ -69,7 +58,7 @@ public class ArtemisDecorator extends CommandsDecorator {
      * @param player@return
      */
     @Override
-    public List<Position> getAvailableCells(Player player) {
+    public Set<Position> getAvailableCells(Player player) {
         // switch(PlayerState):
         // case MOVE:
 

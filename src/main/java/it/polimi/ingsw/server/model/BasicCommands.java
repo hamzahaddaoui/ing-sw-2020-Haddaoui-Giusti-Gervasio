@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class BasicCommands implements Commands {
     protected Set<Position> availablePlacing = new HashSet<>();
     protected Set<Position> availableMovements = new HashSet<>();
-    protected Set<Position> availableBuilding = new HashSet<>();
+    protected Set<Position> availableBuildings = new HashSet<>();
 
     /**
      * method that allows the stardard placing movement
@@ -53,7 +53,7 @@ public class BasicCommands implements Commands {
 
     @Override
     public void build(Position position, Player player) {
-        if (!availableBuilding.contains(position))
+        if (!availableBuildings.contains(position))
             return;
         player.getMatch().getBillboard().incrementTowerHeight(position);
     }
@@ -87,11 +87,11 @@ public class BasicCommands implements Commands {
                     ComputeAvailablePlacing(player);
                     return availablePlacing;
                 case MOVE:
-                    ComputeAvailableMovement(player);
+                    ComputeAvailableMovements(player);
                     return availableMovements;
                 case BUILD:
-                    ComputeAvailableBuilding(player);
-                    return availableBuilding;
+                    ComputeAvailableBuildings(player);
+                    return availableBuildings;
                 default:
                     return null;
             }
@@ -128,7 +128,7 @@ public class BasicCommands implements Commands {
      * @param player  is the current player
      * @return  the list of Position where the worker can move on
      */
-    public Set<Position> ComputeAvailableMovement(Player player) {
+    public Set<Position> ComputeAvailableMovements(Player player) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
             Position currentPosition=player.getCurrentWorker().getPosition();
@@ -159,10 +159,10 @@ public class BasicCommands implements Commands {
      * @param player  is the current player
      * @return  the list of Position where the worker can build on
      */
-    public Set<Position> ComputeAvailableBuilding(Player player) {
+    public Set<Position> ComputeAvailableBuildings(Player player) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
-            availableBuilding = player
+            availableBuildings = player
                     .getCurrentWorker()
                     .getPosition()
                     .neighbourPositions()
@@ -170,7 +170,7 @@ public class BasicCommands implements Commands {
                     .filter(position -> billboard.getPlayer(position) == null)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
-            return availableBuilding;
+            return availableBuildings;
         }
         catch(Exception ex){
             throw new NullPointerException("PLAYER IS NULL");
@@ -182,4 +182,10 @@ public class BasicCommands implements Commands {
 
     }
 
+    @Override
+    public void reset() {
+        availableBuildings = null;
+        availablePlacing = null;
+        availableMovements = null;
+    }
 }

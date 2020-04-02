@@ -131,7 +131,6 @@ public class GameModel extends Observable {
         translateMatchID(matchID).nextTurn();
     }
 
-
     /**
      *  Link the current player of the selected match, to the specified GodCard.
      *
@@ -143,7 +142,6 @@ public class GameModel extends Observable {
         GodCards godCard = GodCards.valueOf(card);
         match.getCurrentPlayer().setCommands(godCard);
     }
-
 
     /**
      * Get available cells for move/build related to the given player,

@@ -6,7 +6,6 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
@@ -40,12 +39,9 @@ public class ApolloDecorator extends CommandsDecorator {
         super.placeWorker(position,player);
     }
 
-
     /**
-     * method that allows the stardard player movement
-     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
-     * if the position that is selected is free
-     *  @param position   the position that player have inserted, not null
+     * worker may move into ah opponent Worker's space by forcing their worker to the space yours just vacated
+     *  @param position  is the position that player have inserted
      * @param player
      */
     @Override

@@ -71,10 +71,16 @@ public class Player{
 
     public void playerTurn(Position position){
         switch(state){
+            case START:
+                Commands().reset();
+            case PLACING:
+                Commands().placeWorker(position, this);
             case MOVE:
-                Commands().build(position,this);
+                Commands().moveWorker(position,this);
             case BUILD:
                 Commands().build(position, this);
+            case END:
+
         }
     }
 }

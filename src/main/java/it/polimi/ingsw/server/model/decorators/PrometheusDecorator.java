@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
+import java.util.Set;
 
 public class PrometheusDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Prometheus;
@@ -35,12 +36,12 @@ public class PrometheusDecorator extends CommandsDecorator {
      * @param position   the position that player have inserted, not null
      */
     @Override
-    public void build(Player player, Position position) {
+    public void build(Position position, Player player) {
         if (!hasMoved) {
-            super.build(player, position);
+            super.build(position,player);
             hasBuiltBefore = true;
         }
-        else super.build(player, position);
+        else super.build(position, player);
     }
 
     /**
@@ -52,7 +53,7 @@ public class PrometheusDecorator extends CommandsDecorator {
      * @return           the spaces which are available
      */
     @Override
-    public List<Position> getAvailableCells(Player player) {
+    public Set<Position> getAvailableCells(Player player) {
         // switch(PlayerState):
         // case MOVE:
         // se costruisco prima, non posso salire di livello --> check hasBuiltBefore
