@@ -8,6 +8,8 @@ public class Worker{
     private Color color;
     private boolean movedUp;
 
+
+
     public Worker(Position position){
         this.position = position;
     }

@@ -3,7 +3,7 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
 
-    private int movesBeforeBuild = 2;
+    private int movesBeforeBuild = 1;
     private int numOfBuilds = 1;
-    private int movesAfterBuild = 1;
+    private int movesAfterBuild = 0;
     private boolean doneStandard = false;
     private boolean positionedWorkers = false;
 
@@ -31,16 +31,6 @@ public class ApolloDecorator extends CommandsDecorator {
     }
 
     /**
-     * method that allows the stardard placing movement
-     *  @param position  is the position that player have inserted
-     * @param player
-     */
-    @Override
-    public void placeWorker(Position position, Player player) {
-        super.placeWorker(position,player);
-    }
-
-    /**
      * worker may move into ah opponent Worker's space by forcing their worker to the space yours just vacated
      *  @param position  is the position that player have inserted
      * @param player
@@ -50,30 +40,30 @@ public class ApolloDecorator extends CommandsDecorator {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
         Set<Position> availableMovements = computeAvailableMovements(player);
+
         if (!availableMovements.contains(position))
             return;
 
-        position.setZ(billboard.getTowerHeight(position));
-        billboard.resetPlayer(worker.getPosition());
-        worker.setPosition(position);
-        billboard.setPlayer(position, worker);
+        else if(billboard.getPlayer(position)==null){
+            position.setZ(billboard.getTowerHeight(position));
+            billboard.resetPlayer(worker.getPosition());
+            worker.setPosition(position);
+            billboard.setPlayer(position, worker);
+        }
+        else{
+            exchangePosition(player,position);
+        }
     }
 
-    @Override
-    public void build(Position position, Player player) {
-        super.build(position,player);
-    }
-
-    /**
-     * method that allows the standard building block action
-     * the player can build a block on an unoccupied space neighbouring the worker
-     *
-     * @param player
-     * @param position   the position that player have inserted, not null
-     */
-    @Override
-    public void build(Position position, Player player, boolean forceDome) {
-        super.build(position,player,forceDome);
+    public void exchangePosition(Player player,Position position){
+        Billboard billboard=player.getMatch().getBillboard();
+        Worker myWorker= player.getCurrentWorker();
+        Worker opponentWorker= findOpponentWorker(position,player);
+        Position provisionalPosition=myWorker.getPosition();
+        opponentWorker.setPosition(provisionalPosition);
+        billboard.setPlayer(provisionalPosition,opponentWorker);
+        myWorker.setPosition(myWorker.getPosition());
+        billboard.setPlayer(position,myWorker);
     }
 
     /**
@@ -106,27 +96,17 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param player  is the current player
      * @return  the list of Position where the worker can move on
      */
-    public Set<Position> computeAvailablePlacing(Player player) {
-        return super.computeAvailablePlacing(player);
-    }
-
-    /**
-     * method that show the list of cells that are available for the standard movement of the player
-     *
-     * @param player  is the current player
-     * @return  the list of Position where the worker can move on
-     */
-    public Set<Position> ComputeAvailableMovement(Player player) {
+    public Set<Position> computeAvailableMovement(Player player) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
             Position currentPosition=player.getCurrentWorker().getPosition();
 
-            availableMovements = player
+            Set<Position> availableMovements = player
                     .getCurrentWorker()
                     .getPosition()
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getPlayer(position) !=player.getCurrentWorker().getColor())
                     .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
                     .filter(position ->
                             player.getMatch().isMoveUpActive()
@@ -140,26 +120,6 @@ public class ApolloDecorator extends CommandsDecorator {
         }
 
     }
-
-    /**
-     * method that show the list of cells that are available for the standard building action of the player
-     *
-     * @param player  is the current player
-     * @return  the list of Position where the worker can build on
-     */
-
-    public Set<Position> computeAvailableBuilding(Player player) {
-      super.computeAvailableBuildings(player);
-    }
-
-    /**
-     * method that allows the standard building dome action
-     * the player can build a dome on an unoccupied space neighbouring the worker
-     * @param worker is the player's selected worker
-     * @param position is the position that player have inserted
-     * @param billboard is the reference to the gameboard
-     */
-
 
     public boolean hasWon() {
         return false;
