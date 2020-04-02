@@ -57,9 +57,9 @@ public class BasicCommands implements Commands {
     }
 
 
-    public List<Position> getAvailableCells(Player player) {
+    public Set<Position> getAvailableCells(Player player) {
         Position workerPosition=player.getCurrentWorker().getPosition();
-        List<Position> neighboringCells=workerPosition.neighbourPositions(workerPosition,workerPosition);//=metodo che restituisce una lista di posizioni vicine ad una data posizione
+        Set<Position> neighboringCells=workerPosition.neighbourPositions();//=metodo che restituisce una lista di posizioni vicine ad una data posizione
         Billboard billboard = player.getMatch().getBillboard();
         int i=0;
         while( i < neighboringCells.size()){
