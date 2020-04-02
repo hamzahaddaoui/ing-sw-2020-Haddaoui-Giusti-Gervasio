@@ -7,16 +7,28 @@ import java.util.Set;
 
 public class Position {
 
-    private int x, y;
+    private int x, y, z;
 
     Position (int x, int y){
         this.x = x;
         this.y = y;
     }
 
+    Position (int x, int y, int z){
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public void set(int x, int y){
         this.x = x;
         this.y = y;
+    }
+
+    public void set(int x, int y, int z){
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public void setX(int x){
@@ -27,12 +39,20 @@ public class Position {
         this.y = y;
     }
 
+    public void setZ(int z){
+        this.z = z;
+    }
+
     public int getX(){
         return this.x;
     }
 
     public int getY(){
         return this.y;
+    }
+
+    public int getZ(){
+        return this.z;
     }
 
 

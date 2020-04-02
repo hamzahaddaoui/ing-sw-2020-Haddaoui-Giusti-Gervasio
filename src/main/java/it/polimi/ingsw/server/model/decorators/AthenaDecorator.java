@@ -4,9 +4,14 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
+import java.util.Set;
 
 public class AthenaDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Athena;
+
+    private int movesBeforeBuild;
+    private int numOfBuilds;
+    private int movesAfterBuild;
 
     /**
      * decorate the object Command with Athena's special power
@@ -30,16 +35,25 @@ public class AthenaDecorator extends CommandsDecorator {
 
     /**
      * method that allows the stardard player movement
-     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
-     * if the position that is selected is free
+     * if the player moves up, the other players aren't allowed to moved up until the next Athena turn
      *
-     * @param position  is the position that player have inserted
-     * @param player
-     * @throws hasMovedUP()  if the movement of the worker is from down to up
+     * @param position the position where whe worker has to move
+     * @param player the player which is performing the command
+     *
      */
     @Override
     public void moveWorker(Position position, Player player) {
+        Match match = player.getMatch();
+        int startHeight, endHeight;
+
+        startHeight = player.getCurrentWorker().getPosition().getZ();
         super.moveWorker(position, player);
+        endHeight = player.getCurrentWorker().getPosition().getZ();
+
+        if (startHeight - endHeight < 0)
+            match.setMoveUpActive(false);
+        else
+            match.setMoveUpActive(true);
     }
 
     /**
@@ -50,35 +64,18 @@ public class AthenaDecorator extends CommandsDecorator {
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build(Player player, Position position) {
-        super.build(player, position);
-    }
-
-    /**
-     * method that allows the standard building dome action
-     * the player can build a dome on an unoccupied space neighbouring the worker
-     *
-     * @param worker  is the player's selected worker
-     * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
-     */
-    @Override
-    public void buildDome(Worker worker, Position position, Billboard billboard) {
-
+    public void build(Position position, Player player) {
+        super.build(position, player);
     }
 
     /**
      * return the spaces that are available after a check on billboard
      *
-     * @param billboard  is the reference to the gameboard
+     * @param player reference to the player
      * @return
      */
     @Override
-    public List<Position> getAvailableCells(Billboard billboard) {
-        // switch(PlayerState):
-        // case MOVE:
-
-
-        return null;
+    public Set<Position> getAvailableCells(Player player) {
+        return super.getAvailableCells(player);
     }
 }

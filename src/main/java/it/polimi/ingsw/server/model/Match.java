@@ -15,6 +15,7 @@ public class Match {
 
     private boolean started;
     private boolean numReached;
+    private boolean moveUpActive;
 
     public Match(int matchID, int playersNum) {
         this.playersNum = playersNum;
@@ -101,15 +102,11 @@ public class Match {
         */
     }
 
+    public boolean isMoveUpActive() {
+        return moveUpActive;
+    }
 
-
-
-
-
-
-
-
-
-
-
+    public void setMoveUpActive(boolean moveUpActive) {
+        this.moveUpActive = moveUpActive;
+    }
 }

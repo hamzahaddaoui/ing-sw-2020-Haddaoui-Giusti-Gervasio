@@ -13,8 +13,10 @@ public interface Commands {
 
     public void build(Position position, Player player);
 
+    public void build(Position position, Player player, boolean forceDome);
+
     public Set<Position> getAvailableCells(Player player);
 
-    public void specialFunctionSetUnset(Player player);
+    public void specialFunctionSetUnset();
 
 }

@@ -1,11 +1,6 @@
 package it.polimi.ingsw.server.model;
 
-
-import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
-
-import java.util.List;
-
 import java.util.Set;
 
 public class CommandsDecorator implements Commands {
@@ -41,8 +36,13 @@ public class CommandsDecorator implements Commands {
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build( Position position, Player player) {
+    public void build(Position position, Player player) {
         commands.build(position, player);
+    }
+
+    @Override
+    public void build(Position position, Player player, boolean forceDome) {
+        commands.build(position, player, forceDome);
     }
 
     /**
@@ -61,22 +61,17 @@ public class CommandsDecorator implements Commands {
      * return the spaces that are available after a check on billboard
      *
      *
-     * @param player@return
+     * @param player
+     * @return
      */
-    @Override
-    public Set<Position> getAvailableCells(Player player) {
-        commands.getAvailableCells(player);
-        return null;
     public Set<Position> getAvailableCells(Player player) {
         return commands.getAvailableCells(player);
     }
 
     /**
      * Activates (deactivates) special function related to a certain player
-     * @param player the player which wants to active (deactivate) the special function
      */
-    @Override
-    public void specialFunctionSetUnset(Player player) {
-        commands.specialFunctionSetUnset(player);
+    public void specialFunctionSetUnset(){
+        commands.specialFunctionSetUnset();
     }
 }

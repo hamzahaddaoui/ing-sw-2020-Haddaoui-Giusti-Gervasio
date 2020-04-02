@@ -37,8 +37,11 @@ public class Billboard {
         return towerHeight[position.getX()][position.getY()];
     }
 
-    public void setTowerHeight(Position position, int level) {
-        towerHeight[position.getX()][position.getY()] = level;
+    public void incrementTowerHeight(Position position) {
+        if (towerHeight[position.getX()][position.getY()] < 3)
+            towerHeight[position.getX()][position.getY()] ++;
+        else
+            setDome(position);
     }
 
     public boolean[][] getDome() {
@@ -58,16 +61,14 @@ public class Billboard {
     }
 
     public Color getPlayer(Position position) {
-            if((position.getX()>=0)&&(position.getY()>=0))
-                return playerColor[position.getX()][position.getY()];
-        else throw new IllegalArgumentException("Error");
+        return playerColor[position.getX()][position.getY()];
     }
 
-    public void setPlayerColor(Position position, Worker worker){
+    public void setPlayer(Position position, Worker worker){
         playerColor[position.getX()][position.getY()] = worker.getColor();
     }
 
-    public void resetPlayerColor(Position position){
+    public void resetPlayer(Position position){
         playerColor[position.getX()][position.getY()] = null;
     }
 

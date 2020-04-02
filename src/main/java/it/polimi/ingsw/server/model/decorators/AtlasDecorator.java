@@ -4,9 +4,12 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
+import java.util.Set;
 
 public class AtlasDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Atlas;
+
+    private boolean domeBuild;
 
     /**
      * decorate the object Command with Atlas's special power
@@ -30,52 +33,45 @@ public class AtlasDecorator extends CommandsDecorator {
 
     /**
      * method that allows the stardard player movement
-     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
-     * if the position that is selected is free
-     *  @param position  is the position that player have inserted
-     * @param player
+     *
+     * @param position the position where whe worker has to move
+     * @param player the player which is performing the command
+     *
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        //super.moveWorker(worker,position,billboard);
+        super.moveWorker(position, player);
     }
 
     /**
-     * method that allows the special building block action
-     * the worker may build a dome at any level
+     * method that allows the standard building block action
+     * the Atlas player can build a block or a dome, depending on the special function activation
      *
      * @param player
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build(Player player, Position position) {
-        //super.build(worker,position,billboard);
-    }
-
-    /**
-     * method that allows the standard building dome action
-     * the player can build a dome on an unoccupied space neighbouring the worker
-     *
-     * @param worker  is the player's selected worker
-     * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
-     */
-    @Override
-    public void buildDome(Worker worker, Position position, Billboard billboard) {
-
+    public void build(Position position, Player player) {
+        build(position, player, domeBuild);
     }
 
     /**
      * return the spaces that are available after a check on billboard
      *
-     * @param billboard  is the reference to the gameboard
+     * @param player reference to the player
      * @return
      */
     @Override
-    public List<Position> getAvailableCells(Billboard billboard) {
-        // switch(PlayerState):
-        // case MOVE:
-        return null;
+    public Set<Position> getAvailableCells(Player player) {
+        return super.getAvailableCells(player);
     }
 
+    /**
+     * Activates (deactivates) special function related to a certain player
+     *
+     */
+    @Override
+    public void specialFunctionSetUnset() {
+        domeBuild ^= true;
+    }
 }
