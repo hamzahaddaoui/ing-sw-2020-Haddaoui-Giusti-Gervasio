@@ -83,6 +83,21 @@ public class ApolloDecorator extends CommandsDecorator {
         return null;
     }
 
+    private Worker findOpponentNewWorker (Position position, Player player) {
+        Billboard billboard = player.getMatch().getBillboard();
+
+        Worker worker= player.getMatch().getPlayers()
+                .stream()
+                .map(player1 -> player1
+                        .getWorkers()
+                        .stream()
+                        .filter(worker1 -> worker1.getPosition()==position)
+                        .filter(worker1 -> worker1.getColor()==billboard.getPlayer(position))
+                        .findAny().get())
+                .findAny().get();
+
+    }
+
     /**
      * method that divide the different implementation of available cells: for building action and for movement action
      *
@@ -146,7 +161,7 @@ public class ApolloDecorator extends CommandsDecorator {
     public boolean hasLost() {
         return false;
     }
-    
+
 
     public boolean hasMoved() {
         return false;
