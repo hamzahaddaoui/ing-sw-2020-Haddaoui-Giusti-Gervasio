@@ -49,6 +49,8 @@ public class BasicCommands implements Commands {
         billboard.resetPlayer(worker.getPosition());
         worker.setPosition(position);
         billboard.setPlayer(position, worker);
+
+        player.setState(TurnState.BUILD);
     }
 
     @Override
@@ -56,6 +58,8 @@ public class BasicCommands implements Commands {
         if (!availableBuildings.contains(position))
             return;
         player.getMatch().getBillboard().incrementTowerHeight(position);
+
+        player.setState(TurnState.END);
     }
 
     /**
@@ -183,9 +187,10 @@ public class BasicCommands implements Commands {
     }
 
     @Override
-    public void reset() {
+    public void reset(Player player) {
         availableBuildings = null;
         availablePlacing = null;
         availableMovements = null;
+        player.setState(TurnState.MOVE);
     }
 }
