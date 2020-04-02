@@ -115,14 +115,4 @@ public class BasicCommands implements Commands {
     public void specialFunctionSetUnset(Player player) {
     }
 
-    /**
-     * method that return a list of neighboring cells for the method getAvailableCells
-     *
-     * @param worker  the current worker
-     * @return  the list of neighboring cells
-     */
-    public Set<Position> getNeighboringCells(Worker worker){
-        Set<Position> neighboringCells = null;
-        return neighboringCells;
-    }
 }

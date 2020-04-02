@@ -35,7 +35,7 @@ public class ApolloDecorator extends CommandsDecorator {
      */
     @Override
     public void placeWorker(Position position, Player player) {
-        //super.placeWorker(worker,position,billboard);
+        super.placeWorker(position,player);
     }
 
     /**
@@ -56,7 +56,7 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param position  is the position that player have inserted
      */
     @Override
-    public void build(Player player, Position position) {
+    public void build(Position position, Player player) {
         super.build(player, position);
     }
 
@@ -87,7 +87,7 @@ public class ApolloDecorator extends CommandsDecorator {
     }
 
 
-    public HashSet<Position> checkAvailableMovements() {
+    public List<Position> checkAvailableMovements() {
 
         return null;
     }
