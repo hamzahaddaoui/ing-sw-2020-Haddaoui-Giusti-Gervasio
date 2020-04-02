@@ -58,8 +58,8 @@ public class Billboard {
     }
 
     public Color getPlayerColor(Position position) {
-        if((position.getX()>=0)&&(position.getY()>=0))
-            return playerColor[position.getX()][position.getY()];
+            if((position.getX()>=0)&&(position.getY()>=0))
+                return playerColor[position.getX()][position.getY()];
         else throw new IllegalArgumentException("Error");
     }
 

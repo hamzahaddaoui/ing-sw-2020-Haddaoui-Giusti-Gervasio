@@ -35,7 +35,7 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        super.moveWorker(position, player);
+       // super.moveWorker(position, player);
     }
 
     /**
@@ -56,11 +56,10 @@ public class ArtemisDecorator extends CommandsDecorator {
      *
      * @param worker  is the player's selected worker
      * @param position  is the position that player have inserted
-     * @param billboard  is the reference to the gameboard
      */
     @Override
-    public void buildDome(Worker worker, Position position, Billboard billboard) {
-
+    public void buildDome(Player player, Position position) {
+        super.buildDome(player, position);
     }
 
     /**
