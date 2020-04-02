@@ -28,8 +28,9 @@ public class HephaestusDecorator extends CommandsDecorator {
         secondBuild ^= true;
     }
 
-    public void reset() {
-        commands.reset();
+    @Override
+    public void reset(Player player) {
+        commands.reset(player);
         secondBuild = false;
         firstBuildPosition = null;
     }

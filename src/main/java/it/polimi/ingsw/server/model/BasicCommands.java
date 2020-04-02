@@ -191,6 +191,5 @@ public class BasicCommands implements Commands {
         availableBuildings = null;
         availablePlacing = null;
         availableMovements = null;
-        player.setState(TurnState.MOVE);
     }
 }
