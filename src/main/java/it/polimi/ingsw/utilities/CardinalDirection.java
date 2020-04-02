@@ -15,28 +15,24 @@ public enum CardinalDirection {
     NONE(0.0);
 
     double angle;
-    private static Map map = new HashMap<>();
+    private static Map<Double, CardinalDirection> map = new HashMap<>();
 
     CardinalDirection(double angle){
         this.angle = angle;
     }
 
-    public int getAngle() {
+    public double getAngle() {
         return angle;
     }
 
-
     static {
         for (CardinalDirection cardinalDirection : CardinalDirection.values()) {
-            map.put(CardinalDirection.angle, cardinalDirection);
+            map.put(cardinalDirection.angle, cardinalDirection);
         }
     }
 
-    public static CardinalDirection valueOf(int angle) {
-        return (CardinalDirection) map.get(angle);
-    }
 
-    public int getValue() {
-        return value;
+    public static CardinalDirection valueOf(double angle) {
+        return (CardinalDirection) map.get(angle);
     }
 }

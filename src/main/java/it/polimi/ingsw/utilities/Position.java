@@ -35,6 +35,9 @@ public class Position {
     public List<Position> neighbourPositions (){
         List<Position> resultPositions = new ArrayList<>();
         Position current = new Position(0,0);
+        Position start = new Position(Math.max(this.x - 1, 0), Math.max(this.y -1, 0));
+        Position end = new Position(Math.min(this.x + 1, 4), Math.min(this.y -1, 4));
+
         for (current.setX(this.x-1); x <= this.x+1; x++){
             for (current.setY(this.y-1); y <= this.y+1; y++){
                 resultPositions.add(current);
@@ -64,45 +67,7 @@ public class Position {
 
         Position offset = new Position(position.getX()-this.getX(), position.getY()-this.getY());
 
-        double angle = Math.toDegrees(Math.atan2(offset.getY(),offset.getX()));
-
-        CardinalDirection.   .valueOf(angle);
-
-        switch (angle){
-            case 0.0:
-                break;
-            case 45.0:
-                break;
-            case 90.0:
-                break;
-
-        }
-
-        if (this.getX()==position.getX()){
-            if(this.getX()>position.getX())
-                return CardinalDirection.NORTH;
-            else
-                return CardinalDirection.SOUTH;
-        }
-        if (this.getY()==position.getY()){
-            if(this.getY()>position.getY())
-                return CardinalDirection.EAST;
-            else
-                return CardinalDirection.WEST;
-        }
-        if (this.getX() > position.getY()){
-            if (this.getY() > position.getY())
-                return CardinalDirection.NORTHEAST;
-            else
-                return CardinalDirection.SOUTHEAST;
-        }
-        if (this.getX() < position.getY()){
-            if (this.getY() > position.getY())
-                return CardinalDirection.NORTHWEST;
-            else
-                return CardinalDirection.SOUTHWEST;
-        }
-        return CardinalDirection.NONE;
+        return CardinalDirection.valueOf(Math.toDegrees(Math.atan2(offset.getY(),offset.getX())));
     }
 }
 
