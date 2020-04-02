@@ -1,9 +1,12 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.utilities.Position;
+
 import java.util.Set;
+import java.util.List;
 
 public interface Commands {
+
     public void placeWorker(Position position, Player player);
 
     public void moveWorker(Position position, Player player);
@@ -13,4 +16,5 @@ public interface Commands {
     public Set<Position> getAvailableCells(Player player);
 
     public void specialFunctionSetUnset(Player player);
+
 }

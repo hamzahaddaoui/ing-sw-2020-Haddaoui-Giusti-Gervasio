@@ -3,7 +3,9 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.List;
+
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BasicCommands implements Commands {
     /**
@@ -56,22 +58,29 @@ public class BasicCommands implements Commands {
 
     }
 
-
-    public Set<Position> getAvailableCells(Player player) {
-        Position workerPosition=player.getCurrentWorker().getPosition();
-        Set<Position> neighboringCells=workerPosition.neighbourPositions();//=metodo che restituisce una lista di posizioni vicine ad una data posizione
-        Billboard billboard = player.getMatch().getBillboard();
-        int i=0;
-        while( i < neighboringCells.size()){
-            if(     !(billboard.getPlayer(neighboringCells.get(i))==null
-                    && ((billboard.getTowerHeight(neighboringCells.get(i))==billboard.getTowerHeight(player.getCurrentWorker().getPosition())+1)
-                    || (billboard.getTowerHeight(neighboringCells.get(i))<=billboard.getTowerHeight(player.getCurrentWorker().getPosition())))
-                    && (billboard.getDome(neighboringCells.get(i))==false))) {
-                neighboringCells.remove(i);
-                i--;}
-            i++;
+    /**
+     * method that show the list of cells that are available for the standard movement of the player
+     *
+     * @param player  is the current player
+     * @return  the list of Position where the worker can move on
+     */
+    public Set<Position> getAvailableMovement(Player player) {
+        try{
+            Set<Position> neighboringCells=player.getCurrentWorker().getPosition().neighbourPositions();
+            Billboard billboard=player.getMatch().getBillboard();
+            Position currentPosition=player.getCurrentWorker().getPosition();
+            Set<Position> collect = neighboringCells
+                    .stream()
+                    .filter(position -> billboard.getPlayer(position)==null)
+                    .filter(position -> billboard.getTowerHeight(position)<=billboard.getTowerHeight(currentPosition))
+                    .filter(position -> billboard.getTowerHeight(position)==billboard.getTowerHeight(currentPosition)+1)
+                    .filter(position -> billboard.getDome(position)==false)
+                    .collect(Collectors.toSet());
+            return collect;
         }
-        return neighboringCells;
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
     }
 
     /**
@@ -88,31 +97,54 @@ public class BasicCommands implements Commands {
     }
 
     /**
-     * method that control the cells that are available according to standard characteristic from the list of
-     * neighboring cells
+     * method that divide the different implementation of available cells: for building action and for movement action
      *
-     * @param player  the current worker, not null
-     * @return  the list of spaces that are available after a check on billboard
+     * @param player  is the current player
+     * @return  the list of Position that are available for that specific action
      */
     //@Override
-    public List<Position> getAvailableMovement(Player player) {
-        List<Position> neighboringCells=null;//=metodo che restituisce una lista di posizioni vicine ad una data posizione
-        Billboard billboard = player.getMatch().getBillboard();
-        int i=0;
-        while( i < neighboringCells.size()){
-            if(     !(billboard.getPlayer(neighboringCells.get(i))==null
-                    && ((billboard.getTowerHeight(neighboringCells.get(i))==billboard.getTowerHeight(player.getCurrentWorker().getPosition())+1)
-                    || (billboard.getTowerHeight(neighboringCells.get(i))<=billboard.getTowerHeight(player.getCurrentWorker().getPosition())))
-                    && (billboard.getDome(neighboringCells.get(i))==false))) {
-                neighboringCells.remove(i);
-                i--;}
-            i++;
+    public Set<Position> getAvailableCells(Player player) {
+        try{TurnState playerState=player.getState();
+        if(playerState==TurnState.BUILD){
+            return getAvailableBuilding(player);
         }
-        return neighboringCells;
+        else if(playerState==TurnState.MOVE){
+            return getAvailableMovement(player);
+        }
+        else return null;
+        }
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
+    }
+
+
+    /**
+     * method that show the list of cells that are available for the standard building action of the player
+     *
+     * @param player  is the current player
+     * @return  the list of Position where the worker can build on
+     */
+    public Set<Position> getAvailableBuilding(Player player) {
+        try{
+            Set<Position> neighboringCells=player.getCurrentWorker().getPosition().neighbourPositions();
+            Billboard billboard=player.getMatch().getBillboard();
+            Set<Position> collect = neighboringCells
+                    .stream()
+                    .filter(position -> billboard.getTowerHeight(position) <= 3)
+                    .filter(position -> billboard.getPlayer(position)==null)
+                    .filter(position -> billboard.getDome(position)==false)
+                    .collect(Collectors.toSet());
+            return collect;
+        }
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
     }
 
     @Override
     public void specialFunctionSetUnset(Player player) {
+        return;
     }
 
 }

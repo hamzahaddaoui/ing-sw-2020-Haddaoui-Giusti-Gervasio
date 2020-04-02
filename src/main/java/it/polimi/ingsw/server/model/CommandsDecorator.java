@@ -1,6 +1,11 @@
 package it.polimi.ingsw.server.model;
 
+
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
+
+import java.util.List;
+
 import java.util.Set;
 
 public class CommandsDecorator implements Commands {
@@ -41,12 +46,27 @@ public class CommandsDecorator implements Commands {
     }
 
     /**
+     * method that allows the standard building dome action
+     * the player can build a dome on an unoccupied space neighbouring the worker
+     *
+     * @param player
+     * @param position  is the position that player have inserted
+     *
+     */
+    public void buildDome(Position position, Player player) {
+
+    }
+
+    /**
      * return the spaces that are available after a check on billboard
      *
      *
      * @param player@return
      */
     @Override
+    public Set<Position> getAvailableCells(Player player) {
+        commands.getAvailableCells(player);
+        return null;
     public Set<Position> getAvailableCells(Player player) {
         return commands.getAvailableCells(player);
     }
