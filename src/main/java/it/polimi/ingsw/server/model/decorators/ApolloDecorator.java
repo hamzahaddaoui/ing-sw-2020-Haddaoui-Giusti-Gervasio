@@ -61,8 +61,9 @@ public class ApolloDecorator extends CommandsDecorator {
     public void exchangePosition(Player player,Position position){
         Billboard billboard=player.getMatch().getBillboard();
         Worker myWorker= player.getCurrentWorker();
-        Match activematch=player.getMatch();
+        Match activeMatch=player.getMatch();
         Worker opponentWorker= findOpponentWorker(position,player);
+
         Position provisionalPosition=myWorker.getPosition();
         opponentWorker.setPosition(provisionalPosition);
         billboard.setPlayer(provisionalPosition,opponentWorker);
@@ -70,7 +71,7 @@ public class ApolloDecorator extends CommandsDecorator {
         billboard.setPlayer(position,myWorker);
     }
 
-    private Worker findOpponentWorker (Position position, Player player) {
+    private Worker findOpponentOldWorker (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
         for (Player opponent : player.getMatch().getPlayers()) {
@@ -83,7 +84,7 @@ public class ApolloDecorator extends CommandsDecorator {
         return null;
     }
 
-    private Worker findOpponentNewWorker (Position position, Player player) {
+    private Worker findOpponentWorker (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
         Worker worker= player.getMatch().getPlayers()
@@ -95,7 +96,7 @@ public class ApolloDecorator extends CommandsDecorator {
                         .filter(worker1 -> worker1.getColor()==billboard.getPlayer(position))
                         .findAny().get())
                 .findAny().get();
-
+        return worker;
     }
 
     /**
