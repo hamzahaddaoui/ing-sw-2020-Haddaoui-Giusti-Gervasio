@@ -5,6 +5,8 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
@@ -38,14 +40,31 @@ public class ApolloDecorator extends CommandsDecorator {
         super.placeWorker(position,player);
     }
 
+
     /**
-     * worker may move into ah opponent Worker's space by forcing their worker to the space yours just vacated
-     *  @param position  is the position that player have inserted
+     * method that allows the stardard player movement
+     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
+     * if the position that is selected is free
+     *  @param position   the position that player have inserted, not null
      * @param player
      */
     @Override
     public void moveWorker(Position position, Player player) {
-       // super.moveWorker(worker,position,billboard);
+        Billboard billboard = player.getMatch().getBillboard();
+        Worker worker = player.getCurrentWorker();
+
+        if (!availableMovements.contains(position))
+            return;
+
+        position.setZ(billboard.getTowerHeight(position));
+        billboard.resetPlayer(worker.getPosition());
+        worker.setPosition(position);
+        billboard.setPlayer(position, worker);
+    }
+
+    @Override
+    public void build(Position position, Player player) {
+        super.build(position,player);
     }
 
     /**
@@ -53,25 +72,115 @@ public class ApolloDecorator extends CommandsDecorator {
      * the player can build a block on an unoccupied space neighbouring the worker
      *
      * @param player
-     * @param position  is the position that player have inserted
+     * @param position   the position that player have inserted, not null
      */
     @Override
-    public void build(Position position, Player player) {
-        super.build(player, position);
+    public void build(Position position, Player player, boolean forceDome) {
+        super.build(position,player,forceDome);
     }
 
     /**
-     * return the spaces that are available after a check on billboard
+     * method that divide the different implementation of available cells: for building action and for movement action
      *
-     *
-     * @param player@return
+     * @param player  is the current player
+     * @return  the list of Position that are available for that specific action
      */
-    @Override
-    public List<Position> getAvailableCells(Player player) {
+    //@Override
+    public Set<Position> getAvailableCells(Player player) {
+        try{
+            switch (player.getState()){
+                case PLACING:
+                    ComputeAvailablePlacing(player);
+                    return availablePlacing;
+                case MOVE:
+                    ComputeAvailableMovement(player);
+                    return availableMovements;
+                case BUILD:
+                    ComputeAvailableBuilding(player);
+                    return availableBuilding;
+                default:
+                    return null;
+            }
+        } catch(NullPointerException ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
+    }
 
+    /**
+     * method that show the list of cells that are available for the standard movement of the player
+     *
+     * @param player  is the current player
+     * @return  the list of Position where the worker can move on
+     */
+    public Set<Position> ComputeAvailablePlacing(Player player) {
+        try{
+            availablePlacing = player
+                    .getCurrentWorker()
+                    .getPosition()
+                    .neighbourPositions()
+                    .stream()
+                    .filter(position -> player.getMatch().getBillboard().getPlayer(position) == null)
+                    .collect(Collectors.toSet());
+        }
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
+        return availablePlacing;
+    }
 
+    /**
+     * method that show the list of cells that are available for the standard movement of the player
+     *
+     * @param player  is the current player
+     * @return  the list of Position where the worker can move on
+     */
+    public Set<Position> ComputeAvailableMovement(Player player) {
+        try{
+            Billboard billboard=player.getMatch().getBillboard();
+            Position currentPosition=player.getCurrentWorker().getPosition();
 
-        return null;
+            availableMovements = player
+                    .getCurrentWorker()
+                    .getPosition()
+                    .neighbourPositions()
+                    .stream()
+                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
+                    .filter(position ->
+                            player.getMatch().isMoveUpActive()
+                                    && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
+                    .filter(position -> billboard.getDome(position) == false)
+                    .collect(Collectors.toSet());
+            return availableMovements;
+        }
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
+
+    }
+
+    /**
+     * method that show the list of cells that are available for the standard building action of the player
+     *
+     * @param player  is the current player
+     * @return  the list of Position where the worker can build on
+     */
+    public Set<Position> ComputeAvailableBuilding(Player player) {
+        try{
+            Billboard billboard=player.getMatch().getBillboard();
+            availableBuilding = player
+                    .getCurrentWorker()
+                    .getPosition()
+                    .neighbourPositions()
+                    .stream()
+                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getDome(position) == false)
+                    .collect(Collectors.toSet());
+            return availableBuilding;
+        }
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
     }
 
     /**
@@ -81,26 +190,6 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param position is the position that player have inserted
      * @param billboard is the reference to the gameboard
      */
-    @Override
-    public void buildDome(Worker worker, Position position, Billboard billboard) {
-
-    }
-
-
-    public List<Position> checkAvailableMovements() {
-
-        return null;
-    }
-
-
-    public HashSet<Position> checkAvailableBuildBlocks() {
-        return null;
-    }
-
-
-    public HashSet<Position> checkAvailableBuildDomes() {
-        return null;
-    }
 
 
     public boolean hasWon() {
