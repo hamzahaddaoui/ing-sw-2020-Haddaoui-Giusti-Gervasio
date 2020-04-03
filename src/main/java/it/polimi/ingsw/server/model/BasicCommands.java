@@ -194,4 +194,13 @@ public class BasicCommands implements Commands {
         availablePlacing = null;
         availableMovements = null;
     }
+
+    @Override
+    public void winningCondition(Position startingPosition, Player player) {
+    }
+
+    @Override
+    public void losingCondition(Player player) {
+
+    }
 }

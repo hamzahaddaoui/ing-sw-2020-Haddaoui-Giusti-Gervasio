@@ -94,4 +94,10 @@ public class CommandsDecorator implements Commands {
     public void reset(Player player) {
         commands.reset(player);
     }
+
+    @Override
+    public void winningCondition(Position startingPosition, Player player) { commands.winningCondition(startingPosition,player); }
+
+    @Override
+    public void losingCondition(Player player) { commands.losingCondition(player); }
 }

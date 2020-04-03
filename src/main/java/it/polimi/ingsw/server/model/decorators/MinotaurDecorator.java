@@ -27,7 +27,21 @@ public class MinotaurDecorator extends CommandsDecorator {
      * Else, we store the next position, set the opponent's worker there and then i reset him from the position I
      * chose so i can set my worker there.
      * <p>
-     *     
+     * {@link #setNextPosition(Position, Position)}
+     * {@link #findOpponentWorker(Position, Player)}
+     * {@link super#moveWorker(Position, Player)}
+     * {@link Player#setState(TurnState)}
+     * {@link Player#getMatch()}
+     * {@link Player#getCurrentWorker()}
+     * {@link Billboard#getPlayer(Position)}
+     * {@link Billboard#getTowerHeight(Position)}
+     * {@link Billboard#setPlayer(Position, Worker)}
+     * {@link Billboard#resetPlayer(Position)}
+     * {@link Match#getBillboard()}
+     * {@link Worker#setPosition(Position)}
+     * {@link Position#setZ(int)}
+
+     *
      * @param position    the position that player have inserted, not null
      * @param player      the player who is making the move, not null
      */
@@ -60,14 +74,15 @@ public class MinotaurDecorator extends CommandsDecorator {
     }
 
     /**
-     * Return the spaces that are available after a check on billboard.
+     * Return the set of spaces that are available after a check on billboard.
      * <p>
-     * This is used both in the phase of moving and building.
+     * It use the basic methods except when PlayerState == MOVE.
      * <p>
-     *  //metodi della Billboard da definire
-     *  {@link #checkNextPosition(Position, Position, Billboard)}
+     *  {@link super#computeAvailablePlacing(Player)}
+     *  {@link super#computeAvailableBuildings(Player)}
+     *  {@link #computeAvailableMovements(Player)}
      *
-     * @param player           the player who make the move, not null
+     * @param player           the player who makes the move, not null
      * @return List<Position>  the spaces that are available
      */
     @Override
@@ -78,7 +93,7 @@ public class MinotaurDecorator extends CommandsDecorator {
                     super.computeAvailablePlacing(player);
                     return availablePlacing;
                 case MOVE:
-                    computeAvailableMovements(player);
+                    this.computeAvailableMovements(player);
                     return availableMovements;
                 case BUILD:
                     super.computeAvailableBuildings(player);
@@ -93,6 +108,17 @@ public class MinotaurDecorator extends CommandsDecorator {
 
     //check 1 : casella libera da player oppure occupato da un player avversario la cui casella successiva
     // è libera
+
+    /**
+     * Method that show the list of cells that are available for this specific movement.
+     * <p>
+     * Check if the space is free or if there's an opponent player,
+     * if there's another player checks if the next space is free and
+     * then it does the other standard checks.
+     *
+     * @param player  the player who makes the move, not null
+     * @return        the spaces which are available
+     */
     @Override
     public Set<Position> computeAvailableMovements(Player player) {
         Billboard billboard = player.getMatch().getBillboard();
@@ -107,7 +133,7 @@ public class MinotaurDecorator extends CommandsDecorator {
                 .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
                         (player.getMatch().isMoveUpActive() &&
                                 billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
-                .filter(position -> billboard.getDome(position) == false)
+                .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
         return availableMovements;
     }
@@ -116,15 +142,16 @@ public class MinotaurDecorator extends CommandsDecorator {
     /**
      * Check the next position of the opponent's worker.
      * <p>
+     * Check if the next position is not null and there's no dome or player in it.
+     *
      * {@link Billboard#getDome(Position)}
-     * {@link Billboard#getPlayerColor(Position)}
+     * {@link Billboard#getPlayer(Position)}
      * {@link Position#getX()}
      * {@link Position#getY()}
      * {@link Position#set(int, int)}
      * 
      * @param opponentPosition  the position of your opponent's worker, not null
-     * @param myPosition        the position of you current worker, not null
-     * @param billboard         the reference to the gameboard, not null
+     * @param player            the player who makes the move, not null
      * @return                  true if is available, otherwise false
      * @throws IllegalArgumentException if the opponentPosition and myPosition are the same
      * @throws IllegalArgumentException if the opponentPosition is a perimeter space
@@ -147,7 +174,17 @@ public class MinotaurDecorator extends CommandsDecorator {
         }
     }
 
-    //check per la posizione successiva rispetto a quella del worker avversario
+    /**
+     * Method that returns the next position.
+     * <p>
+     * It compares your position and your opponent's position and finds the next position in that direction.
+     *
+     * @param opponentPosition the position of the opponent's worker, not null
+     * @param myPosition       the position of the worker who makes the move, not null
+     * @return                 the next position if exists, or null
+     * @throws IllegalArgumentException if the positions you want to compare are the same
+     * @throws NullPointerException     if the positions are null
+     */
     private Position setNextPosition(Position opponentPosition, Position myPosition) throws IllegalArgumentException,NullPointerException {
 
         try {
@@ -164,30 +201,39 @@ public class MinotaurDecorator extends CommandsDecorator {
     }
 
     //data la posizione in cui finisci e il player con cui fai la mossa, ti dice qual è il worker avversario presente, in modo da cambiargli poi posizione
+
+    /**
+     * Method which returns the worker which is in the specific space where the player wants to go.
+     * <p>
+     * First the method finds out which is the player who has a worker in that space,
+     * then finds out which is the specific worker.
+     *
+     * @param position  the position of the space, not null
+     * @param player    the player who makes the move, not null
+     * @return          the worker which is in the specific space, not null
+     */
     private Worker findOpponentWorker (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
-        Worker worker = player
+        return player
                 .getMatch()
                 .getPlayers()
                 .stream()
+                .filter(player1 -> player.getCurrentWorker().getColor() == billboard.getPlayer(position))
                 .map(player1 -> player1
                                 .getWorkers()
                                 .stream()
                                 .filter(worker1 -> worker1.getPosition() == position)
-                                .filter(worker1 -> worker1.getColor()==billboard.getPlayer(position))
                         .findAny().get())
                 .findAny().get();
-
-
-        for (Player opponent : player.getMatch().getPlayers()) {
+       /* for (Player opponent : player.getMatch().getPlayers()) {
             if (opponent.getCurrentWorker().getColor() == billboard.getPlayer(position)) {
                 for(Worker opponentWorker : opponent.getWorkers())
                     if (opponentWorker.getPosition()==position)
                         return opponentWorker;
             }
         }
-        return null;
+        return null; */
     }
 
 }
