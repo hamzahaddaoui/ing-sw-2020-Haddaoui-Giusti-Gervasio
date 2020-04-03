@@ -4,13 +4,14 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
-
+    Set<Position> availableMovements = new HashSet<>();
     private int movesBeforeBuild = 1;
     private int numOfBuilds = 1;
     private int movesAfterBuild = 0;
@@ -86,7 +87,7 @@ public class ApolloDecorator extends CommandsDecorator {
     private Worker findOpponentNewWorker (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
-        Worker worker= player.getMatch().getPlayers()
+        return player.getMatch().getPlayers()
                 .stream()
                 .map(player1 -> player1
                         .getWorkers()
@@ -98,13 +99,13 @@ public class ApolloDecorator extends CommandsDecorator {
 
     }
 
-    /**
+    /*/**
      * method that divide the different implementation of available cells: for building action and for movement action
      *
      * @param player  is the current player
      * @return  the list of Position that are available for that specific action
      */
-    //@Override
+    @Override
     public Set<Position> getAvailableCells(Player player) {
         try{
             switch (player.getState()){
@@ -128,12 +129,12 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param player  is the current player
      * @return  the list of Position where the worker can move on
      */
-    public Set<Position> computeAvailableMovement(Player player) {
+    @Override
+    public Set<Position> computeAvailableMovements(Player player) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
             Position currentPosition=player.getCurrentWorker().getPosition();
-
-            Set<Position> availableMovements = player
+            availableMovements = player
                     .getCurrentWorker()
                     .getPosition()
                     .neighbourPositions()

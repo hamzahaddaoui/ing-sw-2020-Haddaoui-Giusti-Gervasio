@@ -90,7 +90,7 @@ public class DemeterDecorator extends CommandsDecorator {
             throw new NullPointerException("PLAYER IS NULL");
         }
     }
-c
+
     /**
      * method that show the list of cells that are available for the standard building action of the player
      *

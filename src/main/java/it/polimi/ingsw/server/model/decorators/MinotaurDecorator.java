@@ -12,10 +12,6 @@ public class MinotaurDecorator extends CommandsDecorator {
 
     static final GodCards card = GodCards.Minotaur;
 
-    protected Set<Position> availablePlacing = new HashSet<>();
-    protected Set<Position> availableMovements = new HashSet<>();
-    protected Set<Position> availableBuildings = new HashSet<>();
-
     public MinotaurDecorator(Commands commands){
         this.commands=commands;
     }

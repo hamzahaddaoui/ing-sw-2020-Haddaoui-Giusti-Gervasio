@@ -41,8 +41,8 @@ public class AtlasDecorator extends CommandsDecorator {
         domeBuild ^= true;
     }
 
-    public void reset() {
-        super.reset();
+    public void reset(Player player) {
+        super.reset(player);
         domeBuild = false;
     }
 }

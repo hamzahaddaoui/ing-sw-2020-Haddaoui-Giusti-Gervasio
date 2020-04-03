@@ -39,7 +39,7 @@ public class PanDecorator extends CommandsDecorator {
         worker.setPosition(position);
         billboard.setPlayer(position, worker);
 
-        winningCondition(startingPosition,player);
+        winningCondition(player);
     }
 
     @Override
@@ -71,23 +71,16 @@ public class PanDecorator extends CommandsDecorator {
      * Else you set the turn state to the building phase.
      * <p>
      *
-     * @param startingPosition the position where is the worker before the move, not null
      * @param player           the player who makes the move, not null
+     * @return
      */
     @Override
-    public void winningCondition(Position startingPosition, Player player) {
-        Billboard billboard = player.getMatch().getBillboard();
+    public boolean winningCondition(Player player) {
         Worker worker = player.getCurrentWorker();
-        Match match = player.getMatch();
-        int startHeight = billboard.getTowerHeight(startingPosition);
-        int endHeight = billboard.getTowerHeight(worker.getPosition());
-
-        if (endHeight == startHeight + 1 && endHeight == 3 ||
-                endHeight <= startHeight - 2) {
-            match.setWinner(player);
-            match.setFinished(true);
-        }
-        else player.setState(TurnState.BUILD);
+        if (worker.getHeightVariation() == -2)
+            return true;
+        else
+            return super.winningCondition(player);
     }
 
 }

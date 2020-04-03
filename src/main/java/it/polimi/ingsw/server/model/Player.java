@@ -3,16 +3,27 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.ArrayList;
+import java.util.Set;
+
+import static it.polimi.ingsw.server.model.TurnState.*;
+import static it.polimi.ingsw.server.model.TurnState.START;
 
 public class Player{
     private int ID; //id connessione del giocatore
     private String nickname;
     private Match match;
     private ArrayList<Worker> workers = new ArrayList<>(2);
-    //Worker 0 - Worker 1
+
     private Worker currentWorker;
     private Commands commands;
+    GodCards card;
     private TurnState state;
+
+    private int movesBeforeBuild;
+    private int totalBuilds;
+    private int totalMoves;
+    private boolean specialFunction;
+    private boolean turnStart;
 
     protected Player(int ID,String nickname, Match match) {
         this.ID = ID;
@@ -53,12 +64,9 @@ public class Player{
     }
 
     public void setCommands(GodCards card) {
+        this.card = card;
         this.commands = card.apply(new BasicCommands());
         match.removeCard(card);
-    }
-
-    public Commands Commands() {
-        return commands;
     }
 
     public TurnState getState() {
@@ -69,19 +77,54 @@ public class Player{
         this.state = state;
     }
 
-    public void playerTurn(Position position){
-        switch(state){
-            case START:
-                commands.reset(this);
-            case PLACING:
-                commands.placeWorker(position, this);
-            case MOVE:
-                commands.moveWorker(position,this);
-            case BUILD:
-                commands.build(position, this);
-            case END:
-                match.nextTurn();
+    public void setUnsetSpecialFunction(){
+        specialFunction ^= true;
+    }
 
+    public boolean isSpecialFunction() {
+        return specialFunction;
+    }
+
+    public void playerAction(Position position){
+            switch(state) {
+                case START:
+                    movesBeforeBuild = card.getMovesBeforeBuilding();
+                    totalBuilds = card.getNumOfBuilding();
+                    totalMoves = card.getMovesAfterBuilding();
+                    workers.stream().forEach(this::setAvailableCells);
+                    break;
+                case PLACING:
+                    commands.placeWorker(position, this);
+                case MOVE:
+                    commands.moveWorker(position, this);
+                    if (movesBeforeBuild == 0){
+                        totalMoves--;
+                        if (totalMoves == 0)
+                            state = END;
+                    }
+                    else {
+                        movesBeforeBuild--;
+                        totalMoves--;
+                        if (movesBeforeBuild == 0)
+                            state = BUILD;
+                    }
+                case BUILD:
+                    commands.build(position,this);
+                    if(--totalBuilds == 0)
+                        if(totalMoves != 0) state = MOVE;
+                        else state = END;
+            }
         }
+    }
+
+    public Set<Position> getAvailableCells() {
+        return currentWorker.getAvailableCells(this.state);
+    }
+
+
+    private void setAvailableCells(Worker worker) {
+        worker.setAvailableCells(PLACING, commands.computeAvailablePlacing(this, worker));
+        worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));
+        worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));
     }
 }
