@@ -12,10 +12,12 @@ public class Match {
     private ArrayList<GodCards> cards = new ArrayList<>(2);
     private Billboard billboard;
     private MatchState currentState;
+    private Player winner;
 
     private boolean started;
     private boolean numReached;
     private boolean moveUpActive;
+    private boolean finished;
 
     public Match(int matchID, int playersNum) {
         this.playersNum = playersNum;
@@ -91,6 +93,7 @@ public class Match {
 
     private void matchStart() {
         started = true;
+        finished = false;
         currentPlayer = players.get(0);
     }
 
@@ -109,4 +112,13 @@ public class Match {
     public void setMoveUpActive(boolean moveUpActive) {
         this.moveUpActive = moveUpActive;
     }
+
+    public void setFinished(boolean finished) { this.finished = finished; }
+
+
+    public boolean isFinished() { return finished; }
+
+    public Player getWinner() { return winner; }
+
+    public void setWinner(Player winner) { this.winner = winner; }
 }

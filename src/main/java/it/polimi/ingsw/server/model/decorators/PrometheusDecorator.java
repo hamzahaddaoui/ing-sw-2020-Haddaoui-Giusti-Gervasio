@@ -3,43 +3,72 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PrometheusDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Prometheus;
     public PrometheusDecorator(Commands commands){
         this.commands=commands;
     }
-    private boolean hasBuiltBefore = false;
-    private boolean hasMoved = false;
+
+    protected Set<Position> availablePlacing = new HashSet<>();
+    protected Set<Position> availableMovements = new HashSet<>();
+    protected Set<Position> availableBuildings = new HashSet<>();
+
+    private int numOfBuildings;
+    private boolean buildBefore;
 
     /**
-     * method that allows the stardard player movement
-     * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
-     * if the position that is selected is free
-     * @param position is the position that player have inserted, not null
-     * @param player
+     * Method that implements the specific movement of Prometheus.
+     * <p>
+     * If the flag buildBefore is true and you haven't done the first building, you have to build before move.
+     * Else if the flag is true and you have already done the first building, you can move but not move up.
+     * Else the flag is false and you do the standard move.
+     *
+     * @param position  the position that player have inserted, not null
+     * @param player    the player who make the move, not null
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        super.moveWorker(position, player);
+        Billboard billboard = player.getMatch().getBillboard();
+        Worker worker = player.getCurrentWorker();
+
+        if (buildBefore && numOfBuildings==2) {
+                player.setState(TurnState.BUILD); //valutare se ha senso farlo
+                build(position, player);
+        }
+        else if (buildBefore && numOfBuildings==1) {
+            if (!availableMovements.contains(position))
+                return;
+
+            position.setZ(billboard.getTowerHeight(position));
+            billboard.resetPlayer(worker.getPosition());
+            worker.setPosition(position);
+            billboard.setPlayer(position, worker);
+
+            player.setState(TurnState.BUILD);
+        }
+        else super.moveWorker(position, player);
     }
 
     /**
      * Method that allows the specific building block action of Prometheus.
      * <p>
-     * The player can build both before and after moving, just if he doesn't move up.
-     * Check on the boolean hasMoved to understand if he's building before or after.
+     * If it's your first building move, you do the standard building move and increment your counter.
+     * Else you do just your standard building move.
      *
-     * @param player
+     * @param player     the player who makes the building move, not null
      * @param position   the position that player have inserted, not null
      */
     @Override
     public void build(Position position, Player player) {
-        if (!hasMoved) {
+        if (buildBefore && numOfBuildings==2) {
             super.build(position,player);
-            hasBuiltBefore = true;
+            numOfBuildings--;
+            player.setState(TurnState.MOVE);
         }
         else super.build(position, player);
     }
@@ -47,19 +76,91 @@ public class PrometheusDecorator extends CommandsDecorator {
     /**
      * Return the spaces that are available after a check on billboard.
      * <p>
-     * If the player builds before moving, he can't see higher level spaces.
+     * If the flag is true, it means you can't see the neighboring space that has higher level.
+     * Else you see the standard spaces.
      *
-     * @param player     the player's selected worker, not null
+     * @param player     the player who makes the move, not null
      * @return           the spaces which are available
      */
     @Override
     public Set<Position> getAvailableCells(Player player) {
-        // switch(PlayerState):
-        // case MOVE:
-        // se costruisco prima, non posso salire di livello --> check hasBuiltBefore
-        // se true, non mostro le caselle in cui getTowerHeights è > rispetto a quella della posizione attuale del worker
-        // altrimenti faccio un semplice super.getAvailableCells
 
-        return null;
+        try{
+            switch (player.getState()){
+                case PLACING:
+                    super.computeAvailablePlacing(player);
+                    return availablePlacing;
+                case MOVE:
+                    if (buildBefore)
+                    this.computeAvailableMovements(player);
+                    else super.computeAvailableMovements(player);
+                    return availableMovements;
+                case BUILD:
+                    super.computeAvailableBuildings(player);
+                    return availableBuildings;
+                default:
+                    return null;
+            }
+        } catch(NullPointerException ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
+    }
+
+
+    /**
+     * Returns the spaces that are available after a check in the billboard.
+     * <p>
+     * Check if the space is free, if has height less than or equal to the current space
+     * and if there isn't a dome in it.
+     *
+     * @param player  the player who makes the move, not null
+     * @return        the spaces which are available
+     */
+    @Override
+    public Set<Position> computeAvailableMovements(Player player) {
+        try{
+            Billboard billboard=player.getMatch().getBillboard();
+            Position currentPosition=player.getCurrentWorker().getPosition();
+
+            availableMovements = player
+                    .getCurrentWorker()
+                    .getPosition()
+                    .neighbourPositions()
+                    .stream()
+                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition)))
+                    .filter(position -> !billboard.getDome(position))
+                    .collect(Collectors.toSet());
+            return availableMovements;
+        }
+        catch(Exception ex){
+            throw new NullPointerException("PLAYER IS NULL");
+        }
+    }
+
+
+    /**
+     * Method that set or unset a specific behaviour.
+     * <p>
+     * The first time you set the flag buildBefore as true and numOfBuildings = 2.
+     * Every other time you switch the flag and the numOfBuildings.
+     */
+    @Override
+    public void specialFunctionSetUnset() {
+        buildBefore ^= true;
+        if (buildBefore) numOfBuildings=2;
+        else numOfBuildings=1;
+    }
+
+    /**
+     * Method that reset the standard values of buildBefore and numOfBuildings.
+     *
+     * @param player
+     */
+    @Override
+    public void reset(Player player) {
+        super.reset(player);
+        buildBefore = false;
+        numOfBuildings = 1;
     }
 }

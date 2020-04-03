@@ -27,4 +27,8 @@ public interface Commands {
 
     public void reset(Player player);
 
+    public void winningCondition(Position startingPosition, Player player);
+
+    public void losingCondition(Player player);
+
 }
