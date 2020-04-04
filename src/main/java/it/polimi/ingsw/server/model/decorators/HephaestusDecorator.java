@@ -6,7 +6,6 @@ import it.polimi.ingsw.utilities.Position;
 public class HephaestusDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Hephaestus;
 
-    private boolean secondBuild;
     private Position firstBuildPosition;
 
     public HephaestusDecorator(Commands commands) {
@@ -15,24 +14,18 @@ public class HephaestusDecorator extends CommandsDecorator {
 
     @Override
     public void build(Position position, Player player) {
-        if(firstBuildPosition != null && secondBuild)
-            return;
+        super.build(position, player);
+        if (firstBuildPosition == null){
+            super.build(position, player);
+            firstBuildPosition = position;
+            position.setZ(player.getMatch().getBillboard().getTowerHeight(position));
+        }
+        else{
+            if (player.isSpecialFunction() && firstBuildPosition.getZ()<3)
+                super.build(firstBuildPosition, player);
+        }
+
     }
 
-    /**
-     * Activates (deactivates) special function related to a certain player
-     *
-     */
-    @Override
-    public void specialFunctionSetUnset() {
-        secondBuild ^= true;
-    }
-
-    @Override
-    public void reset(Player player) {
-        commands.reset(player);
-        secondBuild = false;
-        firstBuildPosition = null;
-    }
 
 }

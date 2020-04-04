@@ -9,10 +9,6 @@ import java.util.Set;
 public class AthenaDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Athena;
 
-    private int movesBeforeBuild;
-    private int numOfBuilds;
-    private int movesAfterBuild;
-
     /**
      * decorate the object Command with Athena's special power
      *
@@ -20,17 +16,6 @@ public class AthenaDecorator extends CommandsDecorator {
      */
     public AthenaDecorator(Commands commands){
         this.commands=commands;
-    }
-
-    /**
-     * method that allows the stardard placing movement
-     * also if the selected position is free
-     *  @param position  is the position that player have inserted
-     * @param player
-     */
-    @Override
-    public void placeWorker(Position position, Player player) {
-        super.placeWorker(position, player);
     }
 
     /**
@@ -54,28 +39,5 @@ public class AthenaDecorator extends CommandsDecorator {
             match.setMoveUpActive(false);
         else
             match.setMoveUpActive(true);
-    }
-
-    /**
-     * method that allows the standard building block action
-     * the player can build a block on an unoccupied space neighbouring the worker
-     *
-     * @param player
-     * @param position  is the position that player have inserted
-     */
-    @Override
-    public void build(Position position, Player player) {
-        super.build(position, player);
-    }
-
-    /**
-     * return the spaces that are available after a check on billboard
-     *
-     * @param player reference to the player
-     * @return
-     */
-    @Override
-    public Set<Position> getAvailableCells(Player player) {
-        return super.getAvailableCells(player);
     }
 }

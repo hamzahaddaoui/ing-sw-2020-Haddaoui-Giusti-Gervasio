@@ -86,34 +86,32 @@ public class Player{
     }
 
     public void playerAction(Position position){
-            switch(state) {
-                case START:
-                    movesBeforeBuild = card.getMovesBeforeBuilding();
-                    totalBuilds = card.getNumOfBuilding();
-                    totalMoves = card.getMovesAfterBuilding();
-                    workers.stream().forEach(this::setAvailableCells);
-                    break;
-                case PLACING:
-                    commands.placeWorker(position, this);
-                case MOVE:
-                    commands.moveWorker(position, this);
-                    if (movesBeforeBuild == 0){
-                        totalMoves--;
-                        if (totalMoves == 0)
-                            state = END;
-                    }
-                    else {
-                        movesBeforeBuild--;
-                        totalMoves--;
-                        if (movesBeforeBuild == 0)
-                            state = BUILD;
-                    }
-                case BUILD:
-                    commands.build(position,this);
-                    if(--totalBuilds == 0)
-                        if(totalMoves != 0) state = MOVE;
-                        else state = END;
-            }
+        switch (state) {
+            case START:
+                movesBeforeBuild = card.getMovesBeforeBuilding();
+                totalBuilds = card.getNumOfBuilding();
+                totalMoves = card.getMovesAfterBuilding();
+                workers.stream().forEach(this::setAvailableCells);
+                break;
+            case PLACING:
+                commands.placeWorker(position, this);
+            case MOVE:
+                commands.moveWorker(position, this);
+                if (movesBeforeBuild == 0) {
+                    totalMoves--;
+                    if (totalMoves == 0)
+                        state = END;
+                } else {
+                    movesBeforeBuild--;
+                    totalMoves--;
+                    if (movesBeforeBuild == 0)
+                        state = BUILD;
+                }
+            case BUILD:
+                commands.build(position, this);
+                if (-- totalBuilds == 0)
+                    if (totalMoves != 0) state = MOVE;
+                    else state = END;
         }
     }
 

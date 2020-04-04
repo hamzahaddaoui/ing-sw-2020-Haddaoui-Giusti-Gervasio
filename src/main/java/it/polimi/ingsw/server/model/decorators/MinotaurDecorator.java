@@ -3,9 +3,7 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
-import javax.swing.*;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MinotaurDecorator extends CommandsDecorator {
@@ -48,7 +46,7 @@ public class MinotaurDecorator extends CommandsDecorator {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
 
-        if (!availableMovements.contains(position))
+        if (!computeAvailableMovements(player, worker).contains(position))
             return;
 
         if (billboard.getPlayer(position)==null)
@@ -69,39 +67,6 @@ public class MinotaurDecorator extends CommandsDecorator {
         }
     }
 
-    /**
-     * Return the set of spaces that are available after a check on billboard.
-     * <p>
-     * It use the basic methods except when PlayerState == MOVE.
-     * <p>
-     *  {@link super#computeAvailablePlacing(Player)}
-     *  {@link super#computeAvailableBuildings(Player)}
-     *  {@link #computeAvailableMovements(Player)}
-     *
-     * @param player           the player who makes the move, not null
-     * @return List<Position>  the spaces that are available
-     */
-    @Override
-    public Set<Position> getAvailableCells(Player player) {
-        try{
-            switch (player.getState()){
-                case PLACING:
-                    super.computeAvailablePlacing(player);
-                    return availablePlacing;
-                case MOVE:
-                    this.computeAvailableMovements(player);
-                    return availableMovements;
-                case BUILD:
-                    super.computeAvailableBuildings(player);
-                    return availableBuildings;
-                default:
-                    return null;
-            }
-        } catch(NullPointerException ex){
-            throw new NullPointerException("PLAYER IS NULL");
-        }
-    }
-
     //check 1 : casella libera da player oppure occupato da un player avversario la cui casella successiva
     // è libera
 
@@ -116,11 +81,11 @@ public class MinotaurDecorator extends CommandsDecorator {
      * @return        the spaces which are available
      */
     @Override
-    public Set<Position> computeAvailableMovements(Player player) {
+    public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         Billboard billboard = player.getMatch().getBillboard();
         Position currentPosition = player.getCurrentWorker().getPosition();
 
-        availableMovements = currentPosition
+        return currentPosition
                 .neighbourPositions()
                 .stream()
                 .filter(position -> billboard.getPlayer(position)==null ||
@@ -131,7 +96,6 @@ public class MinotaurDecorator extends CommandsDecorator {
                                 billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
-        return availableMovements;
     }
 
 
@@ -222,14 +186,6 @@ public class MinotaurDecorator extends CommandsDecorator {
                                 .filter(worker1 -> worker1.getPosition() == position)
                         .findAny().get())
                 .findAny().get();
-       /* for (Player opponent : player.getMatch().getPlayers()) {
-            if (opponent.getCurrentWorker().getColor() == billboard.getPlayer(position)) {
-                for(Worker opponentWorker : opponent.getWorkers())
-                    if (opponentWorker.getPosition()==position)
-                        return opponentWorker;
-            }
-        }
-        return null; */
     }
 
 }

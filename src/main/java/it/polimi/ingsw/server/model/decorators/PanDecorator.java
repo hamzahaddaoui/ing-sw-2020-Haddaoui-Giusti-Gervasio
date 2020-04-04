@@ -13,10 +13,6 @@ public class PanDecorator extends CommandsDecorator {
         this.commands=commands;
     }
 
-    protected Set<Position> availablePlacing = new HashSet<>();
-    protected Set<Position> availableMovements = new HashSet<>();
-    protected Set<Position> availableBuildings = new HashSet<>();
-
     /**
      * Method who implements the standard move.
      * <p>
@@ -31,7 +27,7 @@ public class PanDecorator extends CommandsDecorator {
         Worker worker = player.getCurrentWorker();
         Position startingPosition = worker.getPosition();
 
-        if (!availableMovements.contains(position))
+        if (!player.getCurrentWorker().getAvailableCells(player.getState()).contains(position))
             return;
 
         position.setZ(billboard.getTowerHeight(position));
@@ -40,26 +36,6 @@ public class PanDecorator extends CommandsDecorator {
         billboard.setPlayer(position, worker);
 
         winningCondition(player);
-    }
-
-    @Override
-    public Set<Position> getAvailableCells(Player player) {
-        return super.getAvailableCells(player);
-    }
-
-    @Override
-    public Set<Position> computeAvailablePlacing(Player player) {
-        return super.computeAvailablePlacing(player);
-    }
-
-    @Override
-    public Set<Position> computeAvailableMovements(Player player) {
-        return super.computeAvailableMovements(player);
-    }
-
-    @Override
-    public Set<Position> computeAvailableBuildings(Player player) {
-        return super.computeAvailableBuildings(player);
     }
 
     /**
