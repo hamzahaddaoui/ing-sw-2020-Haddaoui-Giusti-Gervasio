@@ -20,7 +20,7 @@ public class GameModel extends Observable {
     //navigableMap to get the last inserted element, which could correspond to the waiting to start watch
     //Made up of an integer, which represents the matchID, and the match entity.
     private static NavigableMap<Integer, Match> activeMatches = new TreeMap<>(); //id match, match
-
+    //private static Map<Integer, Match> waitingToStart;  //non è creato il match
 
     /**
      * Translates the matchID to the related instance of match
@@ -216,11 +216,10 @@ public class GameModel extends Observable {
         //player.specialFunctionSetUnset();
     }
 
-
-
-    //la funzione dovrerbbe ritornare un valore che dice se l'utente ha finito il turno oppure no!
-    public static void playerTurn(Integer matchID, Integer playerID, Position position){
-        translatePlayerID(translateMatchID(matchID), playerID).playerAction(position);
+    public static boolean playerTurn(Integer matchID, Integer playerID, Position position){
+        Player player = translatePlayerID(translateMatchID(matchID), playerID);
+        player.playerAction(position);
+        return player.hasFinished();
     }
 
 

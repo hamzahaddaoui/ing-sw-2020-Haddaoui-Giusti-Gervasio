@@ -21,13 +21,14 @@ public class Player{
     private Commands commands;
     GodCards card;
     private TurnState state;
+    private boolean hasFinished;
 
-    private boolean placedWorkers;
     private boolean specialFunction;
 
     protected Player(int ID,String nickname, Match match) {
         this.ID = ID;
         this.nickname = nickname;
+        state = PLACING;
         this.match = match;
         workers.add(new Worker());
         workers.add(new Worker());
@@ -84,9 +85,6 @@ public class Player{
         return specialFunction;
     }
 
-
-
-    //la funzione non va bene!
     public void playerAction(Position position){
         switch (state){
             case PLACING:
@@ -96,13 +94,12 @@ public class Player{
                 else
                     state = commands.nextState(this);
             case WAIT:
+                hasFinished = false;
                 workers.stream().forEach(this::setAvailableCells);
                 state = commands.nextState(this);
             case MOVE:
-                //le celle dove muoversi sono già state computate, poichè inviate all'utente
                 commands.moveWorker(position, this);
             case BUILD:
-                //le celle dove muoversi sono già state computate, poichè inviate all'utente
                 commands.build(position, this);
         }
         state = commands.nextState(this);
@@ -112,6 +109,13 @@ public class Player{
         return currentWorker.getAvailableCells(this.state);
     }
 
+    public void setHasFinished(boolean hasFinished) {
+        this.hasFinished = hasFinished;
+    }
+
+    public boolean hasFinished() {
+        return hasFinished;
+    }
 
     private void setAvailableCells(Worker worker) {
         worker.setAvailableCells(PLACING, commands.computeAvailablePlacing(this, worker));
