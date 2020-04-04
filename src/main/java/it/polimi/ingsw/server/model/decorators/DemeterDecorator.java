@@ -10,13 +10,8 @@ import java.util.stream.Collectors;
 public class DemeterDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Demeter;
 
-
-    private int movesBeforeBuild = 1;
-    private int numOfBuilds = 2;
-    private int movesAfterBuild = 0;
-    private boolean doneStandard = false;
-    private boolean positionedWorkers = false;
     private Position positionBuilt=null;
+    private int numOfBuilds = 2;
 
     /**
      * decorate the object Command with Demeter's special power
@@ -29,9 +24,8 @@ public class DemeterDecorator extends CommandsDecorator {
 
     @Override
     public void build(Position position, Player player) {
-        Set<Position> availableBuildings=null;
         if(numOfBuilds==2){
-            availableBuildings=computeAvailableBuildings(player);}
+            }
         if(numOfBuilds==1){
             availableBuildings=computeAvailableSecondBuildings(player);}
         if (!availableBuildings.contains(position))
@@ -67,25 +61,37 @@ public class DemeterDecorator extends CommandsDecorator {
             build(position, player);
     }
 
+
+    @Override
+    public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
+        try{
+            if(player.getTotalBuilds()==2){
+                return computeAvailableFirstBuildings(player,worker);}
+            else if(player.getTotalBuilds()==1){
+                return computeAvailableSecondBuildings(player,worker);}
+            else return null;
+        }
+        catch(Exception ex){
+            throw new NullPointerException();}
+    }
+
     /**
      * method that show the list of cells that are available for the standard building action of the player
      *
      * @param player  is the current player
      * @return  the list of Position where the worker can build on
      */
-    public Set<Position> computeAvailableBuildings(Player player) {
+    public Set<Position> computeAvailableFirstBuildings(Player player, Worker worker) {
         try{
-            Set<Position> availableBuildings;
             Billboard billboard=player.getMatch().getBillboard();
-            availableBuildings = player
-                    .getCurrentWorker()
+
+            return worker
                     .getPosition()
                     .neighbourPositions()
                     .stream()
                     .filter(position -> billboard.getPlayer(position) == null)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
-            return availableBuildings;
         }
         catch(Exception ex){
             throw new NullPointerException("PLAYER IS NULL");
@@ -98,12 +104,10 @@ public class DemeterDecorator extends CommandsDecorator {
      * @param player  is the current player
      * @return  the list of Position where the worker can build on
      */
-    public Set<Position> computeAvailableSecondBuildings(Player player) {
+    public Set<Position> computeAvailableSecondBuildings(Player player, Worker worker) {
         try{
-            Set<Position> availableBuildings;
             Billboard billboard=player.getMatch().getBillboard();
-            availableBuildings = player
-                    .getCurrentWorker()
+            return worker
                     .getPosition()
                     .neighbourPositions()
                     .stream()
@@ -111,7 +115,6 @@ public class DemeterDecorator extends CommandsDecorator {
                     .filter(position -> billboard.getPlayer(position) == null)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
-            return availableBuildings;
         }
         catch(Exception ex){
             throw new NullPointerException("PLAYER IS NULL");

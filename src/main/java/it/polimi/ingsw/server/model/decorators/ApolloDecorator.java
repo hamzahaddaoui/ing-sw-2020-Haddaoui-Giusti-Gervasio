@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
-    Set<Position> availableMovements = new HashSet<>();
 
     /**
      * decorate the object Command with Apollo's special power
@@ -36,16 +35,13 @@ public class ApolloDecorator extends CommandsDecorator {
     public void moveWorker(Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
-        Set<Position> availableMovements = computeAvailableMovements(player, worker);
 
-        if (!availableMovements.contains(position))
-            return;
+        if(billboard.getPlayer(position)==null){
+            position.setZ(billboard.getTowerHeight(position));// imposta l'altezza al quale corrisponde il movimento
 
-        else if(billboard.getPlayer(position)==null){
-            position.setZ(billboard.getTowerHeight(position));
-            billboard.resetPlayer(worker.getPosition());
-            worker.setPosition(position);
-            billboard.setPlayer(position, worker);
+            billboard.resetPlayer(worker.getPosition());//nella Billboard imposta il color nella posizione
+            worker.setPosition(position);//imposta la nuova posizione nel nuovo player
+            billboard.setPlayer(position, worker);//imposta il colore del player
         }
         else{
             exchangePosition(player,position);
@@ -55,27 +51,18 @@ public class ApolloDecorator extends CommandsDecorator {
     public void exchangePosition(Player player,Position position){
         Billboard billboard=player.getMatch().getBillboard();
         Worker myWorker= player.getCurrentWorker();
-        Match activeMatch=player.getMatch();
+        Position exchangePosition= myWorker.getPosition();
         Worker opponentWorker= findOpponentWorker(position,player);
 
-        Position provisionalPosition=myWorker.getPosition();
-        opponentWorker.setPosition(provisionalPosition);
-        billboard.setPlayer(provisionalPosition,opponentWorker);
-        myWorker.setPosition(myWorker.getPosition());
-        billboard.setPlayer(position,myWorker);
-    }
+        opponentWorker.getPosition().setZ(billboard.getTowerHeight(opponentWorker.getPosition()));
+        position.setZ(billboard.getTowerHeight(position));
 
-    private Worker findOpponentOldWorker (Position position, Player player) {
-        Billboard billboard = player.getMatch().getBillboard();
-
-        for (Player opponent : player.getMatch().getPlayers()) {
-            if (opponent.getCurrentWorker().getColor() == billboard.getPlayer(position)) {
-                for(Worker opponentWorker : opponent.getWorkers())
-                    if (opponentWorker.getPosition()==position)
-                        return opponentWorker;
-            }
-        }
-        return null;
+        billboard.resetPlayer(opponentWorker.getPosition());
+        myWorker.setPosition(position);
+        billboard.setPlayer(position, myWorker);
+        billboard.resetPlayer(exchangePosition);
+        opponentWorker.setPosition(exchangePosition);
+        billboard.setPlayer(position, opponentWorker);
     }
 
     private Worker findOpponentWorker (Position position, Player player) {
@@ -90,7 +77,6 @@ public class ApolloDecorator extends CommandsDecorator {
                         .filter(worker1 -> worker1.getColor()==billboard.getPlayer(position))
                         .findAny().get())
                 .findAny().get();
-        return worker;
     }
 
     /**
@@ -103,20 +89,18 @@ public class ApolloDecorator extends CommandsDecorator {
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
-            Position currentPosition=player.getCurrentWorker().getPosition();
-            availableMovements = player
-                    .getCurrentWorker()
+            Position currentPosition=worker.getPosition();
+            return worker
                     .getPosition()
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) !=player.getCurrentWorker().getColor())
+                    .filter(position -> billboard.getPlayer(position) !=worker.getColor())
                     .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
                     .filter(position ->
                             player.getMatch().isMoveUpActive()
                                     && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
-            return availableMovements;
         }
         catch(Exception ex){
             throw new NullPointerException("PLAYER IS NULL");

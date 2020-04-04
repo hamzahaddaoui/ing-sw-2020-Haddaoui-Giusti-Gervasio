@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 public class ArtemisDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Artemis;
 
-    private int movesBeforeBuild = 2;
     private Position startingPosition=null;
+
     /**
      * decorate the object Command with Artemis's special power
      *
@@ -31,26 +31,32 @@ public class ArtemisDecorator extends CommandsDecorator {
     public void moveWorker(Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
-        Set<Position> availableMovements;
-        if(movesBeforeBuild==2){
-            this.startingPosition=worker.getPosition();
-            availableMovements = computeAvailableMovements(player, worker);}
-        else if(movesBeforeBuild==1)
-            availableMovements = computeAvailableSecondMovements(player);
-        else return;
-        if(availableMovements.contains(position)){
-            position.setZ(billboard.getTowerHeight(position));
-            billboard.resetPlayer(worker.getPosition());
-            worker.setPosition(position);
-            billboard.setPlayer(position, worker);
-            movesBeforeBuild--;
-        }
 
-        if(movesBeforeBuild==0){
-            this.startingPosition=null;
-            player.setState(TurnState.BUILD);}
+        if(player.getMovesBeforeBuild()==2){
+            startingPosition=worker.getPosition();}
+
+        position.setZ(billboard.getTowerHeight(position));
+
+        billboard.resetPlayer(worker.getPosition());
+        worker.setPosition(position);
+        billboard.setPlayer(position, worker);
+
+        if(player.getMovesBeforeBuild()==1){
+            startingPosition=null;}
     }
 
+    @Override
+    public Set<Position> computeAvailableMovements(Player player, Worker worker) {
+        try{
+            if(player.getMovesBeforeBuild()==2){
+                return computeAvailableFirstMovements(player,worker);}
+            else if(player.getMovesBeforeBuild()==1){
+                return computeAvailableSecondMovements(player,worker);}
+            else return null;
+        }
+        catch(Exception ex){
+            throw new NullPointerException();}
+    }
 
     /**
      * method that show the list of cells that are available for the standard movement of the player
@@ -58,24 +64,21 @@ public class ArtemisDecorator extends CommandsDecorator {
      * @param player  is the current player
      * @return  the list of Position where the worker can move on
      */
-    public Set<Position> computeAvailableMovement(Player player) {
+    public Set<Position> computeAvailableFirstMovements(Player player, Worker worker) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
-            Position currentPosition=player.getCurrentWorker().getPosition();
+            Position currentPosition=worker.getPosition();
 
-            Set<Position> availableMovements = player
-                    .getCurrentWorker()
-                    .getPosition()
+            return currentPosition
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) !=player.getCurrentWorker().getColor())
+                    .filter(position -> billboard.getPlayer(position) !=worker.getColor())
                     .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
                     .filter(position ->
                             player.getMatch().isMoveUpActive()
                                     && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
-            return availableMovements;
         }
         catch(Exception ex){
             throw new NullPointerException();
@@ -83,25 +86,22 @@ public class ArtemisDecorator extends CommandsDecorator {
 
     }
 
-    public Set<Position> computeAvailableSecondMovements(Player player) {
+    public Set<Position> computeAvailableSecondMovements(Player player, Worker worker) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
-            Position currentPosition=player.getCurrentWorker().getPosition();
+            Position currentPosition=worker.getPosition();
 
-            Set<Position> availableMovements = player
-                    .getCurrentWorker()
-                    .getPosition()
+            return  currentPosition
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) !=player.getCurrentWorker().getColor())
-                    .filter(position -> position != getStartingPosition())
+                    .filter(position -> billboard.getPlayer(position) !=worker.getColor())
+                    .filter(position -> position != startingPosition)
                     .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
                     .filter(position ->
                             player.getMatch().isMoveUpActive()
                                     && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
-            return availableMovements;
         }
         catch(Exception ex){
             throw new NullPointerException();
@@ -109,11 +109,4 @@ public class ArtemisDecorator extends CommandsDecorator {
 
     }
 
-    public Position getStartingPosition() {
-        return startingPosition;
-    }
-
-    public void setStartingPosition(Position startingPosition) {
-        this.startingPosition = null;
-    }
 }

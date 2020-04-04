@@ -119,6 +119,13 @@ public class Player{
         return currentWorker.getAvailableCells(this.state);
     }
 
+    public int getMovesBeforeBuild(){
+        return this.movesBeforeBuild;
+    }
+
+    public int getTotalBuilds(){
+        return this.totalBuilds;
+    }
 
     private void setAvailableCells(Worker worker) {
         worker.setAvailableCells(PLACING, commands.computeAvailablePlacing(this, worker));
