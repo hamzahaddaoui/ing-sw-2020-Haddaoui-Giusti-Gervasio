@@ -1,9 +1,6 @@
 package it.polimi.ingsw.server.model;
 import java.util.ArrayList;
 
-import static it.polimi.ingsw.server.model.TurnState.WAIT;
-
-
 /**
  * @author hamzahaddaoui
  *

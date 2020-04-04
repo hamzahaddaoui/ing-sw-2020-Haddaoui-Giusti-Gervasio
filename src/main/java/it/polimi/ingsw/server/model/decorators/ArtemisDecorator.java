@@ -32,7 +32,7 @@ public class ArtemisDecorator extends CommandsDecorator {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
 
-        if(player.getMovesBeforeBuild()==2){
+        /*if(player.getMovesBeforeBuild()==2){
             startingPosition=worker.getPosition();}
 
         position.setZ(billboard.getTowerHeight(position));
@@ -42,7 +42,7 @@ public class ArtemisDecorator extends CommandsDecorator {
         billboard.setPlayer(position, worker);
 
         if(player.getMovesBeforeBuild()==1){
-            startingPosition=null;}
+            startingPosition=null;}*/
     }
 
     @Override

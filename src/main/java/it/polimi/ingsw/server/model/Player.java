@@ -25,7 +25,7 @@ public class Player{
 
     private boolean specialFunction;
 
-    protected Player(int ID,String nickname, Match match) {
+    public Player(int ID,String nickname, Match match) {
         this.ID = ID;
         this.nickname = nickname;
         state = PLACING;

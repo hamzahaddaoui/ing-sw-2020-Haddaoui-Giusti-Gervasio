@@ -6,6 +6,11 @@ import java.util.Set;
 public class CommandsDecorator implements Commands {
     protected Commands commands;
 
+    @Override
+    public TurnState nextState(Player player) {
+        return commands.nextState(player);
+    }
+
     /**
      * method that allows the stardard placing movement
      *  @param position  is the position that player have inserted
