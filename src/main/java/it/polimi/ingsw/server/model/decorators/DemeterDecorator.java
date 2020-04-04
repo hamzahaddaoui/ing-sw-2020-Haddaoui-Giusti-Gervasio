@@ -11,7 +11,6 @@ public class DemeterDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Demeter;
 
     private Position positionBuilt=null;
-    private int numOfBuilds = 2;
 
     /**
      * decorate the object Command with Demeter's special power
@@ -24,17 +23,10 @@ public class DemeterDecorator extends CommandsDecorator {
 
     @Override
     public void build(Position position, Player player) {
-        if(numOfBuilds==2){
-            }
-        if(numOfBuilds==1){
-            availableBuildings=computeAvailableSecondBuildings(player);}
-        if (!availableBuildings.contains(position))
-            return;
-
         player.getMatch().getBillboard().incrementTowerHeight(position);
-        numOfBuilds--;
-        if(numOfBuilds==0) {
-            player.setState(TurnState.END);}
+
+        if(player.getTotalBuilds()==1) {
+            positionBuilt=null;}
     }
 
     /**
@@ -45,18 +37,10 @@ public class DemeterDecorator extends CommandsDecorator {
      * @param position   the position that player have inserted, not null
      */
     public void build(Position position, Player player, boolean forceDome) {
-        Set<Position> availableBuildings=null;
-        if(numOfBuilds==2)
+        if(player.getTotalBuilds()==2)
             positionBuilt=position;
         if (forceDome){
-            if(numOfBuilds==2){
-            availableBuildings=computeAvailableBuildings(player);}
-            if(numOfBuilds==1){
-            availableBuildings=computeAvailableSecondBuildings(player);}
-            if (!availableBuildings.contains(position))
-                return;
-            player.getMatch().getBillboard().setDome(position);
-            numOfBuilds--;}
+            player.getMatch().getBillboard().setDome(position);}
         else
             build(position, player);
     }
