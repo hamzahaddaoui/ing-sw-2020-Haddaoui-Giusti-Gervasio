@@ -1,10 +1,10 @@
 package it.polimi.ingsw.server.model;
-
 import it.polimi.ingsw.utilities.Position;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+
 
 public class Worker{
     private Position position;
@@ -12,10 +12,6 @@ public class Worker{
 
     private int heightVariation;
     private Map<TurnState, Set<Position>> availableCells = new HashMap<>();
-
-    public Worker(Position position){
-        this.position = position;
-    }
 
     public void setPosition(Position position) {
         this.heightVariation = position.getZ() - this.position.getZ();

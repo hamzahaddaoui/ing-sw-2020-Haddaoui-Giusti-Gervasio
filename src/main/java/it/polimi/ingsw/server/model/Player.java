@@ -1,12 +1,15 @@
 package it.polimi.ingsw.server.model;
-
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.ArrayList;
 import java.util.Set;
 
 import static it.polimi.ingsw.server.model.TurnState.*;
-import static it.polimi.ingsw.server.model.TurnState.START;
+
+/**
+ * @author hamzahaddaoui
+ * Class managing the instance of a certain user, liked to a match.
+ */
 
 public class Player{
     private int ID; //id connessione del giocatore
@@ -19,16 +22,16 @@ public class Player{
     GodCards card;
     private TurnState state;
 
-    private int movesBeforeBuild;
-    private int totalBuilds;
-    private int totalMoves;
+    private boolean placedWorkers;
     private boolean specialFunction;
-    private boolean turnStart;
 
     protected Player(int ID,String nickname, Match match) {
         this.ID = ID;
         this.nickname = nickname;
         this.match = match;
+        workers.add(new Worker());
+        workers.add(new Worker());
+        currentWorker = workers.get(0);
     }
 
     public String getNickname() {
@@ -41,10 +44,6 @@ public class Player{
 
     public Match getMatch() {
         return match;
-    }
-
-    public void setWorkers(Position position){
-        workers.add(new Worker(position));
     }
 
     public ArrayList<Worker> getWorkers() {
@@ -81,51 +80,38 @@ public class Player{
         specialFunction ^= true;
     }
 
-    public boolean isSpecialFunction() {
+    public boolean getSpecialFunction() {
         return specialFunction;
     }
 
+
+
+    //la funzione non va bene!
     public void playerAction(Position position){
-        switch (state) {
-            case START:
-                movesBeforeBuild = card.getMovesBeforeBuilding();
-                totalBuilds = card.getNumOfBuilding();
-                totalMoves = card.getMovesAfterBuilding();
-                workers.stream().forEach(this::setAvailableCells);
-                break;
+        switch (state){
             case PLACING:
                 commands.placeWorker(position, this);
+                if (workers.iterator().hasNext())
+                    currentWorker = workers.iterator().next();
+                else
+                    state = commands.nextState(this);
+            case WAIT:
+                workers.stream().forEach(this::setAvailableCells);
+                state = commands.nextState(this);
             case MOVE:
+                //le celle dove muoversi sono già state computate, poichè inviate all'utente
                 commands.moveWorker(position, this);
-                if (movesBeforeBuild == 0) {
-                    totalMoves--;
-                    if (totalMoves == 0)
-                        state = END;
-                } else {
-                    movesBeforeBuild--;
-                    totalMoves--;
-                    if (movesBeforeBuild == 0)
-                        state = BUILD;
-                }
             case BUILD:
+                //le celle dove muoversi sono già state computate, poichè inviate all'utente
                 commands.build(position, this);
-                if (-- totalBuilds == 0)
-                    if (totalMoves != 0) state = MOVE;
-                    else state = END;
         }
+        state = commands.nextState(this);
     }
 
     public Set<Position> getAvailableCells() {
         return currentWorker.getAvailableCells(this.state);
     }
 
-    public int getMovesBeforeBuild(){
-        return this.movesBeforeBuild;
-    }
-
-    public int getTotalBuilds(){
-        return this.totalBuilds;
-    }
 
     private void setAvailableCells(Worker worker) {
         worker.setAvailableCells(PLACING, commands.computeAvailablePlacing(this, worker));

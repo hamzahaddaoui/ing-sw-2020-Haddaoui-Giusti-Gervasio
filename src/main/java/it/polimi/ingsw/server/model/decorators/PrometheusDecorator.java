@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.server.model.TurnState.*;
+
 public class PrometheusDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Prometheus;
     public PrometheusDecorator(Commands commands){
@@ -15,6 +17,22 @@ public class PrometheusDecorator extends CommandsDecorator {
     }
     private int numOfBuildings;
     private boolean buildBefore;
+
+
+
+
+    @Override
+    public TurnState nextState(Player player) {
+        switch(player.getState()){
+            case WAIT:
+                return MOVE;
+            case MOVE:
+                return BUILD;
+            default:
+                return WAIT;
+        }
+    }
+
 
     /**
      * Method that implements the specific movement of Prometheus.
@@ -32,7 +50,7 @@ public class PrometheusDecorator extends CommandsDecorator {
         Worker worker = player.getCurrentWorker();
 
         if (buildBefore && numOfBuildings==2) {
-                player.setState(TurnState.BUILD); //valutare se ha senso farlo
+                player.setState(BUILD); //valutare se ha senso farlo
                 build(position, player);
         }
         else if (buildBefore && numOfBuildings==1) {
@@ -44,7 +62,7 @@ public class PrometheusDecorator extends CommandsDecorator {
             worker.setPosition(position);
             billboard.setPlayer(position, worker);
 
-            player.setState(TurnState.BUILD);
+            player.setState(BUILD);
         }
         else super.moveWorker(position, player);
     }

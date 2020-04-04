@@ -1,7 +1,13 @@
 package it.polimi.ingsw.server.model;
-
 import java.util.ArrayList;
 
+import static it.polimi.ingsw.server.model.TurnState.WAIT;
+
+
+/**
+ * @author hamzahaddaoui
+ *
+ */
 public class Match {
     private int ID;
     private int playersNum; //number of players of the match
@@ -16,7 +22,7 @@ public class Match {
 
     private boolean started;
     private boolean numReached;
-    private boolean moveUpActive;
+    private boolean moveUpActive = true;
     private boolean finished;
 
     public Match(int matchID) {
@@ -24,8 +30,9 @@ public class Match {
         billboard = new Billboard();
     }
 
-    public void setPlayersNum(int playersNum){
+    public boolean setPlayersNum(int playersNum){
         this.playersNum = playersNum;
+        return true;
     }
 
     public int getID() {
@@ -79,14 +86,13 @@ public class Match {
 
     //to do - write javadoc
 
-    public boolean addPlayer(Player player) {
+    public void addPlayer(Player player) {
         if (playersCurrentCount >= playersNum)
-            return false;
+            return;
         players.add(player);
         currentPlayer = player;
         playersCurrentCount++;
         if(playersNum == playersCurrentCount) numReached = true;
-        return true;
     }
 
     public void addCard(GodCards card) {
@@ -105,10 +111,6 @@ public class Match {
 
     public void nextTurn() {
         currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
-        /*if (players.indexOf(currentPlayer) == playersNum - 1) {
-            currentPlayer = players.get(0);
-        } else currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
-        */
     }
 
     public boolean isMoveUpActive() {

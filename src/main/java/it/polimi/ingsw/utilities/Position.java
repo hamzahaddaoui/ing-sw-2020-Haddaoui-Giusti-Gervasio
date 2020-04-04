@@ -1,6 +1,11 @@
 package it.polimi.ingsw.utilities;
-
 import java.util.*;
+
+/**
+ * @author hamzahaddaoui
+ * Class for managining 2D points on a natural numbers xy plane
+ * Every point can have a value associated, which is the height, of the point (z)
+ */
 
 public class Position {
 
@@ -102,19 +107,20 @@ public class Position {
         return CardinalDirection.valueOf(Math.toDegrees(Math.atan2(offset.getY(),offset.getX())));
     }
 
-    public boolean Partialequals(Position position) {
+    public boolean equals(Position position) {
         if (this == position) return true;
         if (position == null || getClass() != position.getClass()) return false;
         return x == position.x &&
-                y == position.y;
+               y == position.y;
     }
 
-    public boolean equals(Position position){
+    public boolean equalsHeight(Position position) {
         if (this == position) return true;
         if (position == null || getClass() != position.getClass()) return false;
-        return x == position.x &&
-                y == position.y &&
-                z == position.z;
+        return z == position.z;
     }
+
+
+
 }
 

@@ -3,9 +3,6 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
-import java.util.List;
-import java.util.Set;
-
 public class AtlasDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Atlas;
 
@@ -27,7 +24,7 @@ public class AtlasDecorator extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        if (player.isSpecialFunction())
+        if (player.getSpecialFunction())
             player.getMatch().getBillboard().setDome(position);
         else
             super.build(position, player);

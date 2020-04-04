@@ -6,6 +6,8 @@ import java.util.Set;
 
 public interface Commands {
 
+    TurnState nextState(Player player);
+
     void placeWorker(Position position, Player player);
 
     void moveWorker(Position position, Player player);
@@ -21,5 +23,7 @@ public interface Commands {
     boolean winningCondition(Player player);
 
     boolean losingCondition(Player player);
+
+
 
 }

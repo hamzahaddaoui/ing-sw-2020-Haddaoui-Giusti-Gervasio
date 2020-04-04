@@ -7,15 +7,37 @@ import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.Position;
 import java.util.*;
 
+/**
+ * @author hamzahaddaoui
+ * Main model class: represents the facade of the entire model package
+ * All user-useful model classes are accessible from the methods listed here.
+ */
+
 public class GameModel extends Observable {
+    //list of observers of the model state
     private static Observer<Message> observer;
+
+    //navigableMap to get the last inserted element, which could correspond to the waiting to start watch
+    //Made up of an integer, which represents the matchID, and the match entity.
     private static NavigableMap<Integer, Match> activeMatches = new TreeMap<>(); //id match, match
 
+
+    /**
+     * Translates the matchID to the related instance of match
+     * @param matchID id of the match whose instance is requested
+     * @return the instance of match related to the matchID
+     */
     protected static Match translateMatchID (Integer matchID){
         return activeMatches
                 .get(matchID);
     }
 
+    /**
+     * Translates the playerID to the related instance of player
+     * @param match instance of match joined by the player
+     * @param playerID id of the player whose instance is requested
+     * @return the instance of player related to the playerID
+     */
     protected static Player translatePlayerID (Match match, Integer playerID){
         return match
                 .getPlayers()
@@ -46,7 +68,7 @@ public class GameModel extends Observable {
      * Checks if the match waiting to start has a certain nickname available.
      *
      * @param nickname contains the nickname choosen by the user
-     * @return false if the nickname is not available, true in any other case
+     * @return false if the nickname is not available, true otherwise
      */
     public static boolean isNickAvailable(String nickname){
         if (getAvailableMatchID() != -1){
@@ -66,13 +88,17 @@ public class GameModel extends Observable {
      *
      * @param playerID the ID of the player associated with that nickname and the waiting to start match
      * @param nickname the nickname of the player
-     * @return a boolean value which indicates if the number of players is reached
      */
-    public static boolean addPlayer(Integer playerID, String nickname){
+    public static void addPlayer(Integer playerID, String nickname){
         Match match = activeMatches.get(activeMatches.lastKey());
-        return match.addPlayer(new Player(playerID, nickname, match));
+        match.addPlayer(new Player(playerID, nickname, match));
     }
 
+    /**
+     * Checks if the required number of the players for the starting match is reached
+     *
+     * @return true if the number of players is reached
+     */
     public static boolean isNumReached(){
         return activeMatches.get(activeMatches.lastKey()).isNumReached();
     }
@@ -80,39 +106,53 @@ public class GameModel extends Observable {
     /**
      * Creates a new instance of match, with an assigned unique ID
      */
-    public static void createMatch(){
+    public synchronized static void createMatch(){
+        Match match;
         int matchID = 0;
-        if (activeMatches.lastKey() != null) matchID = activeMatches.lastKey() + 1;
+        if (activeMatches.lastKey() != null)
+            matchID = activeMatches.lastKey() + 1;
         activeMatches.put(matchID, new Match(activeMatches.lastKey()));
     }
 
-    public static void setMatchPlayersNum(int playerNum){
+    /**
+     * Changes the number of the players of the "waiting to start" match
+     *
+     * @param playerNum the number of players wanted for the "waiting to start" match
+     */
+    public synchronized static void setMatchPlayersNum(int playerNum){
         activeMatches.get(activeMatches.lastKey()).setPlayersNum(playerNum);
     }
 
-    public static void startMatch(){
+    /**
+     * Starts the "waiting to start" match
+     */
+    public synchronized static void startMatch(){
         activeMatches.get(activeMatches.lastKey()).matchStart();
     }
 
     /**
-     * Add (or removes) a specific card to the match deck,
-     * according to the number of players of the match
+     * Add (or removes) a specific card to the match deck
      *
      * @param matchID specified matchID
      * @param card special card selected by the current user
-     * @return true if the cards deck is full (cards number is equal to players number)
      */
-    public static boolean addRemoveCardToMatch(Integer matchID, String card){
+    public synchronized static void addRemoveCardToMatchDeck(Integer matchID, String card){
         Match match = translateMatchID(matchID);
         GodCards godCard = GodCards.valueOf(card);
-        if (match.getCards().contains(godCard)) match.removeCard(godCard);
-        else match.addCard(godCard);
+        if (match.getCards().contains(godCard))
+            match.removeCard(godCard);
+        else
+            match.addCard(godCard);
+    }
 
-        if (match.isDeckFull()){
-            match.nextTurn();
-        }
-
-        return match.isDeckFull();
+    /**
+     * Checks if the deck of the match is full
+     *
+     * @param matchID specified matchID
+     * @return true if the deck is full, false otherwise
+     */
+    public synchronized static boolean isMatchDeckFull(Integer matchID){
+        return translateMatchID(matchID).isDeckFull();
     }
 
     /**
@@ -121,12 +161,19 @@ public class GameModel extends Observable {
      * @param matchID specified matchID
      * @return the current player of the specified match
      */
-    public int getCurrentPlayerID(Integer matchID){
+    public synchronized static int getCurrentPlayerID(Integer matchID){
         return translateMatchID(matchID).getCurrentPlayer().getID();
     }
 
-    public static void setCurrentPlayerWorker(Integer matchID, Integer playerID, int worker){
-        translatePlayerID(translateMatchID(matchID), playerID).setCurrentWorkerID(worker);
+
+    /**
+     * Changes the current worker of the currentPlayer on the specified match
+     *
+     * @param matchID specified matchID
+     * @param worker the worker chosen by the player
+     */
+    public synchronized static void setCurrentPlayerWorker(Integer matchID, int worker){
+        translateMatchID(matchID).getCurrentPlayer().setCurrentWorkerID(worker);
     }
 
     /**
@@ -169,9 +216,13 @@ public class GameModel extends Observable {
         //player.specialFunctionSetUnset();
     }
 
-    public static void playerMoveBuild(Integer matchID, Integer playerID, Position position){
+
+
+    //la funzione dovrerbbe ritornare un valore che dice se l'utente ha finito il turno oppure no!
+    public static void playerTurn(Integer matchID, Integer playerID, Position position){
         translatePlayerID(translateMatchID(matchID), playerID).playerAction(position);
     }
+
 
     /**
      * Make a copy of the state of the billboard, made of 3 layers:

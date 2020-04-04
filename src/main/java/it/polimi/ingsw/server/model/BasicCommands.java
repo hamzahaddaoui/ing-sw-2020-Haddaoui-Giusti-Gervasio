@@ -5,7 +5,26 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.server.model.TurnState.*;
+
+/**
+ * @author hamzahaddaoui, giusti-leo
+ * Basic move and build commands for a generic worker, with no special power associated
+ */
+
 public class BasicCommands implements Commands {
+
+    @Override
+    public TurnState nextState(Player player) {
+        switch(player.getState()){
+            case WAIT:
+                return MOVE;
+            case MOVE:
+                return BUILD;
+            default:
+                return WAIT;
+        }
+    }
 
     /**
      * method that allows the stardard placing movement
@@ -24,6 +43,7 @@ public class BasicCommands implements Commands {
             throw new NullPointerException();
         }
     }
+
 
     /**
      * method that allows the stardard player movement
