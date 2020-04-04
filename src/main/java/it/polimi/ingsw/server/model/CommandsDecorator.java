@@ -41,63 +41,23 @@ public class CommandsDecorator implements Commands {
     }
 
     @Override
-    public void build(Position position, Player player, boolean forceDome) {
-        commands.build(position, player, forceDome);
-    }
-
-    /**
-     * method that allows the standard building dome action
-     * the player can build a dome on an unoccupied space neighbouring the worker
-     *
-     * @param player
-     * @param position  is the position that player have inserted
-     *
-     */
-    public void buildDome(Position position, Player player) {
-
-    }
-
-    /**
-     * return the spaces that are available after a check on billboard
-     *
-     *
-     * @param player
-     * @return
-     */
-    public Set<Position> getAvailableCells(Player player) {
-        return commands.getAvailableCells(player);
+    public Set<Position> computeAvailablePlacing(Player player, Worker worker) {
+        return commands.computeAvailablePlacing(player, worker);
     }
 
     @Override
-    public Set<Position> computeAvailablePlacing(Player player) {
-        return commands.computeAvailablePlacing(player);
+    public Set<Position> computeAvailableMovements(Player player, Worker worker) {
+        return commands.computeAvailableMovements(player, worker);
     }
 
     @Override
-    public Set<Position> computeAvailableMovements(Player player) {
-        return commands.computeAvailableMovements(player);
+    public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
+        return commands.computeAvailableBuildings(player, worker);
     }
 
     @Override
-    public Set<Position> computeAvailableBuildings(Player player) {
-        return commands.computeAvailableBuildings(player);
-    }
-
-    /**
-     * Activates (deactivates) special function related to a certain player
-     */
-    public void specialFunctionSetUnset(){
-        commands.specialFunctionSetUnset();
-    }
+    public boolean winningCondition(Player player) { return commands.winningCondition(player); }
 
     @Override
-    public void reset(Player player) {
-        commands.reset(player);
-    }
-
-    @Override
-    public void winningCondition(Position startingPosition, Player player) { commands.winningCondition(startingPosition,player); }
-
-    @Override
-    public void losingCondition(Player player) { commands.losingCondition(player); }
+    public boolean losingCondition(Player player) { return commands.losingCondition(player); }
 }

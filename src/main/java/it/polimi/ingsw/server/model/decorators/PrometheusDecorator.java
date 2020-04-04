@@ -13,11 +13,6 @@ public class PrometheusDecorator extends CommandsDecorator {
     public PrometheusDecorator(Commands commands){
         this.commands=commands;
     }
-
-    protected Set<Position> availablePlacing = new HashSet<>();
-    protected Set<Position> availableMovements = new HashSet<>();
-    protected Set<Position> availableBuildings = new HashSet<>();
-
     private int numOfBuildings;
     private boolean buildBefore;
 
@@ -41,7 +36,7 @@ public class PrometheusDecorator extends CommandsDecorator {
                 build(position, player);
         }
         else if (buildBefore && numOfBuildings==1) {
-            if (!availableMovements.contains(position))
+            if (!computeAvailableMovements(player, worker).contains(position))
                 return;
 
             position.setZ(billboard.getTowerHeight(position));
@@ -73,39 +68,6 @@ public class PrometheusDecorator extends CommandsDecorator {
         else super.build(position, player);
     }
 
-    /**
-     * Return the spaces that are available after a check on billboard.
-     * <p>
-     * If the flag is true, it means you can't see the neighboring space that has higher level.
-     * Else you see the standard spaces.
-     *
-     * @param player     the player who makes the move, not null
-     * @return           the spaces which are available
-     */
-    @Override
-    public Set<Position> getAvailableCells(Player player) {
-
-        try{
-            switch (player.getState()){
-                case PLACING:
-                    super.computeAvailablePlacing(player);
-                    return availablePlacing;
-                case MOVE:
-                    if (buildBefore)
-                    this.computeAvailableMovements(player);
-                    else super.computeAvailableMovements(player);
-                    return availableMovements;
-                case BUILD:
-                    super.computeAvailableBuildings(player);
-                    return availableBuildings;
-                default:
-                    return null;
-            }
-        } catch(NullPointerException ex){
-            throw new NullPointerException("PLAYER IS NULL");
-        }
-    }
-
 
     /**
      * Returns the spaces that are available after a check in the billboard.
@@ -117,12 +79,12 @@ public class PrometheusDecorator extends CommandsDecorator {
      * @return        the spaces which are available
      */
     @Override
-    public Set<Position> computeAvailableMovements(Player player) {
+    public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         try{
             Billboard billboard=player.getMatch().getBillboard();
             Position currentPosition=player.getCurrentWorker().getPosition();
 
-            availableMovements = player
+            return player
                     .getCurrentWorker()
                     .getPosition()
                     .neighbourPositions()
@@ -131,36 +93,10 @@ public class PrometheusDecorator extends CommandsDecorator {
                     .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition)))
                     .filter(position -> !billboard.getDome(position))
                     .collect(Collectors.toSet());
-            return availableMovements;
         }
         catch(Exception ex){
             throw new NullPointerException("PLAYER IS NULL");
         }
     }
 
-
-    /**
-     * Method that set or unset a specific behaviour.
-     * <p>
-     * The first time you set the flag buildBefore as true and numOfBuildings = 2.
-     * Every other time you switch the flag and the numOfBuildings.
-     */
-    @Override
-    public void specialFunctionSetUnset() {
-        buildBefore ^= true;
-        if (buildBefore) numOfBuildings=2;
-        else numOfBuildings=1;
-    }
-
-    /**
-     * Method that reset the standard values of buildBefore and numOfBuildings.
-     *
-     * @param player
-     */
-    @Override
-    public void reset(Player player) {
-        super.reset(player);
-        buildBefore = false;
-        numOfBuildings = 1;
-    }
 }

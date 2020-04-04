@@ -50,7 +50,6 @@ public class DemeterDecorator extends CommandsDecorator {
      * @param player
      * @param position   the position that player have inserted, not null
      */
-    @Override
     public void build(Position position, Player player, boolean forceDome) {
         Set<Position> availableBuildings=null;
         if(numOfBuilds==2)
@@ -68,29 +67,6 @@ public class DemeterDecorator extends CommandsDecorator {
             build(position, player);
     }
 
-    /**
-     * method that divide the different implementation of available cells: for building action and for movement action
-     *
-     * @param player  is the current player
-     * @return  the list of Position that are available for that specific action
-     */
-    public Set<Position> getAvailableCells(Player player) {
-        try{
-            switch (player.getState()){
-                case PLACING:
-                    return computeAvailablePlacing(player);
-                case MOVE:
-                    return computeAvailableMovements(player);
-                case BUILD:
-                    return computeAvailableBuildings(player);
-                default:
-                    return null;
-            }
-        } catch(NullPointerException ex){
-            throw new NullPointerException("PLAYER IS NULL");
-        }
-    }
-c
     /**
      * method that show the list of cells that are available for the standard building action of the player
      *

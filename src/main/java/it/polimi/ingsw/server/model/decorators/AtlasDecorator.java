@@ -9,8 +9,6 @@ import java.util.Set;
 public class AtlasDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Atlas;
 
-    private boolean domeBuild;
-
     /**
      * decorate the object Command with Atlas's special power
      *
@@ -29,20 +27,9 @@ public class AtlasDecorator extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        build(position, player, domeBuild);
-    }
-
-    /**
-     * Activates (deactivates) special function related to a certain player
-     *
-     */
-    @Override
-    public void specialFunctionSetUnset() {
-        domeBuild ^= true;
-    }
-
-    public void reset() {
-        super.reset();
-        domeBuild = false;
+        if (player.isSpecialFunction())
+            player.getMatch().getBillboard().setDome(position);
+        else
+            super.build(position, player);
     }
 }

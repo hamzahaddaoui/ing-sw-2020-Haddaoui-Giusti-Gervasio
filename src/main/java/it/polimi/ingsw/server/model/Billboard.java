@@ -8,18 +8,7 @@ public class Billboard {
     static final int COLOUMNS = 5;
 
     private int [][] towerHeight;
-    /*
-    0 if the space is empty
-    1 if the space is on the first floor
-    2 if the space is on the second floor
-    3 if the space is on the third floor
-     */
-
     private boolean [][] domePosition ;
-    /*
-    false if in the space there isn't the dome
-    true if in the space there is the dome
-     */
     private  Color[][] playerColor;
 
     public Billboard() {
@@ -27,7 +16,6 @@ public class Billboard {
         this.domePosition = new boolean[ROWS][COLOUMNS];
         this.playerColor = new Color[ROWS][COLOUMNS];
     }
-
 
     public int[][] getTowerHeight() {
         return towerHeight;

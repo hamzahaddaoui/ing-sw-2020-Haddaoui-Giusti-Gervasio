@@ -11,10 +11,6 @@ public class ArtemisDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Artemis;
 
     private int movesBeforeBuild = 2;
-    private int numOfBuilds = 1;
-    private int movesAfterBuild = 0;
-    private boolean doneStandard = false;
-    private boolean positionedWorkers = false;
     private Position startingPosition=null;
     /**
      * decorate the object Command with Artemis's special power
@@ -38,7 +34,7 @@ public class ArtemisDecorator extends CommandsDecorator {
         Set<Position> availableMovements;
         if(movesBeforeBuild==2){
             this.startingPosition=worker.getPosition();
-            availableMovements = computeAvailableMovements(player);}
+            availableMovements = computeAvailableMovements(player, worker);}
         else if(movesBeforeBuild==1)
             availableMovements = computeAvailableSecondMovements(player);
         else return;
@@ -82,11 +78,10 @@ public class ArtemisDecorator extends CommandsDecorator {
             return availableMovements;
         }
         catch(Exception ex){
-            throw new NullPointerException("PLAYER IS NULL");
+            throw new NullPointerException();
         }
 
     }
-
 
     public Set<Position> computeAvailableSecondMovements(Player player) {
         try{
@@ -109,33 +104,10 @@ public class ArtemisDecorator extends CommandsDecorator {
             return availableMovements;
         }
         catch(Exception ex){
-            throw new NullPointerException("PLAYER IS NULL");
+            throw new NullPointerException();
         }
 
     }
-    /**
-     * return the spaces that are available after a check on billboard
-     *
-     *
-     * @param player@return
-     */
-    public Set<Position> getAvailableCells(Player player) {
-        try{
-            switch (player.getState()){
-                case PLACING:
-                    return computeAvailablePlacing(player);
-                case MOVE:
-                    return computeAvailableMovements(player);
-                case BUILD:
-                    return computeAvailableBuildings(player);
-                default:
-                    return null;
-            }
-        } catch(NullPointerException ex){
-            throw new NullPointerException("PLAYER IS NULL");
-        }
-    }
-
 
     public Position getStartingPosition() {
         return startingPosition;

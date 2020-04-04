@@ -7,7 +7,7 @@ import it.polimi.ingsw.utilities.Observer;
 public class GameController implements Observer<Message> {
     @Override
     public void update(Message message) {
-        if (message.getMatchID() == null){
+        /*if (message.getMatchID() == null){
             if (GameModel.getCurrentMatch() != null){
                 if(GameModel.isNickAvailable(message.getPayload())){
                     GameModel.addPlayer(message.getPayload());
@@ -18,7 +18,7 @@ public class GameController implements Observer<Message> {
                 GameModel.addPlayer(message.getPayload());
             }
         }
-
+*/
         /*switch(message.getMatchID().getCurrentState){
 
         }*/

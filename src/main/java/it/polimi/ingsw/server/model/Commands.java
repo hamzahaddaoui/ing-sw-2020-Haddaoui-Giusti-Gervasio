@@ -3,32 +3,23 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.Set;
-import java.util.List;
 
 public interface Commands {
 
-    public void placeWorker(Position position, Player player);
+    void placeWorker(Position position, Player player);
 
-    public void moveWorker(Position position, Player player);
+    void moveWorker(Position position, Player player);
 
-    public void build(Position position, Player player);
+    void build(Position position, Player player);
 
-    public void build(Position position, Player player, boolean forceDome);
+    Set<Position> computeAvailablePlacing(Player player, Worker worker);
 
-    public Set<Position> getAvailableCells(Player player);
+    Set<Position> computeAvailableMovements(Player player, Worker worker);
 
-    public Set<Position> computeAvailablePlacing(Player player);
+    Set<Position> computeAvailableBuildings(Player player, Worker worker);
 
-    public Set<Position> computeAvailableMovements(Player player);
+    boolean winningCondition(Player player);
 
-    public Set<Position> computeAvailableBuildings(Player player);
-
-    public void specialFunctionSetUnset();
-
-    public void reset(Player player);
-
-    public void winningCondition(Position startingPosition, Player player);
-
-    public void losingCondition(Player player);
+    boolean losingCondition(Player player);
 
 }

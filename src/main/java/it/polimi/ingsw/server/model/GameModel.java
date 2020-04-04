@@ -6,24 +6,22 @@ import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.Position;
 import java.util.*;
-import java.util.stream.Collectors;
-
 
 public class GameModel extends Observable {
     private static Observer<Message> observer;
     private static NavigableMap<Integer, Match> activeMatches = new TreeMap<>(); //id match, match
 
-    public static Match translateMatchID (Integer matchID){
+    protected static Match translateMatchID (Integer matchID){
         return activeMatches
                 .get(matchID);
     }
 
-    public static Player translatePlayerID (Match match, Integer playerID){
+    protected static Player translatePlayerID (Match match, Integer playerID){
         return match
                 .getPlayers()
                 .stream()
                 .filter(player1 -> player1.getID()==playerID)
-                .collect(Collectors.toList()).get(0);
+                .findAny().get();
     }
 
     /**
@@ -72,19 +70,28 @@ public class GameModel extends Observable {
      */
     public static boolean addPlayer(Integer playerID, String nickname){
         Match match = activeMatches.get(activeMatches.lastKey());
-        match.addPlayer(new Player(playerID, nickname, match));
-        return match.isNumReached();
+        return match.addPlayer(new Player(playerID, nickname, match));
+    }
+
+    public static boolean isNumReached(){
+        return activeMatches.get(activeMatches.lastKey()).isNumReached();
     }
 
     /**
-     * Creates a new instance of match, with the specified number of player,
-     * with an assigned unique ID
-     * @param playerNum number of players of the match
+     * Creates a new instance of match, with an assigned unique ID
      */
-    public static void createMatch(int playerNum){
+    public static void createMatch(){
         int matchID = 0;
         if (activeMatches.lastKey() != null) matchID = activeMatches.lastKey() + 1;
-        activeMatches.put(matchID, new Match(activeMatches.lastKey(), playerNum));
+        activeMatches.put(matchID, new Match(activeMatches.lastKey()));
+    }
+
+    public static void setMatchPlayersNum(int playerNum){
+        activeMatches.get(activeMatches.lastKey()).setPlayersNum(playerNum);
+    }
+
+    public static void startMatch(){
+        activeMatches.get(activeMatches.lastKey()).matchStart();
     }
 
     /**
@@ -154,7 +161,7 @@ public class GameModel extends Observable {
     public static Set<Position> getAvailableCells(Integer matchID, Integer playerID){
         Match match = translateMatchID(matchID);
         Player player = translatePlayerID(match, playerID);
-        return player.Commands().getAvailableCells(player);
+        return player.getAvailableCells();
     }
 
     public static void setUnsetSpecialFunction(Integer matchID, Integer playerID, int worker){
@@ -163,7 +170,7 @@ public class GameModel extends Observable {
     }
 
     public static void playerMoveBuild(Integer matchID, Integer playerID, Position position){
-        translatePlayerID(translateMatchID(matchID), playerID).playerTurn(position);
+        translatePlayerID(translateMatchID(matchID), playerID).playerAction(position);
     }
 
     /**

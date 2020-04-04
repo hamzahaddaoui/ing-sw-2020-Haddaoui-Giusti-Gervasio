@@ -19,10 +19,13 @@ public class Match {
     private boolean moveUpActive;
     private boolean finished;
 
-    public Match(int matchID, int playersNum) {
-        this.playersNum = playersNum;
+    public Match(int matchID) {
         this.ID = matchID;
         billboard = new Billboard();
+    }
+
+    public void setPlayersNum(int playersNum){
+        this.playersNum = playersNum;
     }
 
     public int getID() {
@@ -76,11 +79,14 @@ public class Match {
 
     //to do - write javadoc
 
-    public void addPlayer(Player player) {
+    public boolean addPlayer(Player player) {
+        if (playersCurrentCount >= playersNum)
+            return false;
         players.add(player);
         currentPlayer = player;
         playersCurrentCount++;
         if(playersNum == playersCurrentCount) numReached = true;
+        return true;
     }
 
     public void addCard(GodCards card) {
@@ -91,7 +97,7 @@ public class Match {
         cards.remove(card);
     }
 
-    private void matchStart() {
+    public void matchStart() {
         started = true;
         finished = false;
         currentPlayer = players.get(0);
