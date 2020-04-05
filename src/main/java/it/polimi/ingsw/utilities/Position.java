@@ -120,7 +120,5 @@ public class Position {
         return z == position.z;
     }
 
-
-
 }
 
