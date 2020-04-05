@@ -25,8 +25,8 @@ public class DemeterDecorator extends CommandsDecorator {
     public void build(Position position, Player player) {
         player.getMatch().getBillboard().incrementTowerHeight(position);
 
-        if(player.getTotalBuilds()==1) {
-            positionBuilt=null;}
+        /*if(player.getTotalBuilds()==1) {
+            positionBuilt=null;}*/
     }
 
     /**
@@ -37,23 +37,23 @@ public class DemeterDecorator extends CommandsDecorator {
      * @param position   the position that player have inserted, not null
      */
     public void build(Position position, Player player, boolean forceDome) {
-        if(player.getTotalBuilds()==2)
+       /* if(player.getTotalBuilds()==2)
             positionBuilt=position;
         if (forceDome){
             player.getMatch().getBillboard().setDome(position);}
         else
-            build(position, player);
+            build(position, player);*/
     }
 
 
     @Override
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
         try{
-            if(player.getTotalBuilds()==2){
+            /*if(player.getTotalBuilds()==2){
                 return computeAvailableFirstBuildings(player,worker);}
             else if(player.getTotalBuilds()==1){
                 return computeAvailableSecondBuildings(player,worker);}
-            else return null;
+            else*/ return null;
         }
         catch(Exception ex){
             throw new NullPointerException();}
@@ -73,7 +73,7 @@ public class DemeterDecorator extends CommandsDecorator {
                     .getPosition()
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getPlayer(position) == -1)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
         }
@@ -96,7 +96,7 @@ public class DemeterDecorator extends CommandsDecorator {
                     .neighbourPositions()
                     .stream()
                     .filter(position -> position!=positionBuilt)
-                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getPlayer(position) == -1)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
         }

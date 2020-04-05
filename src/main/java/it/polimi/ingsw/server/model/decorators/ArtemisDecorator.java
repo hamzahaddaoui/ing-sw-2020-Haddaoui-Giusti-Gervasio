@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.server.model.TurnState.*;
+
 public class ArtemisDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Artemis;
 
@@ -21,7 +23,19 @@ public class ArtemisDecorator extends CommandsDecorator {
         this.commands=commands;
     }
 
-
+    @Override
+    public TurnState nextState(Player player) {
+        switch(player.getState()){
+            case WAIT:
+                return MOVE;
+            case MOVE:
+                return BUILD;
+            case BUILD:
+                player.setHasFinished(true);
+            default:
+                return WAIT;
+        }
+    }
     /**
      * worker may move one additional time but not back to the initial space
      *  @param position  is the position that player have inserted
@@ -48,11 +62,12 @@ public class ArtemisDecorator extends CommandsDecorator {
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         try{
-            if(player.getMovesBeforeBuild()==2){
+           /* if(1){
                 return computeAvailableFirstMovements(player,worker);}
-            else if(player.getMovesBeforeBuild()==1){
+            else if(0){
                 return computeAvailableSecondMovements(player,worker);}
-            else return null;
+            else return null;*/
+           return null;
         }
         catch(Exception ex){
             throw new NullPointerException();}
@@ -72,7 +87,7 @@ public class ArtemisDecorator extends CommandsDecorator {
             return currentPosition
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) !=worker.getColor())
+                    .filter(position -> billboard.getPlayer(position) !=player.getID())
                     .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
                     .filter(position ->
                             player.getMatch().isMoveUpActive()
@@ -94,7 +109,7 @@ public class ArtemisDecorator extends CommandsDecorator {
             return  currentPosition
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) !=worker.getColor())
+                    .filter(position -> billboard.getPlayer(position) !=player.getID())
                     .filter(position -> position != startingPosition)
                     .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
                     .filter(position ->
