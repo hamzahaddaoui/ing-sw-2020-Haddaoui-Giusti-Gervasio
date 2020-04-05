@@ -3,6 +3,8 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.Set;
+
 public class Billboard {
 
     static final int ROWS = 5;
@@ -72,5 +74,4 @@ public class Billboard {
     public void resetPlayer(Position position){
         playersPosition.replace(position, -1);
     }
-
 }

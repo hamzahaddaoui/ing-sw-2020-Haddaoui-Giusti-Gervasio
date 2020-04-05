@@ -31,7 +31,7 @@ public class MinotaurDecorator extends CommandsDecorator {
      * {@link Player#getCurrentWorker()}
      * {@link Billboard#getPlayer(Position)}
      * {@link Billboard#getTowerHeight(Position)}
-     * {@link Billboard#setPlayer(Position, Worker)}
+     * {@link Billboard#setPlayer(Position, Player)}
      * {@link Billboard#resetPlayer(Position)}
      * {@link Match#getBillboard()}
      * {@link Worker#setPosition(Position)}
@@ -48,7 +48,7 @@ public class MinotaurDecorator extends CommandsDecorator {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
 
-        if (billboard.getPlayer(position)==null)
+       /* if (billboard.getPlayer(position)==null)
             super.moveWorker(position,player);
         else {
             Position nextPosition = setNextPosition(position, worker.getPosition());
@@ -61,7 +61,7 @@ public class MinotaurDecorator extends CommandsDecorator {
             billboard.resetPlayer(worker.getPosition());
             worker.setPosition(position);
             billboard.setPlayer(position, worker);
-        }
+        }*/
     }
 
     /**
@@ -78,8 +78,8 @@ public class MinotaurDecorator extends CommandsDecorator {
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         Billboard billboard = player.getMatch().getBillboard();
         Position currentPosition = worker.getPosition();
-
-        return currentPosition
+        return null;
+        /*return currentPosition
                 .neighbourPositions()
                 .stream()
                 .filter(position -> billboard.getPlayer(position)==null ||
@@ -89,7 +89,7 @@ public class MinotaurDecorator extends CommandsDecorator {
                         (player.getMatch().isMoveUpActive() &&
                                 billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                 .filter(position -> !billboard.getDome(position))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet());*/
     }
 
 
@@ -116,8 +116,8 @@ public class MinotaurDecorator extends CommandsDecorator {
             Position nextPosition = setNextPosition(opponentPosition, myPosition);
 
             if (nextPosition!=null &&
-                    !billboard.getDome(nextPosition) &&
-                    billboard.getPlayer(nextPosition) == null)
+                    !billboard.getDome(nextPosition) /*&&
+                    billboard.getPlayer(nextPosition) == null*/)
                 return true;
             else return false;
 
@@ -156,8 +156,8 @@ public class MinotaurDecorator extends CommandsDecorator {
      */
     private Worker findOpponentWorker (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
-
-        return player
+        return null;
+        /*return player
                 .getMatch()
                 .getPlayers()
                 .stream()
@@ -167,7 +167,7 @@ public class MinotaurDecorator extends CommandsDecorator {
                                 .stream()
                                 .filter(worker1 -> worker1.getPosition() == position)
                         .findAny().get())
-                .findAny().get();
+                .findAny().get();*/
     }
 
 }
