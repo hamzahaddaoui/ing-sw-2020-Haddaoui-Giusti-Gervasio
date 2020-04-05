@@ -15,96 +15,89 @@ public class PrometheusDecorator extends CommandsDecorator {
     public PrometheusDecorator(Commands commands){
         this.commands=commands;
     }
-    private int numOfBuildings;
-    private boolean buildBefore;
 
+    private boolean hasBuiltBeforeMoving;
 
-
-
+    /**
+     * Method that sets the next state of the player.
+     * <p>
+     * If the player sets the special function, from WAIT the turn shifts to BUILD
+     * then if the player has done just his first building move, the turn shifts to MOVE
+     * otherwise, the player has finished his turn, sets the boolean and the turn shifts to WAIT.
+     * Else, the turn follows his standard shifting.
+     *
+     * @param player  the player who makes the turn, not null
+     * @return  the next turn state in which the player is
+     */
     @Override
     public TurnState nextState(Player player) {
+        Worker worker = player.getCurrentWorker();
         switch(player.getState()){
+            case PLACING:
+                player.setHasFinished(true);
             case WAIT:
-                return MOVE;
-            case MOVE:
+                if (player.getSpecialFunction())
                 return BUILD;
+                else return MOVE;
+            case MOVE:
+                worker.setAvailableCells(BUILD,computeAvailableBuildings(player,worker));
+                return BUILD;
+            case BUILD:
+                if (player.getSpecialFunction() && hasBuiltBeforeMoving) {
+                    worker.setAvailableCells(MOVE, computeAvailableMovements(player, worker));
+                    return MOVE;
+                }
+                else player.setHasFinished(true);
             default:
                 return WAIT;
         }
     }
 
-
-    /**
-     * Method that implements the specific movement of Prometheus.
-     * <p>
-     * If the flag buildBefore is true and you haven't done the first building, you have to build before move.
-     * Else if the flag is true and you have already done the first building, you can move but not move up.
-     * Else the flag is false and you do the standard move.
-     *
-     * @param position  the position that player have inserted, not null
-     * @param player    the player who make the move, not null
-     */
-    @Override
-    public void moveWorker(Position position, Player player) {
-        Billboard billboard = player.getMatch().getBillboard();
-        Worker worker = player.getCurrentWorker();
-
-        if (buildBefore && numOfBuildings==2) {
-                player.setState(BUILD); //valutare se ha senso farlo
-                build(position, player);
-        }
-        else if (buildBefore && numOfBuildings==1) {
-            if (!computeAvailableMovements(player, worker).contains(position))
-                return;
-
-            position.setZ(billboard.getTowerHeight(position));
-            billboard.resetPlayer(worker.getPosition());
-            worker.setPosition(position);
-            billboard.setPlayer(position, worker);
-
-            player.setState(BUILD);
-        }
-        else super.moveWorker(position, player);
-    }
-
     /**
      * Method that allows the specific building block action of Prometheus.
      * <p>
-     * If it's your first building move, you do the standard building move and increment your counter.
-     * Else you do just your standard building move.
+     * If the player sets the special function and it's his first building move, after the standard move,
+     * the method sets the boolean at true.
+     * In all the other case, the player does the standard building move
+     * and the method sets the boolean at false.
      *
      * @param player     the player who makes the building move, not null
      * @param position   the position that player have inserted, not null
      */
     @Override
     public void build(Position position, Player player) {
-        if (buildBefore && numOfBuildings==2) {
+        if (player.getSpecialFunction() && !hasBuiltBeforeMoving) {
             super.build(position,player);
-            numOfBuildings--;
-            player.setState(TurnState.MOVE);
+            hasBuiltBeforeMoving = true;
         }
-        else super.build(position, player);
+        else {
+            super.build(position, player);
+            hasBuiltBeforeMoving = false;
+        }
     }
 
 
     /**
      * Returns the spaces that are available after a check in the billboard.
      * <p>
-     * Check if the space is free, if has height less than or equal to the current space
+     * If the player set the boolean special function, ha can't move up this turn so
+     * this method checks if the space is free, if has height less than or equal to the current space
      * and if there isn't a dome in it.
+     * Else, it's not a special function and the method returns the basic cells available for movements.
      *
      * @param player  the player who makes the move, not null
      * @return        the spaces which are available
      */
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-        try{
-            Billboard billboard=player.getMatch().getBillboard();
-            Position currentPosition=player.getCurrentWorker().getPosition();
 
-            return player
-                    .getCurrentWorker()
-                    .getPosition()
+        if (!player.getSpecialFunction())
+            return super.computeAvailableMovements(player, worker);
+        else {
+            Billboard billboard = player.getMatch().getBillboard();
+            Position currentPosition = player.getCurrentWorker().getPosition();
+
+            return currentPosition
                     .neighbourPositions()
                     .stream()
                     .filter(position -> billboard.getPlayer(position) == null)
@@ -112,9 +105,5 @@ public class PrometheusDecorator extends CommandsDecorator {
                     .filter(position -> !billboard.getDome(position))
                     .collect(Collectors.toSet());
         }
-        catch(Exception ex){
-            throw new NullPointerException("PLAYER IS NULL");
-        }
     }
-
 }

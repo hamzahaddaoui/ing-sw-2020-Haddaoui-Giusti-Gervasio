@@ -3,7 +3,9 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
+import javax.swing.*;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MinotaurDecorator extends CommandsDecorator {
@@ -46,9 +48,6 @@ public class MinotaurDecorator extends CommandsDecorator {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
 
-        if (!computeAvailableMovements(player, worker).contains(position))
-            return;
-
         if (billboard.getPlayer(position)==null)
             super.moveWorker(position,player);
         else {
@@ -62,13 +61,8 @@ public class MinotaurDecorator extends CommandsDecorator {
             billboard.resetPlayer(worker.getPosition());
             worker.setPosition(position);
             billboard.setPlayer(position, worker);
-
-            player.setState(TurnState.BUILD);
         }
     }
-
-    //check 1 : casella libera da player oppure occupato da un player avversario la cui casella successiva
-    // è libera
 
     /**
      * Method that show the list of cells that are available for this specific movement.
@@ -83,7 +77,7 @@ public class MinotaurDecorator extends CommandsDecorator {
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         Billboard billboard = player.getMatch().getBillboard();
-        Position currentPosition = player.getCurrentWorker().getPosition();
+        Position currentPosition = worker.getPosition();
 
         return currentPosition
                 .neighbourPositions()
@@ -110,15 +104,12 @@ public class MinotaurDecorator extends CommandsDecorator {
      * {@link Position#getY()}
      * {@link Position#set(int, int)}
      * 
-     * @param opponentPosition  the position of your opponent's worker, not null
+     * @param opponentPosition  the position of the player opponent's worker, not null
      * @param player            the player who makes the move, not null
      * @return                  true if is available, otherwise false
-     * @throws IllegalArgumentException if the opponentPosition and myPosition are the same
-     * @throws IllegalArgumentException if the opponentPosition is a perimeter space
      */
-    private boolean checkNextPosition(Position opponentPosition, Player player) throws IllegalArgumentException, NullPointerException {
+    private boolean checkNextPosition(Position opponentPosition, Player player) {
 
-        try {
             Billboard billboard = player.getMatch().getBillboard();
             Position myPosition = player.getCurrentWorker().getPosition();
 
@@ -126,28 +117,24 @@ public class MinotaurDecorator extends CommandsDecorator {
 
             if (nextPosition!=null &&
                     !billboard.getDome(nextPosition) &&
-                    billboard.getPlayer(nextPosition) == null) {return true;}
+                    billboard.getPlayer(nextPosition) == null)
+                return true;
             else return false;
 
-        } catch (NullPointerException e) {
-            throw new NullPointerException("Null player or position!");
-        }
     }
 
     /**
      * Method that returns the next position.
      * <p>
-     * It compares your position and your opponent's position and finds the next position in that direction.
+     * It compares the player's position and his opponent's position and finds the next position in that direction.
      *
      * @param opponentPosition the position of the opponent's worker, not null
      * @param myPosition       the position of the worker who makes the move, not null
      * @return                 the next position if exists, or null
      * @throws IllegalArgumentException if the positions you want to compare are the same
-     * @throws NullPointerException     if the positions are null
      */
-    private Position setNextPosition(Position opponentPosition, Position myPosition) throws IllegalArgumentException,NullPointerException {
+    private Position setNextPosition(Position opponentPosition, Position myPosition) throws IllegalArgumentException {
 
-        try {
             if (opponentPosition==myPosition) throw new IllegalArgumentException("Same position!");
 
             for (Position position : opponentPosition.neighbourPositions()) {
@@ -155,12 +142,7 @@ public class MinotaurDecorator extends CommandsDecorator {
                     return position;
             }
             return null;
-        } catch (NullPointerException e) {
-            throw new NullPointerException("Null positions.");
-        }
     }
-
-    //data la posizione in cui finisci e il player con cui fai la mossa, ti dice qual è il worker avversario presente, in modo da cambiargli poi posizione
 
     /**
      * Method which returns the worker which is in the specific space where the player wants to go.

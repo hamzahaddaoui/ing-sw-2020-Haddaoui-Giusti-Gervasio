@@ -1,10 +1,6 @@
 package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.utilities.Position;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class PanDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Pan;
@@ -14,46 +10,22 @@ public class PanDecorator extends CommandsDecorator {
     }
 
     /**
-     * Method who implements the standard move.
+     * Method that implements the winning conditions for Pan.
      * <p>
-     * At the end of the move, you check the winningCondition.
+     * If the player moves down for two or more levels, he wins.
+     * Else, check if the player wins with the standard method.
+     * <p>
+     * {@link Player#getCurrentWorker()}
+     * {@link Worker#getHeightVariation()}
+     * {@link super#winningCondition(Player)}
      *
-     * @param position  the position that player have inserted, not null
-     * @param player    the player who makes the move, not null
-     */
-    @Override
-    public void moveWorker(Position position, Player player) {
-        Billboard billboard = player.getMatch().getBillboard();
-        Worker worker = player.getCurrentWorker();
-        Position startingPosition = worker.getPosition();
-
-        if (!player.getCurrentWorker().getAvailableCells(player.getState()).contains(position))
-            return;
-
-        position.setZ(billboard.getTowerHeight(position));
-        billboard.resetPlayer(worker.getPosition());
-        worker.setPosition(position);
-        billboard.setPlayer(position, worker);
-
-        winningCondition(player);
-    }
-
-    /**
-     * Method which determines if a player wins.
-     * <p>
-     * If the final position is at level 3 and the starting position is at level 2
-     * or the final position is at least two levels lower, you win
-     * so you set the player as the winner of the match and you indicates that match is finished.
-     * Else you set the turn state to the building phase.
-     * <p>
-     *
-     * @param player           the player who makes the move, not null
-     * @return
+     * @param player  the player who is making the game turn, not null
+     * @return        true if he wins, false otherwise
      */
     @Override
     public boolean winningCondition(Player player) {
         Worker worker = player.getCurrentWorker();
-        if (worker.getHeightVariation() == -2)
+        if (worker.getHeightVariation() >= -2)
             return true;
         else
             return super.winningCondition(player);
