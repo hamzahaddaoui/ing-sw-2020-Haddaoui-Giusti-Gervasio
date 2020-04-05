@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model;
-
 import it.polimi.ingsw.utilities.Position;
-
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,7 @@ public class BasicCommands implements Commands {
         try{
             position.setZ(0);
             player.getCurrentWorker().setPosition(position);
-            player.getMatch().getBillboard().setPlayer(position, player.getCurrentWorker());
+            player.getMatch().getBillboard().setPlayer(position, player);
         }
         catch(NullPointerException ex){
             throw new NullPointerException();
@@ -65,7 +64,7 @@ public class BasicCommands implements Commands {
 
         billboard.resetPlayer(worker.getPosition());
         worker.setPosition(position);
-        billboard.setPlayer(position, worker);
+        billboard.setPlayer(position, player);
     }
 
     @Override
@@ -89,15 +88,13 @@ public class BasicCommands implements Commands {
      */
     public Set<Position> computeAvailablePlacing(Player player, Worker worker) {
         try{
-            return worker
-                    .getPosition()
-                    .neighbourPositions()
-                    .stream()
-                    .filter(position -> player
-                            .getMatch()
-                            .getBillboard()
-                            .getPlayer(position) == null)
-                    .collect(Collectors.toSet());
+            Set<Position> positions = new HashSet<>();
+            player.getMatch().getBillboard().getPlayer().forEach((key,val) -> {
+                if (val.equals(-1)){
+                    positions.add(key);
+                }
+            });
+            return positions;
         }
         catch(Exception ex){
             throw new NullPointerException();
@@ -118,7 +115,7 @@ public class BasicCommands implements Commands {
                     .getPosition()
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getPlayer(position) == -1)
                     .filter(position -> {
                         if (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
                             return true;
@@ -149,7 +146,7 @@ public class BasicCommands implements Commands {
                     .getPosition()
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getPlayer(position) == -1)
                     .filter(position -> billboard.getDome(position) == false)
                     .collect(Collectors.toSet());
         }

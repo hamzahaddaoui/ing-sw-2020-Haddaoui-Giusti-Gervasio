@@ -208,6 +208,7 @@ public class GameModel extends Observable {
     public static Set<Position> getAvailableCells(Integer matchID, Integer playerID){
         Match match = translateMatchID(matchID);
         Player player = translatePlayerID(match, playerID);
+        //player.setAvailableCells(currentWorker)
         return player.getAvailableCells();
     }
 
