@@ -96,14 +96,14 @@ public class PrometheusDecorator extends CommandsDecorator {
         else {
             Billboard billboard = player.getMatch().getBillboard();
             Position currentPosition = player.getCurrentWorker().getPosition();
-
-            return currentPosition
+            return null;
+            /*return currentPosition
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getPlayer(position) == -1)
                     .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition)))
                     .filter(position -> !billboard.getDome(position))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toSet());*/
         }
     }
 }
