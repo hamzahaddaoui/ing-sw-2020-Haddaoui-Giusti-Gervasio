@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.model;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import it.polimi.ingsw.utilities.Message;
 
 import it.polimi.ingsw.utilities.Observable;
@@ -247,26 +246,26 @@ public class GameModel extends Observable {
         int x, y;
         Match match = translateMatchID(matchID);
         Billboard billboard = match.getBillboard();
-        Position position;
         Player player = translatePlayerID(match, playerID);
         Map<Position,Set<Position>> availableCells;
         HashMap<Position, Quartet<Integer, Integer, Boolean, Set<Position>>> returnValue = new HashMap<>();
 
-        if (match.getCurrentPlayer() == player)
+
+
+        if (match.getCurrentPlayer() == player) {
+            player.setAvailableCells();
             availableCells = player.getAvailableCells();
+        }
         else
             availableCells = null;
 
 
-        for (x = 0; x < 5; x++){
-            for (y = 0; y < 5; y++){
-                position = new Position(x,y);
-                returnValue.put(position, new Quartet<Integer, Integer, Boolean, Set<Position>>(
-                        billboard.getTowerHeight(position),
-                        billboard.getPlayer(position),
-                        billboard.getDome(position),
-                        availableCells.get(position)));
-            }
+        for (Position position : billboard.getTowerHeight().keySet()){
+            returnValue.put(position, new Quartet<Integer, Integer, Boolean, Set<Position>>(
+                    billboard.getTowerHeight(position),
+                    billboard.getPlayer(position),
+                    billboard.getDome(position),
+                    availableCells.get(position)));
         }
         return returnValue;
     }

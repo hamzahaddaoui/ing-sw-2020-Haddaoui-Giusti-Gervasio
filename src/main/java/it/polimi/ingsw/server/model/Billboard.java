@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Billboard {
 
@@ -26,7 +27,6 @@ public class Billboard {
                 playersPosition.put(position, -1);
             }
         }
-
     }
 
     public Map<Position, Integer> getTowerHeight() {

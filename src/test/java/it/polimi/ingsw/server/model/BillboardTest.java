@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,10 @@ class BillboardTest {
 
     @Test
     void getTowerHeight() {
+        Billboard billboard = new Billboard();
+        billboard.incrementTowerHeight(new Position(2,3));
+        assertEquals(1, billboard.getTowerHeight(new Position (2,3)),"ok");
+
     }
 
     @Test

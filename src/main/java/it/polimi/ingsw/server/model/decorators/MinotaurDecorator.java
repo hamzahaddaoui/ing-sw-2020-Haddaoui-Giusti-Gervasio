@@ -48,7 +48,7 @@ public class MinotaurDecorator extends CommandsDecorator {
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
 
-        if (billboard.getPlayer(position)==null)
+        if (billboard.getPlayer(position)==-1)
             super.moveWorker(position,player);
         else {
             Position nextPosition = setNextPosition(position, worker.getPosition());
@@ -169,5 +169,6 @@ public class MinotaurDecorator extends CommandsDecorator {
                         .findAny().get())
                 .findAny().get();
     }
+
 
 }

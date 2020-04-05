@@ -100,7 +100,7 @@ public class PrometheusDecorator extends CommandsDecorator {
             return currentPosition
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getPlayer(position) == -1)
                     .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition)))
                     .filter(position -> !billboard.getDome(position))
                     .collect(Collectors.toSet());
