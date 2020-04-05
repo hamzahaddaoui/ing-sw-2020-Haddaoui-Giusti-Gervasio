@@ -8,10 +8,13 @@ import java.util.Set;
 
 public class Worker{
     private Position position;
-    private Color color;
 
     private int heightVariation;
     private Map<TurnState, Set<Position>> availableCells = new HashMap<>();
+
+    public Worker(Position position) {
+        this.position = position;
+    }
 
     public void setPosition(Position position) {
         this.heightVariation = position.getZ() - this.position.getZ();
@@ -20,14 +23,6 @@ public class Worker{
 
     public Position getPosition() {
         return position;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public int getHeightVariation() {

@@ -165,15 +165,14 @@ public class GameModel extends Observable {
         return translateMatchID(matchID).getCurrentPlayer().getID();
     }
 
-
     /**
      * Changes the current worker of the currentPlayer on the specified match
      *
      * @param matchID specified matchID
-     * @param worker the worker chosen by the player
+     * @param position the position of the worker chosen by the player
      */
-    public synchronized static void setCurrentPlayerWorker(Integer matchID, int worker){
-        translateMatchID(matchID).getCurrentPlayer().setCurrentWorkerID(worker);
+    public synchronized static void setCurrentPlayerWorker(Integer matchID, Position position){
+        translateMatchID(matchID).getCurrentPlayer().setCurrentWorker(position);
     }
 
     /**
@@ -206,10 +205,14 @@ public class GameModel extends Observable {
      * @return the list of cells on the billboard, where the player could move
      */
     public static Set<Position> getAvailableCells(Integer matchID, Integer playerID){
-        Match match = translateMatchID(matchID);
-        Player player = translatePlayerID(match, playerID);
-        //player.setAvailableCells(currentWorker)
+        Player player = translatePlayerID(translateMatchID(matchID), playerID);
+        player.setAvailableCells(player.getCurrentWorker());
         return player.getAvailableCells();
+    }
+
+    public static void placeWorker(Integer matchID, Integer playerID, Position position){
+        Player player = translatePlayerID(translateMatchID(matchID), playerID);
+
     }
 
     public static void setUnsetSpecialFunction(Integer matchID, Integer playerID, int worker){
@@ -221,6 +224,10 @@ public class GameModel extends Observable {
         Player player = translatePlayerID(translateMatchID(matchID), playerID);
         player.playerAction(position);
         return player.hasFinished();
+    }
+
+    public static boolean playerHasPlacedWorkers(Integer matchID, Integer playerID){
+        return translatePlayerID(translateMatchID(matchID), playerID).hasPlacedWorkers();
     }
 
 

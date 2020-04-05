@@ -38,8 +38,6 @@ public class BasicCommands implements Commands {
     @Override
     public void placeWorker(Position position, Player player) {
         try{
-            position.setZ(0);
-            player.getCurrentWorker().setPosition(position);
             player.getMatch().getBillboard().setPlayer(position, player);
         }
         catch(NullPointerException ex){

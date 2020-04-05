@@ -6,6 +6,5 @@ public enum TurnState {
     PLACING,
     WAIT,
     BUILD,
-    MOVE,
-    END
+    MOVE
 }

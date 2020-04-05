@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import static it.polimi.ingsw.server.model.TurnState.*;
@@ -15,13 +16,14 @@ public class Player{
     private int ID; //id connessione del giocatore
     private String nickname;
     private Match match;
-    private ArrayList<Worker> workers = new ArrayList<>(2);
+    private Set<Worker> workers = new HashSet<>(2);
 
     private Worker currentWorker;
     private Commands commands;
     GodCards card;
     private TurnState state;
-    private boolean hasFinished;
+    private boolean finished;
+    private boolean placedWorkers;
 
     private boolean specialFunction;
 
@@ -30,9 +32,6 @@ public class Player{
         this.nickname = nickname;
         state = PLACING;
         this.match = match;
-        workers.add(new Worker());
-        workers.add(new Worker());
-        currentWorker = workers.get(0);
     }
 
     public String getNickname() {
@@ -47,20 +46,35 @@ public class Player{
         return match;
     }
 
-    public ArrayList<Worker> getWorkers() {
+    public Set<Worker> getWorkers() {
         return workers;
+    }
+
+    public void setWorker(Position position) {
+        position.setZ(0);
+        workers.add(new Worker(position));
+        commands.placeWorker(position, this);
+        if (workers.size() == 2){
+            state = commands.nextState(this);
+            placedWorkers = true;
+        }
+
+    }
+
+    public boolean hasPlacedWorkers() {
+        return placedWorkers;
     }
 
     public Worker getCurrentWorker() {
         return currentWorker;
     }
 
-    public void setCurrentWorkerID(Integer worker) {
-        currentWorker = workers.get(worker);
+    public void setCurrentWorker(Position position) {
+        currentWorker = workers.stream().filter(worker -> worker.getPosition()==position).findAny().get();
     }
 
-    public int getCurrentWorkerID() {
-        return workers.indexOf(currentWorker);
+    public Position getCurrentWorkerPosition() {
+        return currentWorker.getPosition();
     }
 
     public void setCommands(GodCards card) {
@@ -85,16 +99,12 @@ public class Player{
         return specialFunction;
     }
 
+
+
     public void playerAction(Position position){
         switch (state){
-            case PLACING:
-                commands.placeWorker(position, this);
-                if (workers.iterator().hasNext())
-                    currentWorker = workers.iterator().next();
-                else
-                    state = commands.nextState(this);
             case WAIT:
-                hasFinished = false;
+                finished = false;
                 workers.stream().forEach(this::setAvailableCells);
                 state = commands.nextState(this);
             case MOVE:
@@ -110,14 +120,14 @@ public class Player{
     }
 
     public void setHasFinished(boolean hasFinished) {
-        this.hasFinished = hasFinished;
+        this.finished = hasFinished;
     }
 
     public boolean hasFinished() {
-        return hasFinished;
+        return finished;
     }
 
-    private void setAvailableCells(Worker worker) {
+    public void setAvailableCells(Worker worker) {
         worker.setAvailableCells(PLACING, commands.computeAvailablePlacing(this, worker));
         worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));
         worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));
