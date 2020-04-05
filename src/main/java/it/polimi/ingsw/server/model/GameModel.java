@@ -1,10 +1,13 @@
 package it.polimi.ingsw.server.model;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import it.polimi.ingsw.utilities.Message;
 
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.Position;
+import org.javatuples.Quartet;
+
 import java.util.*;
 
 /**
@@ -171,18 +174,9 @@ public class GameModel extends Observable {
      * @param matchID specified matchID
      * @param position the position of the worker chosen by the player
      */
-    public synchronized static void setCurrentPlayerWorker(Integer matchID, Position position){
+    /*public synchronized static void setCurrentPlayerWorker(Integer matchID, Position position){
         translateMatchID(matchID).getCurrentPlayer().setCurrentWorker(position);
-    }
-
-    /**
-     * Make the next player gain the control of the match, by passing the turn
-     *
-     * @param matchID selected match
-     */
-    public static void nextMatchTurn(Integer matchID){
-        translateMatchID(matchID).nextTurn();
-    }
+    }*/
 
     /**
      *  Link the current player of the selected match, to the specified GodCard.
@@ -204,32 +198,43 @@ public class GameModel extends Observable {
      *
      * @return the list of cells on the billboard, where the player could move
      */
-    public static Set<Position> getAvailableCells(Integer matchID, Integer playerID){
+    /*public static Set<Position> getAvailableCells(Integer matchID, Integer playerID){
         Player player = translatePlayerID(translateMatchID(matchID), playerID);
-        player.setAvailableCells(player.getCurrentWorker());
-        return player.getAvailableCells();
-    }
+    }*/
 
     public static void placeWorker(Integer matchID, Integer playerID, Position position){
         Player player = translatePlayerID(translateMatchID(matchID), playerID);
+        player.setWorker(position);
 
     }
 
-    public static void setUnsetSpecialFunction(Integer matchID, Integer playerID, int worker){
+    public static void setUnsetSpecialFunction(Integer matchID, Integer playerID){
         Player player =  translatePlayerID(translateMatchID(matchID), playerID);
-        //player.specialFunctionSetUnset();
+        player.setUnsetSpecialFunction();
     }
 
-    public static boolean playerTurn(Integer matchID, Integer playerID, Position position){
+    public static void playerTurn(Integer matchID, Integer playerID, Position initPosition, Position finalPosition){
         Player player = translatePlayerID(translateMatchID(matchID), playerID);
-        player.playerAction(position);
-        return player.hasFinished();
+        player.setCurrentWorker(initPosition);
+        player.playerAction(finalPosition);
+    }
+
+    /**
+     * Make the next player gain the control of the match, by passing the turn
+     *
+     * @param matchID selected match
+     */
+    public static void nextMatchTurn(Integer matchID){
+        translateMatchID(matchID).nextTurn();
     }
 
     public static boolean playerHasPlacedWorkers(Integer matchID, Integer playerID){
         return translatePlayerID(translateMatchID(matchID), playerID).hasPlacedWorkers();
     }
 
+    public static boolean playerHasFinished(Integer matchID, Integer playerID){
+        return translatePlayerID(translateMatchID(matchID), playerID).hasFinished();
+    }
 
     /**
      * Make a copy of the state of the billboard, made of 3 layers:
@@ -238,9 +243,32 @@ public class GameModel extends Observable {
      * third layer for the domes
      * @return
      */
-    public static int[][][] getBillboard(){
+    public static HashMap<Position, Quartet<Integer, Integer, Boolean, Set<Position>>> getBillboard(Integer matchID, Integer playerID){
+        int x, y;
+        Match match = translateMatchID(matchID);
+        Billboard billboard = match.getBillboard();
+        Position position;
+        Player player = translatePlayerID(match, playerID);
+        Map<Position,Set<Position>> availableCells;
+        HashMap<Position, Quartet<Integer, Integer, Boolean, Set<Position>>> returnValue = new HashMap<>();
 
-        return null;
+        if (match.getCurrentPlayer() == player)
+            availableCells = player.getAvailableCells();
+        else
+            availableCells = null;
+
+
+        for (x = 0; x < 5; x++){
+            for (y = 0; y < 5; y++){
+                position = new Position(x,y);
+                returnValue.put(position, new Quartet<Integer, Integer, Boolean, Set<Position>>(
+                        billboard.getTowerHeight(position),
+                        billboard.getPlayer(position),
+                        billboard.getDome(position),
+                        availableCells.get(position)));
+            }
+        }
+        return returnValue;
     }
 
 }

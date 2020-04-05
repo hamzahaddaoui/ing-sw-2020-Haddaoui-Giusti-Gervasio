@@ -1,9 +1,7 @@
 package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static it.polimi.ingsw.server.model.TurnState.*;
 
@@ -105,7 +103,7 @@ public class Player{
         switch (state){
             case WAIT:
                 finished = false;
-                workers.stream().forEach(this::setAvailableCells);
+                specialFunction = false;
                 state = commands.nextState(this);
             case MOVE:
                 commands.moveWorker(position, this);
@@ -115,8 +113,12 @@ public class Player{
         state = commands.nextState(this);
     }
 
-    public Set<Position> getAvailableCells() {
-        return currentWorker.getAvailableCells(this.state);
+    public Map<Position,Set<Position>> getAvailableCells() {
+        Map<Position,Set<Position>> positionSetMap = new HashMap<>();
+        workers.stream().forEach(worker -> {
+            positionSetMap.put(worker.getPosition(),worker.getAvailableCells(state));
+        });
+        return positionSetMap;
     }
 
     public void setHasFinished(boolean hasFinished) {
@@ -127,9 +129,13 @@ public class Player{
         return finished;
     }
 
-    public void setAvailableCells(Worker worker) {
-        worker.setAvailableCells(PLACING, commands.computeAvailablePlacing(this, worker));
-        worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));
-        worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));
+    public void setAvailableCells() {
+        workers.stream().forEach(worker -> {
+        if (!placedWorkers)
+            worker.setAvailableCells(PLACING, commands.computeAvailablePlacing(this, worker));
+        else {
+            worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));
+            worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));
+        }});
     }
 }

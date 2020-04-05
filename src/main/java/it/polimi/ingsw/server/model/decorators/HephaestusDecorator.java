@@ -36,7 +36,7 @@ public class HephaestusDecorator extends CommandsDecorator {
 
     @Override
     public void build(Position position, Player player) {
-        super.build(position, player);
+        //super.build(position, player);
         if (firstBuildPosition == null){
             super.build(position, player);
             firstBuildPosition = position;
