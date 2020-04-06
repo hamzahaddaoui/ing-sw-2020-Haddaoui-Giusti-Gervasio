@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.model.decorators;
 
-import org.junit.Assert.*;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.AfterEach;
@@ -62,6 +61,6 @@ class ApolloDecoratorTest {
         positions.add(new Position(1,3));
         positions.add(new Position(2,1));
         positions.add(new Position(2,3));
-        A
+        
     }
 }
