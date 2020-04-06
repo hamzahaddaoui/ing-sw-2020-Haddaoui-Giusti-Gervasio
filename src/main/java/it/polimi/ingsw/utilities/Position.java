@@ -66,18 +66,18 @@ public class Position {
      * @return the set of computed positions
      */
     public Set<Position> neighbourPositions (Position upperLeftConstraint, Position lowerRightConstraint){
+        int x, y;
         Set<Position> resultPositions = new HashSet<>();
-        Position current = new Position(0,0);
         Position start = new Position(Math.max(this.x - 1,upperLeftConstraint.getX()), Math.max(this.y -1, upperLeftConstraint.getY()));
-        Position end = new Position(Math.min(this.x + 1,lowerRightConstraint.getX()), Math.min(this.y -1, lowerRightConstraint.getY()));
+        Position end = new Position(Math.min(this.x + 1,lowerRightConstraint.getX()), Math.min(this.y +1, lowerRightConstraint.getY()));
 
-        for (current.setX(start.getX()); x <= end.getX(); x++){
-            for (current.setY(start.getY()); y <= end.getY(); y++){
-                if (!current.equals(this))
-                    resultPositions.add(current);
+        for (x = start.getX(); x <= end.getX(); x++){
+            for (y = start.getY(); y <= end.getY(); y++){
+                Position current = new Position(x,y);
+                resultPositions.add(current);
             }
         }
-
+        resultPositions.remove(this);
         return resultPositions;
     }
 
@@ -88,7 +88,7 @@ public class Position {
      * @return the set of computed positions
      */
     public Set<Position> neighbourPositions (){
-        return neighbourPositions(new Position(0,0), new Position(4,4));
+        return this.neighbourPositions(new Position(0,0), new Position(4,4));
     }
 
     /**
@@ -102,23 +102,26 @@ public class Position {
         if (!this.neighbourPositions().contains(position))
             return null;
 
-        Position offset = new Position(position.getX()-this.getX(), position.getY()-this.getY());
-
-        return CardinalDirection.valueOf(Math.toDegrees(Math.atan2(offset.getY(),offset.getX())));
+        Position offset = new Position(this.getX()-position.getX(), this.getY()-position.getY());
+        return CardinalDirection.valueOf(Math.toDegrees(Math.atan2(offset.getX(),offset.getY())));
     }
 
-    public boolean equals(Position position) {
+    @Override
+    public boolean equals(Object position) {
+        Position pos;
         if (this == position) return true;
         if (position == null || getClass() != position.getClass()) return false;
-        return x == position.x &&
-               y == position.y;
+        pos = (Position) position;
+        return x == pos.x && y == pos.y;
     }
-
     public boolean equalsHeight(Position position) {
         if (this == position) return true;
         if (position == null || getClass() != position.getClass()) return false;
         return z == position.z;
     }
-
+    @Override
+    public int hashCode() {
+        return (this.x * 17) ^ y; //hash function x*numeroprimo xor y
+    }
 }
 

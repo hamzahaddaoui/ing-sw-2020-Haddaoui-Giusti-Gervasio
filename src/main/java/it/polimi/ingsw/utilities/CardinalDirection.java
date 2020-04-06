@@ -5,13 +5,13 @@ import java.util.Map;
 
 public enum CardinalDirection {
     NORTH (90.0),
-    WEST (180.0),
-    EAST(0.0),
+    WEST (0.0),
+    EAST(180.0),
     SOUTH(-90.0),
-    NORTHEAST(45.0),
-    SOUTHEAST(-45.0),
-    NORTHWEST(135.0),
-    SOUTHWEST(-135.0);
+    NORTHEAST(135.0),
+    SOUTHEAST(-135.0),
+    NORTHWEST(45.0),
+    SOUTHWEST(-45.0);
 
     double angle;
     private static Map<Double, CardinalDirection> map = new HashMap<>();

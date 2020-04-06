@@ -36,7 +36,7 @@ public class BasicCommands implements Commands {
     @Override
     public void placeWorker(Position position, Player player) {
         try{
-            player.getMatch().getBillboard().setPlayer(position, player);
+            player.getMatch().getBillboard().setPlayer(position, player.getID());
         }
         catch(NullPointerException ex){
             throw new NullPointerException();
@@ -60,7 +60,7 @@ public class BasicCommands implements Commands {
 
         billboard.resetPlayer(worker.getPosition());
         worker.setPosition(position);
-        billboard.setPlayer(position, player);
+        billboard.setPlayer(position, player.getID());
     }
 
     @Override

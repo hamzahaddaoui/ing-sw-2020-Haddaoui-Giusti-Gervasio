@@ -2,31 +2,28 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import java.util.Set;
 
 public class Billboard {
 
     static final int ROWS = 5;
     static final int COLOUMNS = 5;
 
-    private Map<Position, Integer> towerHeight;
-    private Map<Position, Boolean> domePosition ;
-    private Map<Position, Integer> playersPosition;
+    private Map<Position, Integer> towerHeight = new HashMap<>();
+    //è inutile tenere la lista di tutte le celle... basta tenere solo la lista delle posizioni dove c'è una cupola
+    private Map<Position, Boolean> domePosition = new HashMap<>();
+    //stessa cosa qui! tengo solo le posizioni dove c'è un utente
+    private Map<Position, Integer> playersPosition = new HashMap<>();
 
     public Billboard() {
         int i, j;
         Position position;
-        this.towerHeight = new HashMap<>();
-        this.domePosition = new HashMap<>();
-        this.playersPosition = new HashMap<>();
         for(i=0; i<ROWS; i++){
             for(j=0; j<COLOUMNS; j++){
                 position = new Position(i,j);
                 towerHeight.put(position, 0);
                 domePosition.put(position, false);
                 playersPosition.put(position, -1);
+                Position position1 = new Position(i,j);
             }
         }
     }
@@ -36,15 +33,27 @@ public class Billboard {
     }
 
     public int getTowerHeight(Position position) {
-        return towerHeight.get(position);
+        try{
+            return towerHeight.get(position);
+        }
+        catch (Exception e) {
+            return 0;
+        }
+
     }
 
     public void incrementTowerHeight(Position position) {
-        int height = towerHeight.get(position);
-        if (height  < 3)
-            towerHeight.replace(position,height++);
-        else
-            setDome(position);
+        try{
+            int height = towerHeight.get(position);
+            if (height < 3)
+                towerHeight.replace(position, ++height);
+            else
+                setDome(position);
+        }
+        catch (Exception e) {
+            return;
+        }
+
     }
 
     public Map<Position, Boolean>  getDome() {
@@ -52,11 +61,22 @@ public class Billboard {
     }
 
     public boolean getDome(Position position) {
-        return domePosition.get(position);
+        try {
+            return domePosition.get(position);
+        }
+        catch (Exception e) {
+                return false;
+        }
     }
 
     public void setDome(Position position){
-        domePosition.replace(position, true);
+        try {
+            domePosition.replace(position, true);
+        }
+        catch (Exception e) {
+                return;
+        }
+
     }
 
     public Map<Position, Integer> getPlayer() {
@@ -64,14 +84,30 @@ public class Billboard {
     }
 
     public int getPlayer(Position position) {
-        return playersPosition.get(position);
+        try{
+            return playersPosition.get(position);
+        }
+        catch (Exception e) {
+            return -1;
+        }
     }
 
-    public void setPlayer(Position position, Player player){
-        playersPosition.replace(position, player.getID());
+    public void setPlayer(Position position, int player){
+        try{
+            playersPosition.replace(position, player);
+        }
+        catch (Exception e) {
+            return;
+        }
     }
 
     public void resetPlayer(Position position){
-        playersPosition.replace(position, -1);
+        try {
+            playersPosition.replace(position, -1);
+        }
+        catch (Exception e) {
+            return;
+        }
     }
+
 }

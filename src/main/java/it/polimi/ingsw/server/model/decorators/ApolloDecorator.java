@@ -59,11 +59,11 @@ public class ApolloDecorator extends CommandsDecorator {
 
         billboard.resetPlayer(position);
         myWorker.setPosition(position);
-        billboard.setPlayer(position, player);
+        billboard.setPlayer(position, player.getID());
 
         billboard.resetPlayer(actualPosition);
         opponentWorker.setPosition(actualPosition);
-        billboard.setPlayer(actualPosition, opponentPlayer);
+        billboard.setPlayer(actualPosition, opponentPlayer.getID());
     }
 
     private Player findOpponentPlayer (Position position, Player player) {
