@@ -44,7 +44,7 @@ public class ApolloDecorator extends CommandsDecorator {
         }
     }
 
-    public void exchangePosition(Player player,Position position){
+    private void exchangePosition(Player player,Position position){
         Billboard billboard=player.getMatch().getBillboard();
         Worker myWorker= player.getCurrentWorker();
         Player opponentPlayer=findOpponentPlayer(position, player);

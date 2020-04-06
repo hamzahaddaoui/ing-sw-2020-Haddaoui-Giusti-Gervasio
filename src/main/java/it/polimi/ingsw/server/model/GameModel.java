@@ -19,6 +19,7 @@ public class GameModel extends Observable {
     //list of observers of the model state
     private static Observer<Message> observer;
 
+
     //navigableMap to get the last inserted element, which could correspond to the waiting to start watch
     //Made up of an integer, which represents the matchID, and the match entity.
     private static NavigableMap<Integer, Match> activeMatches = new TreeMap<>(); //id match, match
