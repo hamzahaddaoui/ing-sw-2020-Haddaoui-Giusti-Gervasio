@@ -25,17 +25,25 @@ public class ArtemisDecorator extends CommandsDecorator {
 
     @Override
     public TurnState nextState(Player player) {
-        switch(player.getState()){
+        switch (player.getState()) {
+            case PLACING:
+                player.setHasFinished(true);
             case WAIT:
                 return MOVE;
             case MOVE:
-                return BUILD;
+                if (player.getSpecialFunction() && startingPosition != null)//ho già fatto prima mossa e Special Function
+                    return MOVE;
+                else{
+                    startingPosition=null;
+                    return BUILD;
+                }
             case BUILD:
                 player.setHasFinished(true);
+                return WAIT;
             default:
                 return WAIT;
-        }
-    }
+    }}
+
     /**
      * worker may move one additional time but not back to the initial space
      *  @param position  is the position that player have inserted
@@ -43,80 +51,26 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        Billboard billboard = player.getMatch().getBillboard();
-        Worker worker = player.getCurrentWorker();
-
-        /*if(player.getMovesBeforeBuild()==2){
-            startingPosition=worker.getPosition();}
-
-        position.setZ(billboard.getTowerHeight(position));
-
-        billboard.resetPlayer(worker.getPosition());
-        worker.setPosition(position);
-        billboard.setPlayer(position, worker);
-
-        if(player.getMovesBeforeBuild()==1){
-            startingPosition=null;}*/
+        super.moveWorker(position, player);
+        if(startingPosition==null)
+            startingPosition=position;
+        else startingPosition=null;
     }
 
-    @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         try{
-           /* if(1){
-                return computeAvailableFirstMovements(player,worker);}
-            else if(0){
-                return computeAvailableSecondMovements(player,worker);}
-            else return null;*/
-           return null;
-        }
-        catch(Exception ex){
-            throw new NullPointerException();}
-    }
-
-    /**
-     * method that show the list of cells that are available for the standard movement of the player
-     *
-     * @param player  is the current player
-     * @return  the list of Position where the worker can move on
-     */
-    public Set<Position> computeAvailableFirstMovements(Player player, Worker worker) {
-        try{
             Billboard billboard=player.getMatch().getBillboard();
             Position currentPosition=worker.getPosition();
+            Set<Position> result = super.computeAvailableMovements(player, worker);
 
-            return currentPosition
-                    .neighbourPositions()
+            if(startingPosition==null)
+                return result;
+
+            else{
+            return  result
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) !=player.getID())
-                    .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
-                    .filter(position ->
-                            player.getMatch().isMoveUpActive()
-                                    && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
-                    .filter(position -> billboard.getDome(position) == false)
-                    .collect(Collectors.toSet());
-        }
-        catch(Exception ex){
-            throw new NullPointerException();
-        }
-
-    }
-
-    public Set<Position> computeAvailableSecondMovements(Player player, Worker worker) {
-        try{
-            Billboard billboard=player.getMatch().getBillboard();
-            Position currentPosition=worker.getPosition();
-
-            return  currentPosition
-                    .neighbourPositions()
-                    .stream()
-                    .filter(position -> billboard.getPlayer(position) !=player.getID())
                     .filter(position -> position != startingPosition)
-                    .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
-                    .filter(position ->
-                            player.getMatch().isMoveUpActive()
-                                    && billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1)
-                    .filter(position -> billboard.getDome(position) == false)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toSet());}
         }
         catch(Exception ex){
             throw new NullPointerException();

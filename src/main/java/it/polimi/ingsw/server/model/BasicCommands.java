@@ -104,9 +104,9 @@ public class BasicCommands implements Commands {
      * @return  the list of Position where the worker can move on
      */
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-        try{
             Billboard billboard=player.getMatch().getBillboard();
             Position currentPosition=player.getCurrentWorker().getPosition();
+
             return worker
                     .getPosition()
                     .neighbourPositions()
@@ -122,10 +122,6 @@ public class BasicCommands implements Commands {
                     })
                     .filter(position -> !billboard.getDome(position))
                     .collect(Collectors.toSet());
-        }
-        catch(Exception ex){
-            throw new NullPointerException();
-        }
 
     }
 

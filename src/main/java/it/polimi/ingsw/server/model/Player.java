@@ -138,4 +138,8 @@ public class Player{
             worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));
         }});
     }
+
+    public Commands getCommands(){
+        return this.commands;
+    }
 }
