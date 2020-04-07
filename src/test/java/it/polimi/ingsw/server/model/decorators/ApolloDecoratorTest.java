@@ -18,7 +18,34 @@ class ApolloDecoratorTest {
     Match match=new Match(1);
     Player player1=new Player(1,"leo",match);
     Player player2=new Player(2,"dario",match);
-    Position position;
+    Set<Position> positions= new HashSet<Position>();
+    Position position00=new Position(0,0);
+    Position position01=new Position(0,1);
+    Position position02=new Position(0,2);
+    Position position03=new Position(0,3);
+    Position position04=new Position(0,4);
+    Position position10=new Position(1,0);
+    Position position11=new Position(1,1);
+    Position position12=new Position(1,2);
+    Position position13=new Position(1,3);
+    Position position14=new Position(1,4);
+    Position position20=new Position(2,0);
+    Position position21=new Position(2,1);
+    Position position22=new Position(2,2);
+    Position position23=new Position(2,3);
+    Position position24=new Position(2,4);
+    Position position30=new Position(3,0);
+    Position position31=new Position(3,1);
+    Position position32=new Position(3,2);
+    Position position33=new Position(3,3);
+    Position position34=new Position(3,4);
+    Position position40=new Position(4,0);
+    Position position41=new Position(4,1);
+    Position position42=new Position(4,2);
+    Position position43=new Position(4,3);
+    Position position44=new Position(4,4);
+
+
 
     @BeforeEach
     void setUp() {
@@ -41,58 +68,45 @@ class ApolloDecoratorTest {
     void testMoveWorkerChange() {
         //IN: player1(pos1), player2(pos3)
         //END: player1(pos3), player2(pos1)
-        Position position1=new Position(1,2);
-        player1.setWorker(position1);
-        Position position3=new Position(1,1);
-        player2.setWorker(position3);
-        player1.setCurrentWorker(position1);
-        commands1.moveWorker(position3, player1);
-        Assert.assertEquals(match.getBillboard().getPlayer(position1),player2.getID());
-        Assert.assertEquals(match.getBillboard().getPlayer(position3),player1.getID());
+        Position position12=new Position(1,2);
+        player1.setWorker(position12);
+        Position position11=new Position(1,1);
+        player2.setWorker(position11);
+        player1.setCurrentWorker(position12);
+        commands1.moveWorker(position11, player1);
+        Assert.assertEquals(match.getBillboard().getPlayer(position12),player2.getID());
+        Assert.assertEquals(match.getBillboard().getPlayer(position11),player1.getID());
     }
 
     @Test
     void testMoveWorkerNonChange() {
         //IN: player1(pos1), player2(pos3)
         //END: player1(pos), player2(pos3)
-        Position position=new Position(1,3);
-        Position position1=new Position(1,2);
-        player1.setWorker(position1);
-        Position position3=new Position(1,1);
-        player2.setWorker(position3);
-        player1.setCurrentWorker(position1);
-        commands1.moveWorker(position, player1);
-        Assert.assertEquals(match.getBillboard().getPlayer(position),player1.getID());
-        Assert.assertEquals(match.getBillboard().getPlayer(position1),-1);
-        Assert.assertEquals(match.getBillboard().getPlayer(position3),player2.getID());
+        player1.setWorker(position12);
+        player2.setWorker(position11);
+        player1.setCurrentWorker(position12);
+        commands1.moveWorker(position13, player1);
+        Assert.assertEquals(match.getBillboard().getPlayer(position13),player1.getID());
+        Assert.assertEquals(match.getBillboard().getPlayer(position12),-1);
+        Assert.assertEquals(match.getBillboard().getPlayer(position11),player2.getID());
     }
 
 
     @Test
     void testComputeAvailableMovements() {
-        Position position1=new Position(1,2);
-        player1.setWorker(position1);
-        Position position2=new Position(2,2);
-        player1.setWorker(position2);
-        Position position3=new Position(1,1);
-        player2.setWorker(position3);
-        Position position4=new Position(0,2);
-        player2.setWorker(position4);
-        player1.setCurrentWorker(position1);
+        player1.setWorker(position12);
+        player1.setWorker(position22);
+        player2.setWorker(position11);
+        player2.setWorker(position04);
+        player1.setCurrentWorker(position12);
         Worker worker=player1.getCurrentWorker();
         Set<Position> positionSet= commands1.computeAvailableMovements(player1,worker);
-        Set<Position> positions= new HashSet<Position>();
-        Assert.assertTrue("NOT OK", positionSet.contains(position4));
-        Assert.assertTrue("not ok", positionSet.contains(position3));
+
+        Assert.assertTrue("NOT OK1", positionSet.contains(position04));
+        Assert.assertTrue("NOT OK2", positionSet.contains(position11));
+        //commands1.moveWorker(position1,);
     }
 
-    @Test
-    void testFindOpponentPlayer(){
-        Position position1=new Position(1,2);
-        player1.setWorker(position1);
-        Position position3=new Position(1,1);
-        player2.setWorker(position3);
-       // Assert.assertTrue("Error",commands1.);
-    }
+
 
 }
