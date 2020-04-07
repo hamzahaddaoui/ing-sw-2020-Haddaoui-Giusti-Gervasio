@@ -24,14 +24,15 @@ public class MinotaurDecorator extends CommandsDecorator {
      * chose so i can set my worker there.
      * <p>
      * {@link #setNextPosition(Position, Position)}
-     * {@link #findOpponentWorker(Position, Player)}
+     * {@link #findWorker(Position, Player)}
+     * {@link #findOpponentPlayer(Position, Player)}
      * {@link super#moveWorker(Position, Player)}
      * {@link Player#setState(TurnState)}
      * {@link Player#getMatch()}
      * {@link Player#getCurrentWorker()}
      * {@link Billboard#getPlayer(Position)}
      * {@link Billboard#getTowerHeight(Position)}
-     * {@link Billboard#setPlayer(Position, Player)}
+     * {@link Billboard#setPlayer(Position, int)}
      * {@link Billboard#resetPlayer(Position)}
      * {@link Match#getBillboard()}
      * {@link Worker#setPosition(Position)}
@@ -43,25 +44,29 @@ public class MinotaurDecorator extends CommandsDecorator {
      */
 
     @Override
-    public void moveWorker(Position position, Player player) {
+    public void moveWorker(Position position, Player player) throws IllegalArgumentException{
 
         Billboard billboard = player.getMatch().getBillboard();
         Worker worker = player.getCurrentWorker();
 
-       /* if (billboard.getPlayer(position)==null)
+
+       if (billboard.getPlayer(position)==-1)
             super.moveWorker(position,player);
+        else if (!checkNextPosition(position,player))
+            return;
         else {
             Position nextPosition = setNextPosition(position, worker.getPosition());
+            Player opponentPlayer = findOpponentPlayer(position,player);
 
             nextPosition.setZ(billboard.getTowerHeight(nextPosition));
-            billboard.setPlayer(nextPosition,findOpponentWorker(position, player));
-            findOpponentWorker(position,player).setPosition(nextPosition);
+            billboard.setPlayer(nextPosition, opponentPlayer.getID());
+            findWorker(position, opponentPlayer).setPosition(nextPosition);
             billboard.resetPlayer(position);
             position.setZ(billboard.getTowerHeight(position));
             billboard.resetPlayer(worker.getPosition());
             worker.setPosition(position);
-            billboard.setPlayer(position, worker);
-        }*/
+            billboard.setPlayer(position, player.getID());
+        }
     }
 
     /**
@@ -78,18 +83,18 @@ public class MinotaurDecorator extends CommandsDecorator {
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         Billboard billboard = player.getMatch().getBillboard();
         Position currentPosition = worker.getPosition();
-        return null;
-        /*return currentPosition
+
+        return currentPosition
                 .neighbourPositions()
                 .stream()
-                .filter(position -> billboard.getPlayer(position)==null ||
+                .filter(position -> billboard.getPlayer(position)==-1 ||
                         (billboard.getPlayer(position) != billboard.getPlayer(currentPosition) &&
                         checkNextPosition(position,player)))
                 .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
                         (player.getMatch().isMoveUpActive() &&
                                 billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                 .filter(position -> !billboard.getDome(position))
-                .collect(Collectors.toSet());*/
+                .collect(Collectors.toSet());
     }
 
 
@@ -116,8 +121,8 @@ public class MinotaurDecorator extends CommandsDecorator {
             Position nextPosition = setNextPosition(opponentPosition, myPosition);
 
             if (nextPosition!=null &&
-                    !billboard.getDome(nextPosition) /*&&
-                    billboard.getPlayer(nextPosition) == null*/)
+                    !billboard.getDome(nextPosition) &&
+                    billboard.getPlayer(nextPosition) == -1)
                 return true;
             else return false;
 
@@ -145,7 +150,7 @@ public class MinotaurDecorator extends CommandsDecorator {
     }
 
     /**
-     * Method which returns the worker which is in the specific space where the player wants to go.
+     * Method which returns the worker which is in the specific space.
      * <p>
      * First the method finds out which is the player who has a worker in that space,
      * then finds out which is the specific worker.
@@ -154,20 +159,29 @@ public class MinotaurDecorator extends CommandsDecorator {
      * @param player    the player who makes the move, not null
      * @return          the worker which is in the specific space, not null
      */
-    private Worker findOpponentWorker (Position position, Player player) {
-        Billboard billboard = player.getMatch().getBillboard();
-        return null;
-        /*return player
-                .getMatch()
-                .getPlayers()
+    private Worker findWorker (Position position, Player player) {
+        return player
+                .getWorkers()
                 .stream()
-                .filter(player1 -> player.getCurrentWorker().getColor() == billboard.getPlayer(position))
-                .map(player1 -> player1
-                                .getWorkers()
-                                .stream()
-                                .filter(worker1 -> worker1.getPosition() == position)
-                        .findAny().get())
-                .findAny().get();*/
+                .filter(worker1 -> worker1.getPosition() == position)
+                .findAny().get();
     }
 
+    /**
+     * Method which returns the player who is in a specific position.
+     *
+     * @param position  the position which the player wants to go, not null
+     * @param player    the player who's making the turn, not null
+     * @return          the player who is in that position
+     */
+
+    private Player findOpponentPlayer (Position position, Player player) {
+
+        return player.
+                getMatch().
+                getPlayers().
+                stream().
+                filter(player1 -> player1.getID() == player.getMatch().getBillboard().getPlayer(position)).
+                findAny().get();
+    }
 }

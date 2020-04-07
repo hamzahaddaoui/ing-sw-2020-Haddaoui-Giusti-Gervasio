@@ -31,22 +31,16 @@ public class PrometheusDecorator extends CommandsDecorator {
      */
     @Override
     public TurnState nextState(Player player) {
-        Worker worker = player.getCurrentWorker();
         switch(player.getState()){
-            case PLACING:
-                player.setHasFinished(true);
             case WAIT:
                 if (player.getSpecialFunction())
                 return BUILD;
                 else return MOVE;
             case MOVE:
-                worker.setAvailableCells(BUILD,computeAvailableBuildings(player,worker));
                 return BUILD;
             case BUILD:
-                if (player.getSpecialFunction() && hasBuiltBeforeMoving) {
-                    worker.setAvailableCells(MOVE, computeAvailableMovements(player, worker));
+                if (player.getSpecialFunction() && hasBuiltBeforeMoving)
                     return MOVE;
-                }
                 else player.setHasFinished(true);
             default:
                 return WAIT;
@@ -96,14 +90,14 @@ public class PrometheusDecorator extends CommandsDecorator {
         else {
             Billboard billboard = player.getMatch().getBillboard();
             Position currentPosition = player.getCurrentWorker().getPosition();
-            return null;
-            /*return currentPosition
+
+            return currentPosition
                     .neighbourPositions()
                     .stream()
                     .filter(position -> billboard.getPlayer(position) == -1)
                     .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition)))
                     .filter(position -> !billboard.getDome(position))
-                    .collect(Collectors.toSet());*/
+                    .collect(Collectors.toSet());
         }
     }
 }

@@ -81,6 +81,8 @@ public class Player{
         match.removeCard(card);
     }
 
+    public Commands getCommands() {return commands;}
+
     public TurnState getState() {
         return state;
     }
@@ -137,9 +139,5 @@ public class Player{
             worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));
             worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));
         }});
-    }
-
-    public Commands getCommands(){
-        return this.commands;
     }
 }
