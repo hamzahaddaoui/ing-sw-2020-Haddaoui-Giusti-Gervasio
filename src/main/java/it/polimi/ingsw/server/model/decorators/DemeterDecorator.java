@@ -27,8 +27,6 @@ public class DemeterDecorator extends CommandsDecorator {
     @Override
     public TurnState nextState(Player player) {
         switch (player.getState()) {
-            case PLACING:
-                player.setHasFinished(true);
             case WAIT:
                 return MOVE;
             case MOVE:
@@ -37,10 +35,8 @@ public class DemeterDecorator extends CommandsDecorator {
             case BUILD:
                 if (player.getSpecialFunction() && firstBuildPosition != null){
                     return BUILD;}
-                else{
-                    player.setHasFinished(true);
-                    return WAIT;}
             default:
+                player.setHasFinished(true);
                 return WAIT;
         }
     }

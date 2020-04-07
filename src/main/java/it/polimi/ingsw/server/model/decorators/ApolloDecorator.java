@@ -89,14 +89,11 @@ public class ApolloDecorator extends CommandsDecorator {
                 .neighbourPositions()
                 .stream()
                 .filter(position -> billboard.getPlayer(position)!=player.getID())
-                .filter(position -> {
-                    if (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
-                        return true;
-                    if (player.getMatch().isMoveUpActive()) {
-                        return billboard.getTowerHeight(position) == (billboard.getTowerHeight(currentPosition) + 1);
-                    }
-                    return false;
-                })
+                .filter(position -> billboard.getPlayer(position)==-1 ||
+                        (billboard.getPlayer(position) != billboard.getPlayer(currentPosition)))
+                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
+                        (player.getMatch().isMoveUpActive() &&
+                                billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
     }

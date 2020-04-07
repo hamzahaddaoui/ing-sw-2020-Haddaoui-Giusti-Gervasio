@@ -26,8 +26,6 @@ public class ArtemisDecorator extends CommandsDecorator {
     @Override
     public TurnState nextState(Player player) {
         switch (player.getState()) {
-            case PLACING:
-                player.setHasFinished(true);
             case WAIT:
                 return MOVE;
             case MOVE:
@@ -37,10 +35,8 @@ public class ArtemisDecorator extends CommandsDecorator {
                     startingPosition=null;
                     return BUILD;
                 }
-            case BUILD:
-                player.setHasFinished(true);
-                return WAIT;
             default:
+                player.setHasFinished(true);
                 return WAIT;
     }}
 
