@@ -85,4 +85,14 @@ class ApolloDecoratorTest {
         Assert.assertTrue("NOT OK", positionSet.contains(position4));
         Assert.assertTrue("not ok", positionSet.contains(position3));
     }
+
+    @Test
+    void testFindOpponentPlayer(){
+        Position position1=new Position(1,2);
+        player1.setWorker(position1);
+        Position position3=new Position(1,1);
+        player2.setWorker(position3);
+       // Assert.assertTrue("Error",commands1.);
+    }
+
 }

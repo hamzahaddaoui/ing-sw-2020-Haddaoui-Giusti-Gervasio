@@ -73,4 +73,7 @@ public class ArtemisDecoratorTest {
         Set<Position> positionSet= commands1.computeAvailableMovements(player1,worker);
         Assert.assertTrue("Error",positionSet.contains(position1));
     }
+
+    @Test
+    public void move(){}
 }

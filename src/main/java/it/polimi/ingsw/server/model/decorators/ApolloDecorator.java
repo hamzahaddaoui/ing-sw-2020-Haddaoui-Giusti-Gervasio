@@ -21,10 +21,6 @@ public class ApolloDecorator extends CommandsDecorator {
         this.commands=commands;
     }
 
-    public GodCards getCard () {
-        return card;
-    }
-
     /**
      * worker may move into ah opponent Worker's space by forcing their worker to the space yours just vacated
      *
