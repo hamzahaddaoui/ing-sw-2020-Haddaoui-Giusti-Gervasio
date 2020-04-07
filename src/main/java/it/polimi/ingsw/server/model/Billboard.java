@@ -33,27 +33,15 @@ public class Billboard {
     }
 
     public int getTowerHeight(Position position) {
-        try{
-            return towerHeight.get(position);
-        }
-        catch (Exception e) {
-            return 0;
-        }
-
+        return towerHeight.get(position);
     }
 
     public void incrementTowerHeight(Position position) {
-        try{
-            int height = towerHeight.get(position);
-            if (height < 3)
-                towerHeight.replace(position, ++height);
-            else
-                setDome(position);
-        }
-        catch (Exception e) {
-            return;
-        }
-
+        int height = towerHeight.get(position);
+        if (height < 3)
+            towerHeight.replace(position, ++height);
+        else
+            setDome(position);
     }
 
     public Map<Position, Boolean>  getDome() {
@@ -61,22 +49,11 @@ public class Billboard {
     }
 
     public boolean getDome(Position position) {
-        try {
-            return domePosition.get(position);
-        }
-        catch (Exception e) {
-                return false;
-        }
+        return domePosition.get(position);
     }
 
     public void setDome(Position position){
-        try {
-            domePosition.replace(position, true);
-        }
-        catch (Exception e) {
-                return;
-        }
-
+        domePosition.replace(position, true);
     }
 
     public Map<Position, Integer> getPlayer() {
@@ -84,30 +61,14 @@ public class Billboard {
     }
 
     public int getPlayer(Position position) {
-        try{
-            return playersPosition.get(position);
-        }
-        catch (Exception e) {
-            return -1;
-        }
+        return playersPosition.get(position);
     }
 
     public void setPlayer(Position position, int player){
-        try{
-            playersPosition.replace(position, player);
-        }
-        catch (Exception e) {
-            return;
-        }
+        playersPosition.replace(position, player);
     }
 
-    public void resetPlayer(Position position){
-        try {
-            playersPosition.replace(position, -1);
-        }
-        catch (Exception e) {
-            return;
-        }
+    public void resetPlayer(Position position) {
+        playersPosition.replace(position, - 1);
     }
-
 }

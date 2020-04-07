@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author hamzahaddaoui
@@ -7,18 +9,17 @@ import java.util.ArrayList;
  */
 public class Match {
     private int ID;
-    private int playersNum; //number of players of the match
+    private int playersNum = 2; //number of players of the match, 2 by default
     private int playersCurrentCount;
 
     private ArrayList<Player> players = new ArrayList<>(2);
     private Player currentPlayer;
-    private ArrayList<GodCards> cards = new ArrayList<>(2);
+    private Set<GodCards> cards = new HashSet<>(2);
     private Billboard billboard;
     private MatchState currentState;
     private Player winner;
 
     private boolean started;
-    private boolean numReached;
     private boolean moveUpActive = true;
     private boolean finished;
 
@@ -52,7 +53,7 @@ public class Match {
         return currentPlayer;
     }
 
-    public ArrayList<GodCards> getCards() {
+    public Set<GodCards> getCards() {
         return cards;
     }
 
@@ -72,42 +73,12 @@ public class Match {
         return started;
     }
 
-    public boolean isNumReached() {
-        return numReached;
-    }
-
-    public boolean isDeckFull() {
-        if (cards.size() == playersNum) return true;
-        else return false;
-    }
-
-    //to do - write javadoc
-
-    public void addPlayer(Player player) {
-        if (playersCurrentCount >= playersNum)
-            return;
-        players.add(player);
-        currentPlayer = player;
-        playersCurrentCount++;
-        if(playersNum == playersCurrentCount) numReached = true;
-    }
-
     public void addCard(GodCards card) {
         cards.add(card);
     }
 
     public void removeCard(GodCards card) {
         cards.remove(card);
-    }
-
-    public void matchStart() {
-        started = true;
-        finished = false;
-        currentPlayer = players.get(0);
-    }
-
-    public void nextTurn() {
-        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
     }
 
     public boolean isMoveUpActive() {
@@ -120,10 +91,38 @@ public class Match {
 
     public void setFinished(boolean finished) { this.finished = finished; }
 
-
     public boolean isFinished() { return finished; }
 
     public Player getWinner() { return winner; }
 
     public void setWinner(Player winner) { this.winner = winner; }
+
+    public boolean isDeckFull() {
+        if (cards.size() >= playersNum) return true;
+        else return false;
+    }
+
+    public boolean isNumReached() {
+        if (playersNum == playersCurrentCount)
+            return true;
+        else
+            return false;
+    }
+
+    public void addPlayer(Player player) {
+        if (playersCurrentCount >= playersNum || players.contains(player))
+            return;
+        players.add(player);
+        currentPlayer = player;
+        playersCurrentCount++;
+    }
+
+    public void matchStart() {
+        started = true;
+        finished = false;
+    }
+
+    public void nextTurn() {
+        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+    }
 }
