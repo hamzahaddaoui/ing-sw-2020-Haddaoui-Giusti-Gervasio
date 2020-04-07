@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ArtemisDecorator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model.decorators</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ArtemisDecorator (it.polimi.ingsw.server.model.decorators)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ArtemisDecorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84,6%
+  </span>
+  <span class="absValue">
+    (22/ 26)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ArtemisDecorator$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,2%
+  </span>
+  <span class="absValue">
+    (23/ 27)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model.decorators;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.model.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.Position;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.List;
+<i>7</i>&nbsp;import java.util.Set;
+<i>8</i>&nbsp;import java.util.stream.Collectors;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import static it.polimi.ingsw.server.model.TurnState.*;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;public class ArtemisDecorator extends CommandsDecorator {
+<b class="fc"><i>13</i>&nbsp;    static final GodCards card = GodCards.Artemis;</b>
+<i>14</i>&nbsp;
+<b class="fc"><i>15</i>&nbsp;    private Position startingPosition=null;</b>
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /**
+<i>18</i>&nbsp;     * decorate the object Command with Artemis&#39;s special power
+<i>19</i>&nbsp;     *
+<i>20</i>&nbsp;     * @param commands  represent the player behaviour
+<i>21</i>&nbsp;     */
+<b class="fc"><i>22</i>&nbsp;    public ArtemisDecorator(Commands commands){</b>
+<b class="fc"><i>23</i>&nbsp;        this.commands=commands;</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    @Override
+<i>27</i>&nbsp;    public TurnState nextState(Player player) {
+<b class="fc"><i>28</i>&nbsp;        switch (player.getState()) {</b>
+<i>29</i>&nbsp;            case PLACING:
+<b class="fc"><i>30</i>&nbsp;                player.setHasFinished(true);</b>
+<i>31</i>&nbsp;            case WAIT:
+<b class="fc"><i>32</i>&nbsp;                return MOVE;</b>
+<i>33</i>&nbsp;            case MOVE:
+<b class="fc"><i>34</i>&nbsp;                if (player.getSpecialFunction() &amp;&amp; startingPosition != null)//ho già fatto prima mossa e Special Function</b>
+<b class="fc"><i>35</i>&nbsp;                    return MOVE;</b>
+<i>36</i>&nbsp;                else{
+<b class="fc"><i>37</i>&nbsp;                    startingPosition=null;</b>
+<b class="fc"><i>38</i>&nbsp;                    return BUILD;</b>
+<i>39</i>&nbsp;                }
+<i>40</i>&nbsp;            case BUILD:
+<b class="nc"><i>41</i>&nbsp;                player.setHasFinished(true);</b>
+<b class="nc"><i>42</i>&nbsp;                return WAIT;</b>
+<i>43</i>&nbsp;            default:
+<b class="nc"><i>44</i>&nbsp;                return WAIT;</b>
+<i>45</i>&nbsp;    }}
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    /**
+<i>48</i>&nbsp;     * worker may move one additional time but not back to the initial space
+<i>49</i>&nbsp;     *  @param position  is the position that player have inserted
+<i>50</i>&nbsp;     * @param player
+<i>51</i>&nbsp;     */
+<i>52</i>&nbsp;    @Override
+<i>53</i>&nbsp;    public void moveWorker(Position position, Player player) {
+<b class="fc"><i>54</i>&nbsp;        if(this.startingPosition==null)</b>
+<b class="fc"><i>55</i>&nbsp;            this.startingPosition=position;</b>
+<b class="fc"><i>56</i>&nbsp;        super.moveWorker(position, player);</b>
+<b class="fc"><i>57</i>&nbsp;    }</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    public Set&lt;Position&gt; computeAvailableMovements(Player player, Worker worker) {
+<b class="fc"><i>60</i>&nbsp;            Set&lt;Position&gt; result = super.computeAvailableMovements(player, worker);</b>
+<i>61</i>&nbsp;
+<b class="fc"><i>62</i>&nbsp;            if(this.startingPosition==null)</b>
+<b class="nc"><i>63</i>&nbsp;                return result;</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;            else{
+<b class="fc"><i>66</i>&nbsp;            return  result</b>
+<b class="fc"><i>67</i>&nbsp;                    .stream()</b>
+<b class="fc"><i>68</i>&nbsp;                    .filter(position -&gt; position != this.startingPosition)</b>
+<b class="fc"><i>69</i>&nbsp;                    .collect(Collectors.toSet());}</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-07 13:21</div>
+</div>
+</body>
+</html>
