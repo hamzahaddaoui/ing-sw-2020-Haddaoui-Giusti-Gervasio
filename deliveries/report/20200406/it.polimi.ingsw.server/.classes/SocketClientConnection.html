@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SocketClientConnection</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SocketClientConnection (it.polimi.ingsw.server)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SocketClientConnection</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 41)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SocketClientConnection$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 44)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.utilities.Message;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.Observable;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.io.IOException;
+<i>7</i>&nbsp;import java.io.ObjectOutputStream;
+<i>8</i>&nbsp;import java.net.Socket;
+<i>9</i>&nbsp;import java.util.NoSuchElementException;
+<i>10</i>&nbsp;import java.util.Scanner;
+<i>11</i>&nbsp;
+<b class="nc"><i>12</i>&nbsp;public class SocketClientConnection extends Observable&lt;Message&gt; implements ClientConnection, Runnable {</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    private Socket socket;
+<i>15</i>&nbsp;    private ObjectOutputStream out;
+<i>16</i>&nbsp;    private Server server;
+<i>17</i>&nbsp;
+<b class="nc"><i>18</i>&nbsp;    private boolean active = true;</b>
+<i>19</i>&nbsp;
+<b class="nc"><i>20</i>&nbsp;    public SocketClientConnection(Socket socket, Server server) {</b>
+<b class="nc"><i>21</i>&nbsp;        this.socket = socket;</b>
+<b class="nc"><i>22</i>&nbsp;        this.server = server;</b>
+<b class="nc"><i>23</i>&nbsp;    }</b>
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    private synchronized boolean isActive(){
+<b class="nc"><i>26</i>&nbsp;        return active;</b>
+<i>27</i>&nbsp;    }
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    private synchronized void send(Object message) {
+<i>30</i>&nbsp;            try {
+<b class="nc"><i>31</i>&nbsp;                out.reset();</b>
+<b class="nc"><i>32</i>&nbsp;                out.writeObject(message);</b>
+<b class="nc"><i>33</i>&nbsp;                out.flush();</b>
+<b class="nc"><i>34</i>&nbsp;            } catch(IOException e){</b>
+<b class="nc"><i>35</i>&nbsp;                System.err.println(e.getMessage());</b>
+<b class="nc"><i>36</i>&nbsp;            }</b>
+<i>37</i>&nbsp;
+<b class="nc"><i>38</i>&nbsp;    }</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    @Override
+<i>41</i>&nbsp;    public synchronized void closeConnection() {
+<b class="nc"><i>42</i>&nbsp;        send(&quot;Connection closed!&quot;);</b>
+<i>43</i>&nbsp;        try {
+<b class="nc"><i>44</i>&nbsp;            socket.close();</b>
+<b class="nc"><i>45</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>46</i>&nbsp;            System.err.println(&quot;Error when closing socket!&quot;);</b>
+<b class="nc"><i>47</i>&nbsp;        }</b>
+<b class="nc"><i>48</i>&nbsp;        active = false;</b>
+<b class="nc"><i>49</i>&nbsp;    }</b>
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    private void close() {
+<b class="nc"><i>52</i>&nbsp;        closeConnection();</b>
+<b class="nc"><i>53</i>&nbsp;        System.out.println(&quot;Deregistering client...&quot;);</b>
+<b class="nc"><i>54</i>&nbsp;        server.deregisterConnection(this);</b>
+<b class="nc"><i>55</i>&nbsp;        System.out.println(&quot;Done!&quot;);</b>
+<b class="nc"><i>56</i>&nbsp;    }</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    @Override
+<i>59</i>&nbsp;    public void asyncSend(final Object message){
+<b class="nc"><i>60</i>&nbsp;        new Thread(new Runnable() {</b>
+<i>61</i>&nbsp;            @Override
+<i>62</i>&nbsp;            public void run() {
+<b class="nc"><i>63</i>&nbsp;                send(message);</b>
+<b class="nc"><i>64</i>&nbsp;            }</b>
+<b class="nc"><i>65</i>&nbsp;        }).start();</b>
+<b class="nc"><i>66</i>&nbsp;    }</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    @Override
+<i>69</i>&nbsp;    public void run() {
+<i>70</i>&nbsp;        Scanner in;
+<i>71</i>&nbsp;        String read;
+<i>72</i>&nbsp;        Message message;
+<i>73</i>&nbsp;        try{
+<b class="nc"><i>74</i>&nbsp;            in = new Scanner(socket.getInputStream());</b>
+<b class="nc"><i>75</i>&nbsp;            out = new ObjectOutputStream(socket.getOutputStream());</b>
+<b class="nc"><i>76</i>&nbsp;            while(isActive()){</b>
+<b class="nc"><i>77</i>&nbsp;                read = in.nextLine();</b>
+<b class="nc"><i>78</i>&nbsp;                message = new Message(server.getPlayerConnection().get(this),</b>
+<b class="nc"><i>79</i>&nbsp;                        server.getPlayerMatch().get(server.getPlayerConnection().get(this)),</b>
+<i>80</i>&nbsp;                        read);
+<b class="nc"><i>81</i>&nbsp;                notify(message);</b>
+<i>82</i>&nbsp;            }
+<b class="nc"><i>83</i>&nbsp;        } catch (IOException | NoSuchElementException e) {</b>
+<b class="nc"><i>84</i>&nbsp;            System.err.println(&quot;Error!&quot; + e.getMessage());</b>
+<i>85</i>&nbsp;        }finally{
+<b class="nc"><i>86</i>&nbsp;            close();</b>
+<b class="nc"><i>87</i>&nbsp;        }</b>
+<b class="nc"><i>88</i>&nbsp;    }</b>
+<i>89</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-07 10:35</div>
+</div>
+</body>
+</html>

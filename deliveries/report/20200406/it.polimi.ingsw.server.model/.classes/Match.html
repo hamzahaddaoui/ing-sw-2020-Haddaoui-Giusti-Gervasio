@@ -1,0 +1,211 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Match</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Match (it.polimi.ingsw.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Match</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    56%
+  </span>
+  <span class="absValue">
+    (14/ 25)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    68,8%
+  </span>
+  <span class="absValue">
+    (33/ 48)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model;
+<i>2</i>&nbsp;import java.util.ArrayList;
+<i>3</i>&nbsp;import java.util.HashSet;
+<i>4</i>&nbsp;import java.util.Set;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;/**
+<i>7</i>&nbsp; * @author hamzahaddaoui
+<i>8</i>&nbsp; *
+<i>9</i>&nbsp; */
+<i>10</i>&nbsp;public class Match {
+<i>11</i>&nbsp;    private int ID;
+<b class="fc"><i>12</i>&nbsp;    private int playersNum = 2; //number of players of the match, 2 by default</b>
+<i>13</i>&nbsp;    private int playersCurrentCount;
+<i>14</i>&nbsp;
+<b class="fc"><i>15</i>&nbsp;    private ArrayList&lt;Player&gt; players = new ArrayList&lt;&gt;(2);</b>
+<i>16</i>&nbsp;    private Player currentPlayer;
+<b class="fc"><i>17</i>&nbsp;    private Set&lt;GodCards&gt; cards = new HashSet&lt;&gt;(2);</b>
+<i>18</i>&nbsp;    private Billboard billboard;
+<i>19</i>&nbsp;    private MatchState currentState;
+<i>20</i>&nbsp;    private Player winner;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    private boolean started;
+<b class="fc"><i>23</i>&nbsp;    private boolean moveUpActive = true;</b>
+<i>24</i>&nbsp;    private boolean finished;
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;    public Match(int matchID) {</b>
+<b class="fc"><i>27</i>&nbsp;        this.ID = matchID;</b>
+<b class="fc"><i>28</i>&nbsp;        billboard = new Billboard();</b>
+<b class="fc"><i>29</i>&nbsp;    }</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    public boolean setPlayersNum(int playersNum){
+<b class="fc"><i>32</i>&nbsp;        this.playersNum = playersNum;</b>
+<b class="fc"><i>33</i>&nbsp;        return true;</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    public int getID() {
+<b class="nc"><i>37</i>&nbsp;        return ID;</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    public int getPlayersNum() {
+<b class="fc"><i>41</i>&nbsp;        return playersNum;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    public int getPlayersCurrentCount() {
+<b class="fc"><i>45</i>&nbsp;        return playersCurrentCount;</b>
+<i>46</i>&nbsp;    }
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    public ArrayList&lt;Player&gt; getPlayers() {
+<b class="fc"><i>49</i>&nbsp;        return players;</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    public Player getCurrentPlayer() {
+<b class="fc"><i>53</i>&nbsp;        return currentPlayer;</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    public Set&lt;GodCards&gt; getCards() {
+<b class="fc"><i>57</i>&nbsp;        return cards;</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    public Billboard getBillboard() {
+<b class="fc"><i>61</i>&nbsp;        return billboard;</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    public MatchState getCurrentState() {
+<b class="nc"><i>65</i>&nbsp;        return currentState;</b>
+<i>66</i>&nbsp;    }
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    public void setCurrentState(MatchState currentState) {
+<b class="nc"><i>69</i>&nbsp;        this.currentState = currentState;</b>
+<b class="nc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    public boolean isStarted() {
+<b class="nc"><i>73</i>&nbsp;        return started;</b>
+<i>74</i>&nbsp;    }
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    public void addCard(GodCards card) {
+<b class="fc"><i>77</i>&nbsp;        cards.add(card);</b>
+<b class="fc"><i>78</i>&nbsp;    }</b>
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    public void removeCard(GodCards card) {
+<b class="fc"><i>81</i>&nbsp;        cards.remove(card);</b>
+<b class="fc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    public boolean isMoveUpActive() {
+<b class="nc"><i>85</i>&nbsp;        return moveUpActive;</b>
+<i>86</i>&nbsp;    }
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    public void setMoveUpActive(boolean moveUpActive) {
+<b class="nc"><i>89</i>&nbsp;        this.moveUpActive = moveUpActive;</b>
+<b class="nc"><i>90</i>&nbsp;    }</b>
+<i>91</i>&nbsp;
+<b class="nc"><i>92</i>&nbsp;    public void setFinished(boolean finished) { this.finished = finished; }</b>
+<i>93</i>&nbsp;
+<b class="nc"><i>94</i>&nbsp;    public boolean isFinished() { return finished; }</b>
+<i>95</i>&nbsp;
+<b class="nc"><i>96</i>&nbsp;    public Player getWinner() { return winner; }</b>
+<i>97</i>&nbsp;
+<b class="nc"><i>98</i>&nbsp;    public void setWinner(Player winner) { this.winner = winner; }</b>
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    public boolean isDeckFull() {
+<b class="fc"><i>101</i>&nbsp;        if (cards.size() &gt;= playersNum) return true;</b>
+<b class="fc"><i>102</i>&nbsp;        else return false;</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    public boolean isNumReached() {
+<b class="fc"><i>106</i>&nbsp;        if (playersNum == playersCurrentCount)</b>
+<b class="fc"><i>107</i>&nbsp;            return true;</b>
+<i>108</i>&nbsp;        else
+<b class="fc"><i>109</i>&nbsp;            return false;</b>
+<i>110</i>&nbsp;    }
+<i>111</i>&nbsp;
+<i>112</i>&nbsp;    public void addPlayer(Player player) {
+<b class="fc"><i>113</i>&nbsp;        if (playersCurrentCount &gt;= playersNum || players.contains(player))</b>
+<b class="fc"><i>114</i>&nbsp;            return;</b>
+<b class="fc"><i>115</i>&nbsp;        players.add(player);</b>
+<b class="fc"><i>116</i>&nbsp;        currentPlayer = player;</b>
+<b class="fc"><i>117</i>&nbsp;        playersCurrentCount++;</b>
+<b class="fc"><i>118</i>&nbsp;    }</b>
+<i>119</i>&nbsp;
+<i>120</i>&nbsp;    public void matchStart() {
+<b class="nc"><i>121</i>&nbsp;        started = true;</b>
+<b class="nc"><i>122</i>&nbsp;        finished = false;</b>
+<b class="nc"><i>123</i>&nbsp;    }</b>
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;    public void nextTurn() {
+<b class="fc"><i>126</i>&nbsp;        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());</b>
+<b class="fc"><i>127</i>&nbsp;    }</b>
+<i>128</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-07 10:35</div>
+</div>
+</body>
+</html>
