@@ -26,6 +26,7 @@ class MatchTest {
 
         list.add(GodCards.Apollo);
         match.addCard(GodCards.Demeter);
+        list.add(GodCards.Demeter);
         assertEquals(true, match.isDeckFull());
         assertEquals(list, match.getCards());
 
