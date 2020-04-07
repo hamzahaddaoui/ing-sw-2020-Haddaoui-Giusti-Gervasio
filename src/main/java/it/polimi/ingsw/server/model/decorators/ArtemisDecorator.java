@@ -51,31 +51,22 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
+        if(this.startingPosition==null)
+            this.startingPosition=position;
         super.moveWorker(position, player);
-        if(startingPosition==null)
-            startingPosition=position;
-        else startingPosition=null;
     }
 
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-        try{
-            Billboard billboard=player.getMatch().getBillboard();
-            Position currentPosition=worker.getPosition();
             Set<Position> result = super.computeAvailableMovements(player, worker);
 
-            if(startingPosition==null)
+            if(this.startingPosition==null)
                 return result;
 
             else{
             return  result
                     .stream()
-                    .filter(position -> position != startingPosition)
+                    .filter(position -> position != this.startingPosition)
                     .collect(Collectors.toSet());}
-        }
-        catch(Exception ex){
-            throw new NullPointerException();
-        }
-
     }
 
 }
