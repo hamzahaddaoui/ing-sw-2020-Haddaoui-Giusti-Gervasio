@@ -34,13 +34,12 @@ public class ApolloDecorator extends CommandsDecorator {
     @Override
     public void moveWorker(Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
-        Worker worker = player.getCurrentWorker();
 
-        if(billboard.getPlayer(position)==-1){
-            super.moveWorker(position, player);
+        if(billboard.getPlayer(position)>=0 && billboard.getPlayer(position)!=player.getID() ){
+            exchangePosition(player,position);
         }
         else{
-            exchangePosition(player,position);
+            super.moveWorker(position, player);
         }
     }
 
@@ -66,15 +65,16 @@ public class ApolloDecorator extends CommandsDecorator {
         billboard.setPlayer(actualPosition, opponentPlayer.getID());
     }
 
-    private Player findOpponentPlayer (Position position, Player player) {
+    public Player findOpponentPlayer (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
         return player
                 .getMatch()
                 .getPlayers()
                 .stream()
-                .filter(player1 -> player1.getID()==billboard.getPlayer(position))
-                .findAny().get();
+                .filter(player1 -> player1.getID()==billboard.getPlayer(position) )
+                .findAny()
+                .get();
     }
 
     /**
@@ -85,13 +85,24 @@ public class ApolloDecorator extends CommandsDecorator {
      */
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-        Set<Position> result= super.computeAvailableMovements(player, worker);
         Billboard billboard=player.getMatch().getBillboard();
+        Position currentPosition=player.getCurrentWorker().getPosition();
 
-                    return result
-                            .stream()
-                            .filter(position -> billboard.getPlayer(position) !=player.getID())
-                            .collect(Collectors.toSet());
+        return worker
+                .getPosition()
+                .neighbourPositions()
+                .stream()
+                .filter(position -> billboard.getPlayer(position)!=player.getID())
+                .filter(position -> {
+                    if (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
+                        return true;
+                    if (player.getMatch().isMoveUpActive()) {
+                        return billboard.getTowerHeight(position) == (billboard.getTowerHeight(currentPosition) + 1);
+                    }
+                    return false;
+                })
+                .filter(position -> !billboard.getDome(position))
+                .collect(Collectors.toSet());
     }
 
 
