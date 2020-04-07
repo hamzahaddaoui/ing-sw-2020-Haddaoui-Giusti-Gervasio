@@ -24,9 +24,9 @@ public class DemeterDecoratorTest {
         match.addPlayer(player1);
         match.setPlayersNum(2);
         match.addPlayer(player2);
-        match.addCard(GodCards.Apollo);
+        match.addCard(GodCards.Demeter);
         match.addCard(GodCards.Artemis);
-        player1.setCommands(GodCards.Artemis);
+        player1.setCommands(GodCards.Demeter);
         player2.setCommands(GodCards.Apollo);
         commands1=player1.getCommands();
         commands2=player2.getCommands();
