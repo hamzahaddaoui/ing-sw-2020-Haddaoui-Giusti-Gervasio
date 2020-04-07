@@ -141,8 +141,20 @@ class ApolloDecoratorTest {
 
         Assert.assertTrue(positionCheck.containsAll(positionSet));
         Assert.assertTrue(positionSet.containsAll(positionCheck));
+
+        match.getBillboard().incrementTowerHeight(position11);
+        player1.setCurrentWorker(position12);
+        Set<Position> positionSet0= commands1.computeAvailableMovements(player1,worker);
+        positionCheck.clear();
+        positionCheck.add(position03);
+        positionCheck.add(position02);
+        positionCheck.add(position01);
+        positionCheck.add(position13);
+        positionCheck.add(position11);
+        positionCheck.add(position23);
+        positionCheck.add(position21);
+
+        Assert.assertTrue(positionCheck.containsAll(positionSet0));
+        Assert.assertTrue(positionSet0.containsAll(positionCheck));
     }
-
-
-
 }
