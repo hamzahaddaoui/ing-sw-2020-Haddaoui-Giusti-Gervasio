@@ -43,7 +43,7 @@ public class DemeterDecorator extends CommandsDecorator {
                 return WAIT;
         }
     }
-    
+
 
     @Override
     public void build(Position position, Player player) {

@@ -64,18 +64,18 @@ public class DemeterDecoratorTest {
         player1.setState(TurnState.WAIT);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("E1",player1.getState()==TurnState.MOVE);
+        Assert.assertTrue("1",player1.getState()==TurnState.MOVE);
 
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("E2",player1.getState()==TurnState.BUILD);
+        Assert.assertTrue("2",player1.getState()==TurnState.BUILD);
 
         player1.setCurrentWorker(position12);
         commands1.build(position11,player1);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("E3",player1.getState()==TurnState.WAIT);
-        Assert.assertTrue("E4",player1.hasFinished()==true);
+        Assert.assertTrue("3",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("4",player1.hasFinished()==true);
     }
 
     @Test
@@ -115,11 +115,11 @@ public class DemeterDecoratorTest {
         player1.setState(TurnState.WAIT);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("E1",player1.getState()==TurnState.MOVE);
+        Assert.assertTrue("ER!",player1.getState()==TurnState.MOVE);
 
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("E2",player1.getState()==TurnState.BUILD);
+        Assert.assertTrue("ER0",player1.getState()==TurnState.BUILD);
 
         Set<Position> Set= new HashSet<>();
         Set.add(position03);
@@ -132,8 +132,8 @@ public class DemeterDecoratorTest {
         player1.setCurrentWorker(position12);
         Set<Position> SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
 
-        Assert.assertTrue(SetCheck.containsAll(Set));
-        Assert.assertTrue(Set.containsAll(SetCheck));
+        Assert.assertTrue("ER1",SetCheck.containsAll(Set));
+        Assert.assertTrue("ER2",Set.containsAll(SetCheck));
 
         Set.clear();
 
@@ -142,7 +142,7 @@ public class DemeterDecoratorTest {
 
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("E3",player1.getState()==TurnState.BUILD);
+        Assert.assertTrue("ER3",player1.getState()==TurnState.BUILD);
 
         player1.setCurrentWorker(position12);
         Set.add(position03);
@@ -159,8 +159,8 @@ public class DemeterDecoratorTest {
         commands1.build(position01,player1);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("E4",player1.getState()==TurnState.WAIT);
-        Assert.assertTrue("E5",player1.hasFinished()==true);
+        Assert.assertTrue("ER4",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("ER5",player1.hasFinished()==true);
     }
 
 }
