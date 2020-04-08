@@ -14,36 +14,36 @@ import java.util.Set;
 
 public class ArtemisDecoratorTest {
 
-    Commands commands1,commands2;
-    Match match=new Match(2);
-    Player player1=new Player(1,"leo",match);
-    Player player2=new Player(2,"dario",match);
+    Commands commands1, commands2;
+    Match match = new Match(2);
+    Player player1 = new Player(1, "leo", match);
+    Player player2 = new Player(2, "dario", match);
 
-    Position position00=new Position(0,0);
-    Position position01=new Position(0,1);
-    Position position02=new Position(0,2);
-    Position position03=new Position(0,3);
-    Position position04=new Position(0,4);
-    Position position10=new Position(1,0);
-    Position position11=new Position(1,1);
-    Position position12=new Position(1,2);
-    Position position13=new Position(1,3);
-    Position position14=new Position(1,4);
-    Position position20=new Position(2,0);
-    Position position21=new Position(2,1);
-    Position position22=new Position(2,2);
-    Position position23=new Position(2,3);
-    Position position24=new Position(2,4);
-    Position position30=new Position(3,0);
-    Position position31=new Position(3,1);
-    Position position32=new Position(3,2);
-    Position position33=new Position(3,3);
-    Position position34=new Position(3,4);
-    Position position40=new Position(4,0);
-    Position position41=new Position(4,1);
-    Position position42=new Position(4,2);
-    Position position43=new Position(4,3);
-    Position position44=new Position(4,4);
+    Position position00 = new Position(0, 0);
+    Position position01 = new Position(0, 1);
+    Position position02 = new Position(0, 2);
+    Position position03 = new Position(0, 3);
+    Position position04 = new Position(0, 4);
+    Position position10 = new Position(1, 0);
+    Position position11 = new Position(1, 1);
+    Position position12 = new Position(1, 2);
+    Position position13 = new Position(1, 3);
+    Position position14 = new Position(1, 4);
+    Position position20 = new Position(2, 0);
+    Position position21 = new Position(2, 1);
+    Position position22 = new Position(2, 2);
+    Position position23 = new Position(2, 3);
+    Position position24 = new Position(2, 4);
+    Position position30 = new Position(3, 0);
+    Position position31 = new Position(3, 1);
+    Position position32 = new Position(3, 2);
+    Position position33 = new Position(3, 3);
+    Position position34 = new Position(3, 4);
+    Position position40 = new Position(4, 0);
+    Position position41 = new Position(4, 1);
+    Position position42 = new Position(4, 2);
+    Position position43 = new Position(4, 3);
+    Position position44 = new Position(4, 4);
 
 
     @BeforeEach
@@ -55,8 +55,8 @@ public class ArtemisDecoratorTest {
         match.addCard(GodCards.Artemis);
         player1.setCommands(GodCards.Artemis);
         player2.setCommands(GodCards.Apollo);
-        commands1=player1.getCommands();
-        commands2=player2.getCommands();
+        commands1 = player1.getCommands();
+        commands2 = player2.getCommands();
     }
 
     @Test
@@ -65,27 +65,26 @@ public class ArtemisDecoratorTest {
         player1.setState(TurnState.WAIT);
         player1.setState(commands1.nextState(player1));
         player1.setCurrentWorker(position12);
-        commands1.moveWorker(position11,player1);
+        commands1.moveWorker(position11, player1);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("ERROR",player1.getState()==TurnState.BUILD);
+        Assert.assertTrue("ERROR", player1.getState() == TurnState.BUILD);
 
         player1.setState(commands1.nextState(player1));
-        Assert.assertTrue("ERROR",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("ERROR", player1.getState() == TurnState.WAIT);
     }
 
     @Test
     public void nextStateCaseSpecialFunctionInserted() {
-        Position pos2=new Position(1,1);
         player1.setWorker(position12);
         player1.setState(TurnState.WAIT);
         player1.setState(commands1.nextState(player1));
         player1.setCurrentWorker(position12);
-        commands1.moveWorker(position11,player1);
+        commands1.moveWorker(position11, player1);
         player1.setUnsetSpecialFunction();
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("ERROR",player1.getState()==TurnState.MOVE);
+        Assert.assertTrue("ERROR", player1.getState() == TurnState.MOVE);
     }
 
     @Test
@@ -94,10 +93,10 @@ public class ArtemisDecoratorTest {
         player2.setWorker(position41);
         player1.setCurrentWorker(position33);
 
-        Worker worker=player1.getCurrentWorker();
-        Set<Position> positionSet0= commands1.computeAvailableMovements(player1,worker);
+        Worker worker = player1.getCurrentWorker();
+        Set<Position> positionSet0 = commands1.computeAvailableMovements(player1, worker);
 
-        Set<Position> positionCheck=new HashSet<>();
+        Set<Position> positionCheck = new HashSet<>();
         positionCheck.add(position22);
         positionCheck.add(position23);
         positionCheck.add(position24);
@@ -107,17 +106,17 @@ public class ArtemisDecoratorTest {
         positionCheck.add(position43);
         positionCheck.add(position44);
 
-        Assert.assertTrue("ERRORE1",positionCheck.containsAll(positionSet0));
+        Assert.assertTrue("ERRORE1", positionCheck.containsAll(positionSet0));
         Assert.assertTrue("ERRORE2", positionSet0.containsAll(positionCheck));
 
-        commands1.moveWorker(position23,player1);
-        worker=player1.getCurrentWorker();
-        Set<Position> positionSet1= commands1.computeAvailableMovements(player1,worker);
+        commands1.moveWorker(position23, player1);
+        worker = player1.getCurrentWorker();
+        Set<Position> positionSet1 = commands1.computeAvailableMovements(player1, worker);
 
-        Assert.assertTrue("ERRORE3",positionSet1.contains(position33));
+        Assert.assertTrue("ERRORE3", positionSet1.contains(position33));
 
-        worker=player1.getCurrentWorker();
-        Set<Position> positionSet2= commands1.computeAvailableMovements(player1,worker);
+        worker = player1.getCurrentWorker();
+        Set<Position> positionSet2 = commands1.computeAvailableMovements(player1, worker);
         player1.setCurrentWorker(position23);
         positionCheck.clear();
         positionCheck.add(position12);
@@ -131,11 +130,8 @@ public class ArtemisDecoratorTest {
 
         //positionSet2.stream().forEach(position -> System.out.println("Position(" + position.getX() + ";" + position.getY() + ")"));
 
-        Assert.assertTrue("ERRORE4",positionCheck.containsAll(positionSet2));
+        Assert.assertTrue("ERRORE4", positionCheck.containsAll(positionSet2));
         Assert.assertTrue("ERRORE5", positionSet2.containsAll(positionCheck));
 
     }
-
-    @Test
-    public void move(){}
 }

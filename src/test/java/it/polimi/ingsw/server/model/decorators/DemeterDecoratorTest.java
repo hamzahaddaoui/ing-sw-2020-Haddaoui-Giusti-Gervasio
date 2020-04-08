@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import java.util.HashSet;
 import java.util.Set;
+
 public class DemeterDecoratorTest {
 
     Commands commands1,commands2;
@@ -50,38 +50,117 @@ public class DemeterDecoratorTest {
         match.addPlayer(player1);
         match.setPlayersNum(2);
         match.addPlayer(player2);
-        match.addCard(GodCards.Apollo);
+        match.addCard(GodCards.Demeter);
         match.addCard(GodCards.Artemis);
-        player1.setCommands(GodCards.Artemis);
+        player1.setCommands(GodCards.Demeter);
         player2.setCommands(GodCards.Apollo);
         commands1=player1.getCommands();
         commands2=player2.getCommands();
     }
 
     @Test
-    public void nextStateCaseSpecialFunctionNotInserted() {
+    public void nextStateJustOneBuild() {
         player1.setWorker(position12);
         player1.setState(TurnState.WAIT);
         player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E1",player1.getState()==TurnState.MOVE);
+
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E2",player1.getState()==TurnState.BUILD);
+
         player1.setCurrentWorker(position12);
-        commands1.moveWorker(position11,player1);
+        commands1.build(position11,player1);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("ERROR",player1.getState()==TurnState.BUILD);
-
-        player1.setState(commands1.nextState(player1));
-        Assert.assertTrue("ERROR",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("E3",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("E4",player1.hasFinished()==true);
     }
 
     @Test
-    public void build() {
+    public void nextStateSecondBuild() {
+        player1.setWorker(position12);
+        player1.setState(TurnState.WAIT);
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E1",player1.getState()==TurnState.MOVE);
+
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E2",player1.getState()==TurnState.BUILD);
+
+        player1.setCurrentWorker(position12);
+        commands1.build(position11,player1);
+        player1.setUnsetSpecialFunction();
+
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E3",player1.getState()==TurnState.BUILD);
+
+        player1.setCurrentWorker(position12);
+        commands1.build(position01,player1);
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E4",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("E5",player1.hasFinished()==true);
     }
 
     @Test
     public void computeAvailableBuildings() {
+        player1.setWorker(position12);
+        player1.setWorker(position00);
+        player2.setWorker(position13);
+        player2.setWorker(position41);
+        player1.setState(TurnState.WAIT);
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E1",player1.getState()==TurnState.MOVE);
+
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E2",player1.getState()==TurnState.BUILD);
+
+        Set<Position> Set= new HashSet<>();
+        Set.add(position03);
+        Set.add(position02);
+        Set.add(position01);
+        Set.add(position11);
+        Set.add(position23);
+        Set.add(position22);
+        Set.add(position21);
+        player1.setCurrentWorker(position12);
+        Set<Position> SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
+
+        Assert.assertTrue(SetCheck.containsAll(Set));
+        Assert.assertTrue(Set.containsAll(SetCheck));
+
+        Set.clear();
+
+        commands1.build(position11,player1);
+        player1.setUnsetSpecialFunction();
+
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E3",player1.getState()==TurnState.BUILD);
+
+        player1.setCurrentWorker(position12);
+        Set.add(position03);
+        Set.add(position02);
+        Set.add(position01);
+        Set.add(position11);
+        Set.add(position23);
+        Set.add(position22);
+        Set.add(position21);
+        SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
+
+        Assert.assertTrue(SetCheck.containsAll(Set));
+        Assert.assertTrue(Set.containsAll(SetCheck));
+        commands1.build(position01,player1);
+        player1.setState(commands1.nextState(player1));
+
+        Assert.assertTrue("E4",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("E5",player1.hasFinished()==true);
     }
 
-    @Test
-    public void computeAvailableSpecialBuildings() {
-    }
 }

@@ -13,7 +13,7 @@ import static it.polimi.ingsw.server.model.TurnState.WAIT;
 public class DemeterDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Demeter;
 
-    private Position firstBuildPosition=null;
+    private Position firstBuildPosition;
 
     /**
      * decorate the object Command with Demeter's special power
@@ -22,6 +22,7 @@ public class DemeterDecorator extends CommandsDecorator {
      */
     public DemeterDecorator(Commands commands){
         this.commands=commands;
+        this.firstBuildPosition=null;
     }
 
     @Override
@@ -30,68 +31,45 @@ public class DemeterDecorator extends CommandsDecorator {
             case WAIT:
                 return MOVE;
             case MOVE:
-                firstBuildPosition=null;
+                this.firstBuildPosition=null;
                 return BUILD;
             case BUILD:
-                if (player.getSpecialFunction() && firstBuildPosition != null){
-                    return BUILD;}
+                if (this.firstBuildPosition!=null)
+                    if(player.getSpecialFunction()==true)
+                        return BUILD;
             default:
+                this.firstBuildPosition=null;
                 player.setHasFinished(true);
                 return WAIT;
         }
     }
-
+    
 
     @Override
     public void build(Position position, Player player) {
-        if (firstBuildPosition == null){
-            super.build(position, player);
-            firstBuildPosition = position;
-            position.setZ(player.getMatch().getBillboard().getTowerHeight(position));
+        super.build(position, player);
+        if (this.firstBuildPosition == null){
+            this.firstBuildPosition = position;
         }
         else {
-            if (player.getSpecialFunction()) {
-                super.build(firstBuildPosition, player);
+            if (player.getSpecialFunction()==true && this.firstBuildPosition != null) {
+                this.firstBuildPosition=null;
             }
         }
 
     }
-
-
-
 
     @Override
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
-        try{
-            if(firstBuildPosition==null)
-                return super.computeAvailableBuildings(player, worker);
+        Set<Position> result=super.computeAvailableBuildings(player, worker);
+            if(this.firstBuildPosition==null)
+                return result;
             else{
-                return computeAvailableSpecialBuildings(player, worker);
+                return result
+                        .stream()
+                        .filter(position -> position!=firstBuildPosition)
+                        .collect(Collectors.toSet());
             }
         }
-        catch(Exception ex){
-            throw new NullPointerException();}
-    }
-
-    /**
-     * method that show the list of cells that are available for the standard building action of the player
-     *
-     * @param player  is the current player
-     * @return  the list of Position where the worker can build on
-     */
-    public Set<Position> computeAvailableSpecialBuildings(Player player, Worker worker) {
-        try{
-            Billboard billboard=player.getMatch().getBillboard();
-            Set<Position> result=super.computeAvailableBuildings(player, worker);
-
-            return result
-                    .stream()
-                    .filter(position -> position!=firstBuildPosition)
-                    .collect(Collectors.toSet());
-        }
-        catch(Exception ex){
-            throw new NullPointerException("PLAYER IS NULL");
-        }
-    }
 
 }
