@@ -61,7 +61,7 @@ public class ApolloDecorator extends CommandsDecorator {
         billboard.setPlayer(actualPosition, opponentPlayer.getID());
     }
 
-    public Player findOpponentPlayer (Position position, Player player) {
+    private Player findOpponentPlayer (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
         return player
@@ -89,14 +89,9 @@ public class ApolloDecorator extends CommandsDecorator {
                 .neighbourPositions()
                 .stream()
                 .filter(position -> billboard.getPlayer(position)!=player.getID())
-                .filter(position -> {
-                    if (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
-                        return true;
-                    if (player.getMatch().isMoveUpActive()) {
-                        return billboard.getTowerHeight(position) == (billboard.getTowerHeight(currentPosition) + 1);
-                    }
-                    return false;
-                })
+                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
+                        (player.getMatch().isMoveUpActive() &&
+                                billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
     }
