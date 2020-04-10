@@ -1,17 +1,23 @@
 package it.polimi.ingsw.server.controller;
+import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.server.model.GameModel;
 import it.polimi.ingsw.utilities.Observer;
-import it.polimi.ingsw.utilities.VCEvent;
 
-public class ServerController implements Observer<VCEvent> {
+public class ServerController implements Observer {
 
     @Override
-    public void update(VCEvent message){
+    public void update(Object message){
+
         return;
     }
 
     @Override
-    public void update(int matchID, int playerID, VCEvent message){
+    public void update(Integer matchID, Integer playerID, Object message){
         //parsing dell'oggetto vcevent
+        if (matchID == null && GameModel.getMatchID(playerID) != null) {
+            Server.setUsersMatches(playerID, matchID);
+        }
+
     }
 
         /*if (message.getMatchID() == null){

@@ -18,7 +18,7 @@ public class Controller extends Observable implements Observer<VCEvent> {
     }
 
     @Override
-    public void update(int matchID, int playerID, VCEvent message){
+    public void update(Integer playerID, Integer matchID, VCEvent message){
 
     }
 }

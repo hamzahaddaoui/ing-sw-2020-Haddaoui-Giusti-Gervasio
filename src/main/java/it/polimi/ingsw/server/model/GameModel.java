@@ -42,6 +42,10 @@ public class GameModel extends Observable {
                 .findAny().get();
     }
 
+    public static Integer getMatchID(int playerID){
+        return activeMatches.get(playerID).getID();
+    }
+
     /**
      * Checks if there is an instance of match, waiting to start
      * and returns that match to the caller.

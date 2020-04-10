@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,7 +17,18 @@ public class Server {
   static ServerSocket socket;
   static ServerController controller = new ServerController();
   static GameModel model = new GameModel();
+  static int progressiveID = 1;
 
+  static Map<Socket, Integer> socketUsers = new HashMap<>(); //socket - playerID
+  static Map<Integer, Integer> usersMatches = new HashMap<>(); // playerID - matchID
+
+  public static void setUsersMatches(int playerID, int matchID){
+    usersMatches.put(playerID, matchID);
+  }
+
+  public static Integer getUserMatch(int playerID){
+    return usersMatches.get(playerID);
+  }
 
   public static void main(String[] args){
     ClientHandler clientHandler;
@@ -33,12 +45,16 @@ public class Server {
     while (true) {
       try {
         Socket client = socket.accept();
-        clientHandler = new ClientHandler(client);
+        clientHandler = new ClientHandler(client, progressiveID);
+
+        socketUsers.put(client, progressiveID);
 
         clientHandler.addObserver(controller);  //controller osserva clientHandler
         model.addObserver(clientHandler);       //clientHandler osserva Model
 
         executor.submit(clientHandler);
+
+        progressiveID++;
       }
       catch (IOException e) {
         System.out.println("connection dropped");
