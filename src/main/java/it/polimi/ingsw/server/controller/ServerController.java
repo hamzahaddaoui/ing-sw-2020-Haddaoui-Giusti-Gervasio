@@ -1,12 +1,13 @@
 package it.polimi.ingsw.server.controller;
-
-import it.polimi.ingsw.server.model.GameModel;
-import it.polimi.ingsw.utilities.Message;
 import it.polimi.ingsw.utilities.Observer;
+import it.polimi.ingsw.utilities.VCEvent;
 
-public class GameController implements Observer<Message> {
+public class ServerController implements Observer<VCEvent> {
     @Override
-    public void update(Message message) {
+    public void update(VCEvent message){
+        //parsing dell'oggetto vcevent
+    }
+
         /*if (message.getMatchID() == null){
             if (GameModel.getCurrentMatch() != null){
                 if(GameModel.isNickAvailable(message.getPayload())){
@@ -46,7 +47,8 @@ public class GameController implements Observer<Message> {
                     //verifico che la carta faccia parte del set di carte del match, poi la associo al player
                     if (message instanceof godCard) matchid.selectPlayerCard(match, message)
                 if (!isDeckFull()) match.state++;*/
-    }
+
+
 }
 
 

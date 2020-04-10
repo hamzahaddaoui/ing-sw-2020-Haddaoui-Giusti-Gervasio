@@ -9,8 +9,10 @@ public class Billboard {
     static final int COLOUMNS = 5;
 
     private Map<Position, Integer> towerHeight = new HashMap<>();
+
     //è inutile tenere la lista di tutte le celle... basta tenere solo la lista delle posizioni dove c'è una cupola
     private Map<Position, Boolean> domePosition = new HashMap<>();
+
     //stessa cosa qui! tengo solo le posizioni dove c'è un utente
     private Map<Position, Integer> playersPosition = new HashMap<>();
 

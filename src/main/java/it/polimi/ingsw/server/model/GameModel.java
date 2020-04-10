@@ -1,28 +1,22 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.utilities.Message;
-
+import it.polimi.ingsw.server.ClientHandler;
 import it.polimi.ingsw.utilities.Observable;
-import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.Position;
 import org.javatuples.Quartet;
 
 import java.util.*;
 
 /**
- * @author hamzahaddaoui
  * Main model class: represents the facade of the entire model package
  * All user-useful model classes are accessible from the methods listed here.
  */
 
 public class GameModel extends Observable {
-    //list of observers of the model state
-    private static Observer<Message> observer;
-
-
     //navigableMap to get the last inserted element, which could correspond to the waiting to start watch
     //Made up of an integer, which represents the matchID, and the match entity.
     private static NavigableMap<Integer, Match> activeMatches = new TreeMap<>(); //id match, match
+
     //private static Map<Integer, Match> waitingToStart;  //non è creato il match
 
     /**
@@ -243,7 +237,10 @@ public class GameModel extends Observable {
      * third layer for the domes
      * @return
      */
-    public static HashMap<Position, Quartet<Integer, Integer, Boolean, Set<Position>>> getBillboard(Integer matchID, Integer playerID){
+
+    //HashMap< MatchID, HashMap<Cell, Set<Position>>
+
+    public HashMap<Position, Quartet<Integer, Integer, Boolean, Set<Position>>> getBillboard(Integer matchID, Integer playerID){
         int x, y;
         Match match = translateMatchID(matchID);
         Billboard billboard = match.getBillboard();
@@ -268,7 +265,13 @@ public class GameModel extends Observable {
                     billboard.getDome(position),
                     availableCells.get(position)));
         }
+
+        notify(returnValue);
+
         return returnValue;
+
+
+
     }
 
 }

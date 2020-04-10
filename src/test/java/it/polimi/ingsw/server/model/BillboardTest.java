@@ -20,6 +20,9 @@ class BillboardTest {
     @Test
     void testIncrementTowerHeight() {
         assertEquals(0, billboard.getTowerHeight(position));
+
+
+
         billboard.incrementTowerHeight(position);
         assertEquals(1, billboard.getTowerHeight(position));
         billboard.incrementTowerHeight(position);
