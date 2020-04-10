@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.ClientHandler;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Position;
 import org.javatuples.Quartet;
@@ -266,7 +265,7 @@ public class GameModel extends Observable {
                     availableCells.get(position)));
         }
 
-        notify(returnValue);
+        notify(matchID, playerID, returnValue);
 
         return returnValue;
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.utilities.MVEvent;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.VCEvent;
@@ -13,10 +14,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class ClientHandler extends Observable implements Observer, Runnable {
+public class ClientHandler extends Observable<VCEvent> implements Observer<MVEvent>, Runnable {
   ExecutorService executor = Executors.newSingleThreadExecutor();
-  int matchID;
-  int playerID;
+  private int matchID;
+  private int playerID;
   private ObjectOutputStream output;
   private ObjectInputStream input;
   private Socket client;
@@ -35,7 +36,15 @@ public class ClientHandler extends Observable implements Observer, Runnable {
     input = new ObjectInputStream(client.getInputStream());
   }
 
-  @Override
+    public void setMatchID(int matchID){
+        this.matchID = matchID;
+    }
+
+    public void setPlayerID(int playerID){
+        this.playerID = playerID;
+    }
+
+    @Override
   public void run() {
     String inputObject;
     VCEvent message;
@@ -46,7 +55,7 @@ public class ClientHandler extends Observable implements Observer, Runnable {
         while (active) {
           inputObject = (String) input.readObject();
           message = new Gson().fromJson(inputObject,VCEvent.class);
-          notify(message);
+          notify(matchID, playerID, message);
         }
       }
       catch (ClassNotFoundException | ClassCastException e) {
@@ -60,14 +69,16 @@ public class ClientHandler extends Observable implements Observer, Runnable {
     }
   }
 
-  @Override
-  public void update(Object message){
-    //messaggio da model a view
+    @Override
+    public void update(MVEvent message){
+        return;
+    }
 
-
-    //se view need refresh allora ok
-    //else return
-    //il messaggio è legato al mio match???????
+    @Override
+  public void update(int matchID, int playerID, MVEvent message){
+    if (this.matchID != matchID){
+      return;
+    }
 
     executor.submit(() -> {
       try {

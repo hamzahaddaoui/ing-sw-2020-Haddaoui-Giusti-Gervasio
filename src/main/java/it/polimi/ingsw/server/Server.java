@@ -16,10 +16,10 @@ public class Server {
   static ServerSocket socket;
   static ServerController controller = new ServerController();
   static GameModel model = new GameModel();
-  static ClientHandler clientHandler;
+
 
   public static void main(String[] args){
-
+    ClientHandler clientHandler;
 
     try {
       socket = new ServerSocket(SOCKET_PORT);
@@ -34,8 +34,10 @@ public class Server {
       try {
         Socket client = socket.accept();
         clientHandler = new ClientHandler(client);
-        clientHandler.addObserver(controller);
-        model.addObserver(clientHandler);
+
+        clientHandler.addObserver(controller);  //controller osserva clientHandler
+        model.addObserver(clientHandler);       //clientHandler osserva Model
+
         executor.submit(clientHandler);
       }
       catch (IOException e) {

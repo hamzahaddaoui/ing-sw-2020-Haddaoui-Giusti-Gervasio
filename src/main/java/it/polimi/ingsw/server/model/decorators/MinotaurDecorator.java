@@ -3,9 +3,7 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
-import javax.swing.*;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MinotaurDecorator extends CommandsDecorator {

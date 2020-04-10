@@ -27,11 +27,11 @@ public class Client {
         }
         System.out.println("Connected");
 
-        networkHandler.addObserver(view);
-        view.addObserver(controller);
-        controller.addObserver(networkHandler);
+        networkHandler.addObserver(view);       //view osserva il networkHandler
+        view.addObserver(controller);           //controller osserva la view
+        controller.addObserver(networkHandler); //networkHandler osserva il controller
 
-        executor.submit(networkHandler); //si mette in ascolto di messaggi
+        executor.submit(networkHandler);        //si mette in ascolto di messaggi
         executor.submit(view);
 
 
