@@ -19,14 +19,6 @@ public class Observable<T> {
         }
     }
 
-    protected void notify(Integer playerID, Integer matchID, T message){
-        synchronized (observers) {
-            for(Observer<T> observer : observers){
-                observer.update(matchID, playerID, message);
-            }
-        }
-    }
-
     protected void notify(T message){
         synchronized (observers) {
             for(Observer<T> observer : observers){

@@ -1,4 +1,5 @@
 package it.polimi.ingsw.server.model;
+import it.polimi.ingsw.utilities.Cell;
 import it.polimi.ingsw.utilities.Position;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,69 +9,53 @@ public class Billboard {
     static final int ROWS = 5;
     static final int COLOUMNS = 5;
 
-    private Map<Position, Integer> towerHeight = new HashMap<>();
-
-    //è inutile tenere la lista di tutte le celle... basta tenere solo la lista delle posizioni dove c'è una cupola
-    private Map<Position, Boolean> domePosition = new HashMap<>();
-
-    //stessa cosa qui! tengo solo le posizioni dove c'è un utente
-    private Map<Position, Integer> playersPosition = new HashMap<>();
+    private Map<Position, Cell> cellSet = new HashMap<>();
 
     public Billboard() {
-        int i, j;
+        int x, y;
         Position position;
-        for(i=0; i<ROWS; i++){
-            for(j=0; j<COLOUMNS; j++){
-                position = new Position(i,j);
-                towerHeight.put(position, 0);
-                domePosition.put(position, false);
-                playersPosition.put(position, -1);
-                Position position1 = new Position(i,j);
+        for(x=0; x<ROWS; x++){
+            for(y=0; y<COLOUMNS; y++){
+                cellSet.put(new Position(x,y), new Cell());
             }
         }
     }
 
-    public Map<Position, Integer> getTowerHeight() {
-        return towerHeight;
+    public Map<Position, Cell> getCells() {
+        return cellSet;
     }
 
     public int getTowerHeight(Position position) {
-        return towerHeight.get(position);
+        return cellSet.get(position).getTowerHeight();
     }
 
     public void incrementTowerHeight(Position position) {
-        int height = towerHeight.get(position);
-        if (height < 3)
-            towerHeight.replace(position, ++height);
+        int height = cellSet.get(position).getTowerHeight();
+        if (height < 3){
+            height ++;
+            cellSet.get(position).setTowerHeight(height);
+        }
         else
             setDome(position);
     }
 
-    public Map<Position, Boolean>  getDome() {
-        return domePosition;
-    }
-
     public boolean getDome(Position position) {
-        return domePosition.get(position);
+        return cellSet.get(position).isDome();
     }
 
     public void setDome(Position position){
-        domePosition.replace(position, true);
-    }
-
-    public Map<Position, Integer> getPlayer() {
-        return playersPosition;
+        cellSet.get(position).setDome(true);
     }
 
     public int getPlayer(Position position) {
-        return playersPosition.get(position);
+        return cellSet.get(position).getPlayerID();
     }
 
     public void setPlayer(Position position, int player){
-        playersPosition.replace(position, player);
+        cellSet.get(position).setPlayerID(player);
     }
 
     public void resetPlayer(Position position) {
-        playersPosition.replace(position, - 1);
+        cellSet.get(position).setPlayerID(null);
     }
 }

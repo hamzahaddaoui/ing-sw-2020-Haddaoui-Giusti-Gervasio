@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.controller.Controller;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;

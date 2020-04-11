@@ -6,22 +6,16 @@ import it.polimi.ingsw.utilities.*;
 
 import java.util.Scanner;
 
-public class View extends Observable implements Runnable, Observer<MVEvent> {
+public class View extends Observable implements Runnable, Observer{
     Scanner scanner = new Scanner(System.in);
     @Override
-    public void update(MVEvent message){
+    public void update(Object message){
         //se ricevo un messaggio dal model
         //aggiorna la scacchiera a video
     }
-
-    @Override
-    public void update(int matchID, int playerID, MVEvent message){
-        return;
-    }
-
     @Override
     public void run(){
-        VCEvent vcEvent = new VCEvent("nick", new Position(2,2));
+        /*VCEvent vcEvent = new VCEvent("nick", new Position(2,2));
         while(true) {
 
             int x, y;
@@ -31,6 +25,6 @@ public class View extends Observable implements Runnable, Observer<MVEvent> {
             y = scanner.nextInt();
 
             notify(vcEvent);
-        }
+        }*/
     }
 }

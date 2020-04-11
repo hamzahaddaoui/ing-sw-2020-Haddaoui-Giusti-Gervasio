@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.server.controller.ServerController;
+import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.model.GameModel;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,19 +15,14 @@ public class Server {
   public final static int SOCKET_PORT = 12345;
   static ExecutorService executor = Executors.newCachedThreadPool();
   static ServerSocket socket;
-  static ServerController controller = new ServerController();
+  static Controller controller = new Controller();
   static GameModel model = new GameModel();
   static int progressiveID = 1;
 
-  static Map<Socket, Integer> socketUsers = new HashMap<>(); //socket - playerID
-  static Map<Integer, Integer> usersMatches = new HashMap<>(); // playerID - matchID
+  static Map<Integer, ClientHandler> clientSocket = new HashMap<>(); //playerID - socket
 
-  public static void setUsersMatches(int playerID, int matchID){
-    usersMatches.put(playerID, matchID);
-  }
-
-  public static Integer getUserMatch(int playerID){
-    return usersMatches.get(playerID);
+  public static ClientHandler getSocket(int playerID){
+    return clientSocket.get(playerID);
   }
 
   public static void main(String[] args){
@@ -47,10 +42,11 @@ public class Server {
         Socket client = socket.accept();
         clientHandler = new ClientHandler(client, progressiveID);
 
-        socketUsers.put(client, progressiveID);
+        clientSocket.put(progressiveID, clientHandler);
 
-        clientHandler.addObserver(controller);  //controller osserva clientHandler
-        model.addObserver(clientHandler);       //clientHandler osserva Model
+        clientHandler.addObserver(controller);  //controller osserva clientHandler (comunicazioni CLIENT_CONTROLLER-SERVER_CONTROLLER)
+        model.addObserver(clientHandler);       //clientHandler osserva Model (comunicazioni MODEL-VIEW)
+        controller.addObserver(clientHandler);  //clientHandler osserva controller (comunicazioni CONTROLLER-VIEW)
 
         executor.submit(clientHandler);
 
