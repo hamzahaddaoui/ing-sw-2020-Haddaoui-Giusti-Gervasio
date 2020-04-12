@@ -1,7 +1,10 @@
 package it.polimi.ingsw.server.model;
+
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
 
 /**
  * @author hamzahaddaoui
@@ -9,10 +12,10 @@ import java.util.Set;
  */
 public class Match {
     private int ID;
-    private int playersNum = 2; //number of players of the match, 2 by default
+    private Integer playersNum = null; //number of players of the match, 2 by default
     private int playersCurrentCount;
 
-    private ArrayList<Player> players = new ArrayList<>(2);
+    private List<Player> players = new ArrayList<>(2);
     private Player currentPlayer;
     private Set<GodCards> cards = new HashSet<>(2);
     private Billboard billboard;
@@ -26,6 +29,7 @@ public class Match {
     public Match(int matchID) {
         this.ID = matchID;
         billboard = new Billboard();
+        currentState = MatchState.GETTING_PLAYERS_NUM;
     }
 
     public boolean setPlayersNum(int playersNum){
@@ -37,7 +41,7 @@ public class Match {
         return ID;
     }
 
-    public int getPlayersNum() {
+    public Integer getPlayersNum() {
         return playersNum;
     }
 
@@ -45,7 +49,7 @@ public class Match {
         return playersCurrentCount;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 

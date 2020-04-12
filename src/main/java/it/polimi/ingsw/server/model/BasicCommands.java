@@ -85,8 +85,8 @@ public class BasicCommands implements Commands {
     public Set<Position> computeAvailablePlacing(Player player, Worker worker) {
         try{
             Set<Position> positions = new HashSet<>();
-            player.getMatch().getBillboard().getPlayer().forEach((key,val) -> {
-                if (val.equals(-1)){
+            player.getMatch().getBillboard().getCells().forEach((key,val) -> {
+                if (val.getPlayerID() == null){
                     positions.add(key);
                 }
             });

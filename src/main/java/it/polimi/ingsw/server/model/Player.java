@@ -25,10 +25,13 @@ public class Player{
 
     private boolean specialFunction;
 
-    public Player(int ID,String nickname, Match match) {
+    public Player(int ID,String nickname) {
         this.ID = ID;
         this.nickname = nickname;
         state = PLACING;
+    }
+
+    public void setMatch(Match match){
         this.match = match;
     }
 

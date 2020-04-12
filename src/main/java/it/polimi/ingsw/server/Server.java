@@ -1,76 +1,60 @@
 package it.polimi.ingsw.server;
 
-
-
+import it.polimi.ingsw.server.controller.Controller;
+import it.polimi.ingsw.server.model.GameModel;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 public class Server {
+  public final static int SOCKET_PORT = 12345;
+  static ExecutorService executor = Executors.newCachedThreadPool();
+  static ServerSocket socket;
+  static Controller controller = new Controller();
+  static GameModel model = new GameModel();
+  static int progressiveID = 1;
 
-    private static final int PORT = 12345;
-    private ServerSocket serverSocket;
-    private ExecutorService executor = Executors.newFixedThreadPool(128);
-    private Map<ClientConnection, Integer> playerConnection = new HashMap<>(); //idconnessione, idutente
-    private Map<Integer, Integer> playerMatch = new HashMap<>(); //idutente, idmatch
+  static Map<Integer, ClientHandler> clientSocket = new HashMap<>(); //playerID - socket
 
-    public void setPlayerConnection(ClientConnection client, Integer playerID) {
-        this.playerConnection.put(client, playerID);
+  public static ClientHandler getSocket(int playerID){
+    return clientSocket.get(playerID);
+  }
+
+  public static void main(String[] args){
+    ClientHandler clientHandler;
+
+    try {
+      socket = new ServerSocket(SOCKET_PORT);
+    }
+    catch (IOException e) {
+      System.out.println("cannot open server socket");
+      System.exit(1);
+      return;
     }
 
-    public void setPlayerMatch(Integer playerID, Integer matchID) {
-        this.playerMatch.put(playerID, matchID);
+    while (true) {
+      try {
+        Socket client = socket.accept();
+        clientHandler = new ClientHandler(client, progressiveID);
+
+        clientSocket.put(progressiveID, clientHandler);
+
+        clientHandler.addObserver(controller);  //controller osserva clientHandler (comunicazioni CLIENT_CONTROLLER-SERVER_CONTROLLER)
+        model.addObserver(clientHandler);       //clientHandler osserva Model (comunicazioni MODEL-VIEW)
+        controller.addObserver(clientHandler);  //clientHandler osserva controller (comunicazioni CONTROLLER-VIEW)
+
+        executor.submit(clientHandler);
+
+        progressiveID++;
+      }
+      catch (IOException e) {
+        System.out.println("connection dropped");
+      }
     }
-
-    public void removePlayerConnection(ClientConnection client, Integer playerID) {
-        this.playerConnection.remove(client);
-    }
-
-    public void removePlayerMatch(Integer playerID, Integer matchID) {
-        this.playerMatch.remove(playerID);
-    }
-
-    public synchronized void deregisterConnection(ClientConnection connection) {
-        /*ClientConnection opponent = playingConnection.get(c);
-        if(opponent != null) {
-            opponent.closeConnection();
-        }
-        playingConnection.remove(c);
-        playingConnection.remove(opponent);
-        Iterator<String> iterator = waitingConnection.keySet().iterator();
-        while(iterator.hasNext()){
-            if(waitingConnection.get(iterator.next())==c){
-                iterator.remove();
-            }
-        }*/
-    }
-
-    public Map<ClientConnection, Integer> getPlayerConnection() {
-        return playerConnection;
-    }
-
-    public Map<Integer, Integer> getPlayerMatch() {
-        return playerMatch;
-    }
-
-    public Server() throws IOException {
-        this.serverSocket = new ServerSocket(PORT);
-    }
-
-    public void run(){
-        while(true){
-            try {
-                Socket newSocket = serverSocket.accept();
-
-                SocketClientConnection socketConnection = new SocketClientConnection(newSocket, this);
-                executor.submit(socketConnection);
-            } catch (IOException e) {
-                System.out.println("Connection Error!");
-            }
-        }
-    }
-
+  }
 }
