@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.server.model.TurnState.*;
-import static it.polimi.ingsw.server.model.TurnState.WAIT;
+import static it.polimi.ingsw.server.model.TurnState.IDLE;
 
 public class DemeterDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Demeter;
@@ -27,7 +27,7 @@ public class DemeterDecorator extends CommandsDecorator {
     @Override
     public TurnState nextState(Player player) {
         switch (player.getState()) {
-            case WAIT:
+            case IDLE:
                 return MOVE;
             case MOVE:
                 this.firstBuildPosition=null;
@@ -39,7 +39,7 @@ public class DemeterDecorator extends CommandsDecorator {
             default:
                 this.firstBuildPosition=null;
                 player.setHasFinished(true);
-                return WAIT;
+                return IDLE;
         }
     }
 

@@ -20,14 +20,17 @@ public class MessageEvent {
     //private String errorType;
 
     private String godCard;
+    private Set<String> godCards;
 
     private Boolean endTurn;
     private Boolean specialFunction;
 
-    private ArrayList<Integer> position;
+    private Position startPosition;
+    private Position endPosition;
 
     private Map<Position, Cell> billboardStatus;
     private Map<Position, Set<Position>> workersAvailableCells;
+    private Map<Integer, String> matchPlayers;
 
     public MessageEvent(MessageType msgType, Integer playerID, Integer matchID, String playerState, String matchState){
         this.msgType = msgType;
@@ -77,20 +80,20 @@ public class MessageEvent {
         return matchState;
     }
 
-    public String getGodCard(){
-        return godCard;
-    }
-
     public Boolean getEndTurn(){
         return endTurn;
     }
 
-    public Boolean getSpecialFunction(){
-        return specialFunction;
+    public String getGodCard(){
+        return godCard;
     }
 
-    public ArrayList<Integer> getPosition(){
-        return position;
+    public Set<String> getGodCards(){
+        return godCards;
+    }
+
+    public Boolean getSpecialFunction(){
+        return specialFunction;
     }
 
     public Map<Position, Cell> getBillboardStatus(){

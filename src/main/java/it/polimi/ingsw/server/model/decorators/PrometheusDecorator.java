@@ -30,7 +30,7 @@ public class PrometheusDecorator extends CommandsDecorator {
     @Override
     public TurnState nextState(Player player) {
         switch(player.getState()){
-            case WAIT:
+            case IDLE:
                 if (player.getSpecialFunction())
                 return BUILD;
                 else return MOVE;
@@ -41,7 +41,7 @@ public class PrometheusDecorator extends CommandsDecorator {
                     return MOVE;
                 else player.setHasFinished(true);
             default:
-                return WAIT;
+                return IDLE;
         }
     }
 

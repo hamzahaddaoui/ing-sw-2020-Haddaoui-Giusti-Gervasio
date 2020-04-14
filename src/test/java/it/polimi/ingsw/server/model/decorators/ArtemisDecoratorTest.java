@@ -61,7 +61,7 @@ public class ArtemisDecoratorTest {
     @Test
     public void nextStateCaseSpecialFunctionNotInserted() {
         player1.setWorker(position12);
-        player1.setState(TurnState.WAIT);
+        player1.setState(TurnState.IDLE);
         player1.setState(commands1.nextState(player1));
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
@@ -70,13 +70,13 @@ public class ArtemisDecoratorTest {
         Assert.assertTrue("ERROR", player1.getState() == TurnState.BUILD);
 
         player1.setState(commands1.nextState(player1));
-        Assert.assertTrue("ERROR", player1.getState() == TurnState.WAIT);
+        Assert.assertTrue("ERROR", player1.getState() == TurnState.IDLE);
     }
 
     @Test
     public void nextStateCaseSpecialFunctionInserted() {
         player1.setWorker(position12);
-        player1.setState(TurnState.WAIT);
+        player1.setState(TurnState.IDLE);
         player1.setState(commands1.nextState(player1));
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);

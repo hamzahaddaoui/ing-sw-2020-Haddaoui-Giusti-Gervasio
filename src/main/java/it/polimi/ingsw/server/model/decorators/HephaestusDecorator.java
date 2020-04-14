@@ -19,7 +19,7 @@ public class HephaestusDecorator extends CommandsDecorator {
         switch (player.getState()) {
             case PLACING:
                 player.setHasFinished(true);
-            case WAIT:
+            case IDLE:
                 return MOVE;
             case MOVE:
                 return BUILD;
@@ -28,9 +28,9 @@ public class HephaestusDecorator extends CommandsDecorator {
                 if (player.getSpecialFunction() && firstBuildPosition == null)
                     return BUILD;
                 else
-                    return WAIT;
+                    return IDLE;
             default:
-                return WAIT;
+                return IDLE;
         }
     }
 
