@@ -17,52 +17,26 @@ public class GameModel extends Observable {
     private static LinkedList<Player> playersWaitingList = new LinkedList<>();
     private static Map<Integer, Match> activeMatches = new HashMap<>(); //id match, match
 
-    public static boolean isPlayersWaitingListEmpty(){
-        return playersWaitingList.isEmpty();
+    public static int getPlayersWaitingListSize(){
+        return playersWaitingList.size();
     }
 
-    public static boolean isNewMatchinstantiable(){
-        return playersWaitingList.size()
-               >= 2*(activeMatches
+    public static int getNotInitMatchesListSize(){
+        return (int) activeMatches
                 .keySet()
                 .stream()
                 .map(matchID -> activeMatches.get(matchID))
                 .filter(match -> !match.isStarted() && (match.getPlayersNum()==null))
-                .count());
+                .count();
     }
 
-    public static Integer getAvailableMatchID(){
-        return activeMatches
+    public static int getInitMatchesListSize(){
+        return (int) activeMatches
                 .keySet()
                 .stream()
                 .map(matchID -> activeMatches.get(matchID))
                 .filter(match -> !match.isStarted() && (match.getPlayersNum()!=null))
-                .findFirst()
-                .get()
-                .getID();
-    }
-
-    public static boolean isNotInitializedMatchPresent(){
-        return activeMatches
-                .keySet()
-                .stream()
-                .map(matchID -> activeMatches.get(matchID))
-                .filter(match -> !match.isStarted() && (match.getPlayersNum()==null))
-                .findAny()
-                .isPresent();
-    }
-
-    public static void playerAddToWaitingList(Integer playerID, String nickname){
-        playersWaitingList.addLast(new Player(playerID, nickname));
-    }
-
-    /**
-     * Creates a new instance of match, with an assigned unique ID
-     */
-    public synchronized static int createMatch(){
-        progressiveMatchID++;
-        activeMatches.put(progressiveMatchID, new Match(progressiveMatchID));
-        return progressiveMatchID;
+                .count();
     }
 
     /**
@@ -77,27 +51,67 @@ public class GameModel extends Observable {
                 .filter(player -> player.getNickname() == nickname)
                 .findAny()
                 .isPresent()
-                &&
+               &&
                !activeMatches
+                       .keySet()
+                       .stream()
+                       .map(matchID -> activeMatches.get(matchID))
+                       .filter(match -> !match.isStarted())
+                       .filter(match -> match.getPlayers()
+                               .stream().filter(player -> player.getNickname() == nickname)
+                               .findAny()
+                               .isPresent())
+                       .findAny()
+                       .isPresent();
+    }
+
+    public static Integer getInitMatchID(){
+        return activeMatches
                 .keySet()
                 .stream()
                 .map(matchID -> activeMatches.get(matchID))
-                .filter(match -> !match.isStarted())
-                .filter(match -> match.getPlayers()
-                        .stream().filter(player -> player.getNickname() == nickname)
-                        .findAny()
-                        .isPresent())
-                .findAny()
-                .isPresent();
+                .filter(match -> !match.isStarted() && (match.getPlayersNum()!=null))
+                .findFirst()
+                .get()
+                .getID();
     }
 
-    public static List<Integer> getMatchPlayers(Integer matchID){
-        return activeMatches
-                .get(matchID)
-                .getPlayers()
-                .stream()
-                .map(player -> player.getID())
-                .collect(Collectors.toList());
+    /**
+     * Creates a new instance of match, with an assigned unique ID
+     */
+    public synchronized static int createMatch(Integer matchID, Integer playerID, String nickname){
+        Match match;
+        progressiveMatchID++;
+        match = new Match(progressiveMatchID);
+        activeMatches.put(progressiveMatchID, match);
+        match.addPlayer(new Player(playerID, nickname, TurnState.SETTING_MATCH));
+
+        return progressiveMatchID;
+    }
+
+    /**
+     * Add a player to the "waiting to start" match
+     *
+     * @param playerID the ID of the player associated with that nickname and the waiting to start match
+     * @param nickname the nickname of the player
+     */
+    public static void addPlayerToMatch(Integer matchID, Integer playerID, String nickname){
+        translateMatchID(matchID).addPlayer(new Player(playerID, nickname, TurnState.INITIALIZED));
+    }
+
+    public static void addToWaitingList(Integer playerID, String nickname){
+        playersWaitingList.addLast(new Player(playerID, nickname, TurnState.INITIALIZED));
+    }
+
+
+    /**
+     * This method returns the playerID of the current player of the given match
+     *
+     * @param matchID specified matchID
+     * @return the current player of the specified match
+     */
+    public synchronized static int getCurrentPlayerID(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().getID();
     }
 
     /**
@@ -109,28 +123,14 @@ public class GameModel extends Observable {
         activeMatches.get(matchID).setPlayersNum(playerNum);
     }
 
-    /**
-     * Add a player to the "waiting to start" match
-     *
-     * @param playerID the ID of the player associated with that nickname and the waiting to start match
-     * @param nickname the nickname of the player
-     */
-    public static void addPlayer(Integer matchID, Integer playerID, String nickname){
-        translateMatchID(matchID).addPlayer(new Player(playerID, nickname));
-    }
-
-    private static void addPlayer(Integer matchID, Player player){
-        translateMatchID(matchID).addPlayer(player);
-    }
-
-    public static String getMatchState(Integer matchID){
-        return activeMatches.get(matchID).getCurrentState().toString();
-    }
-
     public static Integer unstackPlayerToMatch(Integer matchID){
         Player player = playersWaitingList.removeFirst();
-        addPlayer(matchID, player);
+        addPlayerToMatch(matchID, player);
         return player.getID();
+    }
+
+    private static void addPlayerToMatch(Integer matchID, Player player){
+        translateMatchID(matchID).addPlayer(player);
     }
 
     /**
@@ -151,51 +151,30 @@ public class GameModel extends Observable {
 
 
 
+    public static void nextMatchState(Integer matchID){
+        translateMatchID(matchID).nextState();
+    }
 
-    /**
-     * Add (or removes) a specific card to the match deck
-     *
-     * @param matchID specified matchID
-     * @param card special card selected by the current user
-     */
-    public synchronized static void addRemoveCardToMatchDeck(Integer matchID, String card){
+
+    public static String getMatchState(Integer matchID){
+        return activeMatches.get(matchID).getCurrentState().toString();
+    }
+
+    public static String getCurrentPlayerState(Integer matchID){
+        return "WAIT";
+    }
+
+    public synchronized static void setMatchCards(Integer matchID, Set<String> cards){
+        Set<GodCards> godCards;
         Match match = translateMatchID(matchID);
-        GodCards godCard = GodCards.valueOf(card);
-        if (match.getCards().contains(godCard))
-            match.removeCard(godCard);
-        else
-            match.addCard(godCard);
-    }
 
-    /**
-     * Checks if the deck of the match is full
-     *
-     * @param matchID specified matchID
-     * @return true if the deck is full, false otherwise
-     */
-    public synchronized static boolean isMatchDeckFull(Integer matchID){
-        return translateMatchID(matchID).isDeckFull();
-    }
+         godCards = cards
+                .stream()
+                .map(card -> GodCards.valueOf(card))
+                .collect(Collectors.toSet());
 
-    /**
-     * This method returns the playerID of the current player of the given match
-     *
-     * @param matchID specified matchID
-     * @return the current player of the specified match
-     */
-    public synchronized static int getCurrentPlayerID(Integer matchID){
-        return translateMatchID(matchID).getCurrentPlayer().getID();
+        match.setCards(godCards);
     }
-
-    /**
-     * Changes the current worker of the currentPlayer on the specified match
-     *
-     * @param matchID specified matchID
-     * @param position the position of the worker chosen by the player
-     */
-    /*public synchronized static void setCurrentPlayerWorker(Integer matchID, Position position){
-        translateMatchID(matchID).getCurrentPlayer().setCurrentWorker(position);
-    }*/
 
     /**
      *  Link the current player of the selected match, to the specified GodCard.
@@ -209,22 +188,9 @@ public class GameModel extends Observable {
         match.getCurrentPlayer().setCommands(godCard);
     }
 
-    /**
-     * Get available cells for move/build related to the given player,
-     *
-     * @param matchID selected match
-     * @param playerID player liked to the match
-     *
-     * @return the list of cells on the billboard, where the player could move
-     */
-    /*public static Set<Position> getAvailableCells(Integer matchID, Integer playerID){
-        Player player = translatePlayerID(translateMatchID(matchID), playerID);
-    }*/
-
     public static void placeWorker(Integer matchID, Integer playerID, Position position){
         Player player = translatePlayerID(translateMatchID(matchID), playerID);
         player.setWorker(position);
-
     }
 
     public static void setUnsetSpecialFunction(Integer matchID, Integer playerID){
@@ -232,10 +198,10 @@ public class GameModel extends Observable {
         player.setUnsetSpecialFunction();
     }
 
-    public static void playerTurn(Integer matchID, Integer playerID, Position initPosition, Position finalPosition){
+    public static void playerTurn(Integer matchID, Integer playerID, Position startPosition, Position endPosition){
         Player player = translatePlayerID(translateMatchID(matchID), playerID);
-        player.setCurrentWorker(initPosition);
-        player.playerAction(finalPosition);
+        player.setCurrentWorker(startPosition);
+        player.playerAction(endPosition);
     }
 
     /**
@@ -247,13 +213,30 @@ public class GameModel extends Observable {
         translateMatchID(matchID).nextTurn();
     }
 
-    public static boolean playerHasPlacedWorkers(Integer matchID, Integer playerID){
+    public static boolean hasPlayerPlacedWorkers(Integer matchID, Integer playerID){
         return translatePlayerID(translateMatchID(matchID), playerID).hasPlacedWorkers();
     }
 
-    public static boolean playerHasFinished(Integer matchID, Integer playerID){
+    public static boolean hasPlayerFinished(Integer matchID, Integer playerID){
         return translatePlayerID(translateMatchID(matchID), playerID).hasFinished();
     }
+
+    public static Set<String> getMatchCards(Integer matchID){
+        return translateMatchID(matchID)
+                .getCards()
+                .stream()
+                .map(godCard -> godCard.toString())
+                .collect(Collectors.toSet());
+    }
+
+    public static Map<Integer, String> getMatchPlayers(Integer matchID){
+        return activeMatches
+                .get(matchID)
+                .getPlayers()
+                .stream()
+                .collect(Collectors.toMap(player -> player.getID(), player -> player.getNickname()));
+    }
+
 
     /**
      * Make a copy of the state of the billboard, made of 3 layers:

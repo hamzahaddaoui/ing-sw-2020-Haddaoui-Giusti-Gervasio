@@ -25,7 +25,7 @@ public class ArtemisDecorator extends CommandsDecorator {
     @Override
     public TurnState nextState(Player player) {
         switch (player.getState()) {
-            case WAIT:
+            case IDLE:
                 return MOVE;
             case MOVE:
                 if (player.getSpecialFunction() && startingPosition != null)//ho già fatto prima mossa e Special Function
@@ -36,7 +36,7 @@ public class ArtemisDecorator extends CommandsDecorator {
                 }
             default:
                 player.setHasFinished(true);
-                return WAIT;
+                return IDLE;
     }}
 
     /**

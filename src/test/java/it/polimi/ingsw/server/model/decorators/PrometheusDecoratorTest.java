@@ -35,7 +35,7 @@ class PrometheusDecoratorTest {
         player.setWorker(position1);
         player.setCurrentWorker(position1);
         billboard.incrementTowerHeight(position2);
-        player.setState(WAIT);
+        player.setState(IDLE);
     }
 
     @AfterEach
@@ -54,7 +54,7 @@ class PrometheusDecoratorTest {
         commands.build(position3,player);
         Assert.assertEquals("Build problem.", 1, billboard.getTowerHeight(position3));
         player.setState(commands.nextState(player));
-        Assert.assertEquals(WAIT,player.getState());
+        Assert.assertEquals(IDLE,player.getState());
         Assert.assertTrue("Next state problem.",player.hasFinished());
     }
 
@@ -73,7 +73,7 @@ class PrometheusDecoratorTest {
         commands.build(position3,player);
         Assert.assertEquals("Build problem.", 2, billboard.getTowerHeight(position3));
         player.setState(commands.nextState(player));
-        Assert.assertEquals(WAIT,player.getState());
+        Assert.assertEquals(IDLE,player.getState());
         Assert.assertTrue("Next state problem.",player.hasFinished());
         player.setUnsetSpecialFunction();
     }

@@ -60,7 +60,7 @@ public class DemeterDecoratorTest {
     @Test
     public void nextStateJustOneBuild() {
         player1.setWorker(position12);
-        player1.setState(TurnState.WAIT);
+        player1.setState(TurnState.IDLE);
         player1.setState(commands1.nextState(player1));
 
         Assert.assertTrue("1",player1.getState()==TurnState.MOVE);
@@ -73,14 +73,14 @@ public class DemeterDecoratorTest {
         commands1.build(position11,player1);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("3",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("3",player1.getState()==TurnState.IDLE);
         Assert.assertTrue("4",player1.hasFinished()==true);
     }
 
     @Test
     public void nextStateSecondBuild() {
         player1.setWorker(position12);
-        player1.setState(TurnState.WAIT);
+        player1.setState(TurnState.IDLE);
         player1.setState(commands1.nextState(player1));
 
         Assert.assertTrue("E1",player1.getState()==TurnState.MOVE);
@@ -101,7 +101,7 @@ public class DemeterDecoratorTest {
         commands1.build(position01,player1);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("E4",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("E4",player1.getState()==TurnState.IDLE);
         Assert.assertTrue("E5",player1.hasFinished()==true);
     }
 
@@ -111,7 +111,7 @@ public class DemeterDecoratorTest {
         player1.setWorker(position00);
         player2.setWorker(position13);
         player2.setWorker(position41);
-        player1.setState(TurnState.WAIT);
+        player1.setState(TurnState.IDLE);
         player1.setState(commands1.nextState(player1));
 
         Assert.assertTrue("ER!",player1.getState()==TurnState.MOVE);
@@ -158,7 +158,7 @@ public class DemeterDecoratorTest {
         commands1.build(position01,player1);
         player1.setState(commands1.nextState(player1));
 
-        Assert.assertTrue("ER4",player1.getState()==TurnState.WAIT);
+        Assert.assertTrue("ER4",player1.getState()==TurnState.IDLE);
         Assert.assertTrue("ER5",player1.hasFinished()==true);
     }
 

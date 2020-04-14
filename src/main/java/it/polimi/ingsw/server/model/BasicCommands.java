@@ -16,14 +16,14 @@ public class BasicCommands implements Commands {
     @Override
     public TurnState nextState(Player player) {
         switch(player.getState()){
-            case WAIT:
+            case IDLE:
                 return MOVE;
             case MOVE:
                 return BUILD;
             case BUILD:
                 player.setHasFinished(true);
             default:
-                return WAIT;
+                return IDLE;
         }
     }
 

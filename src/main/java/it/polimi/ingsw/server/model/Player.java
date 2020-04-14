@@ -6,7 +6,6 @@ import java.util.*;
 import static it.polimi.ingsw.server.model.TurnState.*;
 
 /**
- * @author hamzahaddaoui
  * Class managing the instance of a certain user, liked to a match.
  */
 
@@ -25,10 +24,10 @@ public class Player{
 
     private boolean specialFunction;
 
-    public Player(int ID,String nickname) {
+    public Player(int ID,String nickname, TurnState state) {
         this.ID = ID;
         this.nickname = nickname;
-        state = PLACING;
+        this.state = state;
     }
 
     public void setMatch(Match match){
@@ -106,7 +105,7 @@ public class Player{
 
     public void playerAction(Position position){
         switch (state){
-            case WAIT:
+            case IDLE:
                 finished = false;
                 specialFunction = false;
                 state = commands.nextState(this);

@@ -69,16 +69,16 @@ public class Match {
         return currentState;
     }
 
-    public void setCurrentState(MatchState currentState) {
-        this.currentState = currentState;
+    public void nextState() {
+        currentState = currentState.next();
     }
 
     public boolean isStarted() {
         return started;
     }
 
-    public void addCard(GodCards card) {
-        cards.add(card);
+    public void setCards(Set<GodCards> cards) {
+        this.cards = cards;
     }
 
     public void removeCard(GodCards card) {
@@ -114,11 +114,9 @@ public class Match {
     }
 
     public void addPlayer(Player player) {
-        if (playersCurrentCount >= playersNum || players.contains(player))
-            return;
         players.add(player);
-        currentPlayer = player;
         playersCurrentCount++;
+        currentPlayer = players.get(0);
     }
 
     public void matchStart() {
