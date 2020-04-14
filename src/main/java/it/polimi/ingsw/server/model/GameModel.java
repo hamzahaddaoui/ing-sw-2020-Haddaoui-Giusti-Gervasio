@@ -45,44 +45,40 @@ public class GameModel extends Observable {
      * @param nickname contains the nickname choosen by the user
      * @return false if the nickname is not available, true otherwise
      */
-    public static boolean isNickAvailable(String nickname){
-        return !playersWaitingList
+    public static boolean isNickAvailable(java.lang.String nickname){
+        return playersWaitingList
                 .stream()
-                .filter(player -> player.getNickname() == nickname)
-                .findAny()
-                .isPresent()
+                .noneMatch(player -> player.getNickname().equals(nickname))
                &&
-               !activeMatches
+               activeMatches
                        .keySet()
                        .stream()
                        .map(matchID -> activeMatches.get(matchID))
                        .filter(match -> !match.isStarted())
-                       .filter(match -> match.getPlayers()
-                               .stream().filter(player -> player.getNickname() == nickname)
-                               .findAny()
-                               .isPresent())
-                       .findAny()
-                       .isPresent();
+                       .noneMatch(match -> match.getPlayers()
+                               .stream().anyMatch(player -> player.getNickname().equals(nickname)));
     }
 
     public static Integer getInitMatchID(){
-        return activeMatches
-                .keySet()
-                .stream()
-                .map(matchID -> activeMatches.get(matchID))
-                .filter(match -> !match.isStarted() && (match.getPlayersNum()!=null))
-                .findFirst()
-                .get()
-                .getID();
+        if (getInitMatchesListSize() != 0)
+            return activeMatches
+                    .keySet()
+                    .stream()
+                    .map(matchID -> activeMatches.get(matchID))
+                    .filter(match -> !match.isStarted() && (match.getPlayersNum()!=null))
+                    .findFirst()
+                    .get()
+                    .getID();
+        else
+            return null;
     }
 
     /**
      * Creates a new instance of match, with an assigned unique ID
      */
-    public synchronized static int createMatch(Integer matchID, Integer playerID, String nickname){
-        Match match;
+    public synchronized static int createMatch(Integer playerID, java.lang.String nickname){
         progressiveMatchID++;
-        match = new Match(progressiveMatchID);
+        Match match = new Match(progressiveMatchID);
         activeMatches.put(progressiveMatchID, match);
         match.addPlayer(new Player(playerID, nickname, TurnState.SETTING_MATCH));
 
@@ -95,11 +91,11 @@ public class GameModel extends Observable {
      * @param playerID the ID of the player associated with that nickname and the waiting to start match
      * @param nickname the nickname of the player
      */
-    public static void addPlayerToMatch(Integer matchID, Integer playerID, String nickname){
+    public static void addPlayerToMatch(Integer matchID, Integer playerID, java.lang.String nickname){
         translateMatchID(matchID).addPlayer(new Player(playerID, nickname, TurnState.INITIALIZED));
     }
 
-    public static void addToWaitingList(Integer playerID, String nickname){
+    public static void addToWaitingList(Integer playerID, java.lang.String nickname){
         playersWaitingList.addLast(new Player(playerID, nickname, TurnState.INITIALIZED));
     }
 
@@ -110,7 +106,7 @@ public class GameModel extends Observable {
      * @param matchID specified matchID
      * @return the current player of the specified match
      */
-    public synchronized static int getCurrentPlayerID(Integer matchID){
+    public static int getCurrentPlayerID(Integer matchID){
         return translateMatchID(matchID).getCurrentPlayer().getID();
     }
 
@@ -119,7 +115,7 @@ public class GameModel extends Observable {
      *
      * @param playerNum the number of players wanted for the "waiting to start" match
      */
-    public synchronized static void setMatchPlayersNum(Integer matchID, int playerNum){
+    public static void setMatchPlayersNum(Integer matchID, int playerNum){
         activeMatches.get(matchID).setPlayersNum(playerNum);
     }
 
@@ -157,20 +153,31 @@ public class GameModel extends Observable {
 
 
     public static String getMatchState(Integer matchID){
-        return activeMatches.get(matchID).getCurrentState().toString();
+        try{
+            return translateMatchID(matchID).getCurrentState().toString();
+        }
+        catch (NullPointerException exception){
+            return null;
+        }
+
     }
 
-    public static String getCurrentPlayerState(Integer matchID){
-        return "WAIT";
+    public static String getPlayerState(Integer matchID, Integer playerID){
+        try{
+            return translatePlayerID(translateMatchID(matchID), playerID).getState().toString();
+        }
+        catch (NullPointerException exception){
+            return null;
+        }
     }
 
-    public synchronized static void setMatchCards(Integer matchID, Set<String> cards){
+    public synchronized static void setMatchCards(Integer matchID, Set<java.lang.String> cards){
         Set<GodCards> godCards;
         Match match = translateMatchID(matchID);
 
          godCards = cards
                 .stream()
-                .map(card -> GodCards.valueOf(card))
+                .map(GodCards::valueOf)
                 .collect(Collectors.toSet());
 
         match.setCards(godCards);
@@ -182,7 +189,7 @@ public class GameModel extends Observable {
      * @param matchID selected match
      * @param card special card selected by the current user
      */
-    public static void selectPlayerCard(Integer matchID, String card){
+    public static void selectPlayerCard(Integer matchID, java.lang.String card){
         Match match = translateMatchID(matchID);
         GodCards godCard = GodCards.valueOf(card);
         match.getCurrentPlayer().setCommands(godCard);
@@ -213,15 +220,15 @@ public class GameModel extends Observable {
         translateMatchID(matchID).nextTurn();
     }
 
-    public static boolean hasPlayerPlacedWorkers(Integer matchID, Integer playerID){
-        return translatePlayerID(translateMatchID(matchID), playerID).hasPlacedWorkers();
+    public static boolean hasPlayerPlacedWorkers(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().hasPlacedWorkers();
     }
 
-    public static boolean hasPlayerFinished(Integer matchID, Integer playerID){
-        return translatePlayerID(translateMatchID(matchID), playerID).hasFinished();
+    public static boolean hasPlayerFinished(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().hasFinished();
     }
 
-    public static Set<String> getMatchCards(Integer matchID){
+    public static Set<java.lang.String> getMatchCards(Integer matchID){
         return translateMatchID(matchID)
                 .getCards()
                 .stream()
@@ -229,7 +236,7 @@ public class GameModel extends Observable {
                 .collect(Collectors.toSet());
     }
 
-    public static Map<Integer, String> getMatchPlayers(Integer matchID){
+    public static Map<Integer, java.lang.String> getMatchPlayers(Integer matchID){
         return activeMatches
                 .get(matchID)
                 .getPlayers()
@@ -264,7 +271,7 @@ public class GameModel extends Observable {
         else
             workersAvailableCells = null;
 
-        messageEvent = new MessageEvent(MessageType.MODEL_VIEW_UPDATE, matchID, billboardStatus, workersAvailableCells);
+        messageEvent = new MessageEvent("MODEL_VIEW_UPDATE", matchID, billboardStatus, workersAvailableCells);
 
         notify(messageEvent);
     }
@@ -287,10 +294,17 @@ public class GameModel extends Observable {
      * @return the instance of player related to the playerID
      */
     protected static Player translatePlayerID (Match match, Integer playerID){
-        return match
+        if (match == null)
+            return playersWaitingList
+                    .stream()
+                    .filter(player -> player.getID() == playerID)
+                    .findAny()
+                    .get();
+        else
+            return match
                 .getPlayers()
                 .stream()
-                .filter(player1 -> player1.getID()==playerID)
+                .filter(player -> player.getID()==playerID)
                 .findAny().get();
     }
 }

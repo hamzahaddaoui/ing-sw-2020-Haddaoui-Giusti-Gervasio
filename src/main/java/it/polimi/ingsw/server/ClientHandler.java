@@ -26,7 +26,7 @@ public class ClientHandler extends Observable implements Observer<MessageEvent>,
   /*
   TO - DO
   Inserire timeout connessione + heartbeat messages
-   */
+  */
 
     public Integer getMatchID(){
         return matchID;
@@ -78,6 +78,10 @@ public class ClientHandler extends Observable implements Observer<MessageEvent>,
 
     @Override
     public void update(MessageEvent message){
+        if (message.getPlayerID() != 0 && message.getPlayerID()!=this.playerID){
+            //non è per me!!!
+            return;
+        }
         if (message.getMatchID() != this.matchID){
             return;
         }
