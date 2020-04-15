@@ -165,4 +165,30 @@ public class MessageEvent {
     public Map<Integer, String> getMatchPlayers(){
         return matchPlayers;
     }
+
+    public void setStartPosition(Position startPosition) {
+        this.startPosition=startPosition;
+    }
+
+    public void setEndPosition(Position endPosition) {
+        this.endPosition = endPosition;
+    }
+
+    public void setEndTurn(Boolean endTurn) {
+        this.endTurn = endTurn;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setSpecialFunction(Boolean specialFunction) {
+        this.specialFunction =specialFunction;
+    }
+
+    public void setPlayersNum(Integer playersNum) {
+        this.playersNum = playersNum;
+    }
+
+
 }
