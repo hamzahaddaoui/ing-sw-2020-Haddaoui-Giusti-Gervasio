@@ -15,16 +15,16 @@ public class BasicCommands implements Commands {
 
     @Override
     public TurnState nextState(Player player) {
-        switch(player.getState()){
+        switch(player.getTurnState()){
             case IDLE:
                 return MOVE;
             case MOVE:
                 return BUILD;
             case BUILD:
-                player.setHasFinished(true);
-            default:
+                player.setHasFinished();
                 return IDLE;
         }
+        return null;
     }
 
     /**
@@ -49,7 +49,7 @@ public class BasicCommands implements Commands {
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
      *  @param position   the position that player have inserted, not null
-     * @param player
+     * @param player the match current player
      */
     @Override
     public void moveWorker(Position position, Player player) {
@@ -68,13 +68,6 @@ public class BasicCommands implements Commands {
         player.getMatch().getBillboard().incrementTowerHeight(position);
     }
 
-    /**
-     * method that divide the different implementation of available cells: for building action and for movement action
-     *
-     * @param player  is the current player
-     * @return  the list of Position that are available for that specific action
-     */
-
 
     /**
      * method that show the list of cells that are available for the standard movement of the player
@@ -82,7 +75,7 @@ public class BasicCommands implements Commands {
      * @param player  is the current player
      * @return  the list of Position where the worker can move on
      */
-    public Set<Position> computeAvailablePlacing(Player player, Worker worker) {
+    public Set<Position> computeAvailablePlacing(Player player) {
         try{
             Set<Position> positions = new HashSet<>();
             player.getMatch().getBillboard().getCells().forEach((key,val) -> {
@@ -139,7 +132,7 @@ public class BasicCommands implements Commands {
                     .neighbourPositions()
                     .stream()
                     .filter(position -> billboard.getPlayer(position) == -1)
-                    .filter(position -> billboard.getDome(position) == false)
+                    .filter(position -> ! billboard.getDome(position))
                     .collect(Collectors.toSet());
         }
         catch(Exception ex){
@@ -150,18 +143,15 @@ public class BasicCommands implements Commands {
     @Override
     public boolean winningCondition(Player player) {
         Worker worker = player.getCurrentWorker();
-        if (worker.getHeightVariation() == 1 && worker.getPosition().getZ() == 3)
-            return true;
-        else
-            return false;
+        return worker.getHeightVariation() == 1 && worker.getPosition().getZ() == 3;
     }
 
     @Override
-    public boolean losingCondition(Player player) {
+    public boolean losingCondition(Player player){
         return player
                 .getWorkers()
                 .stream()
-                .filter(Worker::isAbleToBuild)
-                .anyMatch(Worker::isMovable);
+                .anyMatch(worker -> worker
+                        .canDoSomething(player.getTurnState()));
     }
 }

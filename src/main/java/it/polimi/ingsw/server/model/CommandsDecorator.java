@@ -14,7 +14,6 @@ public class CommandsDecorator implements Commands {
     /**
      * method that allows the stardard placing movement
      *  @param position  is the position that player have inserted
-     * @param player
      */
     @Override
     public void placeWorker(Position position, Player player) {
@@ -26,7 +25,6 @@ public class CommandsDecorator implements Commands {
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
      *  @param position  is the position that player have inserted
-     * @param player
      */
     @Override
     public void moveWorker(Position position, Player player) {
@@ -37,7 +35,6 @@ public class CommandsDecorator implements Commands {
      * method that allows the standard building block action
      * the player can build a block on an unoccupied space neighbouring the worker
      *
-     * @param player
      * @param position  is the position that player have inserted
      */
     @Override
@@ -46,8 +43,8 @@ public class CommandsDecorator implements Commands {
     }
 
     @Override
-    public Set<Position> computeAvailablePlacing(Player player, Worker worker) {
-        return commands.computeAvailablePlacing(player, worker);
+    public Set<Position> computeAvailablePlacing(Player player) {
+        return commands.computeAvailablePlacing(player);
     }
 
     @Override

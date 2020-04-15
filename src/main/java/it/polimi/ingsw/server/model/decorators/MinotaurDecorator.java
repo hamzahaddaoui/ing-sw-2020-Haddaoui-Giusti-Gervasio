@@ -25,7 +25,7 @@ public class MinotaurDecorator extends CommandsDecorator {
      * {@link #findWorker(Position, Player)}
      * {@link #findOpponentPlayer(Position, Player)}
      * {@link super#moveWorker(Position, Player)}
-     * {@link Player#setState(TurnState)}
+     * {@link Player#setTurnState(TurnState)}
      * {@link Player#getMatch()}
      * {@link Player#getCurrentWorker()}
      * {@link Billboard#getPlayer(Position)}

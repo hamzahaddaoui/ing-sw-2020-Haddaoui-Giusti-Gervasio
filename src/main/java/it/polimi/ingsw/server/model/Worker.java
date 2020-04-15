@@ -29,12 +29,8 @@ public class Worker{
         return heightVariation;
     }
 
-    public boolean isMovable() {
+    public boolean canDoSomething(TurnState turnState) {
         return !(this.availableCells.get(TurnState.MOVE).isEmpty());
-    }
-
-    public boolean isAbleToBuild() {
-        return !(this.availableCells.get(TurnState.BUILD).isEmpty());
     }
 
     public Set<Position> getAvailableCells(TurnState state){

@@ -24,7 +24,7 @@ public class ArtemisDecorator extends CommandsDecorator {
 
     @Override
     public TurnState nextState(Player player) {
-        switch (player.getState()) {
+        switch (player.getTurnState()) {
             case IDLE:
                 return MOVE;
             case MOVE:
@@ -35,14 +35,14 @@ public class ArtemisDecorator extends CommandsDecorator {
                     return BUILD;
                 }
             default:
-                player.setHasFinished(true);
+                player.setHasFinished();
                 return IDLE;
     }}
 
     /**
      * worker may move one additional time but not back to the initial space
      *  @param position  is the position that player have inserted
-     * @param player
+     * @param player to be written
      */
     @Override
     public void moveWorker(Position position, Player player) {

@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.utilities.*;
 import it.polimi.ingsw.utilities.Observable;
+import it.polimi.ingsw.utilities.Observer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,10 +13,19 @@ import java.util.stream.Collectors;
  * All user-useful model classes are accessible from the methods listed here.
  */
 
-public class GameModel extends Observable {
+public class GameModel extends Observable<MessageEvent> implements Observer<MessageEvent> {
+    private static int progressivePlayerID;
     private static int progressiveMatchID;
-    private static LinkedList<Player> playersWaitingList = new LinkedList<>();
-    private static Map<Integer, Match> activeMatches = new HashMap<>(); //id match, match
+    private static final Map<Integer, Player> initializedPlayers = new HashMap<>();
+    private static final LinkedList<Player> playersWaitingList = new LinkedList<>();
+    private static final Map<Integer, Match> activeMatches = new HashMap<>(); //id match, match
+
+
+    /*
+    -------------------------------------------------------------------------------
+    -----------------------MULTIPLAYER MANAGEMENT----------------------------------
+    -------------------------------------------------------------------------------
+     */
 
     public static int getPlayersWaitingListSize(){
         return playersWaitingList.size();
@@ -25,8 +35,8 @@ public class GameModel extends Observable {
         return (int) activeMatches
                 .keySet()
                 .stream()
-                .map(matchID -> activeMatches.get(matchID))
-                .filter(match -> !match.isStarted() && (match.getPlayersNum()==null))
+                .map(activeMatches::get)
+                .filter(match -> match.isStarted() && (match.getPlayersNum() == null))
                 .count();
     }
 
@@ -34,8 +44,8 @@ public class GameModel extends Observable {
         return (int) activeMatches
                 .keySet()
                 .stream()
-                .map(matchID -> activeMatches.get(matchID))
-                .filter(match -> !match.isStarted() && (match.getPlayersNum()!=null))
+                .map(activeMatches::get)
+                .filter(match -> match.isStarted() && (match.getPlayersNum() != null))
                 .count();
     }
 
@@ -45,7 +55,7 @@ public class GameModel extends Observable {
      * @param nickname contains the nickname choosen by the user
      * @return false if the nickname is not available, true otherwise
      */
-    public static boolean isNickAvailable(java.lang.String nickname){
+    public static boolean isNickAvailable(String nickname){
         return playersWaitingList
                 .stream()
                 .noneMatch(player -> player.getNickname().equals(nickname))
@@ -53,8 +63,8 @@ public class GameModel extends Observable {
                activeMatches
                        .keySet()
                        .stream()
-                       .map(matchID -> activeMatches.get(matchID))
-                       .filter(match -> !match.isStarted())
+                       .map(activeMatches::get)
+                       .filter(match -> match.isStarted())
                        .noneMatch(match -> match.getPlayers()
                                .stream().anyMatch(player -> player.getNickname().equals(nickname)));
     }
@@ -64,8 +74,8 @@ public class GameModel extends Observable {
             return activeMatches
                     .keySet()
                     .stream()
-                    .map(matchID -> activeMatches.get(matchID))
-                    .filter(match -> !match.isStarted() && (match.getPlayersNum()!=null))
+                    .map(activeMatches::get)
+                    .filter(match -> match.isStarted() && (match.getPlayersNum() != null))
                     .findFirst()
                     .get()
                     .getID();
@@ -73,15 +83,26 @@ public class GameModel extends Observable {
             return null;
     }
 
+    public static int createPlayer(String nickname){
+        Player player;
+        progressivePlayerID++;
+        player = new Player(progressivePlayerID, nickname);
+        initializedPlayers.put(progressivePlayerID, player);
+        return progressivePlayerID;
+    }
+
+    public static void removeInitPlayer(Integer playerID){
+        initializedPlayers.remove(playerID);
+    }
+
     /**
      * Creates a new instance of match, with an assigned unique ID
      */
-    public synchronized static int createMatch(Integer playerID, java.lang.String nickname){
+    public synchronized static int createMatch(Integer playerID){
         progressiveMatchID++;
-        Match match = new Match(progressiveMatchID);
-        activeMatches.put(progressiveMatchID, match);
-        match.addPlayer(new Player(playerID, nickname, TurnState.SETTING_MATCH));
 
+        activeMatches.put(progressiveMatchID,
+                new Match(progressiveMatchID, initializedPlayers.remove(playerID)));
         return progressiveMatchID;
     }
 
@@ -89,25 +110,13 @@ public class GameModel extends Observable {
      * Add a player to the "waiting to start" match
      *
      * @param playerID the ID of the player associated with that nickname and the waiting to start match
-     * @param nickname the nickname of the player
      */
-    public static void addPlayerToMatch(Integer matchID, Integer playerID, java.lang.String nickname){
-        translateMatchID(matchID).addPlayer(new Player(playerID, nickname, TurnState.INITIALIZED));
+    public static void addPlayerToMatch(Integer matchID, Integer playerID){
+        translateMatchID(matchID).addPlayer(initializedPlayers.remove(playerID));
     }
 
-    public static void addToWaitingList(Integer playerID, java.lang.String nickname){
-        playersWaitingList.addLast(new Player(playerID, nickname, TurnState.INITIALIZED));
-    }
-
-
-    /**
-     * This method returns the playerID of the current player of the given match
-     *
-     * @param matchID specified matchID
-     * @return the current player of the specified match
-     */
-    public static int getCurrentPlayerID(Integer matchID){
-        return translateMatchID(matchID).getCurrentPlayer().getID();
+    public static void addPlayerToWaitingList(Integer playerID){
+        playersWaitingList.addLast(initializedPlayers.remove(playerID));
     }
 
     /**
@@ -119,14 +128,10 @@ public class GameModel extends Observable {
         activeMatches.get(matchID).setPlayersNum(playerNum);
     }
 
-    public static Integer unstackPlayerToMatch(Integer matchID){
+    public static Integer unstackPlayer(){
         Player player = playersWaitingList.removeFirst();
-        addPlayerToMatch(matchID, player);
+        initializedPlayers.put(player.getID(), player);
         return player.getID();
-    }
-
-    private static void addPlayerToMatch(Integer matchID, Player player){
-        translateMatchID(matchID).addPlayer(player);
     }
 
     /**
@@ -142,14 +147,15 @@ public class GameModel extends Observable {
      * Starts the "waiting to start" match
      */
     public synchronized static void startMatch(Integer matchID){
-        activeMatches.get(matchID).matchStart();
+        activeMatches.get(matchID).start();
     }
 
 
-
-    public static void nextMatchState(Integer matchID){
-        translateMatchID(matchID).nextState();
-    }
+    /*
+    -------------------------------------------------------------------------------
+    -----------------------MATCH MANAGEMENT----------------------------------------
+    -------------------------------------------------------------------------------
+     */
 
 
     public static String getMatchState(Integer matchID){
@@ -159,19 +165,37 @@ public class GameModel extends Observable {
         catch (NullPointerException exception){
             return null;
         }
+    }
 
+    public static void nextMatchState(Integer matchID){
+        translateMatchID(matchID).nextState();
     }
 
     public static String getPlayerState(Integer matchID, Integer playerID){
         try{
-            return translatePlayerID(translateMatchID(matchID), playerID).getState().toString();
+            return translatePlayerID(translateMatchID(matchID), playerID).getPlayerState().toString();
         }
         catch (NullPointerException exception){
             return null;
         }
     }
 
-    public synchronized static void setMatchCards(Integer matchID, Set<java.lang.String> cards){
+    /**
+     * Make the next player gain the control of the match, by passing the turn
+     *
+     * @param matchID selected match
+     */
+    public static void nextMatchTurn(Integer matchID){
+        translateMatchID(matchID).nextTurn();
+    }
+
+
+    /*
+    -------------------------------------------------------------------------------
+    -----------------------CARDS MANAGEMENT----------------------------------------
+    -------------------------------------------------------------------------------
+     */
+    public synchronized static void setMatchCards(Integer matchID, Set<String> cards){
         Set<GodCards> godCards;
         Match match = translateMatchID(matchID);
 
@@ -189,60 +213,64 @@ public class GameModel extends Observable {
      * @param matchID selected match
      * @param card special card selected by the current user
      */
-    public static void selectPlayerCard(Integer matchID, java.lang.String card){
-        Match match = translateMatchID(matchID);
-        GodCards godCard = GodCards.valueOf(card);
-        match.getCurrentPlayer().setCommands(godCard);
+    public static void selectPlayerCard(Integer matchID, String card){
+        translateMatchID(matchID).getCurrentPlayer().setCommands(GodCards.valueOf(card));
     }
 
-    public static void placeWorker(Integer matchID, Integer playerID, Position position){
-        Player player = translatePlayerID(translateMatchID(matchID), playerID);
-        player.setWorker(position);
+    public static boolean hasSelectedCard(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().hasSelectedCard();
     }
 
-    public static void setUnsetSpecialFunction(Integer matchID, Integer playerID){
-        Player player =  translatePlayerID(translateMatchID(matchID), playerID);
-        player.setUnsetSpecialFunction();
+
+    /*
+    -------------------------------------------------------------------------------
+    -----------------------PLACING MANAGEMENT--------------------------------------
+    -------------------------------------------------------------------------------
+     */
+    public static void placeWorker(Integer matchID, Position position){
+        translateMatchID(matchID).getCurrentPlayer().setWorker(position);
     }
 
-    public static void playerTurn(Integer matchID, Integer playerID, Position startPosition, Position endPosition){
-        Player player = translatePlayerID(translateMatchID(matchID), playerID);
+    public static boolean hasPlacedWorkers(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().hasPlacedWorkers();
+    }
+
+
+    /*
+    -------------------------------------------------------------------------------
+    -----------------------GAME MANAGEMENT-----------------------------------------
+    -------------------------------------------------------------------------------
+     */
+    public static void setUnsetSpecialFunction(Integer matchID, boolean specialFunction){
+        translateMatchID(matchID).getCurrentPlayer().setUnsetSpecialFunction(specialFunction);
+    }
+
+    public static void setHasFinished(Integer matchID){
+        translateMatchID(matchID).getCurrentPlayer().setHasFinished();
+    }
+
+    public static void playerTurn(Integer matchID, Position startPosition, Position endPosition){
+        Player player = translateMatchID(matchID).getCurrentPlayer();
         player.setCurrentWorker(startPosition);
         player.playerAction(endPosition);
     }
 
-    /**
-     * Make the next player gain the control of the match, by passing the turn
-     *
-     * @param matchID selected match
+    public static String getCurrentPlayerState(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().getPlayerState().toString();
+    }
+
+
+    /*
+    -------------------------------------------------------------------------------
+    -----------------------VIEW FUNCTIONS-----------------------------------------
+    -------------------------------------------------------------------------------
      */
-    public static void nextMatchTurn(Integer matchID){
-        translateMatchID(matchID).nextTurn();
+
+    public static Map<Integer, String> getMatchPlayers(Integer matchID){
+        return translateMatchID(matchID).getPlayers().stream()
+                .collect(Collectors.toMap(Player::getID, Player::getNickname));
     }
 
-    public static boolean hasPlayerPlacedWorkers(Integer matchID){
-        return translateMatchID(matchID).getCurrentPlayer().hasPlacedWorkers();
-    }
-
-    public static boolean hasPlayerFinished(Integer matchID){
-        return translateMatchID(matchID).getCurrentPlayer().hasFinished();
-    }
-
-    public static Set<java.lang.String> getMatchCards(Integer matchID){
-        return translateMatchID(matchID)
-                .getCards()
-                .stream()
-                .map(godCard -> godCard.toString())
-                .collect(Collectors.toSet());
-    }
-
-    public static Map<Integer, java.lang.String> getMatchPlayers(Integer matchID){
-        return activeMatches
-                .get(matchID)
-                .getPlayers()
-                .stream()
-                .collect(Collectors.toMap(player -> player.getID(), player -> player.getNickname()));
-    }
 
 
     /**
@@ -250,31 +278,68 @@ public class GameModel extends Observable {
      * first layer for the height of the buildings
      * second layer for the players (each player has a different number)
      * third layer for the domes
-     * @return
      */
-    public void sendBillboardStatus(Integer matchID, Integer playerID){
+    public void pushChangesToView(Integer matchID){
         MessageEvent messageEvent;
         Map<Position, Cell> billboardStatus;
-        Map<Position, Set<Position>> workersAvailableCells;
+        Map<Integer, String> matchPlayers;
+        Set<String> matchCards;
 
+        matchPlayers = getMatchPlayers(matchID);
 
         Match match = translateMatchID(matchID);
-        Billboard billboard = match.getBillboard();
-        Player player = translatePlayerID(match, playerID);
 
-        billboardStatus = billboard.getCells();
+        billboardStatus = match.getBillboard().getCells();
 
-        if (match.getCurrentPlayer() == player) {
-            player.setAvailableCells();
-            workersAvailableCells = player.getAvailableCells();
-        }
-        else
-            workersAvailableCells = null;
+        matchCards = match.getCards().stream()
+                .map(Enum::toString)
+                .collect(Collectors.toSet());
 
-        messageEvent = new MessageEvent("MODEL_VIEW_UPDATE", matchID, billboardStatus, workersAvailableCells);
+        messageEvent = new MessageEvent("MODEL_TO_VIEW", matchID, billboardStatus, matchPlayers, matchCards);
 
         notify(messageEvent);
     }
+
+    public void pushChangesToView(Integer matchID, Integer playerID){
+        MessageEvent messageEvent;
+        Map<Position, Set<Position>> workersAvailableCells = null;
+        Set<Position> placingAvailableCells = null;
+
+        Match match = translateMatchID(matchID);
+        Player player = match.getCurrentPlayer();
+
+
+        if (match.getCurrentState() == MatchState.PLACING_WORKERS)
+            placingAvailableCells = player.getPlacingAvailableCells();
+        else
+            workersAvailableCells = player.getWorkersAvailableCells();
+
+
+        messageEvent = new MessageEvent("MODEL_TO_VIEW", playerID, matchID, placingAvailableCells, workersAvailableCells);
+
+        notify(messageEvent);
+    }
+
+    public void modelUpdateView(Integer matchID, Integer playerID){
+        pushChangesToView(matchID);
+        pushChangesToView(matchID, playerID);
+    }
+
+
+    @Override
+    public void update(MessageEvent message){
+        if (!(message.getMsgType().equals("VIEW_TO_MODEL"))){
+            return;
+        }
+        modelUpdateView(message.getMatchID(), message.getPlayerID());
+    }
+
+
+    /*
+    -------------------------------------------------------------------------------
+    -----------------------PRIVATE FUNCTIONS-----------------------------------------
+    -------------------------------------------------------------------------------
+     */
 
 
     /**
@@ -282,7 +347,7 @@ public class GameModel extends Observable {
      * @param matchID id of the match whose instance is requested
      * @return the instance of match related to the matchID
      */
-    protected static Match translateMatchID (Integer matchID){
+    private static Match translateMatchID (Integer matchID){
         return activeMatches
                 .get(matchID);
     }
@@ -293,7 +358,7 @@ public class GameModel extends Observable {
      * @param playerID id of the player whose instance is requested
      * @return the instance of player related to the playerID
      */
-    protected static Player translatePlayerID (Match match, Integer playerID){
+    private static Player translatePlayerID (Match match, Integer playerID){
         if (match == null)
             return playersWaitingList
                     .stream()
@@ -307,5 +372,6 @@ public class GameModel extends Observable {
                 .filter(player -> player.getID()==playerID)
                 .findAny().get();
     }
+
 }
 

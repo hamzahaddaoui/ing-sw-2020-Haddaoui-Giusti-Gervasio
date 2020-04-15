@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class ClientHandler extends Observable implements Observer<MessageEvent>, Runnable {
+public class ClientHandler extends Observable<MessageEvent> implements Observer<MessageEvent>, Runnable {
   ExecutorService executor = Executors.newSingleThreadExecutor();
     private Integer matchID;
     private Integer playerID;
@@ -25,7 +25,9 @@ public class ClientHandler extends Observable implements Observer<MessageEvent>,
 
   /*
   TO - DO
-  Inserire timeout connessione + heartbeat messages
+  Inserire timeout connessione (heartbeat messages)
+  Inserire AFK timeout. se non fai una mossa entro 1 minuto, hai perso
+  Eventualmente si può far scegliere all'utente
   */
 
     public Integer getMatchID(){
@@ -40,9 +42,12 @@ public class ClientHandler extends Observable implements Observer<MessageEvent>,
         this.matchID = matchID;
     }
 
-    ClientHandler(Socket client, int playerID) throws IOException {
-        this.client = client;
+    public void setPlayerID(Integer playerID){
         this.playerID = playerID;
+    }
+
+    ClientHandler(Socket client) throws IOException {
+        this.client = client;
         this.active = true;
         output = new ObjectOutputStream(client.getOutputStream());
         input = new ObjectInputStream(client.getInputStream());
@@ -52,16 +57,19 @@ public class ClientHandler extends Observable implements Observer<MessageEvent>,
     @Override
     public void run() {
         String inputObject;
+        MessageEvent messageEvent;
         try {
             System.out.println("Connected to " + client.getInetAddress());
             try {
                 while (active) {
                     inputObject = (String) input.readObject();
-                    MessageEvent messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
-                    messageEvent.setMatchID(this.matchID);
-                    messageEvent.setPlayerID(this.playerID);
-                    //l'oggetto può essere indirizzato al serverController
-                    notify(inputObject);
+                    messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
+                    if(!(this.matchID.equals(messageEvent.getMatchID()) && this.playerID.equals(messageEvent.getPlayerID()))){
+                        //ignoro il messaggio perchè non è corretto
+                        continue;
+                    }
+                    messageEvent.setClientHandler(this);
+                    notify(messageEvent);
                 }
             }
             catch (ClassNotFoundException | ClassCastException e) {
@@ -78,11 +86,11 @@ public class ClientHandler extends Observable implements Observer<MessageEvent>,
 
     @Override
     public void update(MessageEvent message){
-        if (message.getPlayerID() != 0 && message.getPlayerID()!=this.playerID){
+        if ((message.getPlayerID() != 0) && ! message.getPlayerID().equals(this.playerID)){
             //non è per me!!!
             return;
         }
-        if (message.getMatchID() != this.matchID){
+        if (! message.getMatchID().equals(this.matchID)){
             return;
         }
 

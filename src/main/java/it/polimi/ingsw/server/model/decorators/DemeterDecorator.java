@@ -26,7 +26,7 @@ public class DemeterDecorator extends CommandsDecorator {
 
     @Override
     public TurnState nextState(Player player) {
-        switch (player.getState()) {
+        switch (player.getTurnState()) {
             case IDLE:
                 return MOVE;
             case MOVE:
@@ -34,11 +34,11 @@ public class DemeterDecorator extends CommandsDecorator {
                 return BUILD;
             case BUILD:
                 if (this.firstBuildPosition!=null)
-                    if(player.getSpecialFunction()==true)
+                    if(player.getSpecialFunction())
                         return BUILD;
             default:
                 this.firstBuildPosition=null;
-                player.setHasFinished(true);
+                player.setHasFinished();
                 return IDLE;
         }
     }
@@ -51,7 +51,7 @@ public class DemeterDecorator extends CommandsDecorator {
             this.firstBuildPosition = position;
         }
         else {
-            if (player.getSpecialFunction()==true && this.firstBuildPosition != null) {
+            if (player.getSpecialFunction() && this.firstBuildPosition != null) {
                 this.firstBuildPosition=null;
             }
         }

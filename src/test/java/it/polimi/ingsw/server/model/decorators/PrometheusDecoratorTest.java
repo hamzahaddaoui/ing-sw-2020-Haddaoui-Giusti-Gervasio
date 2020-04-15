@@ -35,7 +35,7 @@ class PrometheusDecoratorTest {
         player.setWorker(position1);
         player.setCurrentWorker(position1);
         billboard.incrementTowerHeight(position2);
-        player.setState(IDLE);
+        player.setTurnState(IDLE);
     }
 
     @AfterEach
@@ -46,34 +46,34 @@ class PrometheusDecoratorTest {
 
     @Test
     void turn_NotSpecialFunction() {
-        player.setState(commands.nextState(player));
-        Assert.assertEquals(MOVE,player.getState());
+        player.setTurnState(commands.nextState(player));
+        Assert.assertEquals(MOVE,player.getTurnState());
         commands.moveWorker(position2,player);
-        player.setState(commands.nextState(player));
-        Assert.assertEquals(BUILD,player.getState());
+        player.setTurnState(commands.nextState(player));
+        Assert.assertEquals(BUILD,player.getTurnState());
         commands.build(position3,player);
         Assert.assertEquals("Build problem.", 1, billboard.getTowerHeight(position3));
-        player.setState(commands.nextState(player));
-        Assert.assertEquals(IDLE,player.getState());
+        player.setTurnState(commands.nextState(player));
+        Assert.assertEquals(IDLE,player.getTurnState());
         Assert.assertTrue("Next state problem.",player.hasFinished());
     }
 
     @Test
     void turn_SpecialFunction() {
         player.setUnsetSpecialFunction();
-        player.setState(commands.nextState(player));
-        Assert.assertEquals(BUILD,player.getState());
+        player.setTurnState(commands.nextState(player));
+        Assert.assertEquals(BUILD,player.getTurnState());
         commands.build(position3,player);
         Assert.assertEquals("Build problem.", 1, billboard.getTowerHeight(position3));
-        player.setState(commands.nextState(player));
-        Assert.assertEquals(MOVE,player.getState());
+        player.setTurnState(commands.nextState(player));
+        Assert.assertEquals(MOVE,player.getTurnState());
         commands.moveWorker(position4,player);
-        player.setState(commands.nextState(player));
-        Assert.assertEquals(BUILD,player.getState());
+        player.setTurnState(commands.nextState(player));
+        Assert.assertEquals(BUILD,player.getTurnState());
         commands.build(position3,player);
         Assert.assertEquals("Build problem.", 2, billboard.getTowerHeight(position3));
-        player.setState(commands.nextState(player));
-        Assert.assertEquals(IDLE,player.getState());
+        player.setTurnState(commands.nextState(player));
+        Assert.assertEquals(IDLE,player.getTurnState());
         Assert.assertTrue("Next state problem.",player.hasFinished());
         player.setUnsetSpecialFunction();
     }

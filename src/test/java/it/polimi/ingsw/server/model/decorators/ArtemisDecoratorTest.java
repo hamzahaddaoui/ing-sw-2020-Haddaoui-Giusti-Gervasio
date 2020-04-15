@@ -61,29 +61,29 @@ public class ArtemisDecoratorTest {
     @Test
     public void nextStateCaseSpecialFunctionNotInserted() {
         player1.setWorker(position12);
-        player1.setState(TurnState.IDLE);
-        player1.setState(commands1.nextState(player1));
+        player1.setTurnState(TurnState.IDLE);
+        player1.setTurnState(commands1.nextState(player1));
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
-        player1.setState(commands1.nextState(player1));
+        player1.setTurnState(commands1.nextState(player1));
 
-        Assert.assertTrue("ERROR", player1.getState() == TurnState.BUILD);
+        Assert.assertTrue("ERROR", player1.getTurnState() == TurnState.BUILD);
 
-        player1.setState(commands1.nextState(player1));
-        Assert.assertTrue("ERROR", player1.getState() == TurnState.IDLE);
+        player1.setTurnState(commands1.nextState(player1));
+        Assert.assertTrue("ERROR", player1.getTurnState() == TurnState.IDLE);
     }
 
     @Test
     public void nextStateCaseSpecialFunctionInserted() {
         player1.setWorker(position12);
-        player1.setState(TurnState.IDLE);
-        player1.setState(commands1.nextState(player1));
+        player1.setTurnState(TurnState.IDLE);
+        player1.setTurnState(commands1.nextState(player1));
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
         player1.setUnsetSpecialFunction();
-        player1.setState(commands1.nextState(player1));
+        player1.setTurnState(commands1.nextState(player1));
 
-        Assert.assertTrue("ERROR", player1.getState() == TurnState.MOVE);
+        Assert.assertTrue("ERROR", player1.getTurnState() == TurnState.MOVE);
     }
 
     @Test

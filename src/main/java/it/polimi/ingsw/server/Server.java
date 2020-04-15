@@ -17,11 +17,18 @@ public class Server {
   static ServerSocket socket;
   static Controller controller = new Controller();
   static GameModel model = new GameModel();
-  static int progressiveID = 1;
 
   static Map<Integer, ClientHandler> clientSocket = new HashMap<>(); //playerID - socket
 
-  public static ClientHandler getSocket(int playerID){
+  public static void addClientSocket(Integer playerID, ClientHandler clientHandler){
+    clientSocket.put(playerID, clientHandler);
+  }
+
+  public static void removeClientSocket(Integer playerID){
+    clientSocket.remove(playerID).setPlayerID(null);
+  }
+
+  public static ClientHandler getClientHandler(int playerID){
     return clientSocket.get(playerID);
   }
 
@@ -36,25 +43,26 @@ public class Server {
       System.exit(1);
       return;
     }
+    try {
+      while (true) {
+        try {
+          Socket client = socket.accept();
+          clientHandler = new ClientHandler(client);
 
-    while (true) {
-      try {
-        Socket client = socket.accept();
-        clientHandler = new ClientHandler(client, progressiveID);
+          clientHandler.addObserver(controller);  //controller osserva clientHandler (comunicazioni CLIENT_CONTROLLER-SERVER_CONTROLLER)
+          model.addObserver(clientHandler);       //clientHandler osserva Model (comunicazioni MODEL-VIEW)
+          controller.addObserver(clientHandler);  //clientHandler osserva controller (comunicazioni CONTROLLER-VIEW)
+          clientHandler.addObserver(model);       //model osserva il clientHandler (Comunicazioni VIEW_MODEL)
 
-        clientSocket.put(progressiveID, clientHandler);
+          executor.submit(clientHandler);
 
-        clientHandler.addObserver(controller);  //controller osserva clientHandler (comunicazioni CLIENT_CONTROLLER-SERVER_CONTROLLER)
-        model.addObserver(clientHandler);       //clientHandler osserva Model (comunicazioni MODEL-VIEW)
-        controller.addObserver(clientHandler);  //clientHandler osserva controller (comunicazioni CONTROLLER-VIEW)
-
-        executor.submit(clientHandler);
-
-        progressiveID++;
+        } catch (IOException e) {
+          System.out.println("connection dropped");
+        }
       }
-      catch (IOException e) {
-        System.out.println("connection dropped");
-      }
+    }
+    catch (Exception ignored){
+
     }
   }
 }

@@ -14,7 +14,7 @@ public interface Commands {
 
     void build(Position position, Player player);
 
-    Set<Position> computeAvailablePlacing(Player player, Worker worker);
+    Set<Position> computeAvailablePlacing(Player player);
 
     Set<Position> computeAvailableMovements(Player player, Worker worker);
 

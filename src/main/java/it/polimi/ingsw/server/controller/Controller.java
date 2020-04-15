@@ -1,178 +1,206 @@
 package it.polimi.ingsw.server.controller;
-import it.polimi.ingsw.server.Server;
+
+import it.polimi.ingsw.server.ClientHandler;
 import it.polimi.ingsw.server.model.GameModel;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 
+import java.util.Objects;
+import java.util.Set;
 
+import static it.polimi.ingsw.server.Server.*;
+import static it.polimi.ingsw.server.model.GameModel.*;
+
+
+
+
+
+/*
+------------to do------------------------
+-> ENUM PUBBLICI, FUORI DAL MODEL!
+
+ */
 
 public class Controller extends Observable<MessageEvent> implements Observer<MessageEvent> {
-    MessageEvent messageRX, messageTX;
-    Integer matchID, playerID;
-    Integer nextPlayerID;
-
-    /*
-     *  - RAGGRUPPARE PARTI SIMILI IN FUNZIONI
-     *  - AGGIUNGERE AGGIORNAMENTI MATCHSTATE DOPO OGNI FUNZIONE
-     *  - SE C'è DA AGGIORNARE LA VIEW, CREARE UN MESSAGGIO, E FARE NOTIFY
-     *
-     * */
+    GameModel model;
+    MessageEvent messageTX;
 
     @Override
     public void update(MessageEvent messageRX){
-        this.messageRX = messageRX;
-
-        playerID = messageRX.getPlayerID();
-        matchID = messageRX.getMatchID();
-
-        if (matchID == null) {
-            int playersWaiting = GameModel.getPlayersWaitingListSize();
-            int notInitMatches = GameModel.getNotInitMatchesListSize();
-            int initMatches = GameModel.getInitMatchesListSize();
-
-            if (! GameModel.isNickAvailable(messageRX.getNickname())) {
-                //errore! nickname non disponibile
-                messageTX = new MessageEvent(playerID, matchID, true);
-                notify(messageTX);
-                return;
-            }
-
-            if (playersWaiting == 0) {
-                if (initMatches == 0)
-                    matchCreationManagement(notInitMatches == 0);
-                else {
-                    addToMatch();
-                    checkMatchStart();
-                }
-            } else
-                matchCreationManagement(playersWaiting >= 2 * notInitMatches);
-
-
-            Server.getSocket(playerID).setMatchID(matchID);
-
-            messageTX = new MessageEvent(
-                    "CONTROLLER_CHANGE_VIEW",
-                    playerID,
-                    matchID,
-                    GameModel.getPlayerState(matchID, playerID),
-                    GameModel.getMatchState(matchID));
-
-            messageTX = new MessageEvent(
-                    "CONTROLLER_CHANGE_VIEW",
-                    playerID,
-                    matchID,
-                    GameModel.getPlayerState(matchID, playerID),
-                    GameModel.getMatchState(matchID));
+        if (!(messageRX.getMsgType().equals("CONTROLLER_TO_CONTROLLER"))){
             return;
         }
 
-        checkCurrentPlayer();
+        Integer playerID = messageRX.getPlayerID();
 
-        switch (GameModel.getMatchState(matchID)) {
+        if (playerID == null) {
+            firstClientAccess(messageRX);
+            return;
+        }
+
+        Integer matchID = messageRX.getMatchID();
+        if ((matchID == null) || (! Objects.equals(getPlayerState(matchID, playerID), "ACTIVE"))){
+            inputError(playerID);
+            return;
+        }
+        switch (Objects.requireNonNull(getMatchState(matchID))) {
             case "GETTING_PLAYERS_NUM":
                 int playersNum = messageRX.getPlayersNum();
-                if (playersNum == 2 || playersNum == 3){
-                    GameModel.setMatchPlayersNum(matchID, playersNum);
-                    messageTX = new MessageEvent(
-                            "CONTROLLER_CHANGE_VIEW",
-                            matchID,
-                            GameModel.getMatchState(matchID));
-                    notify(messageTX);
-
-                    unstackToMatch();
-                    checkMatchStart();
-                }
-                else{
-                    //errore
-                    return;
-                }
-
+                setMatchPlayersNum(matchID, playersNum);
+                unstackToMatch(matchID);
+                checkMatchStart(matchID);
                 break;
             case "WAITING_FOR_PLAYERS":
                 //nothing to do... lol
                 break;
             case "SELECTING_GOD_CARDS":
-                GameModel.setMatchCards(matchID, messageRX.getGodCards());
-                GameModel.nextMatchTurn(matchID);
-                GameModel.nextMatchState(matchID);
+                setMatchCards(matchID, messageRX.getGodCards());
+                nextMatchState(matchID);
+                nextMatchTurn(matchID);
+                changeView(matchID);
                 break;
             case "SELECTING_SPECIAL_COMMAND":
-                if (!GameModel.getMatchCards(matchID).contains(messageRX.getGodCard())){
-                    //error!!!!
-                    return;
+                selectPlayerCard(matchID, messageRX.getGodCard());
+                nextMatchTurn(matchID);
+                if (hasSelectedCard(matchID)) {
+                    nextMatchState(matchID);
                 }
-                GameModel.selectPlayerCard(matchID, messageRX.getGodCard());
-                GameModel.nextMatchTurn(matchID);
-                if (GameModel.getMatchCards(matchID).size() == 0)
-                    GameModel.nextMatchState(matchID);
+                changeView(matchID);
                 break;
-            case "PLACING WORKERS":
-                GameModel.placeWorker(matchID,playerID,messageRX.getEndPosition());
-                if (GameModel.hasPlayerPlacedWorkers(matchID)){
-                    GameModel.nextMatchTurn(matchID);
-                    if (GameModel.hasPlayerPlacedWorkers(matchID)){
-                        GameModel.nextMatchState(matchID);
+            case "PLACING_WORKERS":
+                placeWorker(matchID, messageRX.getEndPosition());
+                if (hasPlacedWorkers(matchID)) {
+                    nextMatchTurn(matchID);
+                    if (hasPlacedWorkers(matchID)) {
+                        nextMatchState(matchID);
                     }
+                    changeView(matchID);
                 }
                 break;
             case "RUNNING":
+                if (messageRX.getEndTurn() != null) {
+                    setHasFinished(matchID);
+                }
+
+                else if (messageRX.getSpecialFunction() != null) {
+                    setUnsetSpecialFunction(matchID, messageRX.getSpecialFunction());
+                }
+
+                else{
+                    playerTurn(matchID, messageRX.getStartPosition(),messageRX.getEndPosition());
+                }
+
+                switch(getCurrentPlayerState(matchID)){
+                    case "ACTIVE":
+                        changeView(matchID,playerID);
+                    case "IDLE":
+                        nextMatchTurn(matchID);
+                        changeView(matchID);
+                        break;
+                    case "WIN":
+                        break;
+                    case "LOSE":
+                        break;
+
+                }
                 break;
             case "FINISHED":
                 break;
         }
-
-
+        model.modelUpdateView(matchID, playerID);
     }
 
 
-    private void checkCurrentPlayer(){
-        if (playerID == GameModel.getCurrentPlayerID(matchID)){
+    void firstClientAccess(MessageEvent messageRX){
+        Integer matchID, playerID;
+        int playersWaiting = getPlayersWaitingListSize();
+        int notInitMatches = getNotInitMatchesListSize();
+        int initMatches = getInitMatchesListSize();
+
+        playerID = createPlayer(messageRX.getNickname());
+        addClientSocket(playerID, messageRX.getClientHandler());
+
+        //se il nick non è disponibile, elimino il player e il suo rif al clienthandler
+        //dopo aver mandato la notifica di errore
+        if (! isNickAvailable(messageRX.getNickname())) {
+            inputError(playerID);
+            removeInitPlayer(playerID);
+            removeClientSocket(playerID);
             return;
         }
+
+        //AGGIUNGO IL PLAYER AL MATCH
+        if (playersWaiting == 0 && initMatches !=0){
+            matchID = getInitMatchID();
+            addPlayerToMatch(matchID, playerID);
+        }
+
+        //CREO UN MATCH
+        else if (((playersWaiting != 0) && (playersWaiting >= (2 * notInitMatches))) || ((playersWaiting == 0) && (notInitMatches == 0))){
+            matchID = createMatch(playerID);
+        }
+
+        //AGGIUNGO IL PLAYER ALLA WAITING LIST
         else{
-            //OPERATION FORBIDDEN!!!!!
+            matchID = null;
+            addPlayerToWaitingList(playerID);
+        }
+
+        clientHandlerUpdate(playerID, matchID);
+        changeView(matchID, playerID);
+    }
+
+    private void unstackToMatch(Integer matchID){
+        while ((getPlayersWaitingListSize() != 0) && !isNumReached(matchID)) {
+            int opponentID = unstackPlayer();
+            addPlayerToMatch(matchID, opponentID);
+            clientHandlerUpdate(opponentID, matchID);
+        }
+        changeView(matchID);
+    }
+
+    private void checkMatchStart(Integer matchID){
+        if (isNumReached(matchID)) {
+            startMatch(matchID);
+            nextMatchState(matchID);
+            changeView(matchID);
         }
     }
 
-    //se operation è true, allora creo un match
-    //se è false, non posso farlo, quindi mi metto in lista d'attesa
-    private void matchCreationManagement(boolean operation){
-        if (operation){
-            matchID = GameModel.createMatch(playerID, messageRX.getNickname());
-        }
-        else
-            GameModel.addToWaitingList(playerID, messageRX.getNickname());
+    private void clientHandlerUpdate(Integer matchID, Integer playerID){
+        ClientHandler clientHandler = getClientHandler(playerID);
+        clientHandler.setMatchID(matchID);
+        clientHandler.setPlayerID(playerID);
     }
 
-    private void addToMatch(){
-        matchID = GameModel.getInitMatchID();
-        GameModel.addPlayerToMatch(matchID, playerID, messageRX.getNickname());
-        Server.getSocket(playerID).setMatchID(matchID);
+    private void changeView(Integer matchID, Integer playerID){
+        messageTX = new MessageEvent(
+                "CONTROLLER_CHANGE_VIEW",
+                playerID,
+                matchID,
+                getPlayerState(matchID, playerID),
+                getMatchState(matchID));
+        notify(messageTX);
     }
 
-    private void unstackToMatch(){
-        int opponentID;
-        while (GameModel.getPlayersWaitingListSize() != 0 && !GameModel.isNumReached(matchID)) {
-            opponentID = GameModel.unstackPlayerToMatch(matchID);
-            Server.getSocket(opponentID).setMatchID(matchID);
+    private void changeView(Integer matchID){
+        Set<Integer> matchPlayers = getMatchPlayers(matchID).keySet();
+        for (Integer playerID: matchPlayers){
             messageTX = new MessageEvent(
                     "CONTROLLER_CHANGE_VIEW",
-                    opponentID,
+                    playerID,
                     matchID,
-                    GameModel.getPlayerState(matchID, opponentID),
-                    GameModel.getMatchState(matchID));
+                    getPlayerState(matchID, playerID),
+                    getMatchState(matchID));
             notify(messageTX);
         }
     }
 
-    private void checkMatchStart(){
-        if (GameModel.isNumReached(matchID)) {
-            GameModel.startMatch(matchID);
-
-        }
+    private void inputError(Integer playerID){
+        messageTX = new MessageEvent(playerID,true);
+        notify(messageTX);
     }
-
 }
 
 

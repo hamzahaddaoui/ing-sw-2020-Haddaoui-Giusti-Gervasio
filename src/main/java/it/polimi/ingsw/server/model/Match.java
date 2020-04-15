@@ -11,30 +11,27 @@ import java.util.Set;
  *
  */
 public class Match {
-    private int ID;
-    private Integer playersNum = null; //number of players of the match, 2 by default
-    private int playersCurrentCount;
+    private final int ID;
+    private int playersNum; //number of players of the match
+    private int playersCurrentCount; //current players of the match
 
-    private List<Player> players = new ArrayList<>(2);
+    private final List<Player> players = new ArrayList<>(2);
     private Player currentPlayer;
     private Set<GodCards> cards = new HashSet<>(2);
-    private Billboard billboard;
+    private final Billboard billboard;
     private MatchState currentState;
     private Player winner;
 
     private boolean started;
     private boolean moveUpActive = true;
-    private boolean finished;
 
-    public Match(int matchID) {
+    public Match(int matchID, Player matchMaster) {
         this.ID = matchID;
         billboard = new Billboard();
         currentState = MatchState.GETTING_PLAYERS_NUM;
-    }
-
-    public boolean setPlayersNum(int playersNum){
-        this.playersNum = playersNum;
-        return true;
+        matchMaster.setPlayerState();
+        addPlayer(matchMaster);
+        currentPlayer = matchMaster;
     }
 
     public int getID() {
@@ -49,6 +46,10 @@ public class Match {
         return playersCurrentCount;
     }
 
+    public boolean isNumReached() {
+        return playersNum == playersCurrentCount;
+    }
+
     public List<Player> getPlayers() {
         return players;
     }
@@ -61,6 +62,10 @@ public class Match {
         return cards;
     }
 
+    public boolean isDeckFull() {
+        return cards.size() >= playersNum;
+    }
+
     public Billboard getBillboard() {
         return billboard;
     }
@@ -69,12 +74,36 @@ public class Match {
         return currentState;
     }
 
-    public void nextState() {
-        currentState = currentState.next();
-    }
+    public Player getWinner() { return winner; }
 
     public boolean isStarted() {
         return started;
+    }
+
+    public boolean isMoveUpActive() {
+        return moveUpActive;
+    }
+
+
+
+    public void setPlayersNum(int playersNum){
+        this.playersNum = playersNum;
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player);
+        playersCurrentCount++;
+    }
+
+    public void removePlayer(Player player){
+        players.remove(player);
+        playersCurrentCount--;
+    }
+
+    public void nextTurn() {
+        currentPlayer.resetPlayerState();
+        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+        currentPlayer.setPlayerState();
     }
 
     public void setCards(Set<GodCards> cards) {
@@ -85,46 +114,17 @@ public class Match {
         cards.remove(card);
     }
 
-    public boolean isMoveUpActive() {
-        return moveUpActive;
+    public void nextState() {
+        currentState = currentState.next();
+    }
+
+    public void setWinner(Player winner) { this.winner = winner; }
+
+    public void start() {
+        started = true;
     }
 
     public void setMoveUpActive(boolean moveUpActive) {
         this.moveUpActive = moveUpActive;
-    }
-
-    public void setFinished(boolean finished) { this.finished = finished; }
-
-    public boolean isFinished() { return finished; }
-
-    public Player getWinner() { return winner; }
-
-    public void setWinner(Player winner) { this.winner = winner; }
-
-    public boolean isDeckFull() {
-        if (cards.size() >= playersNum) return true;
-        else return false;
-    }
-
-    public boolean isNumReached() {
-        if (playersNum == playersCurrentCount)
-            return true;
-        else
-            return false;
-    }
-
-    public void addPlayer(Player player) {
-        players.add(player);
-        playersCurrentCount++;
-        currentPlayer = players.get(0);
-    }
-
-    public void matchStart() {
-        started = true;
-        finished = false;
-    }
-
-    public void nextTurn() {
-        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
     }
 }

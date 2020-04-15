@@ -16,7 +16,7 @@ public class HephaestusDecorator extends CommandsDecorator {
 
     @Override
     public TurnState nextState(Player player) {
-        switch (player.getState()) {
+        switch (player.getTurnState()) {
             case PLACING:
                 player.setHasFinished(true);
             case IDLE:

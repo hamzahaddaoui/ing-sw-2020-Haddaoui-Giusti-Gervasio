@@ -1,38 +1,66 @@
 package it.polimi.ingsw.utilities;
 
+import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.server.ClientHandler;
+
 import java.util.Map;
 import java.util.Set;
 
 public class MessageEvent {
+    private transient ClientHandler clientHandler;
     private String msgType;
-    //CONTROLLER_CHANGE_VIEW
-    //MODEL_UPDATE_VIEW
-    //CLIENTCONTROL_NOTIFY_SERVERCONTROL
+    //CONTROLLER_TO_CONTROLLER
+    //MODEL_TO_VIEW
+    //VIEW_TO_MODEL
+    //CONTROLLER_TO_VIEW
 
 
     private Integer playerID; //0 - BROADCAST
     private Integer matchID;  //0 - BROADCAST
 
+    //user to controller
     private String nickname;
-    private int playersNum;
-
-    //la view, leggendo questi due valori, sa cosa deve mostrare
-    private String playerState;
-    private String matchState;
-    private boolean error;
-
+    private Integer playersNum;
     private String godCard;
     private Set<String> godCards;
-
     private Boolean endTurn;
     private Boolean specialFunction;
-
     private Position startPosition;
     private Position endPosition;
 
+    //controller to view
+    private String matchState;
+    private String playerState;
+    private String turnState;
+    private Boolean error;
+
+
+    //view to model
+    private Boolean requestUpdate;
+
+    //model to view
     private Map<Position, Cell> billboardStatus;
-    private Map<Position, Set<Position>> workersAvailableCells;
     private Map<Integer, String> matchPlayers;
+    private Set<String> matchCards;
+    private Map<Position, Set<Position>> workersAvailableCells;
+    private Set<Position> availablePlacingCells;
+
+
+    public MessageEvent(String msgType, Integer playerID, Integer matchID, Set<Position> availablePlacingCells, Map<Position, Set<Position>> workersAvailableCells){
+        this.msgType = msgType;
+        this.playerID = playerID;
+        this.matchID = matchID;
+        this.workersAvailableCells = workersAvailableCells;
+        this.availablePlacingCells = availablePlacingCells;
+    }
+
+    public MessageEvent(String msgType, Integer matchID, Map<Position, Cell> billboardStatus, Map<Integer, String> matchPlayers, Set<String> matchCards){
+        this.msgType = msgType;
+        this.matchID = matchID;
+        this.billboardStatus = billboardStatus;
+        this.matchPlayers = matchPlayers;
+        this.matchCards = matchCards;
+    }
 
     public MessageEvent(String msgType, Integer playerID, Integer matchID, String playerState, String matchState){
         this.msgType = msgType;
@@ -45,21 +73,21 @@ public class MessageEvent {
     public MessageEvent(String msgType, Integer matchID, String matchState){
         this.msgType = msgType;
         this.matchID = matchID;
-        this.playerState = playerState;
         this.matchState = matchState;
     }
 
-    public MessageEvent(Integer playerID, Integer matchID, boolean error){
+    public MessageEvent(Integer playerID, boolean error){
         this.playerID = playerID;
-        this.matchID = matchID;
         this.error = error;
     }
 
-    public MessageEvent(String msgType, Integer matchID, Map<Position, Cell> billboardStatus, Map<Position, Set<Position>> workersAvailableCells){
-        this.msgType = msgType;
-        this.matchID = matchID;
-        this.billboardStatus = billboardStatus;
-        this.workersAvailableCells = workersAvailableCells;
+
+    public ClientHandler getClientHandler(){
+        return clientHandler;
+    }
+
+    public void setClientHandler(ClientHandler clientHandler){
+        this.clientHandler = clientHandler;
     }
 
     public void setPlayerID(Integer playerID){
