@@ -6,6 +6,14 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @author giusti-leo
+ *
+ * Apollo Commands Decorator
+ * Description: "Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated"
+ * Differente methods from Basic Commands: moveWorker, computeAvailableMovements
+ */
+
 public class ApolloDecorator extends CommandsDecorator {
     private GodCards card = GodCards.Apollo;
 
@@ -20,9 +28,11 @@ public class ApolloDecorator extends CommandsDecorator {
 
     /**
      * worker may move into ah opponent Worker's space by forcing their worker to the space yours just vacated
+     * if position is free -> BasicCommands's method
+     * if position is occupied by an enemy -> exchangePosition
      *
      *  @param position  is the position that player have inserted
-     * @param player
+     *  @param player  is the current player
      */
     @Override
     public void moveWorker(Position position, Player player) {
@@ -36,6 +46,13 @@ public class ApolloDecorator extends CommandsDecorator {
         }
     }
 
+
+    /**
+     * method that allow the change of the positions of the workers
+     *
+     * @param player  is the current player
+     * @param position  is the cell where your worker will go
+     */
     private void exchangePosition(Player player,Position position){
         Billboard billboard=player.getMatch().getBillboard();
         Worker myWorker= player.getCurrentWorker();
@@ -57,6 +74,14 @@ public class ApolloDecorator extends CommandsDecorator {
         opponentWorker.setPosition(actualPosition);
         billboard.setPlayer(actualPosition, opponentPlayer.getID());
     }
+
+    /**
+     * find the opponentPlayer and return it
+     *
+     * @param position  that is selected
+     * @param player  current player that move his worker
+     * @return  the Player that occupy the cell "position"
+     */
 
     private Player findOpponentPlayer (Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
@@ -92,6 +117,4 @@ public class ApolloDecorator extends CommandsDecorator {
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
     }
-
-
 }
