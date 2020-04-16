@@ -5,8 +5,8 @@
 
 
 - ###   10583761   Hamza Haddaoui ([@hamzahaddaoui](https://github.com/hamzahaddaoui))<br>hamza.haddaoui@mail.polimi.it
-- ###   10600002    Giusti Leonardo ([@giusti-leo](https://github.com/giusti-leo))<br>giusti.leonardo@mail.polimi.it
-- ###   10600003    Dario Gervasio ([@Vasio1298](https://github.com/Vasio1298))<br>darioalex.gervasio@mail.polimi.it
+- ###   10633778    Giusti Leonardo ([@giusti-leo](https://github.com/giusti-leo))<br>giusti.leonardo@mail.polimi.it
+- ###   10607208    Dario Gervasio ([@Vasio1298](https://github.com/Vasio1298))<br>darioalex.gervasio@mail.polimi.it
 
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
