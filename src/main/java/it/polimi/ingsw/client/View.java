@@ -12,17 +12,32 @@ import java.util.Set;
 public class View extends Observable implements Runnable, Observer{
     Scanner scanner = new Scanner(System.in);
 
+    private static Integer matchID;
+    private static Integer playerID;
     private static String playerState;
     private static String matchState;
     private static Set<String> godCards;
-    private static int playersNum;
+    private static Integer playersNum;
     private static String godCard;
     private static Map<Position, Cell> billboardStatus;
     private static Map<Position, Set<Position>> workersAvailableCells;
+    private static Set<Position> placingAvailableCells;
     private Map<Integer, String> matchPlayers;
 
     public static Set<String> getGodCards() {
         return godCards;
+    }
+
+    public static Integer getMatchID() {
+        return matchID;
+    }
+
+    public static Integer getPlayerID() {
+        return playerID;
+    }
+
+    public static Set<Position> getPlacingAvailableCells() {
+        return placingAvailableCells;
     }
 
     @Override
@@ -63,5 +78,9 @@ public class View extends Observable implements Runnable, Observer{
 
     public static Set<Position> getWorkersAvailableCells(Position position) {
         return workersAvailableCells.get(position);
+    }
+
+    public static boolean isWorkerPresent(Position position) {
+        return workersAvailableCells.containsKey(position);
     }
 }

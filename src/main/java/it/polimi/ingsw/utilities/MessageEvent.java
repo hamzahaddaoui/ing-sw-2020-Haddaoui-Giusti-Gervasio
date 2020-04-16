@@ -190,5 +190,11 @@ public class MessageEvent {
         this.playersNum = playersNum;
     }
 
+    public void setGodCards(Set<String> godCards) {
+        this.godCards = godCards;
+    }
 
+    public void setGodCard(String godCard) {
+        this.godCard = godCard;
+    }
 }

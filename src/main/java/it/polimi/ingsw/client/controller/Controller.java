@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller;
 
 
+import com.google.gson.Gson;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.server.model.GodCards;
 import it.polimi.ingsw.utilities.MessageEvent;
@@ -13,10 +14,15 @@ import java.util.Arrays;
 import java.util.Set;
 
 public class Controller extends Observable<MessageEvent> implements Observer<MessageEvent> {
-    MessageEvent message;
+    MessageEvent message; //
     Set<String> selectedCards;
-    Position position = null;
+    Position startPosition;
+    Position endPosition;
     String cardChecked;
+    int playersNum;
+    boolean endTurn;
+    boolean specialFunction;
+    boolean readyToSend;
 
     private ArrayList<String> totalCards = new ArrayList<String>(Arrays.asList(
             "APOLLO",
@@ -33,118 +39,128 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
     public void update(MessageEvent viewString){
         //messaggio ricevuto dalla view!
         //lo elaboro e se valido, lo invio al server controller
-        int num;
         String Subject = null;
         String Argument = null;
-        position=null;
+        endTurn=false;
+        specialFunction=false;
+        endPosition=null;
+        playersNum=0;
+        readyToSend=false;
         analyzeMessage(Subject,Argument);
 
         switch (View.getMatchState()) {
             case "GETTING_PLAYERS_NUM":
-                //check TurnState = SETTING_MATCH
-                //ci aspettiamo un int, con valore o 2 o 3
-                //altrimenti lancio errore
-                    if (View.getPlayerState().equals("SETTING_MATCH") &&
-                            (message.getPlayersNum() == 2 ||
-                                    message.getPlayersNum() == 3))
-                        notify(message);
+                    if (View.getPlayerState().equals("SETTING_MATCH")) {
+                        this.message.setPlayersNum(this.playersNum);
+                        readyToSend=true;
+                    }
                     else
-                    //lancio errore 1 : "Numero di player inacettabile"
-                    //lancio errore 2 : "Non sei te il player designato"
-                return;
+                    //cambio view: "Non sei te il player designato"
+                break;
             case "WAITING_FOR_PLAYERS" :
                 //non faccio nulla
                 //(cambio view tempo residuo)
-                return;
+                break;
             case "SELECTING_GOD_CARDS":
-                //check TurnState = SETTING_MATCH
-                //check stringhe disponibili
-                //controllo che numero carte = players_Num
-                String messageCard = message.getGodCard().toUpperCase();
-                if (View.getPlayerState().equals("SETTING_MATCH") &&
-                        totalCards.contains(messageCard)) {
-                    selectedCards.add(messageCard);
-                    if (selectedCards.size()==View.getPlayersNum()) {
-                        message.setGodCards(selectedCards);
-                        notify(message);
-                    }
+                if (View.getPlayerState().equals("SETTING_MATCH")) {
+                        if (selectedCards.contains(cardChecked)) {
+                            //cambio view: carta già presente nel mazzo
+                        }
+                        selectedCards.add(cardChecked);
+                        if (selectedCards.size()==View.getPlayersNum()) {
+                            message.setGodCards(selectedCards);
+                            readyToSend=true;
+                        }
                 }
                 else
-                    //Errore 1: "Non sei te il player designato"
-                    //Errore 2: "Divinità non esistente"
-                return;
+                    //cambio view: "Non sei te il player designato"
+                break;
             case "SELECTING_SPECIAL_COMMANDS":
-                //check TurnState = SELECTING_CARDS
                 if (View.getPlayerState().equals("SELECTING_CARDS") &&
-                        View.getGodCards().contains(message.getGodCard()))
-                    notify(message);
+                        View.getGodCards().contains(cardChecked)) {
+                    message.setGodCard(cardChecked);
+                    readyToSend=true;
+                }
                 else
-                    //Errore 1: "Carta non disponibile"
-                    //Errore 2: "Non è il tuo turno"
-                return;
+                    //cambio view 1: "Carta non disponibile"
+                    //cambio view 2: "Non è il tuo turno"
+                break;
             case "PLACING WORKER":
-                //check TurnState = PLACING
-                //costruito posizione
                 if (View.getPlayerState().equals("PLACING") &&
-                        View.getWorkersAvailableCells(message.getStartPosition()).contains(message.getEndPosition())) {
-                   notify(message);
+                        View.getPlacingAvailableCells().contains(startPosition)) {
+                    message.setEndPosition(startPosition);
+                    startPosition=null;
+                    readyToSend=true;
                 }
-                return;
+                else
+                    //cambio view 1: "Non è il tuo turno"
+                    //cambio view 2: "Posizione non valida"
+                break;
             case "RUNNING":
-                //check TurnState != IDLE
-                //trasformo in position la x e la y che mi arrivano
-                //check su availablePosition
-                //metodo per costruire posizione con check su estremi billboard
-                if (position!=null  &&
-                        !View.getPlayerState().equals("IDLE")) {
-                    if (View.getPlayerState().equals("CHOOSING_WORKER")) {
-                        message.setStartPosition(position);
-                    }
-                    else {
-                        //View.getWorkersAvailableCells(message.getStartPosition()).contains(message.getEndPosition())
-                        message.setEndPosition(position);
-                        notify(message);
-                    }
-                }
-                return;
+                if (endTurn)
+                    message.setEndTurn(true);
+                else if (specialFunction)
+                    message.setSpecialFunction(true);
+                else if (!View.getPlayerState().equals("IDLE")) {
+                        if (View.isWorkerPresent(startPosition) &&
+                                endPosition != null &&
+                                View.getWorkersAvailableCells(startPosition).contains(endPosition)) {
+                                    message.setStartPosition(startPosition);
+                                    message.setEndPosition(endPosition);
+                                    startPosition = null;
+                                    readyToSend=true;
+                            }
+                        else
+                            //cambio view 1: "Worker non esistente"
+                            //cambio view 2: "Posizione non accessibile"
+                            //cambio view 3: "Inserisci posizione di destinazione"
+                        break;
+                        }
+                else
+                    //cambio view: "Non è il tuo turno!"
+                break;
             case "FINISHED":
                 //non faccio nulla
                 //(cambio view tempo residuo)
-                return;
+                break;
             default:
                 //caso nickname
                 message.setNickname(Subject);
-                notify(message);
+                readyToSend=true;
         }
 
-    }
-
-    private boolean createPosition(String viewString) {
-        return true;
+        if (readyToSend) {
+            message.setMatchID(View.getMatchID());
+            message.setPlayerID(View.getPlayerID());
+            message = new Gson().fromJson(Argument, MessageEvent.class);
+            notify(message);
+        }
     }
 
     private void analyzeMessage(String messageSubject, String messageArgument){
-        messageArgument.replaceAll(" ","");
+        messageArgument=messageArgument.replaceAll(" ","");
 
         switch(messageSubject.toString()){
             case "POSITION":
-                checkValue(messageArgument);
-                return;
+                if (!checkValue(messageArgument))
+                    //cambio view: posizione errata
+                break;
             case "ENDTURN":
-                message.setEndTurn(true);
+                endTurn=true;
                 break;
             case "GODCARD":
-                //analizza lo stato del player ed in base a quello sceglie dove mettere il valore della carta
+                if (!checkGodCard(messageArgument))
+                    //cambio view: carta non esistente
                 break;
             case "NICKNAME":
-                message.setNickname(messageSubject);
                 break;
             case "NUM_OF_PLAYERS":
-                checkPlayersNum(messageArgument);
+                if(!checkPlayersNum(messageArgument))
+                    //cambio view: numero non corretto
                 break;
             case "SPECIAL_FUNCTION" :
-                message.setSpecialFunction(true);
-            default:
+                specialFunction=true;
+                break;
             }
 
     }
@@ -158,29 +174,34 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
        valueX= ((int) messageParts[0]) -48;
        valueY= ((int) messageParts[1]) -48;
        if((valueX >=0) && (valueY>=0) && (valueX<=4) && (valueY<=4)){
-             this.position.setX(valueX);
-             this.position.setY(valueY);
+            if (startPosition==null) {
+                this.startPosition=new Position(valueX,valueY);
+            }
+            else {
+                this.endPosition=new Position(valueX,valueY);
+            }
              return true;}
        return false;
-    }
-
-    private boolean checkCard(String messageArgument){
-        if(totalCards.contains(messageArgument))
-                return true;
-        else return false;
     }
 
     private boolean checkPlayersNum(String messageArgument){
         int value;
         value= (int)( messageArgument.toString().charAt(0))-48;
-        if(messageArgument.length()==1 && value==2 || value==3){
+        if(value==2 || value==3){
+            playersNum=value;
             return true;
         }
         else
             return false;
     }
 
-    private void checkGodCard(String messageArgument){
-        this.cardChecked = totalCards.stream().filter(card -> card.equals(messageArgument.toUpperCase())).findAny().get();
+    private boolean checkGodCard(String messageArgument){
+        this.cardChecked = totalCards
+                .stream()
+                .filter(card -> card.equals(messageArgument.toUpperCase()))
+                .findAny()
+                .get();
+
+        return !this.cardChecked.equals("");
     }
 }
