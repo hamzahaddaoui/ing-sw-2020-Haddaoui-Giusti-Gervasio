@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.controller;
 
 
 import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.server.model.GodCards;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
@@ -15,7 +16,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
     MessageEvent message;
     Set<String> selectedCards;
     Position position = null;
-    String card;
+    String cardChecked;
 
     private ArrayList<String> totalCards = new ArrayList<String>(Arrays.asList(
             "APOLLO",
@@ -124,6 +125,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
 
     private void analyzeMessage(String messageSubject, String messageArgument){
         messageArgument.replaceAll(" ","");
+
         switch(messageSubject.toString()){
             case "POSITION":
                 checkValue(messageArgument);
@@ -132,7 +134,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
                 message.setEndTurn(true);
                 break;
             case "GODCARD":
-                //controlla che il valore sia corretto
                 //analizza lo stato del player ed in base a quello sceglie dove mettere il valore della carta
                 break;
             case "NICKNAME":
@@ -142,8 +143,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
                 checkPlayersNum(messageArgument);
                 break;
             case "SPECIAL_FUNCTION" :
-                //CONTROLLARE SE é UNA DELLE GIà SCELTE OPPURE SE é UNA TRA QUELLE POSSIBILI
-            case "ENABLE_FUNCTION" :
                 message.setSpecialFunction(true);
             default:
             }
@@ -154,16 +153,15 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
        int valueX,valueY;
        char[] messageParts;
 
-       messageParts = messageArgument.replace(" ","").toCharArray();
+       messageParts = messageArgument.replace(",","").toCharArray();
+       if(messageParts.length!=2) return false;
        valueX= ((int) messageParts[0]) -48;
        valueY= ((int) messageParts[1]) -48;
        if((valueX >=0) && (valueY>=0) && (valueX<=4) && (valueY<=4)){
-           this.position.setX(valueX);
-           this.position.setY(valueY);
-           return true;
-        }
-       else
-           return false;
+             this.position.setX(valueX);
+             this.position.setY(valueY);
+             return true;}
+       return false;
     }
 
     private boolean checkCard(String messageArgument){
@@ -180,5 +178,9 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
         }
         else
             return false;
+    }
+
+    private void checkGodCard(String messageArgument){
+        this.cardChecked = totalCards.stream().filter(card -> card.equals(messageArgument.toUpperCase())).findAny().get();
     }
 }
