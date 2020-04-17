@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.utilities;
 
 public enum MatchState {
     GETTING_PLAYERS_NUM,

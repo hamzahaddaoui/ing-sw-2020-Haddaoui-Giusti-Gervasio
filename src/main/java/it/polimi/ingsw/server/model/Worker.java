@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.TurnState;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

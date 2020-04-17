@@ -13,12 +13,17 @@ import java.util.stream.Collectors;
  * All user-useful model classes are accessible from the methods listed here.
  */
 
-public class GameModel extends Observable<MessageEvent> implements Observer<MessageEvent> {
+public class GameModel extends Observable<MessageEvent> {
     private static int progressivePlayerID;
     private static int progressiveMatchID;
     private static final Map<Integer, Player> initializedPlayers = new HashMap<>();
     private static final LinkedList<Player> playersWaitingList = new LinkedList<>();
     private static final Map<Integer, Match> activeMatches = new HashMap<>(); //id match, match
+
+    //gestire multithreading.
+    //synchronized(GameModel.class)
+    //blocking queue??
+    //immutable objects?
 
 
     /*
@@ -32,12 +37,12 @@ public class GameModel extends Observable<MessageEvent> implements Observer<Mess
     }
 
     public static int getNotInitMatchesListSize(){
-        return (int) activeMatches
-                .keySet()
-                .stream()
-                .map(activeMatches::get)
-                .filter(match -> match.isStarted() && (match.getPlayersNum() == null))
-                .count();
+            return (int) activeMatches
+                    .keySet()
+                    .stream()
+                    .map(activeMatches::get)
+                    .filter(match -> match.isStarted() && (match.getPlayersNum() == null))
+                    .count();
     }
 
     public static int getInitMatchesListSize(){
@@ -64,7 +69,7 @@ public class GameModel extends Observable<MessageEvent> implements Observer<Mess
                        .keySet()
                        .stream()
                        .map(activeMatches::get)
-                       .filter(match -> match.isStarted())
+                       .filter(Match::isStarted)
                        .noneMatch(match -> match.getPlayers()
                                .stream().anyMatch(player -> player.getNickname().equals(nickname)));
     }
@@ -157,10 +162,13 @@ public class GameModel extends Observable<MessageEvent> implements Observer<Mess
     -------------------------------------------------------------------------------
      */
 
+    public static Set<String> getGameCards(){
+        return Arrays.stream(GodCards.values()).map(Enum::toString).collect(Collectors.toSet());
+    }
 
-    public static String getMatchState(Integer matchID){
+    public static MatchState getMatchState(Integer matchID){
         try{
-            return translateMatchID(matchID).getCurrentState().toString();
+            return translateMatchID(matchID).getCurrentState();
         }
         catch (NullPointerException exception){
             return null;
@@ -171,9 +179,18 @@ public class GameModel extends Observable<MessageEvent> implements Observer<Mess
         translateMatchID(matchID).nextState();
     }
 
-    public static String getPlayerState(Integer matchID, Integer playerID){
+    public static PlayerState getPlayerState(Integer matchID, Integer playerID){
         try{
-            return translatePlayerID(translateMatchID(matchID), playerID).getPlayerState().toString();
+            return translatePlayerID(translateMatchID(matchID), playerID).getPlayerState();
+        }
+        catch (NullPointerException exception){
+            return null;
+        }
+    }
+
+    public static TurnState getPlayerTurn(Integer matchID, Integer playerID){
+        try{
+            return translatePlayerID(translateMatchID(matchID), playerID).getTurnState();
         }
         catch (NullPointerException exception){
             return null;
@@ -271,7 +288,9 @@ public class GameModel extends Observable<MessageEvent> implements Observer<Mess
                 .collect(Collectors.toMap(Player::getID, Player::getNickname));
     }
 
-
+    public static Map<Position, Cell> getBillboardStatus (Integer matchID){
+        return translateMatchID(matchID).getBillboard().getCells();
+    }
 
     /**
      * Make a copy of the state of the billboard, made of 3 layers:
@@ -279,61 +298,29 @@ public class GameModel extends Observable<MessageEvent> implements Observer<Mess
      * second layer for the players (each player has a different number)
      * third layer for the domes
      */
-    public void pushChangesToView(Integer matchID){
-        MessageEvent messageEvent;
-        Map<Position, Cell> billboardStatus;
-        Map<Integer, String> matchPlayers;
-        Set<String> matchCards;
-
-        matchPlayers = getMatchPlayers(matchID);
-
-        Match match = translateMatchID(matchID);
-
-        billboardStatus = match.getBillboard().getCells();
-
-        matchCards = match.getCards().stream()
+    public static Set<String>  getMatchCards(Integer matchID){
+        return translateMatchID(matchID)
+                .getCards()
+                .stream()
                 .map(Enum::toString)
                 .collect(Collectors.toSet());
-
-        messageEvent = new MessageEvent("MODEL_TO_VIEW", matchID, billboardStatus, matchPlayers, matchCards);
-
-        notify(messageEvent);
     }
 
-    public void pushChangesToView(Integer matchID, Integer playerID){
-        MessageEvent messageEvent;
-        Map<Position, Set<Position>> workersAvailableCells = null;
-        Set<Position> placingAvailableCells = null;
-
-        Match match = translateMatchID(matchID);
-        Player player = match.getCurrentPlayer();
-
-
-        if (match.getCurrentState() == MatchState.PLACING_WORKERS)
-            placingAvailableCells = player.getPlacingAvailableCells();
-        else
-            workersAvailableCells = player.getWorkersAvailableCells();
-
-
-        messageEvent = new MessageEvent("MODEL_TO_VIEW", playerID, matchID, placingAvailableCells, workersAvailableCells);
-
-        notify(messageEvent);
+    public static Map<Position, Set<Position>> getWorkersAvailableCells(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().getWorkersAvailableCells();
     }
 
-    public void modelUpdateView(Integer matchID, Integer playerID){
-        pushChangesToView(matchID);
-        pushChangesToView(matchID, playerID);
+    public static Set<Position> getPlacingAvailableCells(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().getPlacingAvailableCells();
     }
 
-
-    @Override
-    public void update(MessageEvent message){
-        if (!(message.getMsgType().equals("VIEW_TO_MODEL"))){
-            return;
-        }
-        modelUpdateView(message.getMatchID(), message.getPlayerID());
+    public static int getPlayersConnected(){
+        return progressivePlayerID;
     }
 
+    public static int getActiveMatches(){
+        return progressiveMatchID;
+    }
 
     /*
     -------------------------------------------------------------------------------

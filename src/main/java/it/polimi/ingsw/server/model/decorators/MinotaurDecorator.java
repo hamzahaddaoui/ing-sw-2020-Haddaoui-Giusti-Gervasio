@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.*;
 import java.util.stream.Collectors;

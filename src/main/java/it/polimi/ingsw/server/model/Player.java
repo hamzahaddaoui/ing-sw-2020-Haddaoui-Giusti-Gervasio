@@ -1,9 +1,12 @@
 package it.polimi.ingsw.server.model;
+import it.polimi.ingsw.utilities.MatchState;
+import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.*;
 
-import static it.polimi.ingsw.server.model.TurnState.*;
+import static it.polimi.ingsw.utilities.TurnState.*;
 
 /**
  * Class managing the instance of a certain user, liked to a match.

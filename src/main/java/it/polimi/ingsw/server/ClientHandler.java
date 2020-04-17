@@ -15,12 +15,15 @@ import java.util.concurrent.Executors;
 
 
 public class ClientHandler extends Observable<MessageEvent> implements Observer<MessageEvent>, Runnable {
-  ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Socket client;
+
     private Integer matchID;
     private Integer playerID;
-    private ObjectOutputStream output;
-    private ObjectInputStream input;
-    private Socket client;
+
+    private final ObjectOutputStream output;
+    private final ObjectInputStream input;
+
     private boolean active;
 
   /*
@@ -28,6 +31,9 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
   Inserire timeout connessione (heartbeat messages)
   Inserire AFK timeout. se non fai una mossa entro 1 minuto, hai perso
   Eventualmente si può far scegliere all'utente
+
+  Stati pubblici
+  mandare god card all'inizio
   */
 
     public Integer getMatchID(){
@@ -56,15 +62,14 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
 
     @Override
     public void run() {
-        String inputObject;
-        MessageEvent messageEvent;
         try {
             System.out.println("Connected to " + client.getInetAddress());
             try {
                 while (active) {
-                    inputObject = (String) input.readObject();
-                    messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
-                    if(!(this.matchID.equals(messageEvent.getMatchID()) && this.playerID.equals(messageEvent.getPlayerID()))){
+                    String inputObject = (String) input.readObject();
+                    MessageEvent messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
+                    if(!(this.matchID.equals(messageEvent.getMatchID())
+                         && this.playerID.equals(messageEvent.getPlayerID()))){
                         //ignoro il messaggio perchè non è corretto
                         continue;
                     }
@@ -86,15 +91,13 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
 
     @Override
     public void update(MessageEvent message){
-        if ((message.getPlayerID() != 0) && ! message.getPlayerID().equals(this.playerID)){
+        if (((message.getPlayerID() != null) && !message.getPlayerID().equals(this.playerID))
+            || ((message.getMatchID() != null) && !message.getMatchID().equals(this.matchID))) {
             //non è per me!!!
             return;
         }
-        if (! message.getMatchID().equals(this.matchID)){
-            return;
-        }
 
-        String json = new GsonBuilder().serializeNulls().create().toJson(message);
+        String json = new GsonBuilder().create().toJson(message);
 
         executor.submit(() -> {
             try {

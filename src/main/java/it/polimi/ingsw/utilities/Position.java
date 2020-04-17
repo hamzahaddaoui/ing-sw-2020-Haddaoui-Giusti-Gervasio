@@ -109,6 +109,10 @@ public class Position {
         return CardinalDirection.valueOf(Math.toDegrees(Math.atan2(offset.getY(),offset.getX())));
     }
 
+    public Position translateCardinalDirectionToPosition(CardinalDirection cardinalDirection){
+        return new Position(this.getX() + cardinalDirection.xOffset, this.getY() + cardinalDirection.yOffset);
+    }
+
     @Override
     public boolean equals(Object position) {
         Position pos;
