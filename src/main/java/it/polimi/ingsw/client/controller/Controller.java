@@ -5,17 +5,96 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.ViewControllerEvent;
 import it.polimi.ingsw.server.model.GodCards;
+import it.polimi.ingsw.server.model.MatchState;
+import it.polimi.ingsw.server.model.PlayerState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.Position;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
-public class Controller extends Observable<String> implements Observer<ViewControllerEvent> {
-    MessageEvent message; //
+public class Controller extends Observable<String> implements Observer<String>, KeyListener {
+
+    private ControlState controlState= new StartingStatus();
+    private String playerState;
+    private String matchState;
+    private MessageEvent mgEvent;
+
+    @Override
+    public void update(String viewMessage){
+        String messageString=viewMessage;
+        String newPlayerState = View.getPlayerState();
+        String newMatchState =View.getMatchState();
+        if(newPlayerState==playerState && newMatchState==matchState) {
+            //non aggiorno il playerState e matchState lato controller -> resto nello stesso Stato
+        }
+        else {
+            playerState=newPlayerState;
+            matchState=newMatchState;
+            nextState();
+        }
+
+        if(controlState.getMessageReady()!=null){
+            mgEvent=controlState.getMessageReady();
+        }
+
+        message.setMatchID(View.getMatchID());
+        message.setPlayerID(View.getPlayerID());
+        String json = new Gson().toJson(message);
+        notify(json);
+    }
+
+    public void nextState(){
+        controlState.nextState(this);
+    }
+
+    public String getMatchState() {
+        return matchState;
+    }
+
+    public String getPlayerState() {
+        return playerState;
+    }
+
+    public void setState(ControlState ctrlState){
+        this.controlState=ctrlState;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        controlState.keyTyped(e,mgEvent);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // SE KEYPRESSED restituisse un booleano, controllerei la corretta esecuzione del messaggio
+        // se true lo invio
+        controlState.keyPressed(e,mgEvent);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        controlState.keyReleased(e,mgEvent);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*MessageEvent message; //
     Set<String> selectedCards;
     Position startPosition;
     Position endPosition;
@@ -37,7 +116,7 @@ public class Controller extends Observable<String> implements Observer<ViewContr
             "PROMETHEUS"));
 
     @Override
-    public void update(ViewControllerEvent viewMessage){
+    public void update(String viewMessage){
         String Subject = viewMessage.getMessageSubject();
         String Argument = viewMessage.getMessageArgument();
         endTurn=false;
@@ -203,4 +282,23 @@ public class Controller extends Observable<String> implements Observer<ViewContr
 
         return !this.cardChecked.equals("");
     }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode()==KeyEvent.VK_UP){
+
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }*/
+
 }
