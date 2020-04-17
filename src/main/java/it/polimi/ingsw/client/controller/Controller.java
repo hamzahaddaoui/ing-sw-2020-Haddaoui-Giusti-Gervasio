@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.controller;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.ViewControllerEvent;
 import it.polimi.ingsw.server.model.GodCards;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observable;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
-public class Controller extends Observable<MessageEvent> implements Observer<MessageEvent> {
+public class Controller extends Observable<String> implements Observer<ViewControllerEvent> {
     MessageEvent message; //
     Set<String> selectedCards;
     Position startPosition;
@@ -36,11 +37,9 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
             "PROMETHEUS"));
 
     @Override
-    public void update(MessageEvent viewString){
-        //messaggio ricevuto dalla view!
-        //lo elaboro e se valido, lo invio al server controller
-        String Subject = null;
-        String Argument = null;
+    public void update(ViewControllerEvent viewMessage){
+        String Subject = viewMessage.getMessageSubject();
+        String Argument = viewMessage.getMessageArgument();
         endTurn=false;
         specialFunction=false;
         endPosition=null;
@@ -132,8 +131,8 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
         if (readyToSend) {
             message.setMatchID(View.getMatchID());
             message.setPlayerID(View.getPlayerID());
-            message = new Gson().fromJson(Argument, MessageEvent.class);
-            notify(message);
+            String json = new Gson().toJson(message);
+            notify(json);
         }
     }
 

@@ -5,12 +5,14 @@ import it.polimi.ingsw.utilities.*;
 import it.polimi.ingsw.utilities.Position;
 
 
+import java.io.PrintStream;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
 public class View extends Observable implements Runnable, Observer{
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
+    private PrintStream outputStream;
 
     private static Integer matchID;
     private static Integer playerID;
@@ -23,6 +25,14 @@ public class View extends Observable implements Runnable, Observer{
     private static Map<Position, Set<Position>> workersAvailableCells;
     private static Set<Position> placingAvailableCells;
     private Map<Integer, String> matchPlayers;
+    private InputState state;
+    private ViewControllerEvent event;
+
+    public View() {
+        scanner = new Scanner(System.in);
+        outputStream = new PrintStream(System.out);
+    }
+
 
     public static Set<String> getGodCards() {
         return godCards;
@@ -58,6 +68,14 @@ public class View extends Observable implements Runnable, Observer{
 
             notify(vcEvent);
         }*/
+
+     while(true) {
+         outputStream.println("Insert a nickname: ");
+         String nickname = scanner.next();
+         state = InputState.Nickname;
+         event = new ViewControllerEvent(state, nickname);
+         notify(event);
+     }
     }
 
     public static String getPlayerState() {
@@ -82,5 +100,8 @@ public class View extends Observable implements Runnable, Observer{
 
     public static boolean isWorkerPresent(Position position) {
         return workersAvailableCells.containsKey(position);
+    }
+
+    private void setInputState() {
     }
 }

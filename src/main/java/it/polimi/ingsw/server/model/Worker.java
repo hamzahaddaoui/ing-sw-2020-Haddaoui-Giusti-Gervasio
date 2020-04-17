@@ -30,7 +30,7 @@ public class Worker{
     }
 
     public boolean canDoSomething(TurnState turnState) {
-        return !(this.availableCells.get(TurnState.MOVE).isEmpty());
+        return !(this.availableCells.get(turnState).isEmpty());
     }
 
     public Set<Position> getAvailableCells(TurnState state){
