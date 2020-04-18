@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static it.polimi.ingsw.server.model.TurnState.*;
+import static it.polimi.ingsw.utilities.TurnState.*;
 
 class PrometheusDecoratorTest {
 

@@ -43,26 +43,22 @@ public class Server {
       System.exit(1);
       return;
     }
-    try {
-      while (true) {
-        try {
-          Socket client = socket.accept();
-          clientHandler = new ClientHandler(client);
+    while (true) {
+      try {
+        Socket client = socket.accept();
+        clientHandler = new ClientHandler(client);
 
-          clientHandler.addObserver(controller);  //controller osserva clientHandler (comunicazioni CLIENT_CONTROLLER-SERVER_CONTROLLER)
-          model.addObserver(clientHandler);       //clientHandler osserva Model (comunicazioni MODEL-VIEW)
-          controller.addObserver(clientHandler);  //clientHandler osserva controller (comunicazioni CONTROLLER-VIEW)
-          clientHandler.addObserver(model);       //model osserva il clientHandler (Comunicazioni VIEW_MODEL)
+        clientHandler.addObserver(controller);  //controller osserva clientHandler (comunicazioni CLIENT_CONTROLLER-SERVER_CONTROLLER)
+        //model.addObserver(clientHandler);       //clientHandler osserva Model (comunicazioni MODEL-VIEW)
+        controller.addObserver(clientHandler);  //clientHandler osserva controller (comunicazioni CONTROLLER-VIEW)
+        //clientHandler.addObserver(model);       //model osserva il clientHandler (Comunicazioni VIEW_MODEL)
 
-          executor.submit(clientHandler);
+        executor.submit(clientHandler);
 
-        } catch (IOException e) {
-          System.out.println("connection dropped");
-        }
+      } catch (IOException e) {
+        System.out.println("connection dropped");
       }
     }
-    catch (Exception ignored){
-
-    }
   }
+
 }

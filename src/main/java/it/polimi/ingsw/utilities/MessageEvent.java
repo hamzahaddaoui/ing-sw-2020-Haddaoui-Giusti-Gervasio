@@ -1,6 +1,5 @@
 package it.polimi.ingsw.utilities;
 
-import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.server.ClientHandler;
 
 import java.util.Map;
@@ -8,43 +7,133 @@ import java.util.Set;
 
 public class MessageEvent {
     private transient ClientHandler clientHandler;
+
     private String msgType;
     //CONTROLLER_TO_CONTROLLER
-    //MODEL_TO_VIEW
-    //VIEW_TO_MODEL
     //CONTROLLER_TO_VIEW
 
-
-    private Integer playerID; //0 - BROADCAST
     private Integer matchID;  //0 - BROADCAST
+    private Integer playerID; //0 - BROADCAST
+
 
     //user to controller
     private String nickname;
     private Integer playersNum;
     private String godCard;
     private Set<String> godCards;
-    private Boolean endTurn;
-    private Boolean specialFunction;
+
+    private Set<Position> initializedPositions;
     private Position startPosition;
     private Position endPosition;
 
+    private Boolean endTurn;
+    private Boolean specialFunction;
+
     //controller to view
-    private String matchState;
-    private String playerState;
-    private String turnState;
+    private MatchState matchState;
+    private PlayerState playerState;
+    private TurnState turnState;
     private Boolean error;
 
 
-    //view to model
-    private Boolean requestUpdate;
-
     //model to view
     private Map<Position, Cell> billboardStatus;
-    private Map<Integer, String> matchPlayers;
     private Set<String> matchCards;
+
     private Map<Position, Set<Position>> workersAvailableCells;
     private Set<Position> availablePlacingCells;
 
+    private Boolean terminateTurnAvailable;
+    private Boolean specialFunctionAvailable;
+
+    private Map<Integer, String> matchPlayers;
+    private int activeMatches;
+    private int playersConnected;
+
+
+    //(billboardStatus, matchCards, matchPlayers, ac)
+
+
+    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Set<String> matchCards, Map<Integer, String> matchPlayers, int activeMatches, int playersConnected){
+        this.matchID = matchID;
+        this.playerID = playerID;
+        this.matchState = matchState;
+        this.playerState = playerState;
+        this.turnState = turnState;
+        this.matchCards = matchCards;
+        this.matchPlayers = matchPlayers;
+        this.activeMatches = activeMatches;
+        this.playersConnected = playersConnected;
+    }
+
+    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Map<Position, Cell> billboardStatus, Set<Position> availablePlacingCells, Map<Integer, String> matchPlayers, int activeMatches, int playersConnected){
+        this.matchID = matchID;
+        this.playerID = playerID;
+        this.matchState = matchState;
+        this.playerState = playerState;
+        this.turnState = turnState;
+        this.billboardStatus = billboardStatus;
+        this.availablePlacingCells = availablePlacingCells;
+        this.matchPlayers = matchPlayers;
+        this.activeMatches = activeMatches;
+        this.playersConnected = playersConnected;
+    }
+
+    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Map<Position, Cell> billboardStatus, Map<Position, Set<Position>> workersAvailableCells, Boolean terminateTurnAvailable, Boolean specialFunctionAvailable, Map<Integer, String> matchPlayers, int activeMatches, int playersConnected){
+        this.matchID = matchID;
+        this.playerID = playerID;
+        this.matchState = matchState;
+        this.playerState = playerState;
+        this.turnState = turnState;
+        this.billboardStatus = billboardStatus;
+        this.workersAvailableCells = workersAvailableCells;
+        this.terminateTurnAvailable = terminateTurnAvailable;
+        this.specialFunctionAvailable = specialFunctionAvailable;
+        this.matchPlayers = matchPlayers;
+        this.activeMatches = activeMatches;
+        this.playersConnected = playersConnected;
+    }
+
+
+
+
+
+
+
+
+
+
+    public MessageEvent(Integer matchID, Map<Position, Cell> billboardStatus, Set<String> matchCards, Map<Integer, String> matchPlayers, int activeMatches, int playersConnected){
+        this.matchID = matchID;
+        this.billboardStatus = billboardStatus;
+        this.matchCards = matchCards;
+        this.matchPlayers = matchPlayers;
+        this.activeMatches = activeMatches;
+        this.playersConnected = playersConnected;
+    }
+
+    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Map<Integer, String> matchPlayers){
+        this.playerID = playerID;
+        this.matchID = matchID;
+        this.matchState = matchState;
+        this.playerState = playerState;
+        this.turnState = turnState;
+        this.matchPlayers = matchPlayers;
+    }
+
+    public MessageEvent(Integer playerID, PlayerState playerState){
+        this.playerID = playerID;
+        this.playerState = playerState;
+    }
+
+    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Set<String> matchCards){
+        this.playerID = playerID;
+        this.matchID = matchID;
+        this.matchState = matchState;
+        this.playerState = playerState;
+        this.turnState = turnState;
+        this.matchCards = matchCards;
+    }
 
     public MessageEvent(String msgType, Integer playerID, Integer matchID, Set<Position> availablePlacingCells, Map<Position, Set<Position>> workersAvailableCells){
         this.msgType = msgType;
@@ -62,7 +151,7 @@ public class MessageEvent {
         this.matchCards = matchCards;
     }
 
-    public MessageEvent(String msgType, Integer playerID, Integer matchID, String playerState, String matchState){
+    public MessageEvent(String msgType, Integer playerID, Integer matchID, PlayerState playerState, MatchState matchState){
         this.msgType = msgType;
         this.playerID = playerID;
         this.matchID = matchID;
@@ -70,7 +159,7 @@ public class MessageEvent {
         this.matchState = matchState;
     }
 
-    public MessageEvent(String msgType, Integer matchID, String matchState){
+    public MessageEvent(String msgType, Integer matchID, MatchState matchState){
         this.msgType = msgType;
         this.matchID = matchID;
         this.matchState = matchState;
@@ -82,12 +171,19 @@ public class MessageEvent {
     }
 
 
-    public ClientHandler getClientHandler(){
-        return clientHandler;
-    }
+
+
 
     public void setClientHandler(ClientHandler clientHandler){
         this.clientHandler = clientHandler;
+    }
+
+
+
+
+
+    public ClientHandler getClientHandler(){
+        return clientHandler;
     }
 
     public void setPlayerID(Integer playerID){
@@ -118,11 +214,11 @@ public class MessageEvent {
         return playersNum;
     }
 
-    public String getPlayerState(){
+    public PlayerState getPlayerState(){
         return playerState;
     }
 
-    public String getMatchState(){
+    public MatchState getMatchState(){
         return matchState;
     }
 

@@ -2,12 +2,13 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.server.model.TurnState.*;
-import static it.polimi.ingsw.server.model.TurnState.IDLE;
+import static it.polimi.ingsw.utilities.TurnState.*;
+import static it.polimi.ingsw.utilities.TurnState.IDLE;
 
 /**
  * @author giusti-leo
