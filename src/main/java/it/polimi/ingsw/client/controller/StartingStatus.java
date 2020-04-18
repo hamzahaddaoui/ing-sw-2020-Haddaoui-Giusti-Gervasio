@@ -9,26 +9,10 @@ import java.awt.event.KeyEvent;
 public class StartingStatus extends ControlState  {
 
     @Override
-    public void keyTyped(KeyEvent e, MessageEvent messageEvent) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e, MessageEvent messageEvent) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e, MessageEvent messageEvent) {
-
-    }
-
-    @Override
     public void nextState(Controller ctrl) {
-        if( ctrl.getPlayerState().equals( (PlayerState.ACTIVE) )&& ctrl.getMatchState().equals(MatchState.GETTING_PLAYERS_NUM )) {
-            ctrl.setState(new Selection_Number_Status() );
+        if(ctrl.getPlayerState().equals("ACTIVE") && ctrl.getMatchState().equals("GETTING_PLAYERS_NUM")) {
+            ctrl.setState(new Selection_Number_Status());
         }
     }
-
 
 }

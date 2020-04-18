@@ -1,35 +1,38 @@
 package it.polimi.ingsw.client;
 
-import com.google.gson.Gson;
+import it.polimi.ingsw.server.model.MatchState;
+import it.polimi.ingsw.server.model.PlayerState;
+import it.polimi.ingsw.server.model.TurnState;
 import it.polimi.ingsw.utilities.*;
 import it.polimi.ingsw.utilities.Position;
 
 
+import java.io.DataInputStream;
 import java.io.PrintStream;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
-public class View extends Observable implements Runnable, Observer{
-    private Scanner scanner;
+public class View extends Observable<String> implements Runnable, Observer{
+    private DataInputStream inputStream;
     private PrintStream outputStream;
 
     private static Integer matchID;
     private static Integer playerID;
-    private static String playerState;
-    private static String matchState;
+    private static PlayerState playerState;
+    private static MatchState matchState;
+    private static TurnState turnState;
     private static Set<String> godCards;
     private static Integer playersNum;
     private static String godCard;
     private static Map<Position, Cell> billboardStatus;
     private static Map<Position, Set<Position>> workersAvailableCells;
     private static Set<Position> placingAvailableCells;
+    private static Position coloredPosition;
     private Map<Integer, String> matchPlayers;
-    private InputState state;
     private ViewControllerEvent event;
 
     public View() {
-        scanner = new Scanner(System.in);
+        inputStream = new DataInputStream(System.in);
         outputStream = new PrintStream(System.out);
     }
 
@@ -71,18 +74,15 @@ public class View extends Observable implements Runnable, Observer{
 
      while(true) {
          outputStream.println("Insert a nickname: ");
-         String nickname = scanner.next();
-         state = InputState.Nickname;
-         event = new ViewControllerEvent(state, nickname);
-         notify(event);
+         notify();
      }
     }
 
-    public static String getPlayerState() {
+    public static PlayerState getPlayerState() {
         return playerState;
     }
 
-    public static String getMatchState() {
+    public static MatchState getMatchState() {
         return matchState;
     }
 

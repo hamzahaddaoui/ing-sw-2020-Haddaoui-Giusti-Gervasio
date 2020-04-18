@@ -18,15 +18,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
-public class Controller extends Observable<String> implements Observer<String>, KeyListener {
+public class Controller extends Observable<String> implements Observer<String> {
 
     private ControlState controlState= new StartingStatus();
     private String playerState;
     private String matchState;
-    private MessageEvent mgEvent;
+    private MessageEvent message;
+    private boolean messageReady;
 
     @Override
     public void update(String viewMessage){
+        messageReady=false;
+        message = null;
         String messageString=viewMessage;
         String newPlayerState = View.getPlayerState();
         String newMatchState =View.getMatchState();
@@ -39,9 +42,9 @@ public class Controller extends Observable<String> implements Observer<String>, 
             nextState();
         }
 
-        if(controlState.getMessageReady()!=null){
+        /*if(controlState.getMessageReady()!=null){
             mgEvent=controlState.getMessageReady();
-        }
+        }*/
 
         message.setMatchID(View.getMatchID());
         message.setPlayerID(View.getPlayerID());
@@ -64,34 +67,6 @@ public class Controller extends Observable<String> implements Observer<String>, 
     public void setState(ControlState ctrlState){
         this.controlState=ctrlState;
     }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        controlState.keyTyped(e,mgEvent);
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // SE KEYPRESSED restituisse un booleano, controllerei la corretta esecuzione del messaggio
-        // se true lo invio
-        controlState.keyPressed(e,mgEvent);
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        controlState.keyReleased(e,mgEvent);
-    }
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*MessageEvent message; //
