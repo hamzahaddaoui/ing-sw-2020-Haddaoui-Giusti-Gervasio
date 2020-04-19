@@ -1,9 +1,7 @@
-package it.polimi.ingsw.client.controller;
+package it.polimi.ingsw.client.controller.state;
 
+import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.MessageEvent;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public abstract class ControlState {
 

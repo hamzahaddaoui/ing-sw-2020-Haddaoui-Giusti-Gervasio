@@ -3,13 +3,11 @@ package it.polimi.ingsw.client.controller;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.controller.state.ControlState;
+import it.polimi.ingsw.client.controller.state.StartingStatus;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
 
 public class Controller extends Observable<String> implements Observer<Object> {
 
@@ -59,7 +57,6 @@ public class Controller extends Observable<String> implements Observer<Object> {
     public void setState(ControlState ctrlState){
         this.controlState=ctrlState;
     }
-
 
     /*MessageEvent message; //
     Set<String> selectedCards;
