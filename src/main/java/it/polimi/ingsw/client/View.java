@@ -1,19 +1,19 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.server.model.MatchState;
-import it.polimi.ingsw.server.model.PlayerState;
-import it.polimi.ingsw.server.model.TurnState;
+import it.polimi.ingsw.utilities.MatchState;
+import it.polimi.ingsw.utilities.PlayerState;
+import it.polimi.ingsw.utilities.TurnState;
 import it.polimi.ingsw.utilities.*;
 import it.polimi.ingsw.utilities.Position;
 
-
 import java.io.DataInputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Set;
 
 public class View extends Observable<String> implements Runnable, Observer{
-    private DataInputStream inputStream;
+    private InputStream inputStream;
     private PrintStream outputStream;
 
     private static Integer matchID;

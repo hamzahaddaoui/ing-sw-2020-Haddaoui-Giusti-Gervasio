@@ -3,64 +3,56 @@ package it.polimi.ingsw.client.controller;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.client.ViewControllerEvent;
-import it.polimi.ingsw.server.model.GodCards;
-import it.polimi.ingsw.server.model.MatchState;
-import it.polimi.ingsw.server.model.PlayerState;
-import it.polimi.ingsw.utilities.MessageEvent;
-import it.polimi.ingsw.utilities.Observable;
-import it.polimi.ingsw.utilities.Observer;
-import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.MatchState;
+import it.polimi.ingsw.utilities.PlayerState;
+import it.polimi.ingsw.utilities.*;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
-public class Controller extends Observable<String> implements Observer<String> {
+public class Controller extends Observable<String> implements Observer<Object> {
 
-    private ControlState controlState= new StartingStatus();
-    private String playerState;
-    private String matchState;
+    private ControlState controlState = new StartingStatus();
+    private PlayerState playerState;
+    private MatchState matchState;
     private MessageEvent message;
     private boolean messageReady;
 
     @Override
-    public void update(String viewMessage){
-        messageReady=false;
+    public void update(Object viewObject) {
+
+        messageReady = false;
         message = null;
-        String messageString=viewMessage;
-        String newPlayerState = View.getPlayerState();
-        String newMatchState =View.getMatchState();
-        if(newPlayerState==playerState && newMatchState==matchState) {
-            //non aggiorno il playerState e matchState lato controller -> resto nello stesso Stato
-        }
-        else {
-            playerState=newPlayerState;
-            matchState=newMatchState;
+
+        PlayerState newPlayerState = View.getPlayerState();
+        MatchState newMatchState = View.getMatchState();
+
+        if (newPlayerState != playerState || newMatchState != matchState) {
+            playerState = newPlayerState;
+            matchState = newMatchState;
             nextState();
         }
 
-        /*if(controlState.getMessageReady()!=null){
-            mgEvent=controlState.getMessageReady();
-        }*/
+        messageReady = controlState.doSomething(message, viewObject);
 
-        message.setMatchID(View.getMatchID());
-        message.setPlayerID(View.getPlayerID());
-        String json = new Gson().toJson(message);
-        notify(json);
+        if (messageReady) {
+            message.setMatchID(View.getMatchID());
+            message.setPlayerID(View.getPlayerID());
+            String json = new Gson().toJson(message);
+            notify(json);
+        }
     }
 
     public void nextState(){
         controlState.nextState(this);
     }
 
-    public String getMatchState() {
+    public MatchState getMatchState() {
         return matchState;
     }
 
-    public String getPlayerState() {
+    public PlayerState getPlayerState() {
         return playerState;
     }
 
