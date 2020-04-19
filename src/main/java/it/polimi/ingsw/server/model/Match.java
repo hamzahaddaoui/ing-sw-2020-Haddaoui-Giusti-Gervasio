@@ -1,11 +1,9 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.utilities.MatchState;
+import it.polimi.ingsw.utilities.PlayerState;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -18,13 +16,14 @@ public class Match {
     private int playersCurrentCount; //current players of the match
 
     private final List<Player> players = new ArrayList<>(2);
+    private final List<Player> losers = new ArrayList<>(2);
     private Player currentPlayer;
     private Set<GodCards> cards = new HashSet<>(2);
     private final Billboard billboard;
     private MatchState currentState;
-    private Player winner;
 
     private boolean started;
+    private boolean finished;
     private boolean moveUpActive = true;
 
     public Match(int matchID, Player matchMaster) {
@@ -56,6 +55,12 @@ public class Match {
         return players;
     }
 
+    public List<Player> getAllPlayers() {
+        List<Player> allPlayers = players;
+        allPlayers.addAll(losers);
+        return allPlayers;
+    }
+
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
@@ -75,8 +80,6 @@ public class Match {
     public MatchState getCurrentState() {
         return currentState;
     }
-
-    public Player getWinner() { return winner; }
 
     public boolean isStarted() {
         return started;
@@ -98,9 +101,41 @@ public class Match {
     }
 
     public void removePlayer(Player player){
+        player.lost();
+        losers.add(player);
         players.remove(player);
+        billboard
+                .getCells()
+                .keySet()
+                .stream()
+                .filter(position -> billboard.getPlayer(position) == player.getID())
+                .forEach(billboard::resetPlayer);
+
         playersCurrentCount--;
     }
+
+    public void checkPlayers(){
+        players.stream()
+                .filter(player -> player.getPlayerState() == PlayerState.WIN)
+                .findAny()
+                .ifPresent(winner -> players.stream()
+                .filter(player -> player != winner)
+                .forEach(this::removePlayer));
+
+        players.stream()
+                .filter(player -> player.getPlayerState() == PlayerState.LOST)
+                .findAny()
+                .ifPresent(this::removePlayer);
+
+        if(playersCurrentCount == 1){
+            finished = true;
+        }
+
+        else if (!players.contains(currentPlayer) || currentPlayer.hasFinished()){
+            nextTurn();
+        }
+    }
+
 
     public void nextTurn() {
         currentPlayer.resetPlayerState();
@@ -120,13 +155,15 @@ public class Match {
         currentState = currentState.next();
     }
 
-    public void setWinner(Player winner) { this.winner = winner; }
-
     public void start() {
         started = true;
     }
 
     public void setMoveUpActive(boolean moveUpActive) {
         this.moveUpActive = moveUpActive;
+    }
+
+    public boolean isFinished(){
+        return finished;
     }
 }

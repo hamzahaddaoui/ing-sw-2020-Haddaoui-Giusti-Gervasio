@@ -13,6 +13,14 @@ public class SelectingSpecialCommand extends State {
         if (hasSelectedCard(matchID)) {
             nextMatchState(matchID);
         }
-        changeView(matchID);
+    }
+
+    @Override
+    public void viewNotify(Integer matchID){
+        MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
+        message.setMatchCards(getMatchCards(matchID));
+        getMatchPlayers(matchID)
+                .keySet()
+                .forEach(player -> notify(basicPlayerConfig(message, player)));
     }
 }

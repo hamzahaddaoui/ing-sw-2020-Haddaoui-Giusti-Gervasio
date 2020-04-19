@@ -2,11 +2,8 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.utilities.*;
 import it.polimi.ingsw.utilities.Observable;
-import it.polimi.ingsw.utilities.Observer;
-
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 /**
  * Main model class: represents the facade of the entire model package
@@ -20,7 +17,7 @@ public class GameModel extends Observable<MessageEvent> {
     private static final LinkedList<Player> playersWaitingList = new LinkedList<>();
     private static final Map<Integer, Match> activeMatches = new HashMap<>(); //id match, match
 
-    //gestire multithreading.
+   //gestire multithreading.
     //synchronized(GameModel.class)
     //blocking queue??
     //immutable objects?
@@ -70,11 +67,12 @@ public class GameModel extends Observable<MessageEvent> {
                        .stream()
                        .map(activeMatches::get)
                        .filter(Match::isStarted)
-                       .noneMatch(match -> match.getPlayers()
+                       .noneMatch(match -> match.getAllPlayers()
                                .stream().anyMatch(player -> player.getNickname().equals(nickname)));
     }
 
     public static Integer getInitMatchID(){
+        //sostituire con exception
         if (getInitMatchesListSize() != 0)
             return activeMatches
                     .keySet()
@@ -176,7 +174,10 @@ public class GameModel extends Observable<MessageEvent> {
     }
 
     public static void nextMatchState(Integer matchID){
-        translateMatchID(matchID).nextState();
+        try{
+            translateMatchID(matchID).nextState();
+        }
+        catch (NullPointerException exception){}
     }
 
     public static PlayerState getPlayerState(Integer matchID, Integer playerID){
@@ -203,7 +204,18 @@ public class GameModel extends Observable<MessageEvent> {
      * @param matchID selected match
      */
     public static void nextMatchTurn(Integer matchID){
-        translateMatchID(matchID).nextTurn();
+        try{
+            translateMatchID(matchID).nextTurn();
+        }
+        catch (NullPointerException ignored){}
+    }
+
+    public static boolean isMatchFinished(Integer matchID){
+        return translateMatchID(matchID).isFinished();
+    }
+
+    public static void deleteMatch(Integer matchID){
+        activeMatches.remove(matchID);
     }
 
 
@@ -258,6 +270,14 @@ public class GameModel extends Observable<MessageEvent> {
     -----------------------GAME MANAGEMENT-----------------------------------------
     -------------------------------------------------------------------------------
      */
+    public static boolean isTerminateTurnAvailable(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().isTerminateTurnAvailable();
+    }
+
+    public static boolean isSpecialFunctionAvailable(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().isSpecialFunctionAvailable();
+    }
+
     public static void setUnsetSpecialFunction(Integer matchID, boolean specialFunction){
         translateMatchID(matchID).getCurrentPlayer().setUnsetSpecialFunction(specialFunction);
     }
@@ -267,13 +287,17 @@ public class GameModel extends Observable<MessageEvent> {
     }
 
     public static void playerTurn(Integer matchID, Position startPosition, Position endPosition){
-        Player player = translateMatchID(matchID).getCurrentPlayer();
+        Match match = translateMatchID(matchID);
+        Player player = match.getCurrentPlayer();
+
         player.setCurrentWorker(startPosition);
         player.playerAction(endPosition);
+
+        match.checkPlayers();
     }
 
-    public static String getCurrentPlayerState(Integer matchID){
-        return translateMatchID(matchID).getCurrentPlayer().getPlayerState().toString();
+    public static PlayerState getCurrentPlayerState(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().getPlayerState();
     }
 
 
@@ -284,7 +308,7 @@ public class GameModel extends Observable<MessageEvent> {
      */
 
     public static Map<Integer, String> getMatchPlayers(Integer matchID){
-        return translateMatchID(matchID).getPlayers().stream()
+        return translateMatchID(matchID).getAllPlayers().stream()
                 .collect(Collectors.toMap(Player::getID, Player::getNickname));
     }
 
@@ -354,7 +378,7 @@ public class GameModel extends Observable<MessageEvent> {
                     .get();
         else
             return match
-                .getPlayers()
+                .getAllPlayers()
                 .stream()
                 .filter(player -> player.getID()==playerID)
                 .findAny().get();

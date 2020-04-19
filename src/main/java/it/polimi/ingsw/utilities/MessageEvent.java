@@ -12,285 +12,258 @@ public class MessageEvent {
     //CONTROLLER_TO_CONTROLLER
     //CONTROLLER_TO_VIEW
 
-    private Integer matchID;  //0 - BROADCAST
-    private Integer playerID; //0 - BROADCAST
+    private Integer         matchID;
+    private Integer         playerID;
 
 
     //user to controller
-    private String nickname;
-    private Integer playersNum;
-    private String godCard;
-    private Set<String> godCards;
+    private String          nickname;
+    private Integer         playersNum;
+    private String          godCard;
+    private Set<String>     godCards;
 
-    private Set<Position> initializedPositions;
-    private Position startPosition;
-    private Position endPosition;
 
-    private Boolean endTurn;
-    private Boolean specialFunction;
+    private Set<Position>   initializedPositions;   //le 2 posizioni in cui inizializzo i workers
+    private Position        startPosition;          //il worker che muovo
+    private Position        endPosition;            //la posizione finale del worker che voglio muovere
+
+    private Boolean         endTurn;                //se decido di terminare il turno
+    private Boolean         specialFunction;        //se decido di attivare la funzione speciale
 
     //controller to view
-    private MatchState matchState;
-    private PlayerState playerState;
-    private TurnState turnState;
-    private Boolean error;
+    private MatchState      matchState;
+    private PlayerState     playerState;
+    private TurnState       turnState;
+    private Boolean         error;
 
+    private Map<Position, Cell>             billboardStatus;
+    private Set<String>                     matchCards;
 
-    //model to view
-    private Map<Position, Cell> billboardStatus;
-    private Set<String> matchCards;
+    private Map<Position, Set<Position>>    workersAvailableCells;
+    private Set<Position>                   availablePlacingCells;
 
-    private Map<Position, Set<Position>> workersAvailableCells;
-    private Set<Position> availablePlacingCells;
+    private Boolean                         terminateTurnAvailable;
+    private Boolean                         specialFunctionAvailable;
 
-    private Boolean terminateTurnAvailable;
-    private Boolean specialFunctionAvailable;
+    private Map<Integer, String>            matchPlayers;
+    //private int                             activeMatches;
+    //private int                             playersConnected;
 
-    private Map<Integer, String> matchPlayers;
-    private int activeMatches;
-    private int playersConnected;
-
-
-    //(billboardStatus, matchCards, matchPlayers, ac)
-
-
-    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Set<String> matchCards, Map<Integer, String> matchPlayers, int activeMatches, int playersConnected){
-        this.matchID = matchID;
-        this.playerID = playerID;
-        this.matchState = matchState;
-        this.playerState = playerState;
-        this.turnState = turnState;
-        this.matchCards = matchCards;
-        this.matchPlayers = matchPlayers;
-        this.activeMatches = activeMatches;
-        this.playersConnected = playersConnected;
-    }
-
-    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Map<Position, Cell> billboardStatus, Set<Position> availablePlacingCells, Map<Integer, String> matchPlayers, int activeMatches, int playersConnected){
-        this.matchID = matchID;
-        this.playerID = playerID;
-        this.matchState = matchState;
-        this.playerState = playerState;
-        this.turnState = turnState;
-        this.billboardStatus = billboardStatus;
-        this.availablePlacingCells = availablePlacingCells;
-        this.matchPlayers = matchPlayers;
-        this.activeMatches = activeMatches;
-        this.playersConnected = playersConnected;
-    }
-
-    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Map<Position, Cell> billboardStatus, Map<Position, Set<Position>> workersAvailableCells, Boolean terminateTurnAvailable, Boolean specialFunctionAvailable, Map<Integer, String> matchPlayers, int activeMatches, int playersConnected){
-        this.matchID = matchID;
-        this.playerID = playerID;
-        this.matchState = matchState;
-        this.playerState = playerState;
-        this.turnState = turnState;
-        this.billboardStatus = billboardStatus;
-        this.workersAvailableCells = workersAvailableCells;
-        this.terminateTurnAvailable = terminateTurnAvailable;
-        this.specialFunctionAvailable = specialFunctionAvailable;
-        this.matchPlayers = matchPlayers;
-        this.activeMatches = activeMatches;
-        this.playersConnected = playersConnected;
-    }
-
-
-
-
-
-
-
-
-
-
-    public MessageEvent(Integer matchID, Map<Position, Cell> billboardStatus, Set<String> matchCards, Map<Integer, String> matchPlayers, int activeMatches, int playersConnected){
-        this.matchID = matchID;
-        this.billboardStatus = billboardStatus;
-        this.matchCards = matchCards;
-        this.matchPlayers = matchPlayers;
-        this.activeMatches = activeMatches;
-        this.playersConnected = playersConnected;
-    }
-
-    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Map<Integer, String> matchPlayers){
-        this.playerID = playerID;
-        this.matchID = matchID;
-        this.matchState = matchState;
-        this.playerState = playerState;
-        this.turnState = turnState;
-        this.matchPlayers = matchPlayers;
-    }
-
-    public MessageEvent(Integer playerID, PlayerState playerState){
-        this.playerID = playerID;
-        this.playerState = playerState;
-    }
-
-    public MessageEvent(Integer matchID, Integer playerID, MatchState matchState, PlayerState playerState, TurnState turnState, Set<String> matchCards){
-        this.playerID = playerID;
-        this.matchID = matchID;
-        this.matchState = matchState;
-        this.playerState = playerState;
-        this.turnState = turnState;
-        this.matchCards = matchCards;
-    }
-
-    public MessageEvent(String msgType, Integer playerID, Integer matchID, Set<Position> availablePlacingCells, Map<Position, Set<Position>> workersAvailableCells){
-        this.msgType = msgType;
-        this.playerID = playerID;
-        this.matchID = matchID;
-        this.workersAvailableCells = workersAvailableCells;
-        this.availablePlacingCells = availablePlacingCells;
-    }
-
-    public MessageEvent(String msgType, Integer matchID, Map<Position, Cell> billboardStatus, Map<Integer, String> matchPlayers, Set<String> matchCards){
-        this.msgType = msgType;
-        this.matchID = matchID;
-        this.billboardStatus = billboardStatus;
-        this.matchPlayers = matchPlayers;
-        this.matchCards = matchCards;
-    }
-
-    public MessageEvent(String msgType, Integer playerID, Integer matchID, PlayerState playerState, MatchState matchState){
-        this.msgType = msgType;
-        this.playerID = playerID;
-        this.matchID = matchID;
-        this.playerState = playerState;
-        this.matchState = matchState;
-    }
-
-    public MessageEvent(String msgType, Integer matchID, MatchState matchState){
-        this.msgType = msgType;
-        this.matchID = matchID;
-        this.matchState = matchState;
-    }
-
-    public MessageEvent(Integer playerID, boolean error){
-        this.playerID = playerID;
-        this.error = error;
-    }
-
-
-
-
-
-    public void setClientHandler(ClientHandler clientHandler){
-        this.clientHandler = clientHandler;
-    }
-
-
-
-
+    private Integer winner;
 
     public ClientHandler getClientHandler(){
         return clientHandler;
     }
 
-    public void setPlayerID(Integer playerID){
-        this.playerID = playerID;
-    }
-
-    public void setMatchID(Integer matchID){
-        this.matchID = matchID;
+    public void setClientHandler(ClientHandler clientHandler){
+        this.clientHandler = clientHandler;
     }
 
     public String getMsgType(){
         return msgType;
     }
 
-    public Integer getPlayerID(){
-        return playerID;
+    public void setMsgType(String msgType){
+        this.msgType = msgType;
     }
 
     public Integer getMatchID(){
         return matchID;
     }
 
+    public void setMatchID(Integer matchID){
+        this.matchID = matchID;
+    }
+
+    public Integer getPlayerID(){
+        return playerID;
+    }
+
+    public void setPlayerID(Integer playerID){
+        this.playerID = playerID;
+    }
+
     public String getNickname(){
         return nickname;
     }
 
-    public int getPlayersNum(){
+    public void setNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public Integer getPlayersNum(){
         return playersNum;
     }
 
-    public PlayerState getPlayerState(){
-        return playerState;
-    }
-
-    public MatchState getMatchState(){
-        return matchState;
-    }
-
-    public boolean isError(){
-        return error;
+    public void setPlayersNum(Integer playersNum){
+        this.playersNum = playersNum;
     }
 
     public String getGodCard(){
         return godCard;
     }
 
+    public void setGodCard(String godCard){
+        this.godCard = godCard;
+    }
+
     public Set<String> getGodCards(){
         return godCards;
     }
 
-    public Boolean getEndTurn(){
-        return endTurn;
+    public void setGodCards(Set<String> godCards){
+        this.godCards = godCards;
     }
 
-    public Boolean getSpecialFunction(){
-        return specialFunction;
+    public Set<Position> getInitializedPositions(){
+        return initializedPositions;
+    }
+
+    public void setInitializedPositions(Set<Position> initializedPositions){
+        this.initializedPositions = initializedPositions;
     }
 
     public Position getStartPosition(){
         return startPosition;
     }
 
+    public void setStartPosition(Position startPosition){
+        this.startPosition = startPosition;
+    }
+
     public Position getEndPosition(){
         return endPosition;
+    }
+
+    public void setEndPosition(Position endPosition){
+        this.endPosition = endPosition;
+    }
+
+    public Boolean getEndTurn(){
+        return endTurn;
+    }
+
+    public void setEndTurn(Boolean endTurn){
+        this.endTurn = endTurn;
+    }
+
+    public Boolean getSpecialFunction(){
+        return specialFunction;
+    }
+
+    public void setSpecialFunction(Boolean specialFunction){
+        this.specialFunction = specialFunction;
+    }
+
+    public MatchState getMatchState(){
+        return matchState;
+    }
+
+    public void setMatchState(MatchState matchState){
+        this.matchState = matchState;
+    }
+
+    public PlayerState getPlayerState(){
+        return playerState;
+    }
+
+    public void setPlayerState(PlayerState playerState){
+        this.playerState = playerState;
+    }
+
+    public TurnState getTurnState(){
+        return turnState;
+    }
+
+    public void setTurnState(TurnState turnState){
+        this.turnState = turnState;
+    }
+
+    public Boolean getError(){
+        return error;
+    }
+
+    public void setError(Boolean error){
+        this.error = error;
     }
 
     public Map<Position, Cell> getBillboardStatus(){
         return billboardStatus;
     }
 
+    public void setBillboardStatus(Map<Position, Cell> billboardStatus){
+        this.billboardStatus = billboardStatus;
+    }
+
+    public Set<String> getMatchCards(){
+        return matchCards;
+    }
+
+    public void setMatchCards(Set<String> matchCards){
+        this.matchCards = matchCards;
+    }
+
     public Map<Position, Set<Position>> getWorkersAvailableCells(){
         return workersAvailableCells;
+    }
+
+    public void setWorkersAvailableCells(Map<Position, Set<Position>> workersAvailableCells){
+        this.workersAvailableCells = workersAvailableCells;
+    }
+
+    public Set<Position> getAvailablePlacingCells(){
+        return availablePlacingCells;
+    }
+
+    public void setAvailablePlacingCells(Set<Position> availablePlacingCells){
+        this.availablePlacingCells = availablePlacingCells;
+    }
+
+    public Boolean getTerminateTurnAvailable(){
+        return terminateTurnAvailable;
+    }
+
+    public void setTerminateTurnAvailable(Boolean terminateTurnAvailable){
+        this.terminateTurnAvailable = terminateTurnAvailable;
+    }
+
+    public Boolean getSpecialFunctionAvailable(){
+        return specialFunctionAvailable;
+    }
+
+    public void setSpecialFunctionAvailable(Boolean specialFunctionAvailable){
+        this.specialFunctionAvailable = specialFunctionAvailable;
     }
 
     public Map<Integer, String> getMatchPlayers(){
         return matchPlayers;
     }
 
-    public void setStartPosition(Position startPosition) {
-        this.startPosition=startPosition;
+    public void setMatchPlayers(Map<Integer, String> matchPlayers){
+        this.matchPlayers = matchPlayers;
     }
 
-    public void setEndPosition(Position endPosition) {
-        this.endPosition = endPosition;
+    /*public int getActiveMatches(){
+        return activeMatches;
     }
 
-    public void setEndTurn(Boolean endTurn) {
-        this.endTurn = endTurn;
+    public void setActiveMatches(int activeMatches){
+        this.activeMatches = activeMatches;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public int getPlayersConnected(){
+        return playersConnected;
     }
 
-    public void setSpecialFunction(Boolean specialFunction) {
-        this.specialFunction =specialFunction;
+    public void setPlayersConnected(int playersConnected){
+        this.playersConnected = playersConnected;
+    }*/
+
+    public Integer getWinner(){
+        return winner;
     }
 
-    public void setPlayersNum(Integer playersNum) {
-        this.playersNum = playersNum;
-    }
-
-    public void setGodCards(Set<String> godCards) {
-        this.godCards = godCards;
-    }
-
-    public void setGodCard(String godCard) {
-        this.godCard = godCard;
+    public void setWinner(Integer winner){
+        this.winner = winner;
     }
 }

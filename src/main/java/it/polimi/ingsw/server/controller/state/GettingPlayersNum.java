@@ -7,17 +7,21 @@ public class GettingPlayersNum extends State{
     @Override
     public void handleRequest(Integer matchID, MessageEvent messageEvent){
         int playersNum = messageEvent.getPlayersNum();
-        setMatchPlayersNum(messageEvent.getMatchID(), playersNum);
-        unstackToMatch(matchID);
-        checkMatchStart(matchID);
-    }
+        int playerID = messageEvent.getPlayerID();
+        if (!(playersNum == 2 || playersNum == 3)){
+            notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), playerID),matchID)));
+        }
 
-    private void unstackToMatch(Integer matchID){
+        setMatchPlayersNum(messageEvent.getMatchID(), playersNum);
+        nextMatchState(matchID);
+
         while ((getPlayersWaitingListSize() != 0) && !isNumReached(matchID)) {
             int opponentID = unstackPlayer();
             addPlayerToMatch(matchID, opponentID);
             clientHandlerUpdate(opponentID, matchID);
+
         }
-        changeView(matchID);
+
+        checkMatchStart(matchID);
     }
 }

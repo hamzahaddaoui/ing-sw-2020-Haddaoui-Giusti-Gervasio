@@ -9,7 +9,7 @@ public class Billboard {
     static final int ROWS = 5;
     static final int COLOUMNS = 5;
 
-    private Map<Position, Cell> cellSet = new HashMap<>();
+    private final Map<Position, Cell> cellSet = new HashMap<>();
 
     public Billboard() {
         int x, y;

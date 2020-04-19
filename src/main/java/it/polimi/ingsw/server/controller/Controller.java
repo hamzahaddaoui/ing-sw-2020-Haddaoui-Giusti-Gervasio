@@ -18,7 +18,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
                 put(MatchState.GETTING_PLAYERS_NUM, new GettingPlayersNum());
                 put(MatchState.WAITING_FOR_PLAYERS, new WaitingForPlayers());
                 put(MatchState.SELECTING_GOD_CARDS, new SelectingGodCards());
-                put(MatchState.SELECTING_SPECIAL_COMMAND, new SelectingGodCards());
+                put(MatchState.SELECTING_SPECIAL_COMMAND, new SelectingSpecialCommand());
                 put(MatchState.PLACING_WORKERS, new PlacingWorkers());
                 put(MatchState.RUNNING, new Running());
             }
@@ -28,62 +28,27 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
 
     @Override
     public void update(MessageEvent messageEvent){
-        if (!(messageEvent.getMsgType().equals("CONTROLLER_TO_CONTROLLER"))){
-            return;
-        }
-
+        State controllerBehaviour;
         Integer playerID = messageEvent.getPlayerID();
+        Integer matchID = messageEvent.getMatchID();
 
         if (playerID == null) {
-            new FirstPlayerAccess().handleRequest(null, messageEvent);
-            return;
+            controllerBehaviour = new FirstPlayerAccess();
         }
 
-        Integer matchID = messageEvent.getMatchID();
         if ((matchID == null) || (! Objects.equals(getPlayerState(matchID, playerID), PlayerState.ACTIVE))){
-            inputError(playerID);
-            return;
+            return; //ignoro semplicemente
         }
 
-        stateMap.get(getMatchState(matchID)).handleRequest(matchID,messageEvent);
+        controllerBehaviour = stateMap.get(getMatchState(matchID));
+        controllerBehaviour.handleRequest(matchID,messageEvent);
+        controllerBehaviour.viewNotify(matchID);
     }
 
     public void sendToView(MessageEvent messageEvent){
         notify(messageEvent);
     }
-
-
-    public void changeView(Integer matchID, Integer playerID){
-        notify(new MessageEvent(
-                "CONTROLLER_CHANGE_VIEW",
-                playerID,
-                matchID,
-                getPlayerState(matchID, playerID),
-                getMatchState(matchID)));
-    }
-
-    public void changeView(Integer matchID){
-        Set<Integer> matchPlayers = getMatchPlayers(matchID).keySet();
-        for (Integer playerID: matchPlayers){
-            notify(new MessageEvent(
-                    "CONTROLLER_CHANGE_VIEW",
-                    playerID,
-                    matchID,
-                    getPlayerState(matchID, playerID),
-                    getMatchState(matchID)));
-        }
-    }
-
-    public void inputError(Integer playerID){
-        notify(new MessageEvent(playerID,true));
-    }
-
-    public void updateView(){
-
-    }
 }
-
-
 
 
 

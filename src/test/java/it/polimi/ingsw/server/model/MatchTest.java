@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,7 +54,7 @@ class MatchTest {
         ArrayList<Player> playerSet = new ArrayList<>();
 
         //SITUAZIONE INIZIALE. NESSUN GIOCATORE, GIOCO DA 2
-        assertTrue(match.getPlayers().isEmpty());
+        assertTrue(match.getAllPlayers().isEmpty());
         assertEquals(2, match.getPlayersNum());
         assertEquals(0, match.getPlayersCurrentCount());
 
@@ -63,13 +62,13 @@ class MatchTest {
         Player player = new Player(230,"Hamza", match);
         playerSet.add(player);
         match.addPlayer(player);
-        assertEquals(playerSet, match.getPlayers());
+        assertEquals(playerSet, match.getAllPlayers());
         assertEquals(1, match.getPlayersCurrentCount());
         assertEquals(false, match.isNumReached());
 
         //AGGIUNGO LO STESSO GIOCATORE GIA' INSERITO (non dovrebbe cambiare nulla)
         match.addPlayer(player);
-        assertEquals(playerSet, match.getPlayers());
+        assertEquals(playerSet, match.getAllPlayers());
         assertEquals(1, match.getPlayersCurrentCount());
         assertEquals(false, match.isNumReached());
 
@@ -77,14 +76,14 @@ class MatchTest {
         player = new Player(2,"Leo", match);
         playerSet.add(player);
         match.addPlayer(player);
-        assertEquals(playerSet, match.getPlayers());
+        assertEquals(playerSet, match.getAllPlayers());
         assertEquals(2, match.getPlayersCurrentCount());
         assertEquals(true, match.isNumReached());
 
         //aggiungo un terzo giocatore. non dovrebbe cambiare nulla
         player = new Player(2,"Dario", match);
         match.addPlayer(player);
-        assertEquals(playerSet, match.getPlayers());
+        assertEquals(playerSet, match.getAllPlayers());
         assertEquals(2, match.getPlayersCurrentCount());
         assertEquals(true, match.isNumReached());
 
@@ -99,7 +98,7 @@ class MatchTest {
         player = new Player(24,"Dario", match);
         playerSet.add(player);
         match.addPlayer(player);
-        assertEquals(playerSet, match.getPlayers());
+        assertEquals(playerSet, match.getAllPlayers());
         assertEquals(3, match.getPlayersCurrentCount());
         assertEquals(true, match.isNumReached());
 

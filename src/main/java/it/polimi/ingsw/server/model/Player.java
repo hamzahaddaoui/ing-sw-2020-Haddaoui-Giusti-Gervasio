@@ -140,6 +140,14 @@ public class Player{
         this.playerState = PlayerState.IDLE;
     }
 
+    public void win(){
+        playerState = PlayerState.WIN;
+    }
+
+    public void lost(){
+        playerState = PlayerState.LOST;
+    }
+
     public PlayerState nextPlayerState() {
         playerState = playerState.next();
         return playerState;
