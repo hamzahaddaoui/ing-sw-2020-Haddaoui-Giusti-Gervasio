@@ -104,7 +104,6 @@ public class Position {
     public CardinalDirection checkMutualPosition(Position position){
         if (!this.neighbourPositions().contains(position))
             return null;
-
         Position offset = new Position(position.getX() - this.getX(), position.getY() - this.getY());
         return CardinalDirection.valueOf(Math.toDegrees(Math.atan2(offset.getY(),offset.getX())));
     }
@@ -120,12 +119,6 @@ public class Position {
         if (position == null || getClass() != position.getClass()) return false;
         pos = (Position) position;
         return x == pos.x && y == pos.y;
-    }
-
-    public boolean equalsHeight(Position position) {
-        if (this == position) return true;
-        if (position == null || getClass() != position.getClass()) return false;
-        return z == position.z;
     }
 
     @Override

@@ -5,6 +5,8 @@ import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.Position;
+
 import java.util.Collections;
 import static it.polimi.ingsw.server.Server.getClientHandler;
 import static it.polimi.ingsw.server.model.GameModel.*;
@@ -71,6 +73,11 @@ public abstract class State extends Controller{
             startMatch(matchID);
             nextMatchState(matchID);
         }
+    }
+
+    protected boolean checkPosition(Position position){
+        return (position.getX() > 0 && position.getX() < 4
+                && position.getY() > 0 && position.getY() < 4);
     }
 
     protected void clientHandlerUpdate(Integer matchID, Integer playerID){

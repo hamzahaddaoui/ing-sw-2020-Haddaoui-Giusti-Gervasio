@@ -12,6 +12,44 @@ class PositionTest {
     Position position;
 
     @Test
+    void testGeneral(){
+        position = new Position (2,3,4);
+        assertEquals(position.getX(), 2);
+        assertEquals(position.getY(), 3);
+        assertEquals(position.getZ(), 4);
+
+        position.set(5,5);
+        assertEquals(position.getX(), 5);
+        assertEquals(position.getY(), 5);
+        assertEquals(position.getZ(), 4);
+
+        position.set(5,5,7);
+        assertEquals(position.getX(), 5);
+        assertEquals(position.getY(), 5);
+        assertEquals(position.getZ(), 7);
+
+        position.setX(3);
+        assertEquals(position.getX(), 3);
+        assertEquals(position.getY(), 5);
+        assertEquals(position.getZ(), 7);
+
+
+        position.setY(3);
+        assertEquals(position.getX(), 3);
+        assertEquals(position.getY(), 3);
+        assertEquals(position.getZ(), 7);
+
+        position.setZ(3);
+        assertEquals(position.getX(), 3);
+        assertEquals(position.getY(), 3);
+        assertEquals(position.getZ(), 3);
+
+
+
+    }
+
+
+    @Test
     void testNeighbourPositionsCentered() {
         Set<Position> returnValue = new HashSet<>();
         position= new Position(3,3);
@@ -84,5 +122,19 @@ class PositionTest {
     void testMutualPositionNotNeighbouring() {
         position= new Position(3,3);
         assertEquals(null, position.checkMutualPosition(new Position(1,1)));
+    }
+
+    @Test
+    void testTranslateCardinalDirectionToPosition() {
+        position= new Position(3,3);
+
+        assertEquals(new Position(2,3), position.translateCardinalDirectionToPosition(CardinalDirection.NORTH));
+        assertEquals(new Position(4,3), position.translateCardinalDirectionToPosition(CardinalDirection.SOUTH));
+        assertEquals(new Position(3,2), position.translateCardinalDirectionToPosition(CardinalDirection.WEST));
+        assertEquals(new Position(3,4), position.translateCardinalDirectionToPosition(CardinalDirection.EAST));
+        assertEquals(new Position(2,2), position.translateCardinalDirectionToPosition(CardinalDirection.NORTHWEST));
+        assertEquals(new Position(2,4), position.translateCardinalDirectionToPosition(CardinalDirection.NORTHEAST));
+        assertEquals(new Position(4,2), position.translateCardinalDirectionToPosition(CardinalDirection.SOUTHWEST));
+        assertEquals(new Position(4,4), position.translateCardinalDirectionToPosition(CardinalDirection.SOUTHEAST));
     }
 }

@@ -268,7 +268,6 @@ public class GameModel extends Observable<MessageEvent> {
         return translateMatchID(matchID).getCurrentPlayer().hasPlacedWorkers();
     }
 
-
     /*
     -------------------------------------------------------------------------------
     -----------------------GAME MANAGEMENT-----------------------------------------
@@ -337,6 +336,15 @@ public class GameModel extends Observable<MessageEvent> {
                 .getCards()
                 .stream()
                 .map(Enum::toString)
+                .collect(Collectors.toSet());
+    }
+
+    public static Set<Position> getWorkersPosition(Integer matchID){
+        return translateMatchID(matchID)
+                .getCurrentPlayer()
+                .getWorkers()
+                .stream()
+                .map(Worker::getPosition)
                 .collect(Collectors.toSet());
     }
 

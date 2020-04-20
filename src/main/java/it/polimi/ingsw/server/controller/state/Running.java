@@ -4,23 +4,45 @@ import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
+import it.polimi.ingsw.utilities.Position;
+
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class Running extends State{
     @Override
     public void handleRequest(MessageEvent messageEvent){
         Integer matchID = messageEvent.getMatchID();
-        if (isTerminateTurnAvailable(matchID) && messageEvent.getEndTurn() != null) {
-            setHasFinished(matchID);
+        if (messageEvent.getEndTurn()) {
+            if (isTerminateTurnAvailable(matchID)){
+                setHasFinished(matchID);
+            }
+            else {
+                notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), messageEvent.getPlayerID()), matchID)));
+            }
         }
 
-        else if (isSpecialFunctionAvailable(matchID) && messageEvent.getSpecialFunction() != null) {
-            setUnsetSpecialFunction(matchID, messageEvent.getSpecialFunction());
+        else if (messageEvent.getSpecialFunction()) {
+            if (isSpecialFunctionAvailable(matchID)){
+                setUnsetSpecialFunction(matchID, messageEvent.getSpecialFunction());
+            }
+            else{
+                notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), messageEvent.getPlayerID()),matchID)));
+            }
         }
 
         else{
-            playerTurn(matchID, messageEvent.getStartPosition(), messageEvent.getEndPosition());
+            Position startPosition = messageEvent.getStartPosition();
+            Position endPosition = messageEvent.getEndPosition();
 
+            if (checkPosition(startPosition) && checkPosition(endPosition)
+                && getWorkersAvailableCells(matchID).containsKey(startPosition)
+                && getWorkersAvailableCells(matchID).get(startPosition).contains(endPosition)){
+
+                playerTurn(matchID, startPosition, endPosition);
+            }
+            else{
+                notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), messageEvent.getPlayerID()), matchID)));
+            }
         }
     }
 
