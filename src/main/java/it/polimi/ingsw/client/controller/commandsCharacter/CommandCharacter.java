@@ -1,10 +1,11 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
 public interface CommandCharacter {
-    void executeNumberStatus();
+    boolean executeNumberStatus();
     void executePlacingWorkerStatus();
     void executeRunningStatus();
     void executeGodCardsStatus();
     void executeSpecialCommandsStatus();
+    boolean executeSelectingGodCardsStatus();
     void executeWaitingStatus();
 }

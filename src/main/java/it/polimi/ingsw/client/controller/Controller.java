@@ -14,48 +14,54 @@ public class Controller extends Observable<String> implements Observer<Object> {
     private ControlState controlState = new StartingStatus();
     private PlayerState playerState;
     private MatchState matchState;
-    private MessageEvent message;
+    private static MessageEvent message;
     private boolean messageReady;
 
     @Override
     public void update(Object viewObject) {
 
-        messageReady = false;
-        message = null;
+        this.messageReady = false;
+        this.message = null;
 
         PlayerState newPlayerState = View.getPlayerState();
         MatchState newMatchState = View.getMatchState();
 
-        if (newPlayerState != playerState || newMatchState != matchState) {
-            playerState = newPlayerState;
-            matchState = newMatchState;
+        if (newPlayerState != this.playerState || newMatchState != this.matchState) {
+            this.playerState = newPlayerState;
+            this.matchState = newMatchState;
             nextState();
         }
 
         messageReady = controlState.doSomething(message, viewObject);
 
         if (messageReady) {
-            message.setMatchID(View.getMatchID());
-            message.setPlayerID(View.getPlayerID());
+            this.message.setMatchID(View.getMatchID());
+            this.message.setPlayerID(View.getPlayerID());
             String json = new Gson().toJson(message);
             notify(json);
         }
+
+        //dopo l'invio reset degli attributi del messaggio a null
     }
 
     public void nextState(){
-        controlState.nextState(this);
+        this.controlState.nextState(this);
     }
 
     public MatchState getMatchState() {
-        return matchState;
+        return this.matchState;
     }
 
     public PlayerState getPlayerState() {
-        return playerState;
+        return this.playerState;
     }
 
     public void setState(ControlState ctrlState){
         this.controlState=ctrlState;
+    }
+
+    public static MessageEvent getMessage(){
+        return message;
     }
 
     /*MessageEvent message; //

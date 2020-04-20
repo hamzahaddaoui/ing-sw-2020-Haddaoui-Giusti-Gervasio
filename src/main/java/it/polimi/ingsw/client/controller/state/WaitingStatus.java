@@ -16,11 +16,11 @@ public class WaitingStatus extends ControlState {
     @Override
     public void nextState(Controller ctrl) {
         if (ctrl.getMatchState() == MatchState.SELECTING_GOD_CARDS && ctrl.getPlayerState() == PlayerState.ACTIVE)
-            ctrl.setState(new Selecting_God_Cards_Status());
+            ctrl.setState(new SelectingGodCardsStatus());
         else if (ctrl.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND && ctrl.getPlayerState() == PlayerState.ACTIVE)
             ctrl.setState(new Selecting_Special_Command_Status());
         else if (ctrl.getMatchState() == MatchState.PLACING_WORKERS && ctrl.getPlayerState() == PlayerState.ACTIVE)
-            ctrl.setState(new Placing_Workers_Status());
+            ctrl.setState(new PlacingWorkersStatus());
         else if (ctrl.getMatchState() == MatchState.RUNNING && ctrl.getPlayerState() == PlayerState.ACTIVE)
             ctrl.setState(new Running_Status());
         else ctrl.setState(this);

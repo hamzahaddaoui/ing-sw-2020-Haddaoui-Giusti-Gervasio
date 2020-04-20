@@ -19,8 +19,8 @@ public class MessageEvent {
     //user to controller
     private String          nickname;
     private Integer         playersNum;
-    private String          godCard;
-    private Set<String>     godCards;
+    private String          godCard; //Carta Selzeionata in fase di SelectionSpecialFunction del controller
+    private Set<String>     godCards; //le Carte selezionate in fase di SelectingGodCards del controller
 
 
     private Set<Position>   initializedPositions;   //le 2 posizioni in cui inizializzo i workers

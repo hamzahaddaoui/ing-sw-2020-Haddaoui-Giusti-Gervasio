@@ -7,19 +7,20 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
-public class Selecting_God_Cards_Status extends ControlState {
+public class SelectingGodCardsStatus extends ControlState {
 
     @Override
     public boolean doSomething(MessageEvent messageEvent, Object viewObject) {
 
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
-        commandCharacter.executeGodCardsStatus();
-
-        if (View.getGodCards().size() == View.getPlayersNum()) {
-            messageEvent.setGodCards(View.getGodCards());
+        if(commandCharacter.executeSelectingGodCardsStatus())
             return true;
-        }
+
+        //A scorre in alto il set
+        //D scorre in basso il set
+        //Enter accetta la GodCardSelezionata
+
         else return false;
     }
 
@@ -27,6 +28,6 @@ public class Selecting_God_Cards_Status extends ControlState {
     public void nextState(Controller ctrl) {
         if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND)
             ctrl.setState(new Selecting_Special_Command_Status());
-        else ctrl.setState(new Do_Nothing_Status());
+        else ctrl.setState(new WaitingStatus());
     }
 }

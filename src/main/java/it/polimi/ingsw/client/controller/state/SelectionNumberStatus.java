@@ -7,22 +7,27 @@ import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.MessageEvent;
 
 
-public class Selection_Number_Status extends ControlState {
+public class SelectionNumberStatus extends ControlState {
 
     @Override
     public boolean doSomething(MessageEvent messageEvent, Object viewObject) {
+        boolean result;
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
-        commandCharacter.executeNumberStatus();
-        return true;
+
+        result = commandCharacter.executeNumberStatus();
+
+        if(result)
+            return true;
+        else return false;
     }
 
     @Override
     public void nextState(Controller ctrl) {
         if(ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_GOD_CARDS) {
-            ctrl.setState(new Selecting_God_Cards_Status());
+            ctrl.setState(new SelectingGodCardsStatus());
         }
-        else ctrl.setState(new Do_Nothing_Status());
+        else ctrl.setState(new WaitingStatus());
     }
 
 }

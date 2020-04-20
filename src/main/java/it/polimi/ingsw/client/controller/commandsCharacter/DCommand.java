@@ -1,11 +1,13 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
+import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 
 public class DCommand implements CommandCharacter {
     @Override
-    public void executeNumberStatus() {
-
+    public boolean executeNumberStatus() {
+        View.playersNumChoiceIncrement();
+        return false;
     }
 
     @Override
@@ -26,6 +28,11 @@ public class DCommand implements CommandCharacter {
     @Override
     public void executeSpecialCommandsStatus() {
 
+    }
+
+    @Override
+    public boolean executeSelectingGodCardsStatus() {
+        return false;
     }
 
     @Override

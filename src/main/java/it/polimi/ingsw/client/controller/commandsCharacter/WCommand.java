@@ -5,8 +5,10 @@ import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 public class WCommand implements CommandCharacter {
 
     @Override
-    public void executeNumberStatus() {
+    public boolean executeNumberStatus() {
 
+        //messaggio View: "non fa nulla"
+        return false;
     }
 
     @Override
@@ -27,6 +29,11 @@ public class WCommand implements CommandCharacter {
     @Override
     public void executeSpecialCommandsStatus() {
 
+    }
+
+    @Override
+    public boolean executeSelectingGodCardsStatus() {
+        return false;
     }
 
     @Override

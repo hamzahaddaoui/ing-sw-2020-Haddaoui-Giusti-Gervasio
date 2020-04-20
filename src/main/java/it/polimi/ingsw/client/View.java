@@ -9,6 +9,7 @@ import it.polimi.ingsw.utilities.Position;
 import java.io.DataInputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,12 +17,13 @@ public class View extends Observable<String> implements Runnable, Observer{
     private InputStream inputStream;
     private PrintStream outputStream;
 
+    private static ArrayList<Integer> playersNumChoice;
     private static Integer matchID;
     private static Integer playerID;
     private static PlayerState playerState;
     private static MatchState matchState;
     private static TurnState turnState;
-    private static Set<String> godCards;
+    private static Set<String> godCards; //sono le carte che vengono inserite in fase di SelectingGodCardsStatus
     private static Integer playersNum;
     private static String godCard;
     private static Map<Position, Cell> billboardStatus;
@@ -71,6 +73,8 @@ public class View extends Observable<String> implements Runnable, Observer{
 
             notify(vcEvent);
         }*/
+        playersNumChoice.add(2);
+        playersNumChoice.add(3);
 
      while(true) {
          outputStream.println("Insert a nickname: ");
@@ -102,6 +106,20 @@ public class View extends Observable<String> implements Runnable, Observer{
         return workersAvailableCells.containsKey(position);
     }
 
-    private void setInputState() {
+    public static Integer setPlayersNumChoice(int value){
+        playersNum = playersNumChoice.get(value);
+        return playersNum;
+    }
+
+    public static void playersNumChoiceIncrement(){
+        playersNum = playersNumChoice.get((playersNumChoice.indexOf(playersNum) + 1) % playersNumChoice.size());
+    }
+
+    public static Integer getPlayersNumChoice(){
+        return playersNum;
+    }
+
+    public static void addGodCard(String godCard) {
+        View.godCards.add(godCard);
     }
 }

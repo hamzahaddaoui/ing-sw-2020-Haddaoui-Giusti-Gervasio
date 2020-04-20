@@ -6,13 +6,14 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
-public class Placing_Workers_Status extends ControlState {
+public class PlacingWorkersStatus extends ControlState {
 
     @Override
     public boolean doSomething(MessageEvent messageEvent, Object viewObject) {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
         commandCharacter.executePlacingWorkerStatus();
+
         return true;
     }
 

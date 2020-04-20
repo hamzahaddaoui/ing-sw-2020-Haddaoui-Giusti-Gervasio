@@ -1,11 +1,14 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
+import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 
 public class SCommand implements CommandCharacter {
     @Override
-    public void executeNumberStatus() {
-
+    public boolean executeNumberStatus() {
+        //messaggio View: "non fa nulla"
+        return false;
     }
 
     @Override
@@ -26,6 +29,11 @@ public class SCommand implements CommandCharacter {
     @Override
     public void executeSpecialCommandsStatus() {
 
+    }
+
+    @Override
+    public boolean executeSelectingGodCardsStatus() {
+        return false;
     }
 
     @Override
