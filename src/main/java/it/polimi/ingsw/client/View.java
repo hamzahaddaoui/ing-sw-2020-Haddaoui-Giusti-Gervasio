@@ -12,7 +12,7 @@ import java.io.PrintStream;
 import java.util.Map;
 import java.util.Set;
 
-public class View extends Observable<String> implements Runnable, Observer{
+public class View extends Observable implements Runnable, Observer{
     private InputStream inputStream;
     private PrintStream outputStream;
 

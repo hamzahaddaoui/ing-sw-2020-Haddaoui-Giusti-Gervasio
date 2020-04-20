@@ -7,7 +7,8 @@ import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class PlacingWorkers extends State {
     @Override
-    public void handleRequest(Integer matchID, MessageEvent messageEvent){
+    public void handleRequest(MessageEvent messageEvent){
+        Integer matchID = messageEvent.getMatchID();
         placeWorker(matchID, messageEvent.getEndPosition());
         if (hasPlacedWorkers(matchID)) {
             nextMatchTurn(matchID);

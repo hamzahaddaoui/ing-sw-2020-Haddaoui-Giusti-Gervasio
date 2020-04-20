@@ -10,7 +10,8 @@ public class FirstPlayerAccess extends State {
 
 
     @Override
-    public void handleRequest(Integer matchID, MessageEvent messageEvent){
+    public void handleRequest(MessageEvent messageEvent){
+        Integer matchID = null;
         MessageEvent message;
         int playersWaiting = getPlayersWaitingListSize();
         int notInitMatches = getNotInitMatchesListSize();
@@ -49,10 +50,15 @@ public class FirstPlayerAccess extends State {
             notify(message);
         }
 
-        clientHandlerUpdate(playerID, matchID);
+        clientHandlerUpdate(matchID, playerID);
     }
 
     @Override
     public void viewNotify(Integer matchID){
+    }
+
+    @Override
+    public void exit(Integer matchID){
+
     }
 }

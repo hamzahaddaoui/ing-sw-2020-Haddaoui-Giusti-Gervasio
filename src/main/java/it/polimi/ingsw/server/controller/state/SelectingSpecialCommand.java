@@ -7,7 +7,8 @@ import static it.polimi.ingsw.server.model.GameModel.nextMatchState;
 
 public class SelectingSpecialCommand extends State {
     @Override
-    public void handleRequest(Integer matchID, MessageEvent messageEvent){
+    public void handleRequest(MessageEvent messageEvent){
+        Integer matchID = messageEvent.getMatchID();
         selectPlayerCard(matchID, messageEvent.getGodCard());
         nextMatchTurn(matchID);
         if (hasSelectedCard(matchID)) {

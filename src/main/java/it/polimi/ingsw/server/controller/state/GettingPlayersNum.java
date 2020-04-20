@@ -5,7 +5,8 @@ import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class GettingPlayersNum extends State{
     @Override
-    public void handleRequest(Integer matchID, MessageEvent messageEvent){
+    public void handleRequest(MessageEvent messageEvent){
+        Integer matchID = messageEvent.getMatchID();
         int playersNum = messageEvent.getPlayersNum();
         int playerID = messageEvent.getPlayerID();
         if (!(playersNum == 2 || playersNum == 3)){
@@ -18,7 +19,7 @@ public class GettingPlayersNum extends State{
         while ((getPlayersWaitingListSize() != 0) && !isNumReached(matchID)) {
             int opponentID = unstackPlayer();
             addPlayerToMatch(matchID, opponentID);
-            clientHandlerUpdate(opponentID, matchID);
+            clientHandlerUpdate(matchID, opponentID);
 
         }
 

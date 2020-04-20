@@ -162,6 +162,7 @@ public class Player{
     }
 
     public void setHasFinished() {
+        turnState = TurnState.IDLE;
         playerState = PlayerState.IDLE;
     }
 

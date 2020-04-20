@@ -5,7 +5,8 @@ import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class SelectingGodCards extends State {
     @Override
-    public void handleRequest(Integer matchID, MessageEvent messageEvent){
+    public void handleRequest(MessageEvent messageEvent){
+        Integer matchID = messageEvent.getMatchID();
         setMatchCards(matchID, messageEvent.getGodCards());
         nextMatchState(matchID);
         nextMatchTurn(matchID);
@@ -18,5 +19,10 @@ public class SelectingGodCards extends State {
         getMatchPlayers(matchID)
                 .keySet()
                 .forEach(player -> notify(basicPlayerConfig(message, player)));
+    }
+
+    @Override
+    public void exit(Integer matchID){
+
     }
 }

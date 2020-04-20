@@ -1,13 +1,15 @@
 package it.polimi.ingsw.server.controller.state;
 
+import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
-
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class Running extends State{
     @Override
-    public void handleRequest(Integer matchID, MessageEvent messageEvent){
+    public void handleRequest(MessageEvent messageEvent){
+        Integer matchID = messageEvent.getMatchID();
         if (isTerminateTurnAvailable(matchID) && messageEvent.getEndTurn() != null) {
             setHasFinished(matchID);
         }
@@ -33,19 +35,19 @@ public class Running extends State{
                         message.setSpecialFunctionAvailable(isSpecialFunctionAvailable(matchID));
                         message.setTerminateTurnAvailable(isTerminateTurnAvailable(matchID));
                     }
-                    if (isMatchFinished(matchID)){
-                        getMatchPlayers(matchID)
-                                .keySet()
-                                .stream()
-                                .filter(playerID -> getPlayerState(matchID, playerID) == PlayerState.WIN)
-                                .findAny()
-                                .ifPresent(message::setWinner);
-                    }
                     notify(message);
                 });
-
-        if (isMatchFinished(matchID)) {
+        if (getMatchState(matchID) == MatchState.FINISHED) {
+            getMatchPlayers(matchID).keySet().forEach(this::clientHandlerReset);
+            getMatchPlayers(matchID).keySet().forEach(Server::removeClientSocket);
             deleteMatch(matchID);
         }
+
+        else if (getMatchLosers(matchID).size()!=0) {
+            getMatchLosers(matchID).keySet().forEach(this::clientHandlerReset);
+            getMatchLosers(matchID).keySet().forEach(Server::removeClientSocket);
+            removeLosers(matchID);
+        }
     }
+
 }

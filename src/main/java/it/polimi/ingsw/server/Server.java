@@ -13,10 +13,10 @@ import java.util.concurrent.Executors;
 
 public class Server {
   public final static int SOCKET_PORT = 12345;
+  public final static int SOCKET_TIMEOUT = 5000;
   static ExecutorService executor = Executors.newCachedThreadPool();
   static ServerSocket socket;
   static Controller controller = new Controller();
-  static GameModel model = new GameModel();
 
   static Map<Integer, ClientHandler> clientSocket = new HashMap<>(); //playerID - socket
 
@@ -46,12 +46,11 @@ public class Server {
     while (true) {
       try {
         Socket client = socket.accept();
+        client.setSoTimeout(SOCKET_TIMEOUT);
         clientHandler = new ClientHandler(client);
 
         clientHandler.addObserver(controller);  //controller osserva clientHandler (comunicazioni CLIENT_CONTROLLER-SERVER_CONTROLLER)
-        //model.addObserver(clientHandler);       //clientHandler osserva Model (comunicazioni MODEL-VIEW)
         controller.addObserver(clientHandler);  //clientHandler osserva controller (comunicazioni CONTROLLER-VIEW)
-        //clientHandler.addObserver(model);       //model osserva il clientHandler (Comunicazioni VIEW_MODEL)
 
         executor.submit(clientHandler);
 

@@ -4,10 +4,13 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static it.polimi.ingsw.utilities.TurnState.*;
 
 public class HephaestusDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Hephaestus;
 
     private Position firstBuildPosition;
 
@@ -18,18 +21,20 @@ public class HephaestusDecorator extends CommandsDecorator {
     @Override
     public TurnState nextState(Player player) {
         switch (player.getTurnState()) {
-            case PLACING:
-                player.setHasFinished(true);
             case IDLE:
+                firstBuildPosition = null;
                 return MOVE;
             case MOVE:
                 return BUILD;
             case BUILD:
-                player.setHasFinished(true);
-                if (player.getSpecialFunction() && firstBuildPosition == null)
+                if (firstBuildPosition == null) {
+                    player.setTerminateTurnAvailable();
                     return BUILD;
-                else
+                }
+                else{
+                    player.setHasFinished();
                     return IDLE;
+                }
             default:
                 return IDLE;
         }
@@ -37,17 +42,57 @@ public class HephaestusDecorator extends CommandsDecorator {
 
     @Override
     public void build(Position position, Player player) {
-        //super.build(position, player);
+        super.build(firstBuildPosition, player);
         if (firstBuildPosition == null){
-            super.build(position, player);
-            firstBuildPosition = position;
             position.setZ(player.getMatch().getBillboard().getTowerHeight(position));
+            firstBuildPosition = position;
         }
-        else{
-            if (player.getSpecialFunction() && firstBuildPosition.getZ() < 3)
-                super.build(firstBuildPosition, player);
-        }
+    }
 
+
+    /**
+     * method that show the list of cells that are available for the standard building action of the player
+     *
+     * @param player  is the current player
+     * @return  the list of Position where the worker can build on
+     */
+    @Override
+    public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
+        try{
+            Billboard billboard=player.getMatch().getBillboard();
+
+            if (firstBuildPosition == null){
+                return worker
+                        .getPosition()
+                        .neighbourPositions()
+                        .stream()
+                        .filter(position -> billboard.getPlayer(position) == -1)
+                        .filter(position -> ! billboard.getDome(position))
+                        .collect(Collectors.toSet());
+            }
+            else{
+                if (firstBuildPosition.getZ() < 3)
+                    return Collections.singleton(firstBuildPosition);
+                else
+                    return null;
+            }
+
+        }
+        catch(Exception ex){
+            throw new NullPointerException();
+        }
+    }
+
+    @Override
+    public boolean losingCondition(Player player){
+        if (firstBuildPosition != null)
+            return false;
+        else
+            return player
+                    .getWorkers()
+                    .stream()
+                    .anyMatch(worker -> worker
+                            .canDoSomething(player.getTurnState()));
     }
 
 

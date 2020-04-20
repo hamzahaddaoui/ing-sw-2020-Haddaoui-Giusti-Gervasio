@@ -23,8 +23,8 @@ public class Match {
     private MatchState currentState;
 
     private boolean started;
-    private boolean finished;
     private boolean moveUpActive = true;
+    private Player winner;
 
     public Match(int matchID, Player matchMaster) {
         this.ID = matchID;
@@ -53,6 +53,10 @@ public class Match {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public List<Player> getLosers(){
+        return losers;
     }
 
     public List<Player> getAllPlayers() {
@@ -89,7 +93,9 @@ public class Match {
         return moveUpActive;
     }
 
-
+    public void resetLosers(){
+        losers.clear();
+    }
 
     public void setPlayersNum(int playersNum){
         this.playersNum = playersNum;
@@ -104,6 +110,11 @@ public class Match {
         player.lost();
         losers.add(player);
         players.remove(player);
+
+        playersCurrentCount--;
+        if(currentPlayer == player)
+            nextTurn();
+
         billboard
                 .getCells()
                 .keySet()
@@ -111,27 +122,33 @@ public class Match {
                 .filter(position -> billboard.getPlayer(position) == player.getID())
                 .forEach(billboard::resetPlayer);
 
-        playersCurrentCount--;
+
+
+        if (playersCurrentCount == 1){
+            currentPlayer.win();
+        }
     }
 
     public void checkPlayers(){
-        players.stream()
-                .filter(player -> player.getPlayerState() == PlayerState.WIN)
-                .findAny()
-                .ifPresent(winner -> players.stream()
-                .filter(player -> player != winner)
-                .forEach(this::removePlayer));
-
         players.stream()
                 .filter(player -> player.getPlayerState() == PlayerState.LOST)
                 .findAny()
                 .ifPresent(this::removePlayer);
 
-        if(playersCurrentCount == 1){
-            finished = true;
+        Optional<Player> winPlayer = players.stream()
+                .filter(player -> player.getPlayerState() == PlayerState.WIN)
+                .findAny();
+
+        if (winPlayer.isPresent()){
+            winner = winPlayer.get();
+            currentState = MatchState.FINISHED;
+            players.stream()
+                    .filter(player -> player != winner)
+                    .forEach(this::removePlayer);
+
         }
 
-        else if (!players.contains(currentPlayer) || currentPlayer.hasFinished()){
+        else if (currentPlayer.hasFinished()){
             nextTurn();
         }
     }
@@ -163,7 +180,7 @@ public class Match {
         this.moveUpActive = moveUpActive;
     }
 
-    public boolean isFinished(){
-        return finished;
+    public Player getWinner(){
+        return winner;
     }
 }

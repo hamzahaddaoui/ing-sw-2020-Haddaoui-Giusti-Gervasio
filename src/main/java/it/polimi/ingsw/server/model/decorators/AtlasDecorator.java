@@ -2,9 +2,11 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.TurnState;
+
+import static it.polimi.ingsw.utilities.TurnState.*;
 
 public class AtlasDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Atlas;
 
     /**
      * decorate the object Command with Atlas's special power
@@ -14,6 +16,22 @@ public class AtlasDecorator extends CommandsDecorator {
     public AtlasDecorator(Commands commands){
         this.commands=commands;
     }
+
+    @Override
+    public TurnState nextState(Player player) {
+        switch(player.getTurnState()){
+            case IDLE:
+                return MOVE;
+            case MOVE:
+                player.setUnsetSpecialFunctionAvailable(true);
+                return BUILD;
+            case BUILD:
+                player.setHasFinished();
+                return IDLE;
+        }
+        return null;
+    }
+
 
     /**
      * method that allows the standard building block action
