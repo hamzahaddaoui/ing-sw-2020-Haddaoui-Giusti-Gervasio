@@ -10,8 +10,8 @@ import it.polimi.ingsw.utilities.MessageEvent;
 public class StartingStatus extends ControlState {
 
     @Override
-    public boolean doSomething(MessageEvent messageEvent, Object viewObject) {
-        messageEvent.setNickname((String) viewObject);
+    public boolean processingMessage(Object viewObject) {
+        Controller.getMessage().setNickname((String) viewObject);
         return true;
     }
 
@@ -19,7 +19,7 @@ public class StartingStatus extends ControlState {
     public void nextState(Controller ctrl) {
         if(ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.GETTING_PLAYERS_NUM) {
             ctrl.setState(new SelectionNumberStatus());
-            View.setPlayersNumChoice(0);
+            ctrl.setState(new SelectionNumberStatus());
         }
         //se non scegli il plasyersNum allora non hai diritto di parola finchè non vengono scelte le carte speciali
         else ctrl.setState(new WaitingStatus());

@@ -10,7 +10,7 @@ import it.polimi.ingsw.utilities.PlayerState;
 public class SelectingGodCardsStatus extends ControlState {
 
     @Override
-    public boolean doSomething(MessageEvent messageEvent, Object viewObject) {
+    public boolean processingMessage(Object viewObject) {
 
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
@@ -27,7 +27,7 @@ public class SelectingGodCardsStatus extends ControlState {
     @Override
     public void nextState(Controller ctrl) {
         if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND)
-            ctrl.setState(new Selecting_Special_Command_Status());
+            ctrl.setState(new SelectingSpecialCommandStatus());
         else ctrl.setState(new WaitingStatus());
     }
 }

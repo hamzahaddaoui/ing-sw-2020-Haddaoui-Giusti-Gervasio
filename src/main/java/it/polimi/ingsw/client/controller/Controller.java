@@ -15,13 +15,12 @@ public class Controller extends Observable<String> implements Observer<Object> {
     private PlayerState playerState;
     private MatchState matchState;
     private static MessageEvent message;
-    private boolean messageReady;
 
     @Override
     public void update(Object viewObject) {
 
-        this.messageReady = false;
-        this.message = null;
+        boolean messageReady = false;
+        message = null;
 
         PlayerState newPlayerState = View.getPlayerState();
         MatchState newMatchState = View.getMatchState();
@@ -32,11 +31,13 @@ public class Controller extends Observable<String> implements Observer<Object> {
             nextState();
         }
 
-        messageReady = controlState.doSomething(message, viewObject);
+        messageReady = controlState.processingMessage(viewObject);
 
         if (messageReady) {
-            this.message.setMatchID(View.getMatchID());
-            this.message.setPlayerID(View.getPlayerID());
+            if (playerState != null)
+                message.setPlayerID(View.getPlayerID());
+            if (matchState != null)
+                message.setMatchID(View.getMatchID());
             String json = new Gson().toJson(message);
             notify(json);
         }

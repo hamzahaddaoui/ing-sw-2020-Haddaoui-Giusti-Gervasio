@@ -1,8 +1,10 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
-
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
+import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.utilities.MessageEvent;
 
 public class FCommand implements CommandCharacter {
+
     @Override
     public boolean executeNumberStatus() {
 
@@ -15,19 +17,27 @@ public class FCommand implements CommandCharacter {
 
     }
 
-    @Override
-    public void executeRunningStatus() {
+    /**
+     * Method that recognize if the player wants to set the special function.
+     * <p>
+     * If the View's special function available boolean is true, the method sets the message's special function boolean as true.
+     *
+     *
+     * @return              true if you can send the message, false otherwise
+     */
 
+    @Override
+    public boolean executeRunningStatus() {
+        if (View.isSpecialFunctionAvailable()) {
+            Controller.getMessage().setSpecialFunction(true);
+            return true;
+        }
+        else return false;
     }
 
     @Override
-    public void executeGodCardsStatus() {
-
-    }
-
-    @Override
-    public void executeSpecialCommandsStatus() {
-
+    public boolean executeSpecialCommandsStatus() {
+        return false;
     }
 
     @Override

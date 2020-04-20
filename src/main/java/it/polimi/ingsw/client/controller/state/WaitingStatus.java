@@ -8,7 +8,7 @@ import it.polimi.ingsw.utilities.PlayerState;
 public class WaitingStatus extends ControlState {
 
     @Override
-    public boolean doSomething(MessageEvent messageEvent, Object viewObject) {
+    public boolean processingMessage(Object viewObject) {
         //forse faccio qualcosa nella view
         return false;
     }
@@ -18,11 +18,11 @@ public class WaitingStatus extends ControlState {
         if (ctrl.getMatchState() == MatchState.SELECTING_GOD_CARDS && ctrl.getPlayerState() == PlayerState.ACTIVE)
             ctrl.setState(new SelectingGodCardsStatus());
         else if (ctrl.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND && ctrl.getPlayerState() == PlayerState.ACTIVE)
-            ctrl.setState(new Selecting_Special_Command_Status());
+            ctrl.setState(new SelectingSpecialCommandStatus());
         else if (ctrl.getMatchState() == MatchState.PLACING_WORKERS && ctrl.getPlayerState() == PlayerState.ACTIVE)
             ctrl.setState(new PlacingWorkersStatus());
         else if (ctrl.getMatchState() == MatchState.RUNNING && ctrl.getPlayerState() == PlayerState.ACTIVE)
-            ctrl.setState(new Running_Status());
+            ctrl.setState(new RunningStatus());
         else ctrl.setState(this);
     }
 }

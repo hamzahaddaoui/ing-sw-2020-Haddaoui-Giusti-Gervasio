@@ -10,16 +10,13 @@ import it.polimi.ingsw.utilities.MessageEvent;
 public class SelectionNumberStatus extends ControlState {
 
     @Override
-    public boolean doSomething(MessageEvent messageEvent, Object viewObject) {
-        boolean result;
+    public boolean processingMessage(Object viewObject) {
+
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
-        result = commandCharacter.executeNumberStatus();
+        return commandCharacter.executeNumberStatus();
 
-        if(result)
-            return true;
-        else return false;
     }
 
     @Override

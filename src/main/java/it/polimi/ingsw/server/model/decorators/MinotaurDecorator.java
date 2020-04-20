@@ -119,11 +119,9 @@ public class MinotaurDecorator extends CommandsDecorator {
 
             Position nextPosition = setNextPosition(opponentPosition, myPosition);
 
-            if (nextPosition!=null &&
-                    !billboard.getDome(nextPosition) &&
-                    billboard.getPlayer(nextPosition) == -1)
-                return true;
-            else return false;
+        return nextPosition != null &&
+                !billboard.getDome(nextPosition) &&
+                billboard.getPlayer(nextPosition) == -1;
 
     }
 
