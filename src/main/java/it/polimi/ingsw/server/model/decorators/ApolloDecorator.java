@@ -88,7 +88,7 @@ public class ApolloDecorator extends CommandsDecorator {
 
         return player
                 .getMatch()
-                .getAllPlayers()
+                .getPlayers()
                 .stream()
                 .filter(player1 -> player1.getID()==billboard.getPlayer(position) )
                 .findAny()

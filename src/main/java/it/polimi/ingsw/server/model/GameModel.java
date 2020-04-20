@@ -67,7 +67,7 @@ public class GameModel extends Observable<MessageEvent> {
                        .stream()
                        .map(activeMatches::get)
                        .filter(Match::isStarted)
-                       .noneMatch(match -> match.getAllPlayers()
+                       .noneMatch(match -> match.getPlayers()
                                .stream().anyMatch(player -> player.getNickname().equals(nickname)));
     }
 

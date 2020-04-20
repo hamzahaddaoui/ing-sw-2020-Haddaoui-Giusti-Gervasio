@@ -203,10 +203,25 @@ public class Player{
     }
 
 
+
     public void setAvailableCells() {
         workers.forEach(worker -> {
             worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));
             worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));
         });
+    }
+
+
+    @Override
+    public String toString(){
+        return nickname;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (obj instanceof Player)
+            return (this.nickname.equals(((Player) obj).getNickname()));
+        else
+            return false;
     }
 }
