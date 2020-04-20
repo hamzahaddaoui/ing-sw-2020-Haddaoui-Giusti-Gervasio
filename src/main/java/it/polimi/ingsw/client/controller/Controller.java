@@ -14,48 +14,55 @@ public class Controller extends Observable<String> implements Observer<Object> {
     private ControlState controlState = new StartingStatus();
     private PlayerState playerState;
     private MatchState matchState;
-    private MessageEvent message;
-    private boolean messageReady;
+    private static MessageEvent message;
 
     @Override
     public void update(Object viewObject) {
 
-        messageReady = false;
+        boolean messageReady = false;
         message = null;
 
         PlayerState newPlayerState = View.getPlayerState();
         MatchState newMatchState = View.getMatchState();
 
-        if (newPlayerState != playerState || newMatchState != matchState) {
-            playerState = newPlayerState;
-            matchState = newMatchState;
+        if (newPlayerState != this.playerState || newMatchState != this.matchState) {
+            this.playerState = newPlayerState;
+            this.matchState = newMatchState;
             nextState();
         }
 
-        messageReady = controlState.doSomething(message, viewObject);
+        messageReady = controlState.processingMessage(viewObject);
 
         if (messageReady) {
-            message.setMatchID(View.getMatchID());
-            message.setPlayerID(View.getPlayerID());
+            if (playerState != null)
+                message.setPlayerID(View.getPlayerID());
+            if (matchState != null)
+                message.setMatchID(View.getMatchID());
             String json = new Gson().toJson(message);
             notify(json);
         }
+
+        //dopo l'invio reset degli attributi del messaggio a null
     }
 
     public void nextState(){
-        controlState.nextState(this);
+        this.controlState.nextState(this);
     }
 
     public MatchState getMatchState() {
-        return matchState;
+        return this.matchState;
     }
 
     public PlayerState getPlayerState() {
-        return playerState;
+        return this.playerState;
     }
 
     public void setState(ControlState ctrlState){
         this.controlState=ctrlState;
+    }
+
+    public static MessageEvent getMessage(){
+        return message;
     }
 
     /*MessageEvent message; //

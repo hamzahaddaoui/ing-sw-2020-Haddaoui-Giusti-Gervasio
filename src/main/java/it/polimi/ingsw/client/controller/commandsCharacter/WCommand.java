@@ -1,12 +1,16 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
+import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.utilities.CardinalDirection;
+import it.polimi.ingsw.utilities.MessageEvent;
 
 public class WCommand implements CommandCharacter {
 
     @Override
-    public void executeNumberStatus() {
+    public boolean executeNumberStatus() {
 
+        //messaggio View: "non fa nulla"
+        return false;
     }
 
     @Override
@@ -14,19 +18,35 @@ public class WCommand implements CommandCharacter {
 
     }
 
+    /**
+     * Method that changes the colored position of the View.
+     * <p>
+     * If the player has chosen the worker, the method changes the colored position to the current position's north one.
+     *
+     *
+     * @return              always false, you can't notify the message yet
+     */
+
     @Override
-    public void executeRunningStatus() {
+    public boolean executeRunningStatus() {
+
+        if (View.getStartingPosition()!=null)
+            View
+                    .setColoredPosition(View
+                            .getColoredPosition()
+                            .translateCardinalDirectionToPosition(CardinalDirection.NORTH));
+        return false;
 
     }
 
     @Override
-    public void executeGodCardsStatus() {
-
+    public boolean executeSpecialCommandsStatus() {
+        return false;
     }
 
     @Override
-    public void executeSpecialCommandsStatus() {
-
+    public boolean executeSelectingGodCardsStatus() {
+        return false;
     }
 
     @Override
