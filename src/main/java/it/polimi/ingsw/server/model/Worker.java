@@ -12,7 +12,7 @@ public class Worker{
     private Position position;
 
     private int heightVariation;
-    private Map<TurnState, Set<Position>> availableCells = new HashMap<>();
+    private final Map<TurnState, Set<Position>> availableCells = new HashMap<>();
 
     public Worker(Position position) {
         this.position = position;

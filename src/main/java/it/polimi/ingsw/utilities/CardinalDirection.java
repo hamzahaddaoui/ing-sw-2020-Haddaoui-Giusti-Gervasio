@@ -14,13 +14,7 @@ public enum CardinalDirection {
     SOUTHWEST(-45.0, 1, -1);
 
     double angle;
-    private static final Map<Double, CardinalDirection> map = new HashMap<Double, CardinalDirection>(){
-        {
-            for (CardinalDirection cardinalDirection : CardinalDirection.values()) {
-                map.put(cardinalDirection.angle, cardinalDirection);
-            }
-        }
-    };
+    private static final Map<Double, CardinalDirection> map = new HashMap<Double, CardinalDirection>();
     int xOffset;
     int yOffset;
 
@@ -30,16 +24,10 @@ public enum CardinalDirection {
         this.yOffset = yOffset;
     }
 
-    public double getAngle() {
-        return angle;
-    }
-
-    public int getxOffset(){
-        return xOffset;
-    }
-
-    public int getyOffset(){
-        return yOffset;
+    static {
+        for (CardinalDirection cardinalDirection : CardinalDirection.values()) {
+            map.put(cardinalDirection.angle, cardinalDirection);
+        }
     }
 
     public static CardinalDirection valueOf(double angle) {

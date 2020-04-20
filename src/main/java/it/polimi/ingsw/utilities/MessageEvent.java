@@ -8,12 +8,12 @@ import java.util.Set;
 public class MessageEvent {
     private transient ClientHandler clientHandler;
 
-    private String msgType;
+    private String info;
     //CONTROLLER_TO_CONTROLLER
     //CONTROLLER_TO_VIEW
 
-    private Integer         matchID;
-    private Integer         playerID;
+    private Integer                         matchID;
+    private Integer                         playerID;
 
 
     //user to controller
@@ -22,19 +22,20 @@ public class MessageEvent {
     private String          godCard; //Carta Selzeionata in fase di SelectionSpecialFunction del controller
     private Set<String>     godCards; //le Carte selezionate in fase di SelectingGodCards del controller
 
+    private Set<Position>                   initializedPositions;   //le 2 posizioni in cui inizializzo i workers
+    private Position                        startPosition;          //il worker che muovo
+    private Position                        endPosition;            //la posizione finale del worker che voglio muovere
 
-    private Set<Position>   initializedPositions;   //le 2 posizioni in cui inizializzo i workers
-    private Position        startPosition;          //il worker che muovo
-    private Position        endPosition;            //la posizione finale del worker che voglio muovere
+    private Boolean                         endTurn;                //se decido di terminare il turno
+    private Boolean                         specialFunction;        //se decido di attivare la funzione speciale
 
-    private Boolean         endTurn;                //se decido di terminare il turno
-    private Boolean         specialFunction;        //se decido di attivare la funzione speciale
+    private boolean                         exit;
 
     //controller to view
-    private MatchState      matchState;
-    private PlayerState     playerState;
-    private TurnState       turnState;
-    private Boolean         error;
+    private MatchState                      matchState;
+    private PlayerState                     playerState;
+    private TurnState                       turnState;
+    private Boolean                         error;
 
     private Map<Position, Cell>             billboardStatus;
     private Set<String>                     matchCards;
@@ -46,10 +47,14 @@ public class MessageEvent {
     private Boolean                         specialFunctionAvailable;
 
     private Map<Integer, String>            matchPlayers;
-    //private int                             activeMatches;
-    //private int                             playersConnected;
+    //private int                           activeMatches;
+    //private int                           playersConnected;
 
-    private Integer winner;
+    private Integer                         winner;
+
+    private boolean                         finished;
+
+
 
     public ClientHandler getClientHandler(){
         return clientHandler;
@@ -59,12 +64,12 @@ public class MessageEvent {
         this.clientHandler = clientHandler;
     }
 
-    public String getMsgType(){
-        return msgType;
+    public String getInfo(){
+        return info;
     }
 
-    public void setMsgType(String msgType){
-        this.msgType = msgType;
+    public void setInfo(String info){
+        this.info = info;
     }
 
     public Integer getMatchID(){
@@ -265,5 +270,21 @@ public class MessageEvent {
 
     public void setWinner(Integer winner){
         this.winner = winner;
+    }
+
+    public boolean isExit(){
+        return exit;
+    }
+
+    public void setExit(boolean exit){
+        this.exit = exit;
+    }
+
+    public boolean isFinished(){
+        return finished;
+    }
+
+    public void setFinished(boolean finished){
+        this.finished = finished;
     }
 }

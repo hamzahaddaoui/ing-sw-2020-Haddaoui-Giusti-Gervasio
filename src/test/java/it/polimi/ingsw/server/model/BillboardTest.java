@@ -1,9 +1,11 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.utilities.Cell;
 import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,41 +22,87 @@ class BillboardTest {
     void testIncrementTowerHeight() {
         assertEquals(0, billboard.getTowerHeight(position));
 
-
-
         billboard.incrementTowerHeight(position);
         assertEquals(1, billboard.getTowerHeight(position));
+
         billboard.incrementTowerHeight(position);
         assertEquals(2, billboard.getTowerHeight(position));
+
         billboard.incrementTowerHeight(position);
         assertEquals(3, billboard.getTowerHeight(position));
-        assertEquals(false, billboard.getDome(position));
+        assertFalse(billboard.getDome(position));
+
         billboard.incrementTowerHeight(position);
         assertEquals(3, billboard.getTowerHeight(position));
-        assertEquals(true, billboard.getDome(position));
+        assertTrue(billboard.getDome(position));
     }
 
     @Test
     void setDome() {
-        assertEquals(false, billboard.getDome(position));
+        assertFalse(billboard.getDome(position));
         billboard.setDome(position);
-        assertEquals(true, billboard.getDome(position));
-        assertEquals(true, billboard.getDome().get(position));
+        assertTrue(billboard.getDome(position));
     }
 
     @Test
     void setPlayer() {
-        assertEquals(-1, billboard.getPlayer(position));
+        assertNull(billboard.getPlayer(position));
         billboard.setPlayer(position, 10);
         assertEquals(10, billboard.getPlayer(position));
-        assertEquals(10, billboard.getPlayer().get(position));
     }
 
     @Test
     void resetPlayer() {
         billboard.setPlayer(position, 10);
         billboard.resetPlayer(position);
-        assertEquals(-1, billboard.getPlayer(position));
-        assertEquals(-1, billboard.getPlayer().get(position));
+        assertEquals(null, billboard.getPlayer(position));
+    }
+
+    @Test
+    void generalTest(){
+        int x, y;
+        for(x=0; x<Billboard.ROWS; x++){
+            for(y=0; y<Billboard.COLOUMNS; y++){
+                Position position = new Position(x,y);
+                billboard.incrementTowerHeight(position);
+                billboard.incrementTowerHeight(position);
+                billboard.incrementTowerHeight(position);
+                billboard.setPlayer(position, x+y);
+            }
+        }
+
+        Map<Position, Cell> cells = billboard.getCells();
+
+
+        for(x=0; x<Billboard.ROWS; x++){
+            for(y=0; y<Billboard.COLOUMNS; y++){
+                Position position = new Position(x,y);
+                assertEquals(cells.get(position).getTowerHeight(), 3);
+                assertFalse(cells.get(position).isDome());
+                assertEquals(cells.get(position).getPlayerID(), x+y);
+            }
+        }
+
+
+        for(x=0; x<Billboard.ROWS; x++){
+            for(y=0; y<Billboard.COLOUMNS; y++){
+                Position position = new Position(x,y);
+                billboard.resetPlayer(position);
+                billboard.incrementTowerHeight(position);
+
+            }
+        }
+
+        cells = billboard.getCells();
+
+
+        for(x=0; x<Billboard.ROWS; x++){
+            for(y=0; y<Billboard.COLOUMNS; y++){
+                Position position = new Position(x,y);
+                assertEquals(cells.get(position).getTowerHeight(), 3);
+                assertTrue(cells.get(position).isDome());
+                assertNull(cells.get(position).getPlayerID());
+            }
+        }
     }
 }

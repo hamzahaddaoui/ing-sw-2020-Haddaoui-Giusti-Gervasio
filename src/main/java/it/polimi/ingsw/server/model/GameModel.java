@@ -177,7 +177,7 @@ public class GameModel extends Observable<MessageEvent> {
         try{
             translateMatchID(matchID).nextState();
         }
-        catch (NullPointerException exception){}
+        catch (NullPointerException ignored){}
     }
 
     public static PlayerState getPlayerState(Integer matchID, Integer playerID){
@@ -210,12 +210,16 @@ public class GameModel extends Observable<MessageEvent> {
         catch (NullPointerException ignored){}
     }
 
-    public static boolean isMatchFinished(Integer matchID){
-        return translateMatchID(matchID).isFinished();
+    public static Integer getMatchWinner(Integer matchID){
+        return translateMatchID(matchID).getWinner().getID();
     }
 
     public static void deleteMatch(Integer matchID){
         activeMatches.remove(matchID);
+    }
+
+    public static void removeLosers(Integer matchID){
+        translateMatchID(matchID).resetLosers();
     }
 
 
@@ -264,7 +268,6 @@ public class GameModel extends Observable<MessageEvent> {
         return translateMatchID(matchID).getCurrentPlayer().hasPlacedWorkers();
     }
 
-
     /*
     -------------------------------------------------------------------------------
     -----------------------GAME MANAGEMENT-----------------------------------------
@@ -284,6 +287,7 @@ public class GameModel extends Observable<MessageEvent> {
 
     public static void setHasFinished(Integer matchID){
         translateMatchID(matchID).getCurrentPlayer().setHasFinished();
+        translateMatchID(matchID).nextTurn();
     }
 
     public static void playerTurn(Integer matchID, Position startPosition, Position endPosition){
@@ -307,6 +311,11 @@ public class GameModel extends Observable<MessageEvent> {
     -------------------------------------------------------------------------------
      */
 
+    public static Map<Integer, String> getMatchLosers(Integer matchID){
+        return translateMatchID(matchID).getLosers().stream()
+                .collect(Collectors.toMap(Player::getID, Player::getNickname));
+    }
+
     public static Map<Integer, String> getMatchPlayers(Integer matchID){
         return translateMatchID(matchID).getAllPlayers().stream()
                 .collect(Collectors.toMap(Player::getID, Player::getNickname));
@@ -327,6 +336,15 @@ public class GameModel extends Observable<MessageEvent> {
                 .getCards()
                 .stream()
                 .map(Enum::toString)
+                .collect(Collectors.toSet());
+    }
+
+    public static Set<Position> getWorkersPosition(Integer matchID){
+        return translateMatchID(matchID)
+                .getCurrentPlayer()
+                .getWorkers()
+                .stream()
+                .map(Worker::getPosition)
                 .collect(Collectors.toSet());
     }
 

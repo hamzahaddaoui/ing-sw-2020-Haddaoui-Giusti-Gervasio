@@ -2,13 +2,29 @@ package it.polimi.ingsw.server.controller.state;
 
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
+import it.polimi.ingsw.utilities.Position;
+
+import java.util.Set;
 
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class PlacingWorkers extends State {
     @Override
-    public void handleRequest(Integer matchID, MessageEvent messageEvent){
-        placeWorker(matchID, messageEvent.getEndPosition());
+    public void handleRequest(MessageEvent messageEvent){
+        Integer matchID = messageEvent.getMatchID();
+
+        Set<Position> initializedPositions = messageEvent.getInitializedPositions();
+
+        if(initializedPositions.stream().distinct().count() != 2
+            || !(initializedPositions.stream().allMatch(this::checkPosition)))
+        //TODO VERIFICARE SE SONO DISPONIBILI LE CELLE!!!
+        {
+
+            notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), messageEvent.getPlayerID()),matchID)));
+        }
+
+        initializedPositions.forEach(position -> placeWorker(matchID, position));
+
         if (hasPlacedWorkers(matchID)) {
             nextMatchTurn(matchID);
             if (hasPlacedWorkers(matchID)) {

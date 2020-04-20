@@ -6,9 +6,5 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameModelTest {
 
-    @Test
-    void getMatchState(){
-        System.out.println(GameModel.getMatchState(GameModel.createMatch()));
-        assertTrue(true);
-    }
+
 }
