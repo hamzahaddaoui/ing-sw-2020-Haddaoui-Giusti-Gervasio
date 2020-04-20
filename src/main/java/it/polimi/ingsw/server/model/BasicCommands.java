@@ -99,6 +99,7 @@ public class BasicCommands implements Commands {
      * @return  the list of Position where the worker can move on
      */
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
+
             Billboard billboard=player.getMatch().getBillboard();
             Position currentPosition=player.getCurrentWorker().getPosition();
 
@@ -106,15 +107,10 @@ public class BasicCommands implements Commands {
                     .getPosition()
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) == -1)
-                    .filter(position -> {
-                        if (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition))
-                            return true;
-                        if (player.getMatch().isMoveUpActive()) {
-                            return billboard.getTowerHeight(position) == (billboard.getTowerHeight(currentPosition) + 1);
-                        }
-                        return false;
-                    })
+                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition)) ||
+                            (player.getMatch().isMoveUpActive() &&
+                                    billboard.getTowerHeight(position) == (billboard.getTowerHeight(currentPosition) + 1)))
                     .filter(position -> !billboard.getDome(position))
                     .collect(Collectors.toSet());
 

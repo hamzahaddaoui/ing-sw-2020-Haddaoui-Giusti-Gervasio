@@ -25,10 +25,7 @@ public class PanDecorator extends CommandsDecorator {
     @Override
     public boolean winningCondition(Player player) {
         Worker worker = player.getCurrentWorker();
-        if (worker.getHeightVariation() <= -2)
-            return true;
-        else
-            return super.winningCondition(player);
+        return worker.getHeightVariation() <= -2 || super.winningCondition(player);
     }
 
 }

@@ -49,7 +49,7 @@ public class MinotaurDecorator extends CommandsDecorator {
         Worker worker = player.getCurrentWorker();
 
 
-       if (billboard.getPlayer(position)==-1)
+       if (billboard.getPlayer(position) == null)
             super.moveWorker(position,player);
         else if (!checkNextPosition(position,player))
             return;
@@ -86,7 +86,7 @@ public class MinotaurDecorator extends CommandsDecorator {
         return currentPosition
                 .neighbourPositions()
                 .stream()
-                .filter(position -> billboard.getPlayer(position)==-1 ||
+                .filter(position -> billboard.getPlayer(position)== null ||
                         (billboard.getPlayer(position) != billboard.getPlayer(currentPosition) &&
                         checkNextPosition(position,player)))
                 .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
@@ -121,7 +121,7 @@ public class MinotaurDecorator extends CommandsDecorator {
 
         return nextPosition != null &&
                 !billboard.getDome(nextPosition) &&
-                billboard.getPlayer(nextPosition) == -1;
+                billboard.getPlayer(nextPosition) == null;
 
     }
 

@@ -41,20 +41,23 @@ public class DCommand implements CommandCharacter {
      */
 
     @Override
-    public boolean executeRunningStatus() {if (View.getStartingPosition() == null) {
+    public boolean executeRunningStatus() {
 
-        View.setColoredPosition( View
+        Position coloredPosition = View.getColoredPosition();
+
+        if (View.getStartingPosition() == null) {
+
+            View.setColoredPosition( View
                 .getWorkersPositions()
                 .stream()
-                .filter(position -> position != View.getColoredPosition())
+                .filter(position -> position != coloredPosition)
                 .findAny()
                 .get());
 
-    }
-    else View
-                .setColoredPosition(View
-                        .getColoredPosition()
-                        .translateCardinalDirectionToPosition(CardinalDirection.EAST));
+        }
+        else {
+        coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
+        View.setColoredPosition(coloredPosition); }
         return false;
     }
 

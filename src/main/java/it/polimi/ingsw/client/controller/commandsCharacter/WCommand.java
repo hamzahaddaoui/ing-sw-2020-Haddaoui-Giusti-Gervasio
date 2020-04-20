@@ -40,13 +40,13 @@ public class WCommand implements CommandCharacter {
     @Override
     public boolean executeRunningStatus() {
 
-        if (View.getStartingPosition()!=null)
-            View
-                    .setColoredPosition(View
-                            .getColoredPosition()
-                            .translateCardinalDirectionToPosition(CardinalDirection.NORTH));
-        return false;
+        Position coloredPosition = View.getColoredPosition();
 
+        if (View.getStartingPosition()!=null) {
+            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
+            View.setColoredPosition(coloredPosition);
+        }
+        return false;
     }
 
     @Override

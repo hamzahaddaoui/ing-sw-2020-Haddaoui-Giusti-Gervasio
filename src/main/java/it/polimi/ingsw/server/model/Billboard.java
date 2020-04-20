@@ -13,7 +13,6 @@ public class Billboard {
 
     public Billboard() {
         int x, y;
-        Position position;
         for(x=0; x<ROWS; x++){
             for(y=0; y<COLOUMNS; y++){
                 cellSet.put(new Position(x,y), new Cell());

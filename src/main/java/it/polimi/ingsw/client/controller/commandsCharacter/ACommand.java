@@ -26,7 +26,7 @@ public class ACommand implements CommandCharacter {
         return false;
     }
 
-    private int checkCorrectCoordinate(int coordinate){
+    private int checkCorrectCoordinate(int coordinate) {
         coordinate--;
         if(coordinate<0) coordinate+=5;
         return coordinate;
@@ -45,21 +45,22 @@ public class ACommand implements CommandCharacter {
     @Override
     public boolean executeRunningStatus() {
 
+        Position coloredPosition = View.getColoredPosition();
+
         if (View.getStartingPosition() == null) {
 
             View.setColoredPosition (View
                                         .getWorkersPositions()
                                         .stream()
-                                        .filter(position -> position != View.getColoredPosition())
+                                        .filter(position -> position != coloredPosition)
                                         .findAny()
                                         .get());
 
         }
-        else View
-                .setColoredPosition(View
-                                        .getColoredPosition()
-                                        .translateCardinalDirectionToPosition(CardinalDirection.WEST));
-        //controllo se posizione è fuori dalla billboard
+        else {
+            coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
+            View.setColoredPosition(coloredPosition);
+        }
         return false;
     }
 

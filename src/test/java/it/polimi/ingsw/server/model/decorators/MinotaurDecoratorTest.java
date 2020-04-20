@@ -1,7 +1,11 @@
 package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
+import static org.junit.jupiter.api.Assertions.*;
+
+import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,10 +17,10 @@ class MinotaurDecoratorTest {
 
     Set<Position> positions;
     HashSet<Position> positionsToCheck = new HashSet<>();
-    Match match = new Match(1);
-    Player player1 = new Player(1,"Vasio",match);
-    Player player2 = new Player(2,"Leo",match);
-    Player player3 = new Player(3,"Hamza",match);
+    Player player1 = new Player(1,"Vasio");
+    Match match = new Match(1, player1);
+    Player player2 = new Player(2,"Leo");
+    Player player3 = new Player(3,"Hamza");
     Commands commands;
     Billboard billboard;
     Position position1 = new Position(1,2);
@@ -34,9 +38,9 @@ class MinotaurDecoratorTest {
         billboard = match.getBillboard();
         player1.setCommands(GodCards.Minotaur);
         commands = player1.getCommands();
-        player2.setCommands(GodCards.Minotaur);
         match.addPlayer(player1);
         match.addPlayer(player2);
+        player2.setCommands(GodCards.Minotaur);
         player1.setWorker(position1);
         player1.setCurrentWorker(position1);
         player2.setWorker(position2);
@@ -45,57 +49,60 @@ class MinotaurDecoratorTest {
 
     @AfterEach
     void tearDown() {
-        billboard.getDome().replace(position4,false);
-        billboard.getTowerHeight().replace(position6,0);
-        billboard.getDome().replace(position5,false);
+        billboard.getCells().get(position4).setDome(false);
+        billboard.getCells().get(position6).setTowerHeight(0);
+        billboard.getCells().get(position5).setDome(false);
     }
 
 
     @Test
     void moveWorker_InOpponentWorkerSpaceWithNextCellFree_ExpectNewPositions() {
         commands.moveWorker(position2,player1);
-        Assert.assertEquals(position2,player1.getCurrentWorkerPosition());
-        Assert.assertEquals(position4,player2.getCurrentWorkerPosition());
+        assertEquals(position2,player1.getCurrentWorkerPosition());
+        assertEquals(position4,player2.getCurrentWorkerPosition());
     }
 
     @Test
     void moveWorker_InOpponentWorkerSpaceWithNextCellOccupied_ExpectSamePositions() {
         billboard.setDome(position4);
         commands.moveWorker(position2,player1);
-        Assert.assertEquals(position1,player1.getCurrentWorkerPosition());
-        Assert.assertEquals(position2,player2.getCurrentWorkerPosition());
+        assertEquals(position1,player1.getCurrentWorkerPosition());
+        assertEquals(position2,player2.getCurrentWorkerPosition());
     }
 
     @Test
     void moveWorker_InFreeCell_ExpectNewPosition() {
+        player1.setTurnState(TurnState.IDLE);
         player1.setWorker(position3);
         player1.setCurrentWorker(position3);
         commands.moveWorker(position5,player1);
-        Assert.assertEquals(position5,player1.getCurrentWorkerPosition());
+        assertEquals(position5,player1.getCurrentWorkerPosition());
     }
 
 
     @Test
     void computeAvailableMovements_OpponentWorkerAndNextCellFree() {
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
-        Assert.assertTrue("Problem with opponent.",positions.contains(position2));
+        assertTrue(positions.contains(position2), "Problem with opponent.");
     }
 
     @Test
     void computeAvailableMovements_OpponentWorkerAndNextCellHasDome() {
         billboard.setDome(position4);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
-        Assert.assertFalse("Problem with dome.",positions.contains(position2));
+        assertFalse(positions.contains(position2), "Problem with dome.");
     }
 
     @Test
     void computeAvailableMovements_OpponentWorkerAndNextCellIsNull() {
+        player1.setTurnState(TurnState.IDLE);
+        player2.setTurnState(TurnState.IDLE);
         player1.setWorker(position7);
         player1.setCurrentWorker(position7);
         player2.setWorker(position3);
         player2.setCurrentWorker(position3);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
-        Assert.assertFalse("Problem with null cell.",positions.contains(position8));
+        assertFalse(positions.contains(position8), "Problem with null cell.");
     }
 
     @Test
@@ -106,41 +113,44 @@ class MinotaurDecoratorTest {
         player3.setWorker(position4);
         player3.setCurrentWorker(position4);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
-        Assert.assertFalse("Problem with opponent player.",positions.contains(position2));
+        assertFalse(positions.contains(position2), "Problem with opponent player.");
     }
 
     @Test
     void computeAvailableMovements_WithoutOpponentWorker() {
+        player1.setTurnState(TurnState.IDLE);
         player1.setWorker(position3);
         player1.setCurrentWorker(position3);
         positionsToCheck.add(position5);
         positionsToCheck.add(position6);
         positionsToCheck.add(position7);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
-        Assert.assertTrue("Problem with opponent.",positionsToCheck.containsAll(positions) &&
-                positions.containsAll(positionsToCheck));
+        assertTrue(positionsToCheck.containsAll(positions) &&
+                        positions.containsAll(positionsToCheck), "Problem with opponent.");
     }
 
     @Test
     void computeAvailableMovements_WithMoveUpUnsetAndDome() {
+        player1.setTurnState(TurnState.IDLE);
         player1.setWorker(position3);
         player1.setCurrentWorker(position3);
         billboard.setDome(position5);
         match.setMoveUpActive(false);
         billboard.incrementTowerHeight(position6);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
-        Assert.assertTrue("Problem with move up and dome.",!positions.contains(position5) &&
-                !positions.contains(position6));
+        assertTrue(!positions.contains(position5) &&
+                        !positions.contains(position6), "Problem with move up and dome.");
     }
 
     @Test
     void computeAvailableMovements_WithMoveUpSet() {
+        player1.setTurnState(TurnState.IDLE);
         player1.setWorker(position3);
         player1.setCurrentWorker(position3);
         match.setMoveUpActive(true);
         billboard.incrementTowerHeight(position6);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
-        Assert.assertTrue("Problem with move up and dome.",positions.contains(position6));
+        assertTrue(positions.contains(position6), "Problem with move up and dome.");
     }
 
 }

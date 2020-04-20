@@ -1,11 +1,6 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
 import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.utilities.CardinalDirection;
-import it.polimi.ingsw.utilities.MessageEvent;
-import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.utilities.Position;
 
 public class SCommand implements CommandCharacter {
@@ -41,11 +36,13 @@ public class SCommand implements CommandCharacter {
 
     @Override
     public boolean executeRunningStatus() {
-        if (View.getStartingPosition()!=null)
-            View
-                    .setColoredPosition(View
-                            .getColoredPosition()
-                            .translateCardinalDirectionToPosition(CardinalDirection.SOUTH));
+
+        Position coloredPosition = View.getColoredPosition();
+
+        if (View.getStartingPosition()!=null) {
+            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
+            View.setColoredPosition(coloredPosition);
+        }
         return false;
     }
 

@@ -29,13 +29,13 @@ public class View extends Observable implements Runnable, Observer{
     private static Integer playersNum;
     private static String selectedGodCard;
     private static String godCard;
-    private static Map<it.polimi.ingsw.utilities.Position, Cell> billboardStatus;
-    private static Map<it.polimi.ingsw.utilities.Position, Set<it.polimi.ingsw.utilities.Position>> workersAvailableCells;
+    private static Map<Position, Cell> billboardStatus;
+    private static Map<Position, Set<Position>> workersAvailableCells;
     private static Set<Position> placingAvailableCells;
-    private static it.polimi.ingsw.utilities.Position startingPosition;
+    private static Position startingPosition;
     private static Position coloredPosition;
     private static String coloredGodCard;
-    private Map<Integer, String> matchPlayers;
+    private static Map<Integer, String> matchPlayers;
     private static boolean terminateTurnAvailable;
     private static boolean specialFunctionAvailable;
 
@@ -100,11 +100,11 @@ public class View extends Observable implements Runnable, Observer{
         View.coloredGodCard = coloredGodCard;
     }
 
-    public static it.polimi.ingsw.utilities.Position getStartingPosition() {
+    public static Position getStartingPosition() {
         return startingPosition;
     }
 
-    public static void setStartingPosition(it.polimi.ingsw.utilities.Position startingPosition) {
+    public static void setStartingPosition(Position startingPosition) {
         View.startingPosition = startingPosition;
     }
 
@@ -156,17 +156,17 @@ public class View extends Observable implements Runnable, Observer{
         return playersNum;
     }
 
-    public static Map<it.polimi.ingsw.utilities.Position, Cell> getBillboardStatus() {
+    public static Map<Position, Cell> getBillboardStatus() {
         return billboardStatus;
     }
 
-    public static Set<it.polimi.ingsw.utilities.Position> getWorkersAvailableCells(it.polimi.ingsw.utilities.Position position) {
+    public static Set<Position> getWorkersAvailableCells(Position position) {
         return workersAvailableCells.get(position);
     }
 
-    public static Set<it.polimi.ingsw.utilities.Position> getWorkersPositions() { return workersAvailableCells.keySet();}
+    public static Set<Position> getWorkersPositions() { return workersAvailableCells.keySet();}
 
-    public static boolean isWorkerPresent(it.polimi.ingsw.utilities.Position position) {
+    public static boolean isWorkerPresent(Position position) {
         return workersAvailableCells.containsKey(position);
     }
 
