@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 
+import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.MatchState;
@@ -23,6 +24,7 @@ public class SelectionNumberStatus extends ControlState {
     public void nextState(Controller ctrl) {
         if(ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_GOD_CARDS) {
             ctrl.setState(new SelectingGodCardsStatus());
+            View.setGodCard(View.getGodCards().get(0));
         }
         else ctrl.setState(new WaitingStatus());
     }

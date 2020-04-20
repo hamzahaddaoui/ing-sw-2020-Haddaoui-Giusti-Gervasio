@@ -11,8 +11,8 @@ public class ECommand implements CommandCharacter {
     }
 
     @Override
-    public void executePlacingWorkerStatus() {
-
+    public boolean executePlacingWorkerStatus() {
+        return false;
     }
 
     /**
@@ -40,6 +40,10 @@ public class ECommand implements CommandCharacter {
 
     @Override
     public boolean executeSelectingGodCardsStatus() {
+        if(View.getGodCard()!=null){
+            removeGodCard();
+            View.setGodCard(View.getGodCards().get(0));
+        }
         return false;
     }
 
@@ -48,4 +52,9 @@ public class ECommand implements CommandCharacter {
 
     }
 
+
+    private void removeGodCard() {
+        View.getGodCards().add(View.getGodCard());
+        View.getSelectedGodCards().remove(View.getSelectedGodCards().indexOf(View.getGodCard()));
+    }
 }

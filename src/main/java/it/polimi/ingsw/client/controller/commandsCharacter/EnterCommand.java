@@ -1,20 +1,35 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
+
+import it.polimi.ingsw.client.Position;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
-import java.util.HashSet;
+
+import java.util.List;
 
 
 public class EnterCommand implements CommandCharacter {
 
     @Override
     public boolean executeNumberStatus() {
-        Controller.getMessage().setPlayersNum(View.getPlayersNumChoice());
+        Controller.getMessage().setPlayersNum(View.getPlayersNum());
         return true;
     }
 
     @Override
-    public void executePlacingWorkerStatus() {
-
+    public boolean executePlacingWorkerStatus() {
+        Position tempPosition = View.getColoredPosition();
+        //se la nuova posizione selezionata è corretta allora la aggiunge
+        if(tempPosition!=null
+                && !View.getPlacingAvailableCells().contains(tempPosition)
+                && !View.getWorkersPositions().contains(tempPosition)){
+            View.getWorkersPositions().add(tempPosition);
+            View.getPlacingAvailableCells().remove(tempPosition);
+            if(View.getWorkersPositions().size()==2){
+                return true;
+            }
+            View.setColoredPosition(View.getPlacingAvailableCells().stream().findFirst().get());
+        }
+        return false;
     }
 
     /**
@@ -60,12 +75,14 @@ public class EnterCommand implements CommandCharacter {
 
     @Override
     public boolean executeSelectingGodCardsStatus() {
-        /*if(carta selezionata non è nulla e  View.getGodCards().size()<= View.getPlayersNum())
-        *inserisci dentro arraylist lato VIEW;
-        *
-        */
-        if (View.getGodCards().size() == View.getPlayersNum()) {
-            Controller.getMessage().setGodCards(new HashSet<>(View.getGodCards()));
+        if(View.getGodCard()!=null && View.getSelectedGodCards().size()< View.getPlayersNum()){
+            addGodCard();
+            if(View.getSelectedGodCards().size() < View.getPlayersNum())
+                View.setGodCard(View.getGodCards().get(0));
+            else{
+                View.setGodCard(null);
+                return true;
+            }
         }
         return false;
     }
@@ -73,6 +90,11 @@ public class EnterCommand implements CommandCharacter {
     @Override
     public void executeWaitingStatus() {
 
+    }
+
+    private void addGodCard() {
+        View.getSelectedGodCards().add(View.getGodCard());
+        View.getGodCards().remove(View.getGodCards().indexOf(View.getGodCard()));
     }
 
 }

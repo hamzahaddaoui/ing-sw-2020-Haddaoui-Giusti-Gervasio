@@ -13,24 +13,27 @@ import java.util.Map;
 import java.util.Set;
 
 public class View extends Observable implements Runnable, Observer{
+
+
     private InputStream inputStream;
     private PrintStream outputStream;
 
-    private static ArrayList<Integer> playersNumChoice;
     private static Integer matchID;
     private static Integer playerID;
     private static PlayerState playerState;
     private static MatchState matchState;
     private static TurnState turnState;
-    private static ArrayList<String> selectedGodCards;
+    private static ArrayList<Integer> coloredPlayersNum;
+    private static ArrayList<String> selectedGodCards; //sono le carte che vengono inserite in fase di SelectedSpecialCommandsStatus
     private static ArrayList<String> godCards; //sono le carte che vengono inserite in fase di SelectingGodCardsStatus
     private static Integer playersNum;
+    private static String selectedGodCard;
     private static String godCard;
     private static Map<it.polimi.ingsw.utilities.Position, Cell> billboardStatus;
     private static Map<it.polimi.ingsw.utilities.Position, Set<it.polimi.ingsw.utilities.Position>> workersAvailableCells;
     private static Set<Position> placingAvailableCells;
     private static it.polimi.ingsw.utilities.Position startingPosition;
-    private static it.polimi.ingsw.utilities.Position coloredPosition;
+    private static Position coloredPosition;
     private static String coloredGodCard;
     private Map<Integer, String> matchPlayers;
     private static boolean terminateTurnAvailable;
@@ -42,6 +45,36 @@ public class View extends Observable implements Runnable, Observer{
         outputStream = new PrintStream(System.out);
     }
 
+    @Override
+    public void update(Object message){
+        //se ricevo un messaggio dal model
+        //aggiorna la scacchiera a video
+    }
+
+    @Override
+    public void run(){
+        /*VCEvent vcEvent = new VCEvent("nick", new Position(2,2));
+        while(true) {
+
+            int x, y;
+            System.out.println("Insert position X");
+            x = scanner.nextInt();
+            System.out.println("Insert position Y");
+            y = scanner.nextInt();
+
+            notify(vcEvent);
+        }*/
+
+        coloredPlayersNum.add(2);
+        coloredPlayersNum.add(3);
+        playersNum = coloredPlayersNum.get(0);
+        setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
+
+     while(true) {
+         outputStream.println("Insert a nickname: ");
+         notify();
+     }
+    }
 
     public static ArrayList<String> getGodCards() {
         return godCards;
@@ -75,46 +108,40 @@ public class View extends Observable implements Runnable, Observer{
         View.startingPosition = startingPosition;
     }
 
-    public static it.polimi.ingsw.utilities.Position getColoredPosition() {
+    public static Position getColoredPosition() {
         return coloredPosition;
     }
 
-    public static void setColoredPosition(it.polimi.ingsw.utilities.Position coloredPosition) {
-        View.coloredPosition = coloredPosition;
+    public static void setColoredPosition(Position position) {
+        coloredPosition = position;
     }
 
     public static ArrayList<String> getSelectedGodCards() {
         return selectedGodCards;
     }
 
-    @Override
-    public void update(Object message){
-        //se ricevo un messaggio dal model
-        //aggiorna la scacchiera a video
+    public static String getSelectedGodCard() {
+        return selectedGodCard;
     }
 
-    @Override
-    public void run(){
-        /*VCEvent vcEvent = new VCEvent("nick", new Position(2,2));
-        while(true) {
+    public static void setSelectedGodCard(String selectedGodCard) {
+        View.selectedGodCard = selectedGodCard;
+    }
 
-            int x, y;
-            System.out.println("Insert position X");
-            x = scanner.nextInt();
-            System.out.println("Insert position Y");
-            y = scanner.nextInt();
+    public static void setGodCard(String godCard) {
+        View.godCard = godCard;
+    }
 
-            notify(vcEvent);
-        }*/
+    public static String getGodCard() {
+        return godCard;
+    }
 
-        playersNumChoice.add(2);
-        playersNumChoice.add(3);
-        playersNum = playersNumChoice.get(0);
+    public static ArrayList<Integer> getColoredPlayersNum() {
+        return coloredPlayersNum;
+    }
 
-     while(true) {
-         outputStream.println("Insert a nickname: ");
-         notify();
-     }
+    public static void setColoredPlayersNum(ArrayList<Integer> coloredPlayersNum) {
+        View.coloredPlayersNum = coloredPlayersNum;
     }
 
     public static PlayerState getPlayerState() {
@@ -125,7 +152,7 @@ public class View extends Observable implements Runnable, Observer{
         return matchState;
     }
 
-    public static int getPlayersNum() {
+    public static Integer getPlayersNum() {
         return playersNum;
     }
 
@@ -143,18 +170,6 @@ public class View extends Observable implements Runnable, Observer{
         return workersAvailableCells.containsKey(position);
     }
 
-    public static void playersNumChoiceIncrement(){
-        playersNum = playersNumChoice.get((playersNumChoice.indexOf(playersNum) + 1) % playersNumChoice.size());
-    }
-
-    public static Integer getPlayersNumChoice(){
-        return playersNum;
-    }
-
-    public static void addGodCard(String godCard) {
-        View.godCards.add(godCard);
-    }
-
     public static boolean isTerminateTurnAvailable() {
         return terminateTurnAvailable;
     }
@@ -162,4 +177,5 @@ public class View extends Observable implements Runnable, Observer{
     public static boolean isSpecialFunctionAvailable() {
         return specialFunctionAvailable;
     }
+
 }

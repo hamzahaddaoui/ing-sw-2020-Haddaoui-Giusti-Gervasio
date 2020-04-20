@@ -4,7 +4,7 @@ import it.polimi.ingsw.utilities.MessageEvent;
 
 public interface CommandCharacter {
     boolean executeNumberStatus();
-    void executePlacingWorkerStatus();
+    boolean executePlacingWorkerStatus();
     boolean executeRunningStatus();
     boolean executeSpecialCommandsStatus();
     boolean executeSelectingGodCardsStatus();

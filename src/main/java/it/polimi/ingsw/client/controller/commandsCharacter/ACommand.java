@@ -2,18 +2,34 @@ package it.polimi.ingsw.client.controller.commandsCharacter;
 
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.utilities.CardinalDirection;
+import it.polimi.ingsw.utilities.Position;
+
+import java.util.ArrayList;
+
 
 public class ACommand implements CommandCharacter {
 
     @Override
     public boolean executeNumberStatus() {
-        View.playersNumChoiceIncrement();
+        ArrayList<Integer> coloredPlayersNum = View.getColoredPlayersNum();
+
+        coloredPlayersNum.get((coloredPlayersNum.indexOf(View.getColoredPlayersNum()) - 1) % coloredPlayersNum.size());
         return false;
     }
 
     @Override
-    public void executePlacingWorkerStatus() {
+    public boolean executePlacingWorkerStatus() {
+        Position coloredPosition = View.getColoredPosition();
+        while(View.getPlacingAvailableCells().contains(coloredPosition)){
+            coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
+            View.setColoredPosition(coloredPosition);}
+        return false;
+    }
 
+    private int checkCorrectCoordinate(int coordinate){
+        coordinate--;
+        if(coordinate<0) coordinate+=5;
+        return coordinate;
     }
 
     /**
@@ -67,6 +83,9 @@ public class ACommand implements CommandCharacter {
 
     @Override
     public boolean executeSelectingGodCardsStatus() {
+        ArrayList<String> godCards=View.getGodCards();
+
+        View.setGodCard(godCards.get((godCards.indexOf(godCards) - 1) % godCards.size()));
         return false;
     }
 

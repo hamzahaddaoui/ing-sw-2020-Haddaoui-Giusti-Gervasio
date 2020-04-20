@@ -14,14 +14,12 @@ public class SelectingGodCardsStatus extends ControlState {
 
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
-        if(commandCharacter.executeSelectingGodCardsStatus())
-            return true;
+        return commandCharacter.executeSelectingGodCardsStatus();
 
         //A scorre in alto il set
         //D scorre in basso il set
-        //Enter accetta la GodCardSelezionata
-
-        else return false;
+        //Enter accetta la GodCardSelezionata, o se sono state inserite tutte le posizioni serve per conferma finale
+        // E ritorna indietro e deselezionare le carte
     }
 
     @Override

@@ -13,8 +13,8 @@ public class FCommand implements CommandCharacter {
     }
 
     @Override
-    public void executePlacingWorkerStatus() {
-
+    public boolean executePlacingWorkerStatus() {
+        return false;
     }
 
     /**

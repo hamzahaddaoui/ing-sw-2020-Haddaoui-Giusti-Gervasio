@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
+import it.polimi.ingsw.utilities.Position;
 
 public class SelectingSpecialCommandStatus extends ControlState {
 
@@ -21,5 +22,7 @@ public class SelectingSpecialCommandStatus extends ControlState {
         if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.PLACING_WORKERS)
             ctrl.setState(new PlacingWorkersStatus());
         else ctrl.setState(new WaitingStatus());
+
+        View.getColoredPosition().set(0,0);
     }
 }

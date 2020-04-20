@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.controller.commandsCharacter;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.utilities.CardinalDirection;
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.Position;
 
 public class WCommand implements CommandCharacter {
 
@@ -14,10 +15,19 @@ public class WCommand implements CommandCharacter {
     }
 
     @Override
-    public void executePlacingWorkerStatus() {
-
+    public boolean executePlacingWorkerStatus() {
+        Position coloredPosition = View.getColoredPosition();
+        while(View.getPlacingAvailableCells().contains(coloredPosition)){
+            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
+            View.setColoredPosition(coloredPosition);}
+        return false;
     }
 
+    private int checkCorrectCoordinate(int coordinate){
+        coordinate++;
+        if(coordinate>4) coordinate-=5;
+        return coordinate;
+    }
     /**
      * Method that changes the colored position of the View.
      * <p>

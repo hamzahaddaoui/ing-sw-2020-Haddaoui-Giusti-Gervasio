@@ -12,9 +12,8 @@ public class PlacingWorkersStatus extends ControlState {
     public boolean processingMessage(Object viewObject) {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
-        commandCharacter.executePlacingWorkerStatus();
 
-        return true;
+        return commandCharacter.executePlacingWorkerStatus();
     }
 
     @Override
