@@ -153,7 +153,7 @@ public class BasicCommands implements Commands {
         return player
                 .getWorkers()
                 .stream()
-                .anyMatch(worker -> worker
+                .noneMatch(worker -> worker
                         .canDoSomething(player.getTurnState()));
     }
 }

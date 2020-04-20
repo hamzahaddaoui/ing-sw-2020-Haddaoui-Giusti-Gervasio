@@ -176,7 +176,7 @@ public class MinotaurDecorator extends CommandsDecorator {
 
         return player.
                 getMatch().
-                getAllPlayers().
+                getPlayers().
                 stream().
                 filter(player1 -> player1.getID() == player.getMatch().getBillboard().getPlayer(position)).
                 findAny().get();

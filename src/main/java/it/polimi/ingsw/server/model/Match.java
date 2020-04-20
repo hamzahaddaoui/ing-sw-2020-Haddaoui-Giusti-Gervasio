@@ -30,8 +30,8 @@ public class Match {
         this.ID = matchID;
         billboard = new Billboard();
         currentState = MatchState.GETTING_PLAYERS_NUM;
-        matchMaster.setPlayerState();
         addPlayer(matchMaster);
+        matchMaster.setPlayerState();
         currentPlayer = matchMaster;
     }
 
@@ -43,12 +43,12 @@ public class Match {
         return playersNum;
     }
 
-    public int getPlayersCurrentCount() {
-        return playersCurrentCount;
-    }
-
     public boolean isNumReached() {
         return playersNum == playersCurrentCount;
+    }
+
+    public int getPlayersCurrentCount(){
+        return playersCurrentCount;
     }
 
     public List<Player> getPlayers() {
@@ -60,7 +60,7 @@ public class Match {
     }
 
     public List<Player> getAllPlayers() {
-        List<Player> allPlayers = players;
+        List<Player> allPlayers = new ArrayList<>(players);
         allPlayers.addAll(losers);
         return allPlayers;
     }
@@ -71,10 +71,6 @@ public class Match {
 
     public Set<GodCards> getCards() {
         return cards;
-    }
-
-    public boolean isDeckFull() {
-        return cards.size() >= playersNum;
     }
 
     public Billboard getBillboard() {
@@ -93,6 +89,9 @@ public class Match {
         return moveUpActive;
     }
 
+
+
+
     public void resetLosers(){
         losers.clear();
     }
@@ -103,30 +102,36 @@ public class Match {
 
     public void addPlayer(Player player) {
         players.add(player);
+        player.setMatch(this);
         playersCurrentCount++;
     }
 
     public void removePlayer(Player player){
-        player.lost();
-        losers.add(player);
         players.remove(player);
 
+        player.lost();
+        losers.add(player);
+
+
         playersCurrentCount--;
-        if(currentPlayer == player)
+        if (playersCurrentCount == 1){
+            currentPlayer = players.get(0);
+            currentPlayer.win();
+            winner = currentPlayer;
+            currentState = MatchState.FINISHED;
+            return;
+        }
+        else if(currentPlayer == player)
             nextTurn();
 
         billboard
                 .getCells()
                 .keySet()
                 .stream()
-                .filter(position -> billboard.getPlayer(position) == player.getID())
+                .filter(position -> billboard.getPlayer(position) != null && billboard.getPlayer(position) == player.getID())
                 .forEach(billboard::resetPlayer);
 
 
-
-        if (playersCurrentCount == 1){
-            currentPlayer.win();
-        }
     }
 
     public void checkPlayers(){
@@ -139,25 +144,32 @@ public class Match {
                 .filter(player -> player.getPlayerState() == PlayerState.WIN)
                 .findAny();
 
+
         if (winPlayer.isPresent()){
+            List<Player> lost = new ArrayList<>(players);
+            lost.stream()
+                    .filter(player -> !player.equals(winPlayer.get()))
+                    .forEach(this::removePlayer);
+
             winner = winPlayer.get();
             currentState = MatchState.FINISHED;
-            players.stream()
-                    .filter(player -> player != winner)
-                    .forEach(this::removePlayer);
+
 
         }
 
-        else if (currentPlayer.hasFinished()){
+        else if (currentPlayer != null && currentPlayer.hasFinished()){
             nextTurn();
         }
     }
 
 
     public void nextTurn() {
-        currentPlayer.resetPlayerState();
-        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
-        currentPlayer.setPlayerState();
+        if (currentState != MatchState.FINISHED) {
+            if (currentPlayer.getPlayerState() == PlayerState.ACTIVE)
+                currentPlayer.resetPlayerState();
+            currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+            currentPlayer.setPlayerState();
+        }
     }
 
     public void setCards(Set<GodCards> cards) {
