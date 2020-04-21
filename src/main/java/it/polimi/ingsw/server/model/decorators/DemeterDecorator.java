@@ -43,18 +43,18 @@ public class DemeterDecorator extends CommandsDecorator {
     public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:
-                return MOVE;
+                player.setTurnState(MOVE);
             case MOVE:
                 this.firstBuildPosition=null;
-                return BUILD;
+                player.setTurnState(BUILD);
             case BUILD:
                 if (this.firstBuildPosition!=null)
                     if(player.hasSpecialFunction())
-                        return BUILD;
+                        player.setTurnState(BUILD);
             default:
                 this.firstBuildPosition=null;
                 player.setHasFinished();
-                return IDLE;
+                player.setTurnState(IDLE);
         }
     }
 
@@ -64,7 +64,6 @@ public class DemeterDecorator extends CommandsDecorator {
      * if it's the second building action, reset the firstBuildPosition
      *
      * @param position  is the position that player have inserted
-     * @param player
      */
     @Override
     public void build(Position position, Player player) {

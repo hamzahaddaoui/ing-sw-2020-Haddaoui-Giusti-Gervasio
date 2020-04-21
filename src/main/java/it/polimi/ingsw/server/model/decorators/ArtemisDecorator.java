@@ -41,17 +41,17 @@ public class ArtemisDecorator extends CommandsDecorator {
     public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:
-                return MOVE;
+                player.setTurnState(MOVE);
             case MOVE:
                 if (player.hasSpecialFunction() && this.startingPosition != null)//ho già fatto prima mossa e Special Function
-                    return MOVE;
+                    player.setTurnState(MOVE);
                 else{
                     startingPosition=null;
-                    return BUILD;
+                    player.setTurnState(BUILD);
                 }
             default:
                 player.setHasFinished();
-                return IDLE;
+                player.setTurnState(IDLE);
     }}
 
     /**

@@ -22,20 +22,20 @@ public class HephaestusDecorator extends CommandsDecorator {
         switch (player.getTurnState()) {
             case IDLE:
                 firstBuildPosition = null;
-                return MOVE;
+                player.setTurnState(MOVE);
             case MOVE:
-                return BUILD;
+                player.setTurnState(BUILD);
             case BUILD:
                 if (firstBuildPosition == null) {
                     player.setTerminateTurnAvailable();
-                    return BUILD;
+                    player.setTurnState(BUILD);
                 }
                 else{
                     player.setHasFinished();
-                    return IDLE;
+                    player.setTurnState(IDLE);
                 }
             default:
-                return IDLE;
+                player.setTurnState(IDLE);
         }
     }
 
