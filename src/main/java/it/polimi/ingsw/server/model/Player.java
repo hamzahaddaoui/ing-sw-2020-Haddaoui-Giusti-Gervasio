@@ -16,7 +16,6 @@ public class Player{
     private final int ID; //id connessione del giocatore
     private final String nickname;
     private Match match;
-    GodCards card;
     private Commands commands;
 
     private final Set<Worker> workers = new HashSet<>(2);
@@ -28,6 +27,7 @@ public class Player{
     private boolean selectedCard;
     private boolean placedWorkers;
     private boolean specialFunction;
+
     private boolean terminateTurnAvailable;         //può essere terminato il turno?
     private boolean specialFunctionAvailable;       //può essere attivata la funzione speciale?
 
@@ -35,6 +35,7 @@ public class Player{
         this.ID = ID;
         this.nickname = nickname;
         this.playerState = PlayerState.INITIALIZED;
+        this.turnState = IDLE;
     }
 
     public int getID() {
@@ -47,10 +48,6 @@ public class Player{
 
     public Match getMatch() {
         return match;
-    }
-
-    public GodCards getCard(){
-        return card;
     }
 
     public Commands getCommands() {return commands;}
@@ -83,7 +80,7 @@ public class Player{
         return placedWorkers;
     }
 
-    public boolean getSpecialFunction() {
+    public boolean hasSpecialFunction() {
         return specialFunction;
     }
 
@@ -104,7 +101,6 @@ public class Player{
     }
 
     public void setCommands(GodCards card) {
-        this.card = card;
         selectedCard = true;
         this.commands = card.apply(new BasicCommands());
         match.removeCard(card);
@@ -115,7 +111,6 @@ public class Player{
         workers.add(new Worker(position));
         commands.placeWorker(position, this);
         if (workers.size() == 2){
-            turnState = commands.nextState(this);
             placedWorkers = true;
         }
 
@@ -148,17 +143,13 @@ public class Player{
         playerState = PlayerState.LOST;
     }
 
-    public PlayerState nextPlayerState() {
-        playerState = playerState.next();
-        return playerState;
-    }
-
     public void setTurnState(TurnState turnState) {
         this.turnState = turnState;
     }
 
     public void setUnsetSpecialFunction(boolean specialFunction){
         this.specialFunction = specialFunction;
+        commands.notifySpecialFunction(this);
     }
 
     public void setHasFinished() {
@@ -175,7 +166,7 @@ public class Player{
     }
 
     public void playerAction(Position position){
-        switch (turnState){
+        switch (turnState) {
             case MOVE:
                 commands.moveWorker(position, this);
                 break;
@@ -183,7 +174,7 @@ public class Player{
                 commands.build(position, this);
                 break;
         }
-        turnState = commands.nextState(this);
+        commands.nextState(this);
         setAvailableCells();
         if (commands.winningCondition(this))
             playerState = PlayerState.WIN;

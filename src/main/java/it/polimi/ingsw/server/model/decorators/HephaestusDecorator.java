@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
-import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.Collections;
 import java.util.Set;
@@ -19,7 +18,7 @@ public class HephaestusDecorator extends CommandsDecorator {
     }
 
     @Override
-    public TurnState nextState(Player player) {
+    public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:
                 firstBuildPosition = null;

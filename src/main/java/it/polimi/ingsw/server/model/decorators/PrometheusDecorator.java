@@ -26,23 +26,23 @@ public class PrometheusDecorator extends CommandsDecorator {
      * Else, the turn follows his standard shifting.
      *
      * @param player  the player who makes the turn, not null
-     * @return  the next turn state in which the player is
      */
     @Override
-    public TurnState nextState(Player player) {
+    public void nextState(Player player) {
         switch(player.getTurnState()){
             case IDLE:
-                if (player.getSpecialFunction())
-                return BUILD;
-                else return MOVE;
+                player.setUnsetSpecialFunctionAvailable(losingCondition(player, BUILD));
+                player.setTurnState(MOVE);
+                break;
             case MOVE:
-                return BUILD;
+                player.setTurnState(BUILD);
+                break;
             case BUILD:
-                if (player.getSpecialFunction() && hasBuiltBeforeMoving)
-                    return MOVE;
+                if (player.hasSpecialFunction() && hasBuiltBeforeMoving)
+                    player.setTurnState(MOVE);
                 else player.setHasFinished();
             default:
-                return IDLE;
+                player.setTurnState(IDLE);
         }
     }
 
@@ -59,7 +59,7 @@ public class PrometheusDecorator extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        if (player.getSpecialFunction() && !hasBuiltBeforeMoving) {
+        if (player.hasSpecialFunction() && !hasBuiltBeforeMoving) {
             super.build(position,player);
             hasBuiltBeforeMoving = true;
         }
@@ -84,7 +84,7 @@ public class PrometheusDecorator extends CommandsDecorator {
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
 
-        if (!player.getSpecialFunction())
+        if (!player.hasSpecialFunction())
             return super.computeAvailableMovements(player, worker);
         else {
             Billboard billboard = player.getMatch().getBillboard();
@@ -98,5 +98,21 @@ public class PrometheusDecorator extends CommandsDecorator {
                     .filter(position -> !billboard.getDome(position))
                     .collect(Collectors.toSet());
         }
+    }
+
+    @Override
+    public void notifySpecialFunction(Player player){
+        //se la f. speciale è attiva -> disabilito la possibilità di attivarla
+                //cambio da move a build
+    }
+
+    boolean losingCondition(Player player, TurnState state){
+        boolean retVal;
+        TurnState prec;
+        prec = player.getTurnState();
+        player.setTurnState(state);
+        retVal = losingCondition(player);
+        player.setTurnState(prec);
+        return retVal;
     }
 }

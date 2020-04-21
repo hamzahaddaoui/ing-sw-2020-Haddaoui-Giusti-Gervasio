@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
-import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,17 +15,18 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 public class BasicCommands implements Commands {
 
     @Override
-    public TurnState nextState(Player player) {
+    public void nextState(Player player) {
         switch(player.getTurnState()){
             case IDLE:
-                return MOVE;
+                player.setTurnState(MOVE);
+                break;
             case MOVE:
-                return BUILD;
+                player.setTurnState(BUILD);
+                break;
             case BUILD:
                 player.setHasFinished();
-                return IDLE;
+                player.setTurnState(IDLE);
         }
-        return null;
     }
 
     /**
@@ -136,6 +136,11 @@ public class BasicCommands implements Commands {
         catch(Exception ex){
             throw new NullPointerException();
         }
+    }
+
+    @Override
+    public void notifySpecialFunction(Player player){
+
     }
 
     @Override

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.utilities.Position;
-import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.Set;
 
@@ -9,8 +8,8 @@ public class CommandsDecorator implements Commands {
     protected Commands commands;
 
     @Override
-    public TurnState nextState(Player player) {
-        return commands.nextState(player);
+    public void nextState(Player player) {
+        commands.nextState(player);
     }
 
     /**
@@ -57,6 +56,11 @@ public class CommandsDecorator implements Commands {
     @Override
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
         return commands.computeAvailableBuildings(player, worker);
+    }
+
+    @Override
+    public void notifySpecialFunction(Player player){
+        commands.notifySpecialFunction(player);
     }
 
     @Override

@@ -4,20 +4,18 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
 
 class MatchTest {
-    Player matchMaster = new Player(20, "PincoPallino");
+    Player player1 = new Player(20, "PincoPallino");
     Player player2, player3;
-    Match match = new Match(30, matchMaster);
+    Match match = new Match(30, player1);
 
     List<Player> playersList = new ArrayList<>();
     Player player;
+
+
 
     @BeforeEach
     void setUp(){
@@ -29,10 +27,10 @@ class MatchTest {
     @Test
     void testInitialConditions(){
         assertFalse(match.isNumReached());
-        assertEquals(Collections.singletonList(matchMaster),match.getPlayers());
+        assertEquals(Collections.singletonList(player1),match.getPlayers());
         assertEquals(Collections.emptyList(), match.getLosers());
-        assertEquals(Collections.singletonList(matchMaster), match.getAllPlayers());
-        assertEquals(matchMaster, match.getCurrentPlayer());
+        assertEquals(Collections.singletonList(player1), match.getAllPlayers());
+        assertEquals(player1, match.getCurrentPlayer());
         assertEquals(Collections.emptySet(),match.getCards());
         assertEquals(MatchState.GETTING_PLAYERS_NUM, match.getCurrentState());
         assertFalse(match.isStarted());
@@ -43,7 +41,7 @@ class MatchTest {
     void testAddingPlayers(){
         match.setPlayersNum(2);
 
-        playersList.add(matchMaster);
+        playersList.add(player1);
 
         assertFalse(match.isNumReached());
 
@@ -64,23 +62,25 @@ class MatchTest {
         assertEquals(playersList,match.getPlayers());
         assertEquals(Collections.emptyList(), match.getLosers());
         assertEquals(playersList, match.getAllPlayers());
-        assertEquals(matchMaster, match.getCurrentPlayer());
+        assertEquals(player1, match.getCurrentPlayer());
     }
 
     @Test
     void testRemovingPlayers(){
         testAddingPlayers();
 
-        List<Player> modifiedlist = new ArrayList<>(playersList);
+        List<Player> modifiedlist = new ArrayList<>();
+        List<Player> losersList = new ArrayList<>();
+
+        modifiedlist.add(player2);
+        modifiedlist.add(player3);
 
         //elimino un giocatore
-        player = modifiedlist.remove(0);
-        match.removePlayer(player);
-        assertEquals(PlayerState.LOST, player.getPlayerState());
-
-        //della lista dei perdenti va il giocatore eliminato
-        List<Player> losersList = new ArrayList<>();
-        losersList.add(player);
+        //nella lista dei perdenti va il giocatore eliminato
+        match.removePlayer(player1);
+        match.checkPlayers();
+        losersList.add(player1);
+        assertEquals(PlayerState.LOST, player1.getPlayerState());
         assertEquals(losersList, match.getLosers());
 
         //verifico che siano rimasti tutti i giocatori (perdenti e non)
@@ -88,30 +88,29 @@ class MatchTest {
 
         //verifico che riano rimasti i giocatori attivi
         assertEquals(modifiedlist, match.getPlayers());
-        assertEquals(modifiedlist.get(0), match.getCurrentPlayer());
+        assertEquals(player2, match.getCurrentPlayer());
 
         assertEquals(MatchState.GETTING_PLAYERS_NUM, match.getCurrentState());
         assertNull(match.getWinner());
 
         //rimozione secondo player
-        player = modifiedlist.remove(0);
-        match.removePlayer(player);
-        assertEquals(PlayerState.LOST, player.getPlayerState());
+        modifiedlist.remove(player2);
+        match.removePlayer(player2);
+        match.checkPlayers();
+        assertEquals(PlayerState.LOST, player2.getPlayerState());
 
         //lo aggiungo alla lista dei perdenti
-        losersList.add(player);
+        losersList.add(player2);
         assertEquals(losersList, match.getLosers());
 
         //verifico che la lista dei giocatori sia immutata
         assertTrue(match.getAllPlayers().containsAll(playersList) && playersList.containsAll(match.getAllPlayers()));
 
 
-
         assertEquals(modifiedlist, match.getPlayers());
-        assertEquals(modifiedlist.get(0), match.getCurrentPlayer());
+        assertEquals(player3, match.getCurrentPlayer());
 
-        assertEquals(MatchState.FINISHED, match.getCurrentState());
-        assertEquals(modifiedlist.get(0), match.getWinner());
+        assertEquals(player3, match.getWinner());
 
         match.resetLosers();
         assertEquals(Collections.emptyList(), match.getLosers());
@@ -124,7 +123,7 @@ class MatchTest {
         player2.win();
         match.checkPlayers();
         List<Player> losersList = new ArrayList<>();
-        losersList.add(matchMaster);
+        losersList.add(player1);
         losersList.add(player3);
 
         assertEquals(losersList, match.getLosers());
@@ -159,50 +158,50 @@ class MatchTest {
         modifiedlist.remove(player3);
         assertEquals(modifiedlist, match.getPlayers());
         assertEquals(MatchState.FINISHED, match.getCurrentState());
-        assertEquals(matchMaster, match.getWinner());
+        assertEquals(player1, match.getWinner());
     }
 
 
     @Test
     void testNextTurn(){
         testAddingPlayers();
-        assertEquals(matchMaster, match.getCurrentPlayer());
-        assertEquals(PlayerState.ACTIVE, matchMaster.getPlayerState());
+        assertEquals(player1, match.getCurrentPlayer());
+        assertEquals(PlayerState.ACTIVE, player1.getPlayerState());
         assertEquals(PlayerState.INITIALIZED, player2.getPlayerState());
         assertEquals(PlayerState.INITIALIZED, player3.getPlayerState());
 
-        matchMaster.setHasFinished();
+        player1.setHasFinished();
         match.checkPlayers();
         assertEquals(player2, match.getCurrentPlayer());
-        assertEquals(PlayerState.IDLE, matchMaster.getPlayerState());
+        assertEquals(PlayerState.IDLE, player1.getPlayerState());
         assertEquals(PlayerState.ACTIVE, player2.getPlayerState());
         assertEquals(PlayerState.INITIALIZED, player3.getPlayerState());
 
         player2.setHasFinished();
         match.checkPlayers();
         assertEquals(player3, match.getCurrentPlayer());
-        assertEquals(PlayerState.IDLE, matchMaster.getPlayerState());
+        assertEquals(PlayerState.IDLE, player1.getPlayerState());
         assertEquals(PlayerState.IDLE, player2.getPlayerState());
         assertEquals(PlayerState.ACTIVE, player3.getPlayerState());
 
         player3.setHasFinished();
         match.checkPlayers();
-        assertEquals(matchMaster, match.getCurrentPlayer());
-        assertEquals(PlayerState.ACTIVE, matchMaster.getPlayerState());
+        assertEquals(player1, match.getCurrentPlayer());
+        assertEquals(PlayerState.ACTIVE, player1.getPlayerState());
         assertEquals(PlayerState.IDLE, player2.getPlayerState());
         assertEquals(PlayerState.IDLE, player3.getPlayerState());
 
-        matchMaster.lost();
+        player1.lost();
         match.checkPlayers();
         assertEquals(player2, match.getCurrentPlayer());
-        assertEquals(PlayerState.LOST, matchMaster.getPlayerState());
+        assertEquals(PlayerState.LOST, player1.getPlayerState());
         assertEquals(PlayerState.ACTIVE, player2.getPlayerState());
         assertEquals(PlayerState.IDLE, player3.getPlayerState());
 
         player3.lost();
         match.checkPlayers();
         assertEquals(player2, match.getCurrentPlayer());
-        assertEquals(PlayerState.LOST, matchMaster.getPlayerState());
+        assertEquals(PlayerState.LOST, player1.getPlayerState());
         assertEquals(PlayerState.WIN, player2.getPlayerState());
         assertEquals(PlayerState.LOST, player3.getPlayerState());
 
@@ -227,6 +226,23 @@ class MatchTest {
         assertEquals(MatchState.FINISHED, match.getCurrentState());
     }
 
+
+    @Test
+    void testCards(){
+        Exception exception;
+        Set<GodCards> cards = new HashSet<GodCards>();
+        cards.add(GodCards.Apollo);
+        cards.add(GodCards.Artemis);
+        exception = assertThrows(IllegalArgumentException.class, () ->
+                match.setCards(cards));
+        match.setPlayersNum(3);
+        exception = assertThrows(IllegalArgumentException.class, () ->
+                match.setCards(cards));
+
+        match.setPlayersNum(2);
+        match.setCards(cards);
+        assertEquals(cards, match.getCards());
+    }
 
 
 }

@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
-import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,15 +36,14 @@ public class ArtemisDecorator extends CommandsDecorator {
      * else -> nextTurn is BUILD
      *
      * @param player  is the current player
-     * @return  the next player's state
      */
     @Override
-    public TurnState nextState(Player player) {
+    public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:
                 return MOVE;
             case MOVE:
-                if (player.getSpecialFunction() && this.startingPosition != null)//ho già fatto prima mossa e Special Function
+                if (player.hasSpecialFunction() && this.startingPosition != null)//ho già fatto prima mossa e Special Function
                     return MOVE;
                 else{
                     startingPosition=null;

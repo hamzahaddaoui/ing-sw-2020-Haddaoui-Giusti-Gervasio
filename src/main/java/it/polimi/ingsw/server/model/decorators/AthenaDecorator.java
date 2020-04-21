@@ -4,8 +4,6 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
 public class AthenaDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Athena;
-
     /**
      * decorate the object Command with Athena's special power
      *
@@ -36,5 +34,16 @@ public class AthenaDecorator extends CommandsDecorator {
             match.setMoveUpActive(false);
         else
             match.setMoveUpActive(true);
+    }
+
+    @Override
+    public boolean losingCondition(Player player){
+        if (super.losingCondition(player)){
+            player.getMatch().setMoveUpActive(true);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
-import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,10 +38,9 @@ public class DemeterDecorator extends CommandsDecorator {
      * else -> nextTurn is IDLE
      *
      * @param player  is the current player
-     * @return  the next player's state
      */
     @Override
-    public TurnState nextState(Player player) {
+    public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:
                 return MOVE;
@@ -51,7 +49,7 @@ public class DemeterDecorator extends CommandsDecorator {
                 return BUILD;
             case BUILD:
                 if (this.firstBuildPosition!=null)
-                    if(player.getSpecialFunction())
+                    if(player.hasSpecialFunction())
                         return BUILD;
             default:
                 this.firstBuildPosition=null;
@@ -75,7 +73,7 @@ public class DemeterDecorator extends CommandsDecorator {
             this.firstBuildPosition = position;
         }
         else {
-            if (player.getSpecialFunction() && this.firstBuildPosition != null) {
+            if (player.hasSpecialFunction() && this.firstBuildPosition != null) {
                 this.firstBuildPosition=null;
             }
         }

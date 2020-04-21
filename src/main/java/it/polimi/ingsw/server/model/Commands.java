@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface Commands {
 
-    TurnState nextState(Player player);
+    void nextState(Player player);
 
     void placeWorker(Position position, Player player);
 
@@ -20,6 +20,8 @@ public interface Commands {
     Set<Position> computeAvailableMovements(Player player, Worker worker);
 
     Set<Position> computeAvailableBuildings(Player player, Worker worker);
+
+    void notifySpecialFunction(Player player);
 
     boolean winningCondition(Player player);
 

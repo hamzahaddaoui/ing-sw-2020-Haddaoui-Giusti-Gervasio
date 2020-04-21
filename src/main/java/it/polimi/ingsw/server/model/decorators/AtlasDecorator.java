@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
-import it.polimi.ingsw.utilities.TurnState;
 
 import static it.polimi.ingsw.utilities.TurnState.*;
 
@@ -18,18 +17,17 @@ public class AtlasDecorator extends CommandsDecorator {
     }
 
     @Override
-    public TurnState nextState(Player player) {
+    public void nextState(Player player) {
         switch(player.getTurnState()){
             case IDLE:
-                return MOVE;
+                player.setTurnState(MOVE);
             case MOVE:
                 player.setUnsetSpecialFunctionAvailable(true);
-                return BUILD;
+                player.setTurnState(BUILD);
             case BUILD:
                 player.setHasFinished();
-                return IDLE;
+                player.setTurnState(IDLE);
         }
-        return null;
     }
 
 
@@ -42,9 +40,14 @@ public class AtlasDecorator extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        if (player.getSpecialFunction())
+        if (player.hasSpecialFunction())
             player.getMatch().getBillboard().setDome(position);
         else
             super.build(position, player);
+    }
+
+    @Override
+    public void notifySpecialFunction(Player player){
+        super.notifySpecialFunction(player);
     }
 }
