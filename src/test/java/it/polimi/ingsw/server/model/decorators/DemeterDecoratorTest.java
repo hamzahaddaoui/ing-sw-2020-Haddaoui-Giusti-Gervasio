@@ -6,6 +6,7 @@ import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,9 +14,10 @@ import java.util.Set;
 public class DemeterDecoratorTest {
 
     Commands commands1,commands2;
-    Match match=new Match(2);
-    Player player1=new Player(1,"leo",match);
-    Player player2=new Player(2,"dario",match);
+    Player player1 = new Player(1,"leo");
+    Match match = new Match(2, player1);
+    Player player2 = new Player(2,"dario");
+    Set<GodCards> godCards = new HashSet<GodCards>();
 
     Position position00=new Position(0,0);
     Position position01=new Position(0,1);
@@ -46,11 +48,11 @@ public class DemeterDecoratorTest {
 
     @BeforeEach
     void setUp() {
-        match.addPlayer(player1);
         match.setPlayersNum(2);
         match.addPlayer(player2);
-        match.addCard(GodCards.Demeter);
-        match.addCard(GodCards.Artemis);
+        godCards.add(GodCards.Demeter);
+        godCards.add(GodCards.Apollo);
+        match.setCards(godCards);
         player1.setCommands(GodCards.Demeter);
         player2.setCommands(GodCards.Apollo);
         commands1=player1.getCommands();
@@ -61,48 +63,48 @@ public class DemeterDecoratorTest {
     public void nextStateJustOneBuild() {
         player1.setWorker(position12);
         player1.setTurnState(TurnState.IDLE);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("1", player1.getTurnState() == TurnState.MOVE);
+        assertTrue(player1.getTurnState() == TurnState.MOVE);
 
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("2", player1.getTurnState() == TurnState.BUILD);
+        assertTrue( player1.getTurnState() == TurnState.BUILD);
 
         player1.setCurrentWorker(position12);
         commands1.build(position11,player1);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("3", player1.getTurnState() == TurnState.IDLE);
-        Assert.assertTrue("4",player1.hasFinished()==true);
+        assertTrue( player1.getTurnState() == TurnState.IDLE);
+        assertTrue(player1.hasFinished()==true);
     }
 
     @Test
     public void nextStateSecondBuild() {
         player1.setWorker(position12);
         player1.setTurnState(TurnState.IDLE);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("E1", player1.getTurnState() == TurnState.MOVE);
+        assertTrue( player1.getTurnState() == TurnState.MOVE);
 
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("E2", player1.getTurnState() == TurnState.BUILD);
+        assertTrue(player1.getTurnState() == TurnState.BUILD);
 
         player1.setCurrentWorker(position12);
         commands1.build(position11,player1);
-        player1.setUnsetSpecialFunction();
+        player1.setUnsetSpecialFunction(true);
 
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("E3", player1.getTurnState() == TurnState.BUILD);
+        assertTrue( player1.getTurnState() == TurnState.BUILD);
 
         player1.setCurrentWorker(position12);
         commands1.build(position01,player1);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("E4", player1.getTurnState() == TurnState.IDLE);
-        Assert.assertTrue("E5",player1.hasFinished()==true);
+        assertTrue( player1.getTurnState() == TurnState.IDLE);
+        assertTrue(player1.hasFinished()==true);
     }
 
     @Test
@@ -112,13 +114,13 @@ public class DemeterDecoratorTest {
         player2.setWorker(position13);
         player2.setWorker(position41);
         player1.setTurnState(TurnState.IDLE);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("ER!", player1.getTurnState() == TurnState.MOVE);
+        assertTrue(player1.getTurnState() == TurnState.MOVE);
 
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("ER0", player1.getTurnState() == TurnState.BUILD);
+        assertTrue(player1.getTurnState() == TurnState.BUILD);
 
         Set<Position> Set= new HashSet<>();
         Set.add(position03);
@@ -131,17 +133,17 @@ public class DemeterDecoratorTest {
         player1.setCurrentWorker(position12);
         Set<Position> SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
 
-        Assert.assertTrue("ER1",SetCheck.containsAll(Set));
-        Assert.assertTrue("ER2",Set.containsAll(SetCheck));
+        assertTrue(SetCheck.containsAll(Set));
+        assertTrue(Set.containsAll(SetCheck));
 
         Set.clear();
 
         commands1.build(position11,player1);
-        player1.setUnsetSpecialFunction();
+        player1.setUnsetSpecialFunction(true);
 
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("ER3", player1.getTurnState() == TurnState.BUILD);
+        assertTrue( player1.getTurnState() == TurnState.BUILD);
 
         player1.setCurrentWorker(position12);
         Set.add(position03);
@@ -153,13 +155,13 @@ public class DemeterDecoratorTest {
         Set.add(position21);
         SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
 
-        Assert.assertTrue(SetCheck.containsAll(Set));
-        Assert.assertTrue(Set.containsAll(SetCheck));
+        assertTrue(SetCheck.containsAll(Set));
+        assertTrue(Set.containsAll(SetCheck));
         commands1.build(position01,player1);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("ER4", player1.getTurnState() == TurnState.IDLE);
-        Assert.assertTrue("ER5",player1.hasFinished()==true);
+        assertTrue( player1.getTurnState() == TurnState.IDLE);
+        assertTrue(player1.hasFinished()==true);
     }
 
 }

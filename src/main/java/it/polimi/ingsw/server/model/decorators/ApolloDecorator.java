@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.utilities.Cell;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.Set;
@@ -38,7 +39,8 @@ public class ApolloDecorator extends CommandsDecorator {
     public void moveWorker(Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
-        if(billboard.getPlayer(position)>=0 && billboard.getPlayer(position)!=player.getID() ){
+        if(billboard.getCells().get(position).getPlayerID() != null &&
+                billboard.getCells().get(position).getPlayerID() != player.getID() ){
             exchangePosition(player,position);
         }
         else{
@@ -54,6 +56,7 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param position  is the cell where your worker will go
      */
     private void exchangePosition(Player player,Position position){
+
         Billboard billboard=player.getMatch().getBillboard();
         Worker myWorker= player.getCurrentWorker();
         Player opponentPlayer=findOpponentPlayer(position, player);
@@ -82,15 +85,15 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param player  current player that move his worker
      * @return  the Player that occupy the cell "position"
      */
-
     private Player findOpponentPlayer (Position position, Player player) {
+
         Billboard billboard = player.getMatch().getBillboard();
 
         return player
                 .getMatch()
                 .getPlayers()
                 .stream()
-                .filter(player1 -> player1.getID()==billboard.getPlayer(position) )
+                .filter(player1 -> player1.getID()==billboard.getCells().get(position).getPlayerID() )
                 .findAny()
                 .get();
     }
@@ -103,17 +106,19 @@ public class ApolloDecorator extends CommandsDecorator {
      */
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-        Billboard billboard=player.getMatch().getBillboard();
-        Position currentPosition=player.getCurrentWorker().getPosition();
+
+        Billboard billboard = player.getMatch().getBillboard();
+        Position currentPosition = player.getCurrentWorker().getPosition();
+        Cell currentCell = billboard.getCells().get(currentPosition);
 
         return worker
                 .getPosition()
                 .neighbourPositions()
                 .stream()
-                .filter(position -> billboard.getPlayer(position)!=player.getID())
-                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
+                .filter(position -> billboard.getCells().get(position).getPlayerID() == player.getID() || billboard.getCells().get(position).getPlayerID() == null)
+                .filter(position -> billboard.getCells().get(position).getTowerHeight() <= currentCell.getTowerHeight() ||
                         (player.getMatch().isMoveUpActive() &&
-                                billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
+                                billboard.getCells().get(position).getTowerHeight() == currentCell.getTowerHeight()+1))
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
     }

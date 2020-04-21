@@ -6,6 +6,7 @@ import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 import java.util.HashSet;
@@ -14,9 +15,10 @@ import java.util.Set;
 public class ArtemisDecoratorTest {
 
     Commands commands1, commands2;
-    Match match = new Match(2);
-    Player player1 = new Player(1, "leo", match);
-    Player player2 = new Player(2, "dario", match);
+    Player player1 = new Player(1,"leo");
+    Match match = new Match(1, player1);
+    Player player2 = new Player(2,"dario");
+    Set<GodCards> godCards = new HashSet<GodCards>();
 
     Position position00 = new Position(0, 0);
     Position position01 = new Position(0, 1);
@@ -47,11 +49,11 @@ public class ArtemisDecoratorTest {
 
     @BeforeEach
     void setUp() {
-        match.addPlayer(player1);
         match.setPlayersNum(2);
         match.addPlayer(player2);
-        match.addCard(GodCards.Apollo);
-        match.addCard(GodCards.Artemis);
+        godCards.add(GodCards.Apollo);
+        godCards.add(GodCards.Artemis);
+        match.setCards(godCards);
         player1.setCommands(GodCards.Artemis);
         player2.setCommands(GodCards.Apollo);
         commands1 = player1.getCommands();
@@ -62,28 +64,28 @@ public class ArtemisDecoratorTest {
     public void nextStateCaseSpecialFunctionNotInserted() {
         player1.setWorker(position12);
         player1.setTurnState(TurnState.IDLE);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
 
-        Assert.assertTrue("ERROR", player1.getTurnState() == TurnState.BUILD);
+        assertTrue(player1.getTurnState() == TurnState.BUILD);
 
-        player1.setTurnState(commands1.nextState(player1));
-        Assert.assertTrue("ERROR", player1.getTurnState() == TurnState.IDLE);
+        commands1.nextState(player1);
+        assertTrue( player1.getTurnState() == TurnState.IDLE);
     }
 
     @Test
     public void nextStateCaseSpecialFunctionInserted() {
         player1.setWorker(position12);
         player1.setTurnState(TurnState.IDLE);
-        player1.setTurnState(commands1.nextState(player1));
+        commands1.nextState(player1);
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
-        player1.setUnsetSpecialFunction();
-        player1.setTurnState(commands1.nextState(player1));
+        player1.setUnsetSpecialFunction(true);
+        commands1.nextState(player1);
 
-        Assert.assertTrue("ERROR", player1.getTurnState() == TurnState.MOVE);
+        assertTrue( player1.getTurnState() == TurnState.MOVE);
     }
 
     @Test
@@ -105,14 +107,14 @@ public class ArtemisDecoratorTest {
         positionCheck.add(position43);
         positionCheck.add(position44);
 
-        Assert.assertTrue("ERRORE1", positionCheck.containsAll(positionSet0));
-        Assert.assertTrue("ERRORE2", positionSet0.containsAll(positionCheck));
+        assertTrue( positionCheck.containsAll(positionSet0));
+        assertTrue( positionSet0.containsAll(positionCheck));
 
         commands1.moveWorker(position23, player1);
         worker = player1.getCurrentWorker();
         Set<Position> positionSet1 = commands1.computeAvailableMovements(player1, worker);
 
-        Assert.assertTrue("ERRORE3", positionSet1.contains(position33));
+        assertTrue( positionSet1.contains(position33));
 
         worker = player1.getCurrentWorker();
         Set<Position> positionSet2 = commands1.computeAvailableMovements(player1, worker);
@@ -129,8 +131,8 @@ public class ArtemisDecoratorTest {
 
         //positionSet2.stream().forEach(position -> System.out.println("Position(" + position.getX() + ";" + position.getY() + ")"));
 
-        Assert.assertTrue("ERRORE4", positionCheck.containsAll(positionSet2));
-        Assert.assertTrue("ERRORE5", positionSet2.containsAll(positionCheck));
+        assertTrue( positionCheck.containsAll(positionSet2));
+        assertTrue( positionSet2.containsAll(positionCheck));
 
     }
 }
