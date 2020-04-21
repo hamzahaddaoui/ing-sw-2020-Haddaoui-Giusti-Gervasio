@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
-import it.polimi.ingsw.client.Position;
+import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 
