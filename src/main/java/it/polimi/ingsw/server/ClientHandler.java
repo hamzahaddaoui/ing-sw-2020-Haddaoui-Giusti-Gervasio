@@ -17,7 +17,7 @@ import java.util.concurrent.*;
 
 public class ClientHandler extends Observable<MessageEvent> implements Observer<MessageEvent>, Runnable {
     private final ExecutorService outputTaskQueue = Executors.newSingleThreadExecutor();
-    private final ScheduledExecutorService heartbeatService = Executors.newSingleThreadScheduledExecutor();;
+    private final ScheduledExecutorService heartbeatService = Executors.newSingleThreadScheduledExecutor();
     private final Socket client;
 
     private Integer playerID;
@@ -67,6 +67,8 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                     while (true) {
                         String inputObject = (String) input.readObject();
                         MessageEvent messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
+                        if (messageEvent.getInfo().equals("Heartbeat Message"))
+                            continue;
                         if (this.playerID.equals(messageEvent.getPlayerID())) {
                             messageEvent.setClientHandler(this);
                             notify(messageEvent);
