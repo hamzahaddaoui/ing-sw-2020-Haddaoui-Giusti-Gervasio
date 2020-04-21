@@ -2,11 +2,12 @@ package it.polimi.ingsw.client.controller.commandsCharacter;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 
+import java.util.ArrayList;
+
 public class ECommand implements CommandCharacter {
+
     @Override
     public boolean executeNumberStatus() {
-
-        //messaggio View: "non fa nulla"
         return false;
     }
 
@@ -23,7 +24,6 @@ public class ECommand implements CommandCharacter {
      *
      * @return              true if you can send the message, false otherwise
      */
-
     @Override
     public boolean executeRunningStatus() {
         if (View.isTerminateTurnAvailable()) {
@@ -38,11 +38,21 @@ public class ECommand implements CommandCharacter {
         return false;
     }
 
+    /**
+     * Method that delete the coloredGodCard that has been insert in the array list of selectedGodCards
+     *
+     * @return  always false
+     */
     @Override
     public boolean executeSelectingGodCardsStatus() {
-        if(View.getGodCard()!=null){
-            removeGodCard();
-            View.setGodCard(View.getGodCards().get(0));
+        String coloredGodCard = View.getColoredGodCard();
+        ArrayList<String> godCards = View.getGodCards();
+        ArrayList<String> selectedGodCards = View.getSelectedGodCards();
+
+        if(coloredGodCard!=null){
+            godCards.add(coloredGodCard);
+            selectedGodCards.remove(selectedGodCards.indexOf(coloredGodCard));
+            View.setColoredGodCard(godCards.get(0));
         }
         return false;
     }
@@ -52,9 +62,4 @@ public class ECommand implements CommandCharacter {
 
     }
 
-
-    private void removeGodCard() {
-        View.getGodCards().add(View.getGodCard());
-        View.getSelectedGodCards().remove(View.getSelectedGodCards().indexOf(View.getGodCard()));
-    }
 }
