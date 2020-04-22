@@ -143,7 +143,7 @@ public class Match {
                 .forEach(billboard::resetPlayer);
     }
 
-    public void checkPlayers(){
+    public boolean checkPlayers(){
         players.stream()
                 .filter(player -> player.getPlayerState() == PlayerState.LOST)
                 .findAny()
@@ -163,11 +163,13 @@ public class Match {
 
             winner = winPlayer.get();
             currentState = MatchState.FINISHED;
+            return true;
         }
 
         else if (winner == null && currentPlayer.hasFinished()){
             nextTurn();
         }
+        return false;
     }
 
 
