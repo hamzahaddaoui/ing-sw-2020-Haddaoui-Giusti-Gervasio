@@ -49,7 +49,7 @@ public class ArtemisDecorator extends CommandsDecorator {
                     startingPosition=null;
                     player.setTurnState(BUILD);
                 }
-            default:
+            case BUILD:
                 player.setHasFinished();
                 player.setTurnState(IDLE);
     }}

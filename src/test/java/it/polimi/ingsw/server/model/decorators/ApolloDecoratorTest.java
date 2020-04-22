@@ -75,29 +75,29 @@ class ApolloDecoratorTest {
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
 
-        assertEquals(match.getBillboard().getCells().get(position12).getPlayerID(),player2.getID());
-        assertEquals(match.getBillboard().getCells().get(position11).getPlayerID(),player1.getID());
+        assertEquals(match.getBillboard().getPlayer(position12),player2.getID());
+        assertEquals(match.getBillboard().getPlayer(position11),player1.getID());
 
         commands1.build(position00,player1);
         match.setMoveUpActive(true);
-        assertEquals(match.getBillboard().getCells().get(position00).getTowerHeight(),1);
+        assertEquals(match.getBillboard().getTowerHeight(position00),1);
         player1.setCurrentWorker(position11);
         commands1.moveWorker(position00, player1);
 
-        assertEquals(match.getBillboard().getCells().get(position00).getPlayerID(),player1.getID());
-        assertEquals(match.getBillboard().getCells().get(position12).getPlayerID(),player2.getID());
+        assertEquals(match.getBillboard().getPlayer(position00),player1.getID());
+        assertEquals(match.getBillboard().getPlayer(position12),player2.getID());
 
         commands1.build(position01,player1);
         player1.setCurrentWorker(position00);
         match.setMoveUpActive(true);
         commands1.moveWorker(position01, player1);
 
-        assertEquals(match.getBillboard().getCells().get(position01).getPlayerID(),player1.getID());
+        assertEquals(match.getBillboard().getPlayer(position01),player1.getID());
 
         player1.setCurrentWorker(position01);
         commands1.moveWorker(position11, player1);
 
-        assertEquals(match.getBillboard().getCells().get(position11).getPlayerID(),player1.getID());
+        assertEquals(match.getBillboard().getPlayer(position11),player1.getID());
     }
 
     @Test
@@ -108,9 +108,9 @@ class ApolloDecoratorTest {
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position13, player1);
 
-        assertEquals(match.getBillboard().getCells().get(position13).getPlayerID(),player1.getID());
-        assertEquals(match.getBillboard().getCells().get(position12).getPlayerID(),null);
-        assertEquals(match.getBillboard().getCells().get(position11).getPlayerID(),player2.getID());
+        assertEquals(match.getBillboard().getPlayer(position13),player1.getID());
+        assertEquals(match.getBillboard().getPlayer(position12),null);
+        assertEquals(match.getBillboard().getPlayer(position11),player2.getID());
 
     }
 

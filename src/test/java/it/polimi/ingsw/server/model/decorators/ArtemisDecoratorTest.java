@@ -58,16 +58,28 @@ public class ArtemisDecoratorTest {
         player2.setCommands(GodCards.Apollo);
         commands1 = player1.getCommands();
         commands2 = player2.getCommands();
+
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        player1.setPlayerState();
     }
 
     @Test
     public void nextStateCaseSpecialFunctionNotInserted() {
+
         player1.setWorker(position12);
         player1.setTurnState(TurnState.IDLE);
         commands1.nextState(player1);
+        System.out.println("player1 state: " + player1.getTurnState());
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
+        System.out.println("player1 state: " + player1.getTurnState());
         commands1.nextState(player1);
+
+        System.out.println("player1 state: " + player1.getTurnState());
 
         assertTrue(player1.getTurnState() == TurnState.BUILD);
 
@@ -128,8 +140,6 @@ public class ArtemisDecoratorTest {
         positionCheck.add(position32);
         positionCheck.add(position33);
         positionCheck.add(position34);
-
-        //positionSet2.stream().forEach(position -> System.out.println("Position(" + position.getX() + ";" + position.getY() + ")"));
 
         assertTrue( positionCheck.containsAll(positionSet2));
         assertTrue( positionSet2.containsAll(positionCheck));

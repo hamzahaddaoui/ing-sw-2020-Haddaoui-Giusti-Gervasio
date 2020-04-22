@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  */
 
 public class ApolloDecorator extends CommandsDecorator {
+
     private GodCards card = GodCards.Apollo;
 
     /**
@@ -39,15 +40,13 @@ public class ApolloDecorator extends CommandsDecorator {
     public void moveWorker(Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
-        if(billboard.getCells().get(position).getPlayerID() != null &&
-                billboard.getCells().get(position).getPlayerID() != player.getID() ){
+        if(billboard.getCells().get(position).getPlayerID() != null && billboard.getPlayer(position) != player.getID() ){
             exchangePosition(player,position);
         }
         else{
             super.moveWorker(position, player);
         }
     }
-
 
     /**
      * method that allow the change of the positions of the workers
@@ -93,7 +92,7 @@ public class ApolloDecorator extends CommandsDecorator {
                 .getMatch()
                 .getPlayers()
                 .stream()
-                .filter(player1 -> player1.getID()==billboard.getCells().get(position).getPlayerID() )
+                .filter(player1 -> player1.getID() == billboard.getPlayer(position) )
                 .findAny()
                 .get();
     }
@@ -109,16 +108,16 @@ public class ApolloDecorator extends CommandsDecorator {
 
         Billboard billboard = player.getMatch().getBillboard();
         Position currentPosition = player.getCurrentWorker().getPosition();
-        Cell currentCell = billboard.getCells().get(currentPosition);
 
         return worker
                 .getPosition()
                 .neighbourPositions()
                 .stream()
-                .filter(position -> billboard.getCells().get(position).getPlayerID() == player.getID() || billboard.getCells().get(position).getPlayerID() == null)
-                .filter(position -> billboard.getCells().get(position).getTowerHeight() <= currentCell.getTowerHeight() ||
+                .filter(position -> billboard.getPlayer(position) != billboard.getPlayer(currentPosition) ||
+                        billboard.getPlayer(position) == null)
+                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
                         (player.getMatch().isMoveUpActive() &&
-                                billboard.getCells().get(position).getTowerHeight() == currentCell.getTowerHeight()+1))
+                                billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
     }
