@@ -9,23 +9,41 @@ import java.util.ArrayList;
 
 public class ACommand implements CommandCharacter {
 
+    /**
+     * Method that change the selection of the players num
+     *
+     * @return false always
+     */
     @Override
     public boolean executeNumberStatus() {
         ArrayList<Integer> coloredPlayersNum = View.getColoredPlayersNum();
 
-        coloredPlayersNum.get((coloredPlayersNum.indexOf(View.getColoredPlayersNum()) - 1) % coloredPlayersNum.size());
+        coloredPlayersNum.get((coloredPlayersNum.indexOf(View.getPlayersNum()) - 1) % coloredPlayersNum.size());
         return false;
     }
 
+    /**
+     * Method that change the selectedPosition with the first next empty cells on his left side
+     * it can change the side of the billboard selection
+     *
+     * @return  false always
+     */
     @Override
     public boolean executePlacingWorkerStatus() {
         Position coloredPosition = View.getColoredPosition();
+
         while(View.getPlacingAvailableCells().contains(coloredPosition)){
             coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
             View.setColoredPosition(coloredPosition);}
         return false;
     }
 
+    /**
+     * Method that adapt the coordinate of the position
+     *
+     * @param  coordinate  X coordinate of the position
+     * @return  correct X coordinate
+     */
     private int checkCorrectCoordinate(int coordinate) {
         coordinate--;
         if(coordinate<0) coordinate+=5;
@@ -41,7 +59,6 @@ public class ACommand implements CommandCharacter {
      *
      * @return              always false, you can't notify the message yet
      */
-
     @Override
     public boolean executeRunningStatus() {
 
@@ -72,7 +89,6 @@ public class ACommand implements CommandCharacter {
      *
      * @return  always false, you can't notify the message yet
      */
-
     @Override
     public boolean executeSpecialCommandsStatus() {
         int posColoredCard = View.getSelectedGodCards().indexOf(View.getColoredGodCard());
@@ -82,11 +98,16 @@ public class ACommand implements CommandCharacter {
         return false;
     }
 
+    /**
+     * Method that change the selected GodCard
+     *
+     * @return  false always
+     */
     @Override
     public boolean executeSelectingGodCardsStatus() {
         ArrayList<String> godCards=View.getGodCards();
 
-        View.setGodCard(godCards.get((godCards.indexOf(godCards) - 1) % godCards.size()));
+        View.setColoredGodCard(godCards.get((godCards.indexOf(View.getColoredGodCard()) - 1) % godCards.size()));
         return false;
     }
 

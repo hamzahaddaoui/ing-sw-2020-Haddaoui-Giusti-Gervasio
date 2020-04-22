@@ -4,21 +4,35 @@ import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.utilities.Position;
 
 public class SCommand implements CommandCharacter {
+
     @Override
     public boolean executeNumberStatus() {
         //messaggio View: "non fa nulla"
         return false;
     }
 
+    /**
+     * Method that change the selectedPosition with the first next empty cells in front of the actual selectedPosition
+     * it can change the side of the billboard selection
+     *
+     * @return  false always
+     */
     @Override
     public boolean executePlacingWorkerStatus() {
         Position coloredPosition = View.getColoredPosition();
+
         while(View.getPlacingAvailableCells().contains(coloredPosition)){
             coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
             View.setColoredPosition(coloredPosition);}
         return false;
     }
 
+    /**
+     * Method that adapt the coordinate of the position
+     *
+     * @param coordinate  Y coordinate of the position
+     * @return  correct Y coordinate
+     */
     private int checkCorrectCoordinate(int coordinate){
         coordinate--;
         if(coordinate<0) coordinate+=5;
@@ -33,10 +47,8 @@ public class SCommand implements CommandCharacter {
      *
      * @return              always false, you can't notify the message yet
      */
-
     @Override
     public boolean executeRunningStatus() {
-
         Position coloredPosition = View.getColoredPosition();
 
         if (View.getStartingPosition()!=null) {

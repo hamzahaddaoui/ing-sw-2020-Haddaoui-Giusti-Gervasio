@@ -23,8 +23,9 @@ class PanDecoratorTest {
     void setUp() {
         player = new Player(0,"Vasio");
         match = new Match(1,player);
-        match.addPlayer(player);
+        match.setPlayersNum(2);
         textCards.add(GodCards.Pan);
+        textCards.add(GodCards.Apollo);
         match.setCards(textCards);
         player.setCommands(GodCards.Pan);
         commands = player.getCommands();

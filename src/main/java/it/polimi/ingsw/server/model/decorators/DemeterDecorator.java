@@ -18,6 +18,7 @@ import static it.polimi.ingsw.utilities.TurnState.IDLE;
  */
 
 public class DemeterDecorator extends CommandsDecorator {
+
     static final GodCards card = GodCards.Demeter;
 
     private Position firstBuildPosition;
@@ -44,17 +45,20 @@ public class DemeterDecorator extends CommandsDecorator {
         switch (player.getTurnState()) {
             case IDLE:
                 player.setTurnState(MOVE);
+                break;
             case MOVE:
                 this.firstBuildPosition=null;
                 player.setTurnState(BUILD);
+                break;
             case BUILD:
-                if (this.firstBuildPosition!=null)
-                    if(player.hasSpecialFunction())
-                        player.setTurnState(BUILD);
-            default:
-                this.firstBuildPosition=null;
-                player.setHasFinished();
-                player.setTurnState(IDLE);
+                if (this.firstBuildPosition!=null && player.hasSpecialFunction())
+                    player.setTurnState(BUILD);
+                else{
+                    this.firstBuildPosition=null;
+                        player.setHasFinished();
+                        player.setTurnState(IDLE);
+                    }
+                break;
         }
     }
 
@@ -68,6 +72,7 @@ public class DemeterDecorator extends CommandsDecorator {
     @Override
     public void build(Position position, Player player) {
         super.build(position, player);
+
         if (this.firstBuildPosition == null){
             this.firstBuildPosition = position;
         }
@@ -91,12 +96,13 @@ public class DemeterDecorator extends CommandsDecorator {
     @Override
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
         Set<Position> result=super.computeAvailableBuildings(player, worker);
+
             if(this.firstBuildPosition==null)
                 return result;
             else{
                 return result
                         .stream()
-                        .filter(position -> position!=this.firstBuildPosition)
+                        .filter(position -> position != this.firstBuildPosition)
                         .collect(Collectors.toSet());
             }
         }

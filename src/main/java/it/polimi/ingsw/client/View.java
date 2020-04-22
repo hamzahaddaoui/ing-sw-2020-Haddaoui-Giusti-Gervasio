@@ -23,18 +23,20 @@ public class View extends Observable implements Runnable, Observer{
     private static PlayerState playerState;
     private static MatchState matchState;
     private static TurnState turnState;
+
     private static ArrayList<Integer> coloredPlayersNum;
+    private static Integer playersNum;
+
     private static ArrayList<String> selectedGodCards; //sono le carte che vengono inserite in fase di SelectedSpecialCommandsStatus
     private static ArrayList<String> godCards; //sono le carte che vengono inserite in fase di SelectingGodCardsStatus
-    private static Integer playersNum;
-    private static String selectedGodCard;
-    private static String godCard;
+    private static String coloredGodCard;
+
     private static Map<Position, Cell> billboardStatus;
     private static Map<Position, Set<Position>> workersAvailableCells;
     private static Set<Position> placingAvailableCells;
     private static Position startingPosition;
     private static Position coloredPosition;
-    private static String coloredGodCard;
+
     private static Map<Integer, String> matchPlayers;
     private static boolean terminateTurnAvailable;
     private static boolean specialFunctionAvailable;
@@ -118,22 +120,6 @@ public class View extends Observable implements Runnable, Observer{
 
     public static ArrayList<String> getSelectedGodCards() {
         return selectedGodCards;
-    }
-
-    public static String getSelectedGodCard() {
-        return selectedGodCard;
-    }
-
-    public static void setSelectedGodCard(String selectedGodCard) {
-        View.selectedGodCard = selectedGodCard;
-    }
-
-    public static void setGodCard(String godCard) {
-        View.godCard = godCard;
-    }
-
-    public static String getGodCard() {
-        return godCard;
     }
 
     public static ArrayList<Integer> getColoredPlayersNum() {

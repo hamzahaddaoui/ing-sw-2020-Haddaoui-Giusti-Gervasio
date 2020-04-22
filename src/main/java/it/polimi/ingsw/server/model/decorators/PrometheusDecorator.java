@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model.decorators;
 
+import com.sun.jdi.event.StepEvent;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
@@ -15,7 +16,7 @@ public class PrometheusDecorator extends CommandsDecorator {
         this.commands=commands;
     }
 
-    private boolean hasBuiltBeforeMoving;
+    private static boolean hasBuiltBeforeMoving;
 
     /**
      * Method that sets the next state of the player.
@@ -31,7 +32,8 @@ public class PrometheusDecorator extends CommandsDecorator {
     public void nextState(Player player) {
         switch(player.getTurnState()){
             case IDLE:
-                player.setUnsetSpecialFunctionAvailable(losingCondition(player, BUILD));
+                hasBuiltBeforeMoving = false;
+                player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player, BUILD));
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
@@ -41,8 +43,7 @@ public class PrometheusDecorator extends CommandsDecorator {
                 if (player.hasSpecialFunction() && hasBuiltBeforeMoving)
                     player.setTurnState(MOVE);
                 else player.setHasFinished();
-            default:
-                player.setTurnState(IDLE);
+                break;
         }
     }
 
@@ -100,19 +101,42 @@ public class PrometheusDecorator extends CommandsDecorator {
         }
     }
 
+
     @Override
     public void notifySpecialFunction(Player player){
-        //se la f. speciale è attiva -> disabilito la possibilità di attivarla
-                //cambio da move a build
+        if (player.hasSpecialFunction()) {
+            player.setUnsetSpecialFunctionAvailable(false);
+            player.setTurnState(BUILD);
+        }
     }
 
-    boolean losingCondition(Player player, TurnState state){
+    /**
+     * Method that checks if the boolean special function available can be true.
+     * <p>
+     * If there's only one cell in the building available cells and that cell has a tower height == 0,
+     * you can build in it and then move in it too.
+     * Else if there's only one cell in the building available cell and that cell has a different tower height
+     * (i.e. tower height == 1) the player can't build in it because after that he won't be able to move in that cell.
+     * Else the method does the standard losing condition check.
+     *
+     *
+     * @param player  the current player of the match
+     * @param state   always BUILD, the state you have to check
+     * @return        true if you can build before move, false otherwise
+     */
+
+    private boolean canBuildBeforeMove(Player player, TurnState state){
+
         boolean retVal;
-        TurnState prec;
-        prec = player.getTurnState();
+        Set<Position> buildingPositions = player.getCurrentWorker().getAvailableCells(state);
+        TurnState prec = player.getTurnState();
         player.setTurnState(state);
-        retVal = losingCondition(player);
+        if (buildingPositions.size()==1) {
+            retVal = buildingPositions.stream().anyMatch(position -> player.getMatch().getBillboard().getTowerHeight(position) == 0);
+        }
+        else retVal = losingCondition(player);
         player.setTurnState(prec);
         return retVal;
+
     }
 }

@@ -15,6 +15,8 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 class PrometheusDecoratorTest {
 
     Set<Position> positions;
+    Set<GodCards> testingCards = new HashSet<GodCards>();
+    Set<Position> testingPosition = new HashSet<Position>();
     HashSet<Position> positionsToCheck = new HashSet<>();
     Player player = new Player(1,"Vasio");
     Match match = new Match(1,player);
@@ -29,14 +31,20 @@ class PrometheusDecoratorTest {
     void setUp() {
         billboard = match.getBillboard();
         match.setPlayersNum(2);
-        match.addPlayer(player);
+        testingCards.add(GodCards.Prometheus);
+        testingCards.add(GodCards.Apollo);
+        match.setCards(testingCards);
         player.setCommands(GodCards.Prometheus);
         commands=player.getCommands();
         player.setWorker(position1);
         player.setCurrentWorker(position1);
         billboard.incrementTowerHeight(position2);
         player.setTurnState(IDLE);
-        player.setUnsetSpecialFunction(false);
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
     }
 
     @AfterEach
@@ -47,35 +55,54 @@ class PrometheusDecoratorTest {
 
     @Test
     void turn_NotSpecialFunction() {
-        player.setTurnState(commands.nextState(player));
+        player.setAvailableCells();
+        player.setPlayerState();
         assertEquals(MOVE,player.getTurnState());
         commands.moveWorker(position2,player);
-        player.setTurnState(commands.nextState(player));
+        commands.nextState(player);
         assertEquals(BUILD,player.getTurnState());
         commands.build(position3,player);
         assertEquals(1, billboard.getTowerHeight(position3), "Build problem.");
-        player.setTurnState(commands.nextState(player));
+        commands.nextState(player);
         assertEquals(IDLE,player.getTurnState());
         assertTrue(player.hasFinished(), "Next state problem.");
     }
 
     @Test
     void turn_SpecialFunction() {
+        player.setAvailableCells();
+        player.setPlayerState();
         player.setUnsetSpecialFunction(true);
-        player.setTurnState(commands.nextState(player));
         assertEquals(BUILD,player.getTurnState());
         commands.build(position3,player);
         assertEquals(1, billboard.getTowerHeight(position3), "Build problem.");
-        player.setTurnState(commands.nextState(player));
+        commands.nextState(player);
         assertEquals(MOVE,player.getTurnState());
         commands.moveWorker(position4,player);
-        player.setTurnState(commands.nextState(player));
+        commands.nextState(player);
         assertEquals(BUILD,player.getTurnState());
         commands.build(position3,player);
         assertEquals( 2, billboard.getTowerHeight(position3), "Build problem.");
-        player.setTurnState(commands.nextState(player));
+        commands.nextState(player);
         assertEquals(IDLE,player.getTurnState());
         assertTrue(player.hasFinished(), "Next state problem.");
+    }
+
+    @Test
+    void turn_SpecialFunction_NoBuildBeforeMovingPermitted() {
+        testingPosition.add(new Position(2,3));
+        billboard.incrementTowerHeight(new Position(2,3));
+        player.getCurrentWorker().setAvailableCells(BUILD,testingPosition);
+        player.setPlayerState();
+        assertFalse(player.isSpecialFunctionAvailable());
+    }
+
+    @Test
+    void turn_SpecialFunction_BuildBeforeMovingPermitted() {
+        testingPosition.add(new Position(2,3));
+        player.getCurrentWorker().setAvailableCells(BUILD,testingPosition);
+        player.setPlayerState();
+        assertTrue(player.isSpecialFunctionAvailable());
     }
 
     @Test
