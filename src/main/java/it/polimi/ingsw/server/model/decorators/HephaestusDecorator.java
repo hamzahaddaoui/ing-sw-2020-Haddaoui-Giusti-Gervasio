@@ -12,6 +12,7 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 public class HephaestusDecorator extends CommandsDecorator {
 
     private Position firstBuildPosition;
+    private boolean secondBuildDone;
 
     public HephaestusDecorator(Commands commands) {
         this.commands = commands;
@@ -21,31 +22,36 @@ public class HephaestusDecorator extends CommandsDecorator {
     public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:
+                secondBuildDone = false;
                 firstBuildPosition = null;
                 player.setTurnState(MOVE);
+                break;
             case MOVE:
                 player.setTurnState(BUILD);
+                break;
             case BUILD:
-                if (firstBuildPosition == null) {
-                    player.setTerminateTurnAvailable();
-                    player.setTurnState(BUILD);
+                if (losingCondition(player) || secondBuildDone){
+                    player.setHasFinished();
                 }
                 else{
-                    player.setHasFinished();
-                    player.setTurnState(IDLE);
+                    player.setTerminateTurnAvailable();
                 }
+                break;
             default:
-                player.setTurnState(IDLE);
+                break;
         }
     }
 
     @Override
     public void build(Position position, Player player) {
-        super.build(firstBuildPosition, player);
         if (firstBuildPosition == null){
             position.setZ(player.getMatch().getBillboard().getTowerHeight(position));
             firstBuildPosition = position;
         }
+        else{
+            secondBuildDone = true;
+        }
+        super.build(firstBuildPosition, player);
     }
 
 
@@ -57,42 +63,17 @@ public class HephaestusDecorator extends CommandsDecorator {
      */
     @Override
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
-        try{
-            Billboard billboard=player.getMatch().getBillboard();
-
-            if (firstBuildPosition == null){
-                return worker
-                        .getPosition()
-                        .neighbourPositions()
-                        .stream()
-                        .filter(position -> billboard.getPlayer(position) == -1)
-                        .filter(position -> ! billboard.getDome(position))
-                        .collect(Collectors.toSet());
-            }
-            else{
-                if (firstBuildPosition.getZ() < 3)
-                    return Collections.singleton(firstBuildPosition);
-                else
-                    return null;
-            }
-
+        if (firstBuildPosition == null){
+            return super.computeAvailableBuildings(player, worker);
         }
-        catch(Exception ex){
-            throw new NullPointerException();
+        else{
+            if (firstBuildPosition.getZ() < 3)
+                return Collections.singleton(firstBuildPosition);
+            else
+                return null;
         }
-    }
 
-    @Override
-    public boolean losingCondition(Player player){
-        if (firstBuildPosition != null)
-            return false;
-        else
-            return player
-                    .getWorkers()
-                    .stream()
-                    .anyMatch(worker -> worker
-                            .canDoSomething(player.getTurnState()));
-    }
 
+    }
 
 }

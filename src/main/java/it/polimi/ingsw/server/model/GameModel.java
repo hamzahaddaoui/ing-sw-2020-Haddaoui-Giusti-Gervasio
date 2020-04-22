@@ -60,7 +60,7 @@ public class GameModel extends Observable<MessageEvent> {
     public static boolean isNickAvailable(String nickname){
         return playersWaitingList
                 .stream()
-                .noneMatch(player -> player.getNickname().equals(nickname))
+                .noneMatch(player -> player.toString().equals(nickname))
                &&
                activeMatches
                        .keySet()
@@ -68,7 +68,7 @@ public class GameModel extends Observable<MessageEvent> {
                        .map(activeMatches::get)
                        .filter(Match::isStarted)
                        .noneMatch(match -> match.getPlayers()
-                               .stream().anyMatch(player -> player.getNickname().equals(nickname)));
+                               .stream().anyMatch(player -> player.toString().equals(nickname)));
     }
 
     public static Integer getInitMatchID(){
@@ -294,7 +294,8 @@ public class GameModel extends Observable<MessageEvent> {
         Match match = translateMatchID(matchID);
         Player player = match.getCurrentPlayer();
 
-        player.setCurrentWorker(startPosition);
+        if (!player.hasSelectedWorker())
+            player.setCurrentWorker(startPosition);
         player.playerAction(endPosition);
 
         match.checkPlayers();
@@ -313,12 +314,12 @@ public class GameModel extends Observable<MessageEvent> {
 
     public static Map<Integer, String> getMatchLosers(Integer matchID){
         return translateMatchID(matchID).getLosers().stream()
-                .collect(Collectors.toMap(Player::getID, Player::getNickname));
+                .collect(Collectors.toMap(Player::getID, Player::toString));
     }
 
     public static Map<Integer, String> getMatchPlayers(Integer matchID){
         return translateMatchID(matchID).getAllPlayers().stream()
-                .collect(Collectors.toMap(Player::getID, Player::getNickname));
+                .collect(Collectors.toMap(Player::getID, Player::toString));
     }
 
     public static Map<Position, Cell> getBillboardStatus (Integer matchID){

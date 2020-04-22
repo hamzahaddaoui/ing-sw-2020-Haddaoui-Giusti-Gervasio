@@ -25,7 +25,6 @@ public class BasicCommands implements Commands {
                 break;
             case BUILD:
                 player.setHasFinished();
-                player.setTurnState(IDLE);
         }
     }
 
@@ -101,19 +100,18 @@ public class BasicCommands implements Commands {
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
 
             Billboard billboard=player.getMatch().getBillboard();
-            Position currentPosition=player.getCurrentWorker().getPosition();
+            //Position currentPosition=player.getCurrentWorker().getPosition();
 
-            return worker
+        return worker
                     .getPosition()
                     .neighbourPositions()
                     .stream()
                     .filter(position -> billboard.getPlayer(position) == null)
-                    .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition)) ||
+                    .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(worker.getPosition())) ||
                             (player.getMatch().isMoveUpActive() &&
-                                    billboard.getTowerHeight(position) == (billboard.getTowerHeight(currentPosition) + 1)))
+                                    billboard.getTowerHeight(position) == (billboard.getTowerHeight(worker.getPosition()) + 1)))
                     .filter(position -> !billboard.getDome(position))
                     .collect(Collectors.toSet());
-
     }
 
     /**
@@ -123,19 +121,14 @@ public class BasicCommands implements Commands {
      * @return  the list of Position where the worker can build on
      */
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
-        try{
-            Billboard billboard=player.getMatch().getBillboard();
-            return worker
-                    .getPosition()
-                    .neighbourPositions()
-                    .stream()
-                    .filter(position -> billboard.getPlayer(position) == -1)
-                    .filter(position -> ! billboard.getDome(position))
-                    .collect(Collectors.toSet());
-        }
-        catch(Exception ex){
-            throw new NullPointerException();
-        }
+        Billboard billboard=player.getMatch().getBillboard();
+        return worker
+                .getPosition()
+                .neighbourPositions()
+                .stream()
+                .filter(position -> billboard.getPlayer(position) == null)
+                .filter(position -> ! billboard.getDome(position))
+                .collect(Collectors.toSet());
     }
 
     @Override

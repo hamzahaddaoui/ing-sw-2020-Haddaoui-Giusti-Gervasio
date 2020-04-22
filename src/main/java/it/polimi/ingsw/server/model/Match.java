@@ -41,6 +41,10 @@ public class Match {
         return ID;
     }
 
+    public String getPlayerNick(Integer playerID){
+        return getAllPlayers().stream().filter(player -> player.getID() == playerID).findAny().get().toString();
+    }
+
     public Integer getPlayersNum() {
         return playersNum;
     }
@@ -94,7 +98,9 @@ public class Match {
         losers.clear();
     }
 
-    public void setPlayersNum(int playersNum){
+    public void setPlayersNum(int playersNum) throws IllegalArgumentException{
+        if (!(playersNum == 2 || playersNum == 3))
+            throw new IllegalArgumentException("players Num must be 2 or 3");
         playerNumSetted = true;
         this.playersNum = playersNum;
     }
@@ -169,9 +175,9 @@ public class Match {
         if (winner!=null || currentState == MatchState.FINISHED)
             throw new UnsupportedOperationException("Match is finished!");
 
-        if (currentPlayer.getPlayerState() == PlayerState.ACTIVE){
+        /*if (currentPlayer.getPlayerState() == PlayerState.ACTIVE){
             currentPlayer.resetPlayerState();
-        }
+        }*/
         currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
         currentPlayer.setPlayerState();
     }

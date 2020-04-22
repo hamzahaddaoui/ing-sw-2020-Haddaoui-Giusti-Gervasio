@@ -104,16 +104,16 @@ public class ApolloDecorator extends CommandsDecorator {
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         Billboard billboard=player.getMatch().getBillboard();
-        Position currentPosition=player.getCurrentWorker().getPosition();
+        //Position currentPosition=player.getCurrentWorker().getPosition();
 
         return worker
                 .getPosition()
                 .neighbourPositions()
                 .stream()
-                .filter(position -> billboard.getPlayer(position)!=player.getID())
-                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
+                .filter(position -> billboard.getPlayer(position)==null ||  billboard.getPlayer(position)!=player.getID())
+                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(position) ||
                         (player.getMatch().isMoveUpActive() &&
-                                billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
+                                billboard.getTowerHeight(position) == billboard.getTowerHeight(position)+1))
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
     }
