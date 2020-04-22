@@ -1,17 +1,12 @@
 package it.polimi.ingsw.server.model.decorators;
 
-
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 class ApolloDecoratorTest {
@@ -49,8 +44,6 @@ class ApolloDecoratorTest {
     Position position43=new Position(4,3);
     Position position44=new Position(4,4);
 
-
-
     @BeforeEach
     void setUp() {
         match.addPlayer(player2);
@@ -62,10 +55,6 @@ class ApolloDecoratorTest {
         player2.setCommands(GodCards.Artemis);
         commands1=player1.getCommands();
         commands2=player2.getCommands();
-    }
-
-    @AfterEach
-    void tearDown() {
     }
 
     @Test
@@ -158,4 +147,6 @@ class ApolloDecoratorTest {
         assertTrue(positionCheck.containsAll(positionSet0));
         assertTrue(positionSet0.containsAll(positionCheck));
     }
+
+
 }

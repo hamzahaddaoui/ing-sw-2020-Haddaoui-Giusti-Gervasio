@@ -121,4 +121,5 @@ public class ApolloDecorator extends CommandsDecorator {
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
     }
+
 }

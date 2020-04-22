@@ -17,6 +17,7 @@ import static it.polimi.ingsw.utilities.TurnState.*;
  */
 
 public class ArtemisDecorator extends CommandsDecorator {
+
     static final GodCards card = GodCards.Artemis;
 
     private Position startingPosition=null;
@@ -42,6 +43,7 @@ public class ArtemisDecorator extends CommandsDecorator {
         switch (player.getTurnState()) {
             case IDLE:
                 player.setTurnState(MOVE);
+                break;
             case MOVE:
                 if (player.hasSpecialFunction() && this.startingPosition != null)//ho già fatto prima mossa e Special Function
                     player.setTurnState(MOVE);
@@ -49,9 +51,10 @@ public class ArtemisDecorator extends CommandsDecorator {
                     startingPosition=null;
                     player.setTurnState(BUILD);
                 }
+                break;
             case BUILD:
                 player.setHasFinished();
-                player.setTurnState(IDLE);
+                break;
     }}
 
     /**

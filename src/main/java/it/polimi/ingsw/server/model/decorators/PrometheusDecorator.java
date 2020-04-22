@@ -43,7 +43,7 @@ public class PrometheusDecorator extends CommandsDecorator {
                 if (player.hasSpecialFunction() && hasBuiltBeforeMoving)
                     player.setTurnState(MOVE);
                 else player.setHasFinished();
-
+                break;
         }
     }
 

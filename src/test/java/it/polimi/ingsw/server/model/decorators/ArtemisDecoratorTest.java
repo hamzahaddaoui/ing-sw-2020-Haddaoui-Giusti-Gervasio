@@ -1,14 +1,13 @@
 package it.polimi.ingsw.server.model.decorators;
 
-
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static it.polimi.ingsw.utilities.TurnState.IDLE;
 import static org.junit.jupiter.api.Assertions.*;
-
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,53 +45,51 @@ public class ArtemisDecoratorTest {
     Position position43 = new Position(4, 3);
     Position position44 = new Position(4, 4);
 
-
     @BeforeEach
     void setUp() {
         match.setPlayersNum(2);
-        match.addPlayer(player2);
         godCards.add(GodCards.Apollo);
         godCards.add(GodCards.Artemis);
         match.setCards(godCards);
         player1.setCommands(GodCards.Artemis);
-        player2.setCommands(GodCards.Apollo);
         commands1 = player1.getCommands();
-        commands2 = player2.getCommands();
 
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        player1.setPlayerState();
     }
 
     @Test
     public void nextStateCaseSpecialFunctionNotInserted() {
-
         player1.setWorker(position12);
-        player1.setTurnState(TurnState.IDLE);
+        player1.setCurrentWorker(position12);
+        player1.setTurnState(IDLE);
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+
         commands1.nextState(player1);
-        System.out.println("player1 state: " + player1.getTurnState());
         player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
-        System.out.println("player1 state: " + player1.getTurnState());
         commands1.nextState(player1);
-
-        System.out.println("player1 state: " + player1.getTurnState());
 
         assertTrue(player1.getTurnState() == TurnState.BUILD);
 
         commands1.nextState(player1);
+
         assertTrue( player1.getTurnState() == TurnState.IDLE);
     }
 
     @Test
     public void nextStateCaseSpecialFunctionInserted() {
         player1.setWorker(position12);
-        player1.setTurnState(TurnState.IDLE);
-        commands1.nextState(player1);
         player1.setCurrentWorker(position12);
+        player1.setTurnState(IDLE);
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        commands1.nextState(player1);
         commands1.moveWorker(position11, player1);
         player1.setUnsetSpecialFunction(true);
         commands1.nextState(player1);
@@ -103,8 +100,14 @@ public class ArtemisDecoratorTest {
     @Test
     public void computeAvailableMovements() {
         player1.setWorker(position33);
-        player2.setWorker(position41);
+        player1.setWorker(position00);
         player1.setCurrentWorker(position33);
+        player1.setTurnState(IDLE);
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
 
         Worker worker = player1.getCurrentWorker();
         Set<Position> positionSet0 = commands1.computeAvailableMovements(player1, worker);

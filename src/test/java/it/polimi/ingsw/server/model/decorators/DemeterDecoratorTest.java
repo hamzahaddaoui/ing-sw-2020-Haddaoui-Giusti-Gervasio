@@ -2,10 +2,13 @@ package it.polimi.ingsw.server.model.decorators;
 
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static it.polimi.ingsw.utilities.TurnState.IDLE;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
@@ -45,7 +48,6 @@ public class DemeterDecoratorTest {
     Position position43=new Position(4,3);
     Position position44=new Position(4,4);
 
-
     @BeforeEach
     void setUp() {
         match.setPlayersNum(2);
@@ -62,7 +64,14 @@ public class DemeterDecoratorTest {
     @Test
     public void nextStateJustOneBuild() {
         player1.setWorker(position12);
-        player1.setTurnState(TurnState.IDLE);
+        player1.setCurrentWorker(position12);
+        player1.setTurnState(IDLE);
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+
         commands1.nextState(player1);
 
         assertTrue(player1.getTurnState() == TurnState.MOVE);
@@ -75,8 +84,9 @@ public class DemeterDecoratorTest {
         commands1.build(position11,player1);
         commands1.nextState(player1);
 
-        assertTrue( player1.getTurnState() == TurnState.IDLE);
+
         assertTrue(player1.hasFinished()==true);
+        assertTrue( player1.getTurnState() == TurnState.IDLE);
     }
 
     @Test
@@ -96,7 +106,6 @@ public class DemeterDecoratorTest {
         player1.setUnsetSpecialFunction(true);
 
         commands1.nextState(player1);
-
         assertTrue( player1.getTurnState() == TurnState.BUILD);
 
         player1.setCurrentWorker(position12);
@@ -104,7 +113,7 @@ public class DemeterDecoratorTest {
         commands1.nextState(player1);
 
         assertTrue( player1.getTurnState() == TurnState.IDLE);
-        assertTrue(player1.hasFinished()==true);
+        assertTrue(player1.getPlayerState() == PlayerState.IDLE);
     }
 
     @Test
