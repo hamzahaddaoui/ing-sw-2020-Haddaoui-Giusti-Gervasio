@@ -80,7 +80,6 @@ public class DemeterDecoratorTest {
 
         assertTrue( player1.getTurnState() == TurnState.BUILD);
 
-        player1.setCurrentWorker(position12);
         commands1.build(position11,player1);
         commands1.nextState(player1);
 
@@ -101,14 +100,12 @@ public class DemeterDecoratorTest {
 
         assertTrue(player1.getTurnState() == TurnState.BUILD);
 
-        player1.setCurrentWorker(position12);
         commands1.build(position11,player1);
         player1.setUnsetSpecialFunction(true);
 
         commands1.nextState(player1);
         assertTrue( player1.getTurnState() == TurnState.BUILD);
 
-        player1.setCurrentWorker(position12);
         commands1.build(position01,player1);
         commands1.nextState(player1);
 
@@ -154,7 +151,6 @@ public class DemeterDecoratorTest {
 
         assertTrue( player1.getTurnState() == TurnState.BUILD);
 
-        player1.setCurrentWorker(position12);
         Set.add(position03);
         Set.add(position02);
         Set.add(position01);

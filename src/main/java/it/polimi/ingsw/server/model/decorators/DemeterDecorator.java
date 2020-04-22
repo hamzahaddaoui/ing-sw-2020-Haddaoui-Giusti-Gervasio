@@ -55,8 +55,7 @@ public class DemeterDecorator extends CommandsDecorator {
                     player.setTurnState(BUILD);
                 else{
                     this.firstBuildPosition=null;
-                        player.setHasFinished();
-                        player.setTurnState(IDLE);
+                    player.setHasFinished();
                     }
                 break;
         }

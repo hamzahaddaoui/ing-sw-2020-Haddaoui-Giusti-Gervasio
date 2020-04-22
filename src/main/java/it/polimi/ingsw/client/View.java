@@ -50,6 +50,17 @@ public class View extends Observable implements Runnable, Observer{
     public View() {
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
+
+    }
+
+    public static void setGodCards(ArrayList<String> godCards) {
+        View.godCards = godCards;
+    }
+
+    public void viewSetUp(){
+        coloredPlayersNum.add(2);
+        coloredPlayersNum.add(3);
+        playersNum = coloredPlayersNum.get(0);
     }
 
     @Override
@@ -82,9 +93,6 @@ public class View extends Observable implements Runnable, Observer{
             notify(vcEvent);
         }*/
 
-        coloredPlayersNum.add(2);
-        coloredPlayersNum.add(3);
-        playersNum = coloredPlayersNum.get(0);
         setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
 
          outputStream.println("Insert a nickname: ");

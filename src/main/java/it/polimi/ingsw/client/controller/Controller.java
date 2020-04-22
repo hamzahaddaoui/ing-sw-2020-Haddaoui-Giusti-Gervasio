@@ -15,11 +15,12 @@ public class Controller extends Observable<String> implements Observer<Object> {
     private PlayerState playerState;
     private MatchState matchState;
     private static MessageEvent message;
+    private boolean messageReady = false;
 
     @Override
     public void update(Object viewObject) {
 
-        boolean messageReady = false;
+        messageReady = false;
         message = null;
 
         PlayerState newPlayerState = View.getPlayerState();
@@ -53,8 +54,16 @@ public class Controller extends Observable<String> implements Observer<Object> {
         return this.matchState;
     }
 
+    public void setMatchState(MatchState matchState){
+        this.matchState = matchState;
+    }
+
     public PlayerState getPlayerState() {
         return this.playerState;
+    }
+
+    public void setPlayerState(PlayerState playerState){
+        this.playerState = playerState;
     }
 
     public void setState(ControlState ctrlState){
@@ -63,6 +72,10 @@ public class Controller extends Observable<String> implements Observer<Object> {
 
     public static MessageEvent getMessage(){
         return message;
+    }
+
+    public boolean isMessageReady(){
+        return messageReady;
     }
 
     /*MessageEvent message; //

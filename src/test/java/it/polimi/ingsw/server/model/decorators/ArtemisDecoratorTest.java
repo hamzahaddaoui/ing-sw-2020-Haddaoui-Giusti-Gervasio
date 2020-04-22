@@ -68,7 +68,6 @@ public class ArtemisDecoratorTest {
         match.nextState();
 
         commands1.nextState(player1);
-        player1.setCurrentWorker(position12);
         commands1.moveWorker(position11, player1);
         commands1.nextState(player1);
 
@@ -133,7 +132,6 @@ public class ArtemisDecoratorTest {
 
         worker = player1.getCurrentWorker();
         Set<Position> positionSet2 = commands1.computeAvailableMovements(player1, worker);
-        player1.setCurrentWorker(position23);
         positionCheck.clear();
         positionCheck.add(position12);
         positionCheck.add(position13);

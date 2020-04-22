@@ -3,6 +3,8 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import static org.junit.jupiter.api.Assertions.*;
+
+import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -70,20 +72,18 @@ class ApolloDecoratorTest {
         commands1.build(position00,player1);
         match.setMoveUpActive(true);
         assertEquals(match.getBillboard().getTowerHeight(position00),1);
-        player1.setCurrentWorker(position11);
+        player1.setTurnState(TurnState.MOVE);
         commands1.moveWorker(position00, player1);
 
         assertEquals(match.getBillboard().getPlayer(position00),player1.getID());
         assertEquals(match.getBillboard().getPlayer(position12),player2.getID());
 
         commands1.build(position01,player1);
-        player1.setCurrentWorker(position00);
         match.setMoveUpActive(true);
         commands1.moveWorker(position01, player1);
 
         assertEquals(match.getBillboard().getPlayer(position01),player1.getID());
 
-        player1.setCurrentWorker(position01);
         commands1.moveWorker(position11, player1);
 
         assertEquals(match.getBillboard().getPlayer(position11),player1.getID());
@@ -102,7 +102,6 @@ class ApolloDecoratorTest {
         assertEquals(match.getBillboard().getPlayer(position11),player2.getID());
 
     }
-
 
     @Test
     void testComputeAvailableMovements() {
@@ -127,13 +126,10 @@ class ApolloDecoratorTest {
         positionCheck.add(position23);
         positionCheck.add(position21);
 
-        //positionSet.stream().forEach(position -> System.out.println("Position(" + position.getX() + ";" + position.getY() + ")"));
-
         assertTrue(positionCheck.containsAll(positionSet));
         assertTrue(positionSet.containsAll(positionCheck));
 
         match.getBillboard().incrementTowerHeight(position11);
-        player1.setCurrentWorker(position12);
         Set<Position> positionSet0= commands1.computeAvailableMovements(player1,worker);
         positionCheck.clear();
         positionCheck.add(position03);
