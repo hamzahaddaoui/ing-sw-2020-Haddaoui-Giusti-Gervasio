@@ -21,12 +21,14 @@ public class AtlasDecorator extends CommandsDecorator {
         switch(player.getTurnState()){
             case IDLE:
                 player.setTurnState(MOVE);
+                break;
             case MOVE:
                 player.setUnsetSpecialFunctionAvailable(true);
                 player.setTurnState(BUILD);
+                break;
             case BUILD:
                 player.setHasFinished();
-                player.setTurnState(IDLE);
+                break;
         }
     }
 

@@ -46,4 +46,5 @@ public class AthenaDecorator extends CommandsDecorator {
             return false;
         }
     }
+
 }

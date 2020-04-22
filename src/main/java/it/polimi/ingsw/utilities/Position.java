@@ -8,7 +8,7 @@ import com.google.gson.Gson;
  * Every point can have a value associated, which is the height, of the point (z)
  */
 
-public class Position {
+public class Position implements Comparable{
     private int x;
     private int y;
 
@@ -124,6 +124,20 @@ public class Position {
     @Override
     public int hashCode() {
         return (this.x * 17) ^ y; //hash function x*numeroprimo xor y
+    }
+
+    @Override
+    public String toString(){
+        return x+""+y;
+    }
+
+    @Override
+    public int compareTo(Object o){
+        if(o instanceof Position){
+            Position p = (Position) o;
+            return this.toString().compareTo(p.toString());
+        }
+        return 0;
     }
 }
 

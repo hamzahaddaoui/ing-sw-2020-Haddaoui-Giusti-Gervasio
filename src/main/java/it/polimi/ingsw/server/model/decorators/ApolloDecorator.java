@@ -48,6 +48,7 @@ public class ApolloDecorator extends CommandsDecorator {
         }
     }
 
+
     /**
      * method that allow the change of the positions of the workers
      *

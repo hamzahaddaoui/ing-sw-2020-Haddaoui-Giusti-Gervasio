@@ -26,6 +26,7 @@ public class Player{
 
     private boolean selectedCard;
     private boolean placedWorkers;
+    private boolean selectedWorker;
     private boolean specialFunction;
 
     private boolean terminateTurnAvailable;         //può essere terminato il turno?
@@ -42,7 +43,8 @@ public class Player{
         return ID;
     }
 
-    public String getNickname() {
+    @Override
+    public String toString() {
         return nickname;
     }
 
@@ -78,6 +80,10 @@ public class Player{
 
     public boolean hasPlacedWorkers() {
         return placedWorkers;
+    }
+
+    public boolean hasSelectedWorker(){
+        return selectedWorker;
     }
 
     public boolean hasSpecialFunction() {
@@ -116,16 +122,19 @@ public class Player{
 
     }
 
-    public void setCurrentWorker(Position position) {
-        currentWorker = workers.stream().filter(worker -> worker.getPosition()==position).findAny().get();
+    public void setCurrentWorker(Position position) throws IllegalArgumentException{
+        Optional<Worker> optionalWorker = workers.stream().filter(worker -> worker.getPosition().equals(position)).findAny();
+        if (! selectedWorker && optionalWorker.isPresent()){
+            currentWorker = optionalWorker.get();
+            selectedWorker = true;
+        }
+        else
+            throw new IllegalArgumentException("Can't select worker");
     }
 
     public void setPlayerState(){
         this.playerState = PlayerState.ACTIVE;
         if (match.getCurrentState() == MatchState.RUNNING) {
-            specialFunction = false;
-            terminateTurnAvailable = false;
-            specialFunctionAvailable = false;
             commands.nextState(this);
             setAvailableCells();
         }
@@ -143,7 +152,9 @@ public class Player{
         playerState = PlayerState.LOST;
     }
 
-    public void setTurnState(TurnState turnState) {
+    public void setTurnState(TurnState turnState) throws IllegalStateException{
+        if (playerState != PlayerState.ACTIVE)
+            throw new IllegalStateException("Player is not active");
         this.turnState = turnState;
     }
 
@@ -153,6 +164,12 @@ public class Player{
     }
 
     public void setHasFinished() {
+        specialFunction = false;
+        currentWorker = null;
+        selectedWorker = false;
+        terminateTurnAvailable = false;
+        specialFunctionAvailable = false;
+
         turnState = TurnState.IDLE;
         playerState = PlayerState.IDLE;
     }
@@ -174,13 +191,19 @@ public class Player{
                 commands.build(position, this);
                 break;
         }
-        commands.nextState(this);
         setAvailableCells();
+        commands.nextState(this);
+        if(hasFinished()){
+            return;
+        }
+
         if (commands.winningCondition(this))
             playerState = PlayerState.WIN;
         else if (commands.losingCondition(this))
             playerState = PlayerState.LOST;
     }
+
+
 
     public Set<Position> getPlacingAvailableCells(){
         return commands.computeAvailablePlacing(this);
@@ -193,25 +216,17 @@ public class Player{
         return positionSetMap;
     }
 
-
-
-    public void setAvailableCells() {
+    private void setAvailableCells() {
         workers.forEach(worker -> {
             worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));
             worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));
         });
     }
 
-
-    @Override
-    public String toString(){
-        return nickname;
-    }
-
     @Override
     public boolean equals(Object obj){
         if (obj instanceof Player)
-            return (this.nickname.equals(((Player) obj).getNickname()));
+            return (this.nickname.equals(((Player) obj).toString()));
         else
             return false;
     }

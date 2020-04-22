@@ -10,7 +10,7 @@ import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class Running extends State{
     @Override
-    public void handleRequest(MessageEvent messageEvent){
+    public void handleRequest(MessageEvent messageEvent) {
         Integer matchID = messageEvent.getMatchID();
         if (messageEvent.getEndTurn()) {
             if (isTerminateTurnAvailable(matchID)){
