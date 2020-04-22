@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.controller.state.InsertCharacter;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.TurnState;
@@ -7,7 +8,6 @@ import it.polimi.ingsw.utilities.*;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Map;
@@ -101,7 +101,7 @@ public class View extends Observable implements Runnable, Observer{
              try {
                  outputStream.println();
                  inputCharacter = dataInputStream.readChar();
-                 if(InputCharacter.values().equals(inputCharacter)){
+                 if(InsertCharacter.values().equals(inputCharacter)){
                     notify(inputCharacter);
                  }
                  else{
