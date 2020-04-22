@@ -6,16 +6,19 @@ import it.polimi.ingsw.utilities.TurnState;
 import it.polimi.ingsw.utilities.*;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 public class View extends Observable implements Runnable, Observer{
 
 
-    private InputStream inputStream;
+    private Scanner scanner;
+    private DataInputStream dataInputStream;
     private PrintStream outputStream;
 
     private static Integer matchID;
@@ -41,9 +44,11 @@ public class View extends Observable implements Runnable, Observer{
     private static boolean terminateTurnAvailable;
     private static boolean specialFunctionAvailable;
 
+    private static String inputMessage;
+    private static char inputCharacter;
 
     public View() {
-        inputStream = new DataInputStream(System.in);
+        scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
     }
 
@@ -51,6 +56,16 @@ public class View extends Observable implements Runnable, Observer{
     public void update(Object message){
         //se ricevo un messaggio dal model
         //aggiorna la scacchiera a video
+
+        if(playerState != PlayerState.LOST ){
+            outputStream.println(" DAMN! YOU ARE A LOSER ");
+        }
+
+        else if(playerState != PlayerState.WIN){
+            outputStream.println(" YOU WIN ");
+        }
+
+        // DISCONNESSIONE DEL CLIENT
     }
 
     @Override
@@ -72,10 +87,32 @@ public class View extends Observable implements Runnable, Observer{
         playersNum = coloredPlayersNum.get(0);
         setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
 
-     while(true) {
          outputStream.println("Insert a nickname: ");
-         notify();
-     }
+         inputMessage = scanner.nextLine();
+         scanner.close();
+         notify(inputMessage);
+
+         while( playerState != PlayerState.LOST  || playerState != PlayerState.WIN ){
+             /*
+              *  il controller lato server potrebbe scrivere /dare consigli standard
+              *  su cosa il client deve inserire in quel momento
+              *
+              */
+             try {
+                 outputStream.println();
+                 inputCharacter = dataInputStream.readChar();
+                 if(InputCharacter.values().equals(inputCharacter)){
+                    notify(inputCharacter);
+                 }
+                 else{
+                     outputStream.println(" Carattere non disponibile ");
+                 }
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+
+         }
+
     }
 
     public static ArrayList<String> getGodCards() {
