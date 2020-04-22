@@ -195,5 +195,11 @@ class SelectionNumberStatusTest {
 
         assertEquals(controller.isMessageReady(),true);
         assertEquals(View.getColoredGodCard(), View.getGodCards().get(0));
+        assertEquals( controller.getControlState() , new SelectingGodCardsStatus() );
+
+        controller.setPlayerState(PlayerState.IDLE);
+        controller.setMatchState(MatchState.SELECTING_GOD_CARDS);
+
+        assertEquals( controller.getControlState() , new WaitingStatus() );
     }
 }

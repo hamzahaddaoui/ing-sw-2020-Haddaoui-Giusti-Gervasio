@@ -78,6 +78,10 @@ public class Controller extends Observable<String> implements Observer<Object> {
         return messageReady;
     }
 
+    public ControlState getControlState(){
+        return this.controlState;
+    }
+
     /*MessageEvent message; //
     Set<String> selectedCards;
     Position startPosition;
