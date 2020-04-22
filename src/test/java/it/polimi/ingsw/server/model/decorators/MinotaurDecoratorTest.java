@@ -15,6 +15,7 @@ import java.util.Set;
 
 class MinotaurDecoratorTest {
 
+    Set<GodCards> testingCards = new HashSet<GodCards>();
     Set<Position> positions;
     HashSet<Position> positionsToCheck = new HashSet<>();
     Player player1 = new Player(1,"Vasio");
@@ -36,11 +37,13 @@ class MinotaurDecoratorTest {
     void setUp() {
         match.setPlayersNum(2);
         billboard = match.getBillboard();
+        testingCards.add(GodCards.Minotaur);
+        testingCards.add(GodCards.Apollo);
+        match.setCards(testingCards);
         player1.setCommands(GodCards.Minotaur);
         commands = player1.getCommands();
-        match.addPlayer(player1);
         match.addPlayer(player2);
-        player2.setCommands(GodCards.Minotaur);
+        player2.setCommands(GodCards.Apollo);
         player1.setWorker(position1);
         player1.setCurrentWorker(position1);
         player2.setWorker(position2);
@@ -108,6 +111,10 @@ class MinotaurDecoratorTest {
     @Test
     void computeAvailableMovements_OpponentWorkerAndNextCellHasPlayer() {
         match.setPlayersNum(3);
+        testingCards.add(GodCards.Minotaur);
+        testingCards.add(GodCards.Apollo);
+        testingCards.add(GodCards.Artemis);
+        match.setCards(testingCards);
         match.addPlayer(player3);
         player3.setCommands(GodCards.Artemis);
         player3.setWorker(position4);
