@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,17 +36,19 @@ class MinotaurDecoratorTest {
     void setUp() {
         match.setPlayersNum(2);
         billboard = match.getBillboard();
+        match.addPlayer(player2);
+
         testingCards.add(GodCards.Minotaur);
         testingCards.add(GodCards.Apollo);
         match.setCards(testingCards);
+
         player1.setCommands(GodCards.Minotaur);
         commands = player1.getCommands();
-        match.addPlayer(player2);
         player2.setCommands(GodCards.Apollo);
+
         player1.setWorker(position1);
-        player1.setCurrentWorker(position1);
         player2.setWorker(position2);
-        player2.setCurrentWorker(position2);
+
     }
 
     @AfterEach
@@ -60,6 +61,8 @@ class MinotaurDecoratorTest {
 
     @Test
     void moveWorker_InOpponentWorkerSpaceWithNextCellFree_ExpectNewPositions() {
+        player1.setCurrentWorker(position1);
+        player2.setCurrentWorker(position2);
         commands.moveWorker(position2,player1);
         assertEquals(position2,player1.getCurrentWorkerPosition());
         assertEquals(position4,player2.getCurrentWorkerPosition());
@@ -67,6 +70,8 @@ class MinotaurDecoratorTest {
 
     @Test
     void moveWorker_InOpponentWorkerSpaceWithNextCellOccupied_ExpectSamePositions() {
+        player1.setCurrentWorker(position1);
+        player2.setCurrentWorker(position2);
         billboard.setDome(position4);
         commands.moveWorker(position2,player1);
         assertEquals(position1,player1.getCurrentWorkerPosition());
@@ -85,12 +90,14 @@ class MinotaurDecoratorTest {
 
     @Test
     void computeAvailableMovements_OpponentWorkerAndNextCellFree() {
+        player1.setCurrentWorker(position1);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
         assertTrue(positions.contains(position2), "Problem with opponent.");
     }
 
     @Test
     void computeAvailableMovements_OpponentWorkerAndNextCellHasDome() {
+        player1.setCurrentWorker(position1);
         billboard.setDome(position4);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
         assertFalse(positions.contains(position2), "Problem with dome.");
@@ -99,17 +106,16 @@ class MinotaurDecoratorTest {
     @Test
     void computeAvailableMovements_OpponentWorkerAndNextCellIsNull() {
         player1.setTurnState(TurnState.IDLE);
-        player2.setTurnState(TurnState.IDLE);
         player1.setWorker(position7);
         player1.setCurrentWorker(position7);
         player2.setWorker(position3);
-        player2.setCurrentWorker(position3);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
         assertFalse(positions.contains(position8), "Problem with null cell.");
     }
 
     @Test
     void computeAvailableMovements_OpponentWorkerAndNextCellHasPlayer() {
+        player1.setCurrentWorker(position1);
         match.setPlayersNum(3);
         testingCards.add(GodCards.Minotaur);
         testingCards.add(GodCards.Apollo);
@@ -118,7 +124,6 @@ class MinotaurDecoratorTest {
         match.addPlayer(player3);
         player3.setCommands(GodCards.Artemis);
         player3.setWorker(position4);
-        player3.setCurrentWorker(position4);
         positions = commands.computeAvailableMovements(player1,player1.getCurrentWorker());
         assertFalse(positions.contains(position2), "Problem with opponent player.");
     }

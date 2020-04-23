@@ -40,7 +40,7 @@ class PlayerTestHamza {
         assertFalse(p1.hasSpecialFunction());
         assertFalse(p1.hasFinished());
         assertFalse(p1.isTerminateTurnAvailable());
-        assertFalse(p1.isSpecialFunctionAvailable());
+        //assertFalse(p1.isSpecialFunctionAvailable());
     }
     @Test
     void testMatchCreator(){
@@ -99,78 +99,389 @@ class PlayerTestHamza {
         Position worker, build;
         testPlacing();
         p1.setPlayerState();
+
+        System.out.println("\n-----------------------------------------------------------------------------" +
+                           "\n-----------------------------first ROUND------------------------------------" +
+                           "\n-----------------------------------------------------------------------------");
+        {
+            //---------turno di athena------------------------------------------------------
             p = p1;
             System.out.println(getBillboardStat());
-            worker = new Position(0, 0); p.setCurrentWorker(worker);
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(0, 0);
+            p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            worker = new Position(1, 1); p.playerAction(worker);
-            match.checkPlayers(); build = new Position(0, 0);
+            System.out.println("Athena - moves from x=0 y=0 to x=1 y=1\n\n");
+            worker = new Position(1, 1);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(0, 0);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            p.playerAction(build); match.checkPlayers();
-            p = p2; System.out.println(getBillboardStat());
-            worker = new Position(2, 3);p.setCurrentWorker(worker);
+            System.out.println("Athena - builds a block in x=0 y=0\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+
+            //---------turno di atlas------------------------------------------------------
+            p = p2;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(2, 3);
+            p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Atlas - moves from x=2 y=3 to x=2 y=2\n\n");
             worker = new Position(2, 2);
-            p.playerAction(worker);match.checkPlayers();
-            build = new Position(2, 1); p.setUnsetSpecialFunction(true);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(2, 1);
+            p.setUnsetSpecialFunction(true);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            p.playerAction(build); match.checkPlayers();
-            p = p3; System.out.println(getBillboardStat());
-            worker = new Position(4, 4); p.setCurrentWorker(worker);
+            System.out.println("Atlas - builds a dome in x=2 y=1\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di efesto------------------------------------------------------
+            p = p3;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(4, 4);
+            p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            worker = new Position(3, 4); p.playerAction(worker); match.checkPlayers();
+            System.out.println("Hephaestus - moves from x=4 y=4 to x=3 y=4\n\n");
+            worker = new Position(3, 4);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
             build = new Position(3, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            p.playerAction(build); match.checkPlayers(); build = new Position(3, 3);
+            System.out.println("Hephaestus - builds a block in x=3 y=3\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+
+            build = new Position(3, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            p.playerAction(build);match.checkPlayers();
-            p = p1; System.out.println(getBillboardStat());
-            worker = new Position(1, 1); p.setCurrentWorker(worker);
+            System.out.println("Hephaestus - builds a block in x=3 y=3\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+
+
+            //FINE
+        }
+
+        System.out.println("\n-----------------------------------------------------------------------------" +
+                           "\n-----------------------------second ROUND------------------------------------" +
+                           "\n-----------------------------------------------------------------------------");
+        {
+            //---------turno di athena------------------------------------------------------
+            p = p1;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(1, 1);
+            p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("Athena - moves from x=1 y=1 to x=0 y=0 (moved up)\n\n");
             worker = new Position(0, 0);
-            p.playerAction(worker);match.checkPlayers();
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
             build = new Position(1, 0);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            p.playerAction(build);match.checkPlayers();
-            p = p2; System.out.println(getBillboardStat());
-            worker = new Position(2, 2); p.setCurrentWorker(worker);
+            System.out.println("Athena - builds a block in x=1 y=0\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di atlas------------------------------------------------------
+            p = p2;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(2, 2);
+            p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("(move up not active!)\nAtlas - moves from x=2 y=2 to x=3 y=2\n\n");
             worker = new Position(3, 2);
-            p.playerAction(worker); match.checkPlayers();
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
             build = new Position(2, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("Atlas - builds a block in x=2 y=3\n\n");
-            p.playerAction(build);match.checkPlayers();
-            p = p3; System.out.println(getBillboardStat());
-            worker = new Position(3, 4); p.setCurrentWorker(worker);
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di efesto------------------------------------------------------
+            p = p3;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(3, 4);
+            p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("(move up not active!)\nHephaestus - moves from x=3 y=4 to x=2 y=3\n\n");
             worker = new Position(2, 3);
-            p.playerAction(worker); match.checkPlayers();
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
             build = new Position(1, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("Hephaestus - builds a block in x=1 y=3\n\n");
-            p.playerAction(build); match.checkPlayers();
+            p.playerAction(build);
+            match.checkPlayers();
+
             p.setHasFinished();
             match.checkPlayers();
+            //FINE
+        }
+        System.out.println("\n-----------------------------------------------------------------------------" +
+                           "\n-----------------------------third ROUND------------------------------------" +
+                           "\n-----------------------------------------------------------------------------");
+        {
+            //---------turno di athena------------------------------------------------------
+            p = p1;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(0, 1);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Athena - moves from x=0 y=1 to x=1 y=1\n\n");
+            worker = new Position(1, 1);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(1, 0);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Athena - builds a block in x=1 y=0\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di atlas------------------------------------------------------
+            p = p2;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(2, 4);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Atlas - moves from x=2 y=4 to x=1 y=4\n\n");
+            worker = new Position(1,4);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(1,3);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Atlas - builds a block in x=1 y=3\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di efesto------------------------------------------------------
+            p = p3;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(2, 3);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Hephaestus - moves from x=2 y=3 to x=1 y=3\n\n");
+            worker = new Position(1, 3);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(0, 3);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Hephaestus - builds a block in x=0 y=3\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(0, 3);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Hephaestus - builds a block in x=0 y=3\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            match.checkPlayers();
+            //FINE
+        }
+
+        System.out.println("\n-----------------------------------------------------------------------------" +
+                           "\n-----------------------------fourth ROUND------------------------------------" +
+                           "\n-----------------------------------------------------------------------------");
+        {
+            //---------turno di athena------------------------------------------------------
+            p = p1;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(0, 0);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Athena - moves from x=0 y=0 to x=1 y=0\n\n");
+            worker = new Position(1, 0);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(2, 0);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Athena - builds a block in x=2 y=0\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di atlas------------------------------------------------------
+            p = p2;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(1, 4);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Atlas - moves from x=1 y=4 to x=2 y=4\n\n");
+            worker = new Position(2,4);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(2,3);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Atlas - builds a block in x=2 y=3\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di efesto------------------------------------------------------
+            p = p3;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(1, 3);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Hephaestus - moves from x=1 y=3 to x=2 y=3\n\n");
+            worker = new Position(2, 3);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(3, 3);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Hephaestus - builds a block in x=3 y=3\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+
+            p.setHasFinished();
+            match.checkPlayers();
+            //FINE
+        }
+
+        System.out.println("\n-----------------------------------------------------------------------------" +
+                           "\n-----------------------------fifth ROUND------------------------------------" +
+                           "\n-----------------------------------------------------------------------------");
+        {
+            //---------turno di athena------------------------------------------------------
+            p = p1;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(1, 0);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Athena - moves from x=1 y=0 to x=2 y=0\n\n");
+            worker = new Position(2, 0);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(3, 0);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Athena - builds a block in x=3 y=0\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di atlas------------------------------------------------------
+            p = p2;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(2, 4);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Atlas - moves from x=2 y=4 to x=3 y=4\n\n");
+            worker = new Position(3,4);
+            p.playerAction(worker);
+            match.checkPlayers();
+
+            //COSTRUISCO
+            build = new Position(4,4);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Atlas - builds a block in x=4 y=4\n\n");
+            p.playerAction(build);
+            match.checkPlayers();
+            //FINE
+
+            //---------turno di efesto------------------------------------------------------
+            p = p3;
+            System.out.println(getBillboardStat());
+            //INIZIO TURNO - MI MUOVO
+            worker = new Position(2, 3);
+            p.setCurrentWorker(worker);
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("Hephaestus - moves from x=2 y=3 to x=3 y=3\n\n");
+            worker = new Position(3, 3);
+            p.playerAction(worker);
+            if (match.checkPlayers()){
+                System.out.println("MATCH FINISHED - WINNER IS "+p.toString());
+            }
+        }
     }
+
+
 
     String getBillboardStat(){
         StringBuilder output = new StringBuilder();
-        match.getBillboard().getCells().keySet().stream().sorted().forEach(position -> output.append(match.getBillboard().getPlayer(position)==null ? "[ ]": (match.getPlayerNick(match.getBillboard().getPlayer(position)))).append((position.getY()==4) ? "\n" : " "));
+        match.getBillboard()
+                .getCells()
+                .keySet()
+                .stream()
+                .sorted()
+                .forEach(position -> output
+                        .append(match.getBillboard().getPlayer(position)==null ? "[ ]": (match.getPlayerNick(match.getBillboard().getPlayer(position))))
+                        .append((position.getY()==4) ? "\n" : " "));
+
         output.append("\n");
-        match.getBillboard().getCells().keySet().stream().sorted().forEach(position -> output.append(match.getBillboard().getDome(position) ? "[D]" : "["+match.getBillboard().getTowerHeight(position)+"]").append((position.getY()==4) ? "\n" : " "));
+
+        match.getBillboard()
+                .getCells()
+                .keySet()
+                .stream()
+                .sorted()
+                .forEach(position -> output
+                        .append(match.getBillboard().getDome(position) ? "[D]" : "["+match.getBillboard().getTowerHeight(position)+"]")
+                        .append((position.getY()==4) ? "\n" : " "));
         return output.toString();
     }
 
     String getBillboardStat(Set<Position> cells){
         StringBuilder output = new StringBuilder();
-        match.getBillboard().getCells().keySet().stream().sorted().forEach(position -> output.append(cells.contains(position) ? "\u2B1B" : "").append(!(p.getCurrentWorker().getPosition().equals(position)) && !cells.contains(position) ? "\u2B1C" : "").append((p.getCurrentWorker().getPosition().equals(position)) ? "\u2705" : "").append((position.getY()==4) ? "\n" : " "));
+        match.getBillboard()
+                .getCells()
+                .keySet()
+                .stream()
+                .sorted()
+                .forEach(position -> output
+                        .append(cells.contains(position) ? "\u2B1B" : "")
+                        .append(!(p.getCurrentWorker().getPosition().equals(position)) && !cells.contains(position) ? "\u2B1C" : "")
+                        .append((p.getCurrentWorker().getPosition().equals(position)) ? "\u2705" : "")
+                        .append((position.getY()==4) ? "\n" : " "));
+
         return output.toString();
     }
-
-
-
 }

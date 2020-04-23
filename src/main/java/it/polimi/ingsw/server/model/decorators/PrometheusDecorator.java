@@ -5,6 +5,8 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +35,8 @@ public class PrometheusDecorator extends CommandsDecorator {
         switch(player.getTurnState()){
             case IDLE:
                 hasBuiltBeforeMoving = false;
-                player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player, BUILD));
+                player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player));
+
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
@@ -104,8 +107,8 @@ public class PrometheusDecorator extends CommandsDecorator {
 
     @Override
     public void notifySpecialFunction(Player player){
-        if (player.hasSpecialFunction()) {
-            player.setUnsetSpecialFunctionAvailable(false);
+        if (player.hasSpecialFunction()){
+            player.setUnsetSpecialFunctionAvailable(null);
             player.setTurnState(BUILD);
         }
     }
@@ -121,22 +124,30 @@ public class PrometheusDecorator extends CommandsDecorator {
      *
      *
      * @param player  the current player of the match
-     * @param state   always BUILD, the state you have to check
      * @return        true if you can build before move, false otherwise
      */
 
-    private boolean canBuildBeforeMove(Player player, TurnState state){
+    private Map<Position, Boolean> canBuildBeforeMove(Player player){
 
-        boolean retVal;
-        Set<Position> buildingPositions = player.getCurrentWorker().getAvailableCells(state);
+        return player.getWorkers().stream().collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(BUILD)));
+
+
+
+        //return player.getWorkers().stream().noneMatch(worker -> worker.canDoSomething(BUILD));
+
+        /*boolean retVal;
+        Worker worker = player.getCurrentWorker();
+        //if (worker.getAvailableCells(state)==null)
+            //worker.setAvailableCells(state,player.getCommands().computeAvailableBuildings(player,worker));
+        Set<Position> buildingPositions = worker.getAvailableCells(BUILD);
         TurnState prec = player.getTurnState();
-        player.setTurnState(state);
+        player.setTurnState(BUILD);
         if (buildingPositions.size()==1) {
             retVal = buildingPositions.stream().anyMatch(position -> player.getMatch().getBillboard().getTowerHeight(position) == 0);
         }
-        else retVal = losingCondition(player);
+        else retVal = !losingCondition(player);
         player.setTurnState(prec);
-        return retVal;
+        return retVal;*/
 
     }
 }

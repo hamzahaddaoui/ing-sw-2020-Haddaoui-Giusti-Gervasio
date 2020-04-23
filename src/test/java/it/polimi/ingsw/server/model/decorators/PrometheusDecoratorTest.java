@@ -31,20 +31,27 @@ class PrometheusDecoratorTest {
     void setUp() {
         billboard = match.getBillboard();
         match.setPlayersNum(2);
+
         testingCards.add(GodCards.Prometheus);
         testingCards.add(GodCards.Apollo);
         match.setCards(testingCards);
         player.setCommands(GodCards.Prometheus);
         commands=player.getCommands();
+
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+
         player.setWorker(position1);
+        player.setPlayerState();
         player.setCurrentWorker(position1);
+
         billboard.incrementTowerHeight(position2);
-        player.setTurnState(IDLE);
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
+
+        //player.setTurnState(IDLE);
+
     }
 
     @AfterEach
@@ -55,8 +62,6 @@ class PrometheusDecoratorTest {
 
     @Test
     void turn_NotSpecialFunction() {
-        player.setAvailableCells();
-        player.setPlayerState();
         assertEquals(MOVE,player.getTurnState());
         commands.moveWorker(position2,player);
         commands.nextState(player);
@@ -70,8 +75,6 @@ class PrometheusDecoratorTest {
 
     @Test
     void turn_SpecialFunction() {
-        player.setAvailableCells();
-        player.setPlayerState();
         player.setUnsetSpecialFunction(true);
         assertEquals(BUILD,player.getTurnState());
         commands.build(position3,player);
@@ -93,7 +96,7 @@ class PrometheusDecoratorTest {
         testingPosition.add(new Position(2,3));
         billboard.incrementTowerHeight(new Position(2,3));
         player.getCurrentWorker().setAvailableCells(BUILD,testingPosition);
-        player.setPlayerState();
+        commands.notifySpecialFunction(player);
         assertFalse(player.isSpecialFunctionAvailable());
     }
 

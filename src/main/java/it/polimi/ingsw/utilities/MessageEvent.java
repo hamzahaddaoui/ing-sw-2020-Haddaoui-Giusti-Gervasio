@@ -44,7 +44,7 @@ public class MessageEvent {
     private Set<Position>                   availablePlacingCells;
 
     private Boolean                         terminateTurnAvailable;
-    private Boolean                         specialFunctionAvailable;
+    private Map<Position,Boolean>           specialFunctionAvailable;
 
     private Map<Integer, String>            matchPlayers;
     //private int                           activeMatches;
@@ -232,11 +232,11 @@ public class MessageEvent {
         this.terminateTurnAvailable = terminateTurnAvailable;
     }
 
-    public Boolean getSpecialFunctionAvailable(){
+    public Map<Position, Boolean> getSpecialFunctionAvailable(){
         return specialFunctionAvailable;
     }
 
-    public void setSpecialFunctionAvailable(Boolean specialFunctionAvailable){
+    public void setSpecialFunctionAvailable(Map<Position, Boolean>  specialFunctionAvailable){
         this.specialFunctionAvailable = specialFunctionAvailable;
     }
 

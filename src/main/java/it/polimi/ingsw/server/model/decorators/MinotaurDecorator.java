@@ -51,7 +51,7 @@ public class MinotaurDecorator extends CommandsDecorator {
 
        if (billboard.getPlayer(position) == null)
             super.moveWorker(position,player);
-        else if (!checkNextPosition(position,player))
+        else if (!checkNextPosition(position,player,player.getCurrentWorker()))
             return;
         else {
             Position nextPosition = setNextPosition(position, worker.getPosition());
@@ -87,8 +87,8 @@ public class MinotaurDecorator extends CommandsDecorator {
                 .neighbourPositions()
                 .stream()
                 .filter(position -> billboard.getPlayer(position)== null ||
-                        (billboard.getPlayer(position) != billboard.getPlayer(currentPosition) &&
-                        checkNextPosition(position,player)))
+                        (!billboard.getPlayer(position).equals(billboard.getPlayer(currentPosition)) &&
+                        checkNextPosition(position,player,worker)))
                 .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
                         (player.getMatch().isMoveUpActive() &&
                                 billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
@@ -110,12 +110,13 @@ public class MinotaurDecorator extends CommandsDecorator {
      * 
      * @param opponentPosition  the position of the player opponent's worker, not null
      * @param player            the player who makes the move, not null
+     * @param worker            the worker of the player, not null
      * @return                  true if is available, otherwise false
      */
-    private boolean checkNextPosition(Position opponentPosition, Player player) {
+    private boolean checkNextPosition(Position opponentPosition, Player player, Worker worker) {
 
             Billboard billboard = player.getMatch().getBillboard();
-            Position myPosition = player.getCurrentWorker().getPosition();
+            Position myPosition = worker.getPosition();
 
             Position nextPosition = setNextPosition(opponentPosition, myPosition);
 
@@ -160,7 +161,8 @@ public class MinotaurDecorator extends CommandsDecorator {
         return player
                 .getWorkers()
                 .stream()
-                .filter(worker1 -> worker1.getPosition() == position)
+                .filter(worker1 -> worker1.getPosition().getX() == position.getX() &&
+                        worker1.getPosition().getY() == position.getY())
                 .findAny().get();
     }
 

@@ -277,7 +277,7 @@ public class GameModel extends Observable<MessageEvent> {
         return translateMatchID(matchID).getCurrentPlayer().isTerminateTurnAvailable();
     }
 
-    public static boolean isSpecialFunctionAvailable(Integer matchID){
+    public static Map<Position, Boolean>  isSpecialFunctionAvailable(Integer matchID){
         return translateMatchID(matchID).getCurrentPlayer().isSpecialFunctionAvailable();
     }
 
