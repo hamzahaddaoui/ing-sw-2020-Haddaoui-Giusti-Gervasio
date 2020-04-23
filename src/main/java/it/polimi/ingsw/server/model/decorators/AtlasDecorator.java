@@ -3,6 +3,9 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
+import java.util.Collections;
+import java.util.HashMap;
+
 import static it.polimi.ingsw.utilities.TurnState.*;
 
 public class AtlasDecorator extends CommandsDecorator {
@@ -23,7 +26,9 @@ public class AtlasDecorator extends CommandsDecorator {
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
-                player.setUnsetSpecialFunctionAvailable(true);
+                /*player.setUnsetSpecialFunctionAvailable(new HashMap<Position, Boolean>() = Collections.unmodifiableMap(new HashMap<Position, Boolean>(){
+                            put(player.getCurrentWorker().getPosition(), true);
+                        }));*/
                 player.setTurnState(BUILD);
                 break;
             case BUILD:

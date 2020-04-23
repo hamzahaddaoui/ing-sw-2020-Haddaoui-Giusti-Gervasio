@@ -1,5 +1,4 @@
 package it.polimi.ingsw.server.model;
-import it.polimi.ingsw.server.model.decorators.PrometheusDecorator;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
@@ -30,8 +29,8 @@ public class Player{
     private boolean selectedWorker;
     private boolean specialFunction;
 
-    private boolean terminateTurnAvailable;         //può essere terminato il turno?
-    private boolean specialFunctionAvailable;       //può essere attivata la funzione speciale?
+    private boolean terminateTurnAvailable;                     //può essere terminato il turno?
+    private Map<Position, Boolean> specialFunctionAvailable;    //può essere attivata la funzione speciale?
 
     public Player(int ID,String nickname) {
         this.ID = ID;
@@ -87,9 +86,28 @@ public class Player{
         return selectedWorker;
     }
 
+
+
+
+
+
     public boolean hasSpecialFunction() {
         return specialFunction;
     }
+    public Map<Position, Boolean> isSpecialFunctionAvailable(){
+        return specialFunctionAvailable;
+    }
+    public void setUnsetSpecialFunction(boolean specialFunction){
+        this.specialFunction = specialFunction;
+        commands.notifySpecialFunction(this);
+    }
+    public void setUnsetSpecialFunctionAvailable(Map<Position, Boolean> specialFunctionAvailable){
+        this.specialFunctionAvailable = specialFunctionAvailable;
+    }
+
+
+
+
 
     public boolean hasFinished() {
         return (playerState==PlayerState.IDLE);
@@ -99,9 +117,7 @@ public class Player{
         return terminateTurnAvailable;
     }
 
-    public boolean isSpecialFunctionAvailable(){
-        return specialFunctionAvailable;
-    }
+
 
     public void setMatch(Match match){
         this.match = match;
@@ -128,7 +144,7 @@ public class Player{
         if (! selectedWorker && optionalWorker.isPresent()){
             currentWorker = optionalWorker.get();
             selectedWorker = true;
-            commands.notifySpecialFunction(this);
+            //commands.notifySpecialFunction(this);
         }
         else
             throw new IllegalArgumentException("Can't select worker");
@@ -140,10 +156,6 @@ public class Player{
             commands.nextState(this);
             setAvailableCells();
         }
-    }
-
-    public void resetPlayerState(){
-        this.playerState = PlayerState.IDLE;
     }
 
     public void win(){
@@ -160,17 +172,14 @@ public class Player{
         this.turnState = turnState;
     }
 
-    public void setUnsetSpecialFunction(boolean specialFunction){
-        this.specialFunction = specialFunction;
-        commands.notifySpecialFunction(this);
-    }
+
 
     public void setHasFinished() {
         specialFunction = false;
         currentWorker = null;
         selectedWorker = false;
         terminateTurnAvailable = false;
-        specialFunctionAvailable = false;
+        specialFunctionAvailable = null;
 
         turnState = TurnState.IDLE;
         playerState = PlayerState.IDLE;
@@ -180,9 +189,6 @@ public class Player{
         this.terminateTurnAvailable = true;
     }
 
-    public void setUnsetSpecialFunctionAvailable(boolean specialFunctionAvailable){
-        this.specialFunctionAvailable = specialFunctionAvailable;
-    }
 
     public void playerAction(Position position){
         switch (turnState) {
