@@ -11,7 +11,11 @@ import it.polimi.ingsw.utilities.Position;
 public class SelectingSpecialCommandStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) {
+    public boolean processingMessage(Object viewObject) throws NullPointerException{
+
+        if (viewObject == null)
+            throw new NullPointerException("Null message!");
+
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
         return commandCharacter.executeSpecialCommandsStatus();

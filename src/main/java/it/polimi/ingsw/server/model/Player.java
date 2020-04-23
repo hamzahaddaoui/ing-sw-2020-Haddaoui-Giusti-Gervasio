@@ -1,4 +1,5 @@
 package it.polimi.ingsw.server.model;
+import it.polimi.ingsw.server.model.decorators.PrometheusDecorator;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
@@ -127,6 +128,7 @@ public class Player{
         if (! selectedWorker && optionalWorker.isPresent()){
             currentWorker = optionalWorker.get();
             selectedWorker = true;
+            commands.notifySpecialFunction(this);
         }
         else
             throw new IllegalArgumentException("Can't select worker");

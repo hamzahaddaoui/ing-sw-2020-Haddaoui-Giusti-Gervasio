@@ -11,10 +11,17 @@ import it.polimi.ingsw.utilities.*;
 
 public class Controller extends Observable<String> implements Observer<Object> {
 
-    private ControlState controlState = new StartingStatus();
+    private ControlState controlState;
     private PlayerState playerState;
     private MatchState matchState;
     private static MessageEvent message;
+
+    public Controller() {
+        controlState = new StartingStatus();
+        playerState = null;
+        matchState = null;
+        message = new MessageEvent();
+    }
 
     @Override
     public void update(Object viewObject) {
@@ -63,6 +70,13 @@ public class Controller extends Observable<String> implements Observer<Object> {
 
     public static MessageEvent getMessage(){
         return message;
+    }
+
+    public ControlState getControlState() {return this.controlState;}
+
+    public void setPlayerAndMatchState(PlayerState plState,MatchState matState) {
+        playerState = plState;
+        matchState = matState;
     }
 
     /*MessageEvent message; //

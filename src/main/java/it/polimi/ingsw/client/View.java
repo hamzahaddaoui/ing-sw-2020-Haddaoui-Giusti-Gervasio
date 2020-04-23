@@ -201,4 +201,17 @@ public class View extends Observable implements Runnable, Observer{
         return specialFunctionAvailable;
     }
 
+    /*
+    -------------------------------------------------------------------------------
+    -----------------------METODI UTILI NEI TEST-----------------------------------
+    -------------------------------------------------------------------------------
+     */
+
+    public static void setGodCards (Set<String> godCards) {
+        selectedGodCards = new ArrayList<String>(godCards);
+    }
+
+    public static void setPlayersNum (int selectedPlayersNum) {
+        playersNum = selectedPlayersNum;
+    }
 }

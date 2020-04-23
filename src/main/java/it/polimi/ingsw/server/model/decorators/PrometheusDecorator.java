@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class PrometheusDecorator extends CommandsDecorator {
         switch(player.getTurnState()){
             case IDLE:
                 hasBuiltBeforeMoving = false;
-                player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player, BUILD));
+                //player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player, BUILD));
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
@@ -104,9 +105,11 @@ public class PrometheusDecorator extends CommandsDecorator {
 
     @Override
     public void notifySpecialFunction(Player player){
-        if (player.hasSpecialFunction()) {
-            player.setUnsetSpecialFunctionAvailable(false);
-            player.setTurnState(BUILD);
+        if (player.hasSelectedWorker() && !player.hasSpecialFunction())
+            player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player,BUILD));
+        else if (player.hasSpecialFunction()) {
+                player.setUnsetSpecialFunctionAvailable(false);
+                player.setTurnState(BUILD);
         }
     }
 
@@ -128,13 +131,16 @@ public class PrometheusDecorator extends CommandsDecorator {
     private boolean canBuildBeforeMove(Player player, TurnState state){
 
         boolean retVal;
-        Set<Position> buildingPositions = player.getCurrentWorker().getAvailableCells(state);
+        Worker worker = player.getCurrentWorker();
+        //if (worker.getAvailableCells(state)==null)
+            //worker.setAvailableCells(state,player.getCommands().computeAvailableBuildings(player,worker));
+        Set<Position> buildingPositions = worker.getAvailableCells(state);
         TurnState prec = player.getTurnState();
         player.setTurnState(state);
         if (buildingPositions.size()==1) {
             retVal = buildingPositions.stream().anyMatch(position -> player.getMatch().getBillboard().getTowerHeight(position) == 0);
         }
-        else retVal = losingCondition(player);
+        else retVal = !losingCondition(player);
         player.setTurnState(prec);
         return retVal;
 
