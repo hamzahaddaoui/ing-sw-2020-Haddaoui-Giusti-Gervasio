@@ -17,19 +17,22 @@ public class MessageEvent {
 
 
     //user to controller
-    private String          nickname;
-    private Integer         playersNum;
-    private String          godCard; //Carta Selzeionata in fase di SelectionSpecialFunction del controller
-    private Set<String>     godCards; //le Carte selezionate in fase di SelectingGodCards del controller
+    private String                          nickname;
+
+    private Integer                         playersNum;
+    private Set<String>                     godCards; //le Carte selezionate in fase di SelectingGodCards del controller
+
+    private String                          godCard; //Carta Selzeionata in fase di SelectionSpecialFunction del controller
 
     private Set<Position>                   initializedPositions;   //le 2 posizioni in cui inizializzo i workers
+
     private Position                        startPosition;          //il worker che muovo
     private Position                        endPosition;            //la posizione finale del worker che voglio muovere
 
     private Boolean                         endTurn;                //se decido di terminare il turno
     private Boolean                         specialFunction;        //se decido di attivare la funzione speciale
 
-    private boolean                         exit;
+    private boolean                         exit;                   //SE l'utente esce. mando prima questo
 
     //controller to view
     private MatchState                      matchState;
@@ -37,22 +40,26 @@ public class MessageEvent {
     private TurnState                       turnState;
     private Boolean                         error;
 
-    private Map<Position, Cell>             billboardStatus;
-    private Set<String>                     matchCards;
 
-    private Map<Position, Set<Position>>    workersAvailableCells;
+
+    private Set<String>                     matchCards;
     private Set<Position>                   availablePlacingCells;
 
-    private Boolean                         terminateTurnAvailable;
-    private Map<Position,Boolean>           specialFunctionAvailable;
+    private Map<Position, Cell>             billboardStatus;
 
-    private Map<Integer, String>            matchPlayers;
+    private Map<Position, Set<Position>>    workersAvailableCells;  //
+
+
+    private Boolean                         terminateTurnAvailable; //
+    private Map<Position,Boolean>           specialFunctionAvailable;//worker+disponibilità special function
+
+    private Map<Integer, String>            matchPlayers;           //i giocatori del gioco
     //private int                           activeMatches;
     //private int                           playersConnected;
 
-    private Integer                         winner;
+    private Integer                         winner;                 //chi è il vincitore se il match è finito
 
-    private boolean                         finished;
+    private boolean                         finished;               //se il match è finito
 
 
 
