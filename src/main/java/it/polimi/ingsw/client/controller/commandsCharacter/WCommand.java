@@ -22,11 +22,16 @@ public class WCommand implements CommandCharacter {
      */
     @Override
     public boolean executePlacingWorkerStatus() {
+
         Position coloredPosition = View.getColoredPosition();
 
-        while(View.getPlacingAvailableCells().contains(coloredPosition)){
+        while (true) {
             coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
-            View.setColoredPosition(coloredPosition);}
+            if (View.getPlacingAvailableCells().contains(coloredPosition)) {
+                View.setColoredPosition(coloredPosition);
+                break;
+            }
+        }
         return false;
     }
 

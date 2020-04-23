@@ -6,6 +6,8 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.ArrayList;
 
+import static java.lang.StrictMath.abs;
+
 
 public class ACommand implements CommandCharacter {
 
@@ -18,7 +20,7 @@ public class ACommand implements CommandCharacter {
     public boolean executeNumberStatus() {
         ArrayList<Integer> coloredPlayersNum = View.getColoredPlayersNum();
 
-        coloredPlayersNum.get((coloredPlayersNum.indexOf(View.getPlayersNum()) - 1) % coloredPlayersNum.size());
+        View.setPlayersNum(coloredPlayersNum.get(abs(coloredPlayersNum.indexOf(View.getPlayersNum()) - 1) % coloredPlayersNum.size()));
         return false;
     }
 
@@ -33,9 +35,14 @@ public class ACommand implements CommandCharacter {
 
         Position coloredPosition = View.getColoredPosition();
 
-        while(View.getPlacingAvailableCells().contains(coloredPosition)){
+        while (true) {
             coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
-            View.setColoredPosition(coloredPosition);}
+            if (View.getPlacingAvailableCells().contains(coloredPosition)) {
+                View.setColoredPosition(coloredPosition);
+                break;
+            }
+        }
+
         return false;
     }
 
@@ -108,7 +115,7 @@ public class ACommand implements CommandCharacter {
     public boolean executeSelectingGodCardsStatus() {
         ArrayList<String> godCards=View.getGodCards();
 
-        View.setColoredGodCard(godCards.get((godCards.indexOf(View.getColoredGodCard()) - 1) % godCards.size()));
+        View.setColoredGodCard(godCards.get(abs(godCards.indexOf(View.getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
         return false;
     }
 

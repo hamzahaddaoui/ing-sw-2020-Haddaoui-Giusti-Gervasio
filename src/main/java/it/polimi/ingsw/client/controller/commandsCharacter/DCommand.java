@@ -5,6 +5,8 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.ArrayList;
 
+import static java.lang.StrictMath.abs;
+
 
 public class DCommand implements CommandCharacter {
 
@@ -17,7 +19,7 @@ public class DCommand implements CommandCharacter {
     public boolean executeNumberStatus() {
         ArrayList<Integer> coloredPlayersNum = View.getColoredPlayersNum();
 
-        coloredPlayersNum.get((coloredPlayersNum.indexOf(View.getPlayersNum()) + 1) % coloredPlayersNum.size());
+        View.setPlayersNum(coloredPlayersNum.get((coloredPlayersNum.indexOf(View.getPlayersNum()) + 1) % coloredPlayersNum.size()));
         return false;
     }
 
@@ -29,11 +31,21 @@ public class DCommand implements CommandCharacter {
      */
     @Override
     public boolean executePlacingWorkerStatus() {
+
         Position coloredPosition = View.getColoredPosition();
 
-        while(View.getPlacingAvailableCells().contains(coloredPosition)){
+        while (true) {
+            System.out.println(coloredPosition);
             coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
-            View.setColoredPosition(coloredPosition);}
+            if (View.getPlacingAvailableCells().contains(coloredPosition)) {
+                System.out.println();
+                System.out.println("Colored position");
+                System.out.println(coloredPosition.getX());
+                System.out.println();
+                View.setColoredPosition(coloredPosition);
+                break;
+            }
+        }
         return false;
     }
 
@@ -107,6 +119,7 @@ public class DCommand implements CommandCharacter {
         ArrayList<String> godCards=View.getGodCards();
 
         View.setColoredGodCard(godCards.get((godCards.indexOf(View.getColoredGodCard()) + 1) % godCards.size()));
+
         return false;
     }
 

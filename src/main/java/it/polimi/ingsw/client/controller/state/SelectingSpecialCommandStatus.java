@@ -23,10 +23,10 @@ public class SelectingSpecialCommandStatus extends ControlState {
 
     @Override
     public void nextState(Controller ctrl) {
-        if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.PLACING_WORKERS)
+        if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.PLACING_WORKERS){
             ctrl.setState(new PlacingWorkersStatus());
+            View.getColoredPosition().set(0,0);
+        }
         else ctrl.setState(new WaitingStatus());
-
-        View.getColoredPosition().set(0,0);
     }
 }

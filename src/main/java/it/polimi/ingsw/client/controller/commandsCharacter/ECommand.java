@@ -49,9 +49,13 @@ public class ECommand implements CommandCharacter {
         ArrayList<String> godCards = View.getGodCards();
         ArrayList<String> selectedGodCards = View.getSelectedGodCards();
 
-        if(coloredGodCard != null && selectedGodCards.size() > 0){
-            godCards.add(coloredGodCard);
+        if(!selectedGodCards.contains(coloredGodCard)){
+            throw new IllegalArgumentException(" This card is not in the SelectedCard Deck ");
+        }
+
+        if(coloredGodCard != null && selectedGodCards.size() > 0 && selectedGodCards.contains(coloredGodCard)){
             selectedGodCards.remove(selectedGodCards.indexOf(coloredGodCard));
+            godCards.add(coloredGodCard);
             View.setColoredGodCard(godCards.get(0));
         }
         return false;

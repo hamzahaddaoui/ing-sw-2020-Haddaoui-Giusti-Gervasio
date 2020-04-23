@@ -24,7 +24,7 @@ class SelectionNumberStatusTest {
     InsertCharacter inputQ = InsertCharacter.Q;
     InsertCharacter inputS = InsertCharacter.S;
     InsertCharacter inputEnter = InsertCharacter.ENTER;
-    CommandCharacter commandCharacter;
+    InsertCharacter commandCharacter;
     View view = new View();
     Controller controller = new Controller();
     ControlState ctrlStatus = new SelectionNumberStatus();
@@ -44,12 +44,15 @@ class SelectionNumberStatusTest {
 
         controller.setState(ctrlStatus);
         view.setGodCards(godCards);
+        view.setColoredPlayersNum(new ArrayList<>());
+        view.getColoredPlayersNum().add(2);
+        view.getColoredPlayersNum().add(3);
+        view.setPlayersNum(View.getColoredPlayersNum().get(0));
     }
 
     @Test
     void processingMessageA() {
-        view.viewSetUp();
-        commandCharacter = inputA.apply();
+        commandCharacter = inputA;
 
         assertEquals(view.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
@@ -57,23 +60,19 @@ class SelectionNumberStatusTest {
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(view.getPlayersNum(),3);
-        assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(controller.isMessageReady(),false);
         assertEquals(view.getPlayersNum(),2);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(controller.isMessageReady(),false);
         assertEquals(view.getPlayersNum(),3);
     }
 
     @Test
     void processingMessageD() {
-        view.viewSetUp();
-        commandCharacter = inputD.apply();
+        commandCharacter = inputD;
 
         assertEquals(view.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
@@ -96,8 +95,7 @@ class SelectionNumberStatusTest {
 
     @Test
     void processingMessageW() {
-        view.viewSetUp();
-        commandCharacter = inputW.apply();
+        commandCharacter = inputW;
 
         assertEquals(view.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
@@ -105,14 +103,12 @@ class SelectionNumberStatusTest {
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(view.getPlayersNum(),2);
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageS() {
-        view = new View();
-        view.viewSetUp();
-        commandCharacter = inputS.apply();
+        commandCharacter = inputS;
 
         assertEquals(view.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
@@ -120,14 +116,12 @@ class SelectionNumberStatusTest {
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(view.getPlayersNum(),2);
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageE() {
-        view = new View();
-        view.viewSetUp();
-        commandCharacter = inputE.apply();
+        commandCharacter = inputE;
 
         assertEquals(view.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
@@ -135,14 +129,12 @@ class SelectionNumberStatusTest {
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(view.getPlayersNum(),2);
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageQ() {
-        view = new View();
-        view.viewSetUp();
-        commandCharacter = inputQ.apply();
+        commandCharacter = inputQ;
 
         assertEquals(view.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
@@ -150,14 +142,12 @@ class SelectionNumberStatusTest {
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(view.getPlayersNum(),2);
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageF() {
-        view = new View();
-        view.viewSetUp();
-        commandCharacter = inputF.apply();
+        commandCharacter = inputF;
 
         assertEquals(view.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
@@ -165,22 +155,19 @@ class SelectionNumberStatusTest {
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(view.getPlayersNum(),2);
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageEnter() {
-        view = new View();
-        view.viewSetUp();
-        commandCharacter = inputEnter.apply();
+        commandCharacter = inputEnter;
 
         assertEquals(view.getPlayersNum(),2);
-        assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(view.getPlayersNum(),2);
-        assertEquals(controller.isMessageReady(),true);
+        assertTrue(ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test

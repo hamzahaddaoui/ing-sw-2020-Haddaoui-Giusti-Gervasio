@@ -9,7 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
+import static java.lang.StrictMath.abs;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SelectingGodCardsStatusTest {
@@ -22,7 +24,8 @@ class SelectingGodCardsStatusTest {
     InsertCharacter inputQ = InsertCharacter.Q;
     InsertCharacter inputS = InsertCharacter.S;
     InsertCharacter inputEnter = InsertCharacter.ENTER;
-    CommandCharacter commandCharacter;
+    InsertCharacter commandCharacter;
+
     View view = new View();
     Controller controller = new Controller();
     ControlState ctrlStatus = new SelectingGodCardsStatus();
@@ -41,159 +44,157 @@ class SelectingGodCardsStatusTest {
         godCards.add("PROMETHEUS");
 
         controller.setState(ctrlStatus);
-        View.setGodCards(godCards);
-        View.setColoredGodCard(View.getGodCards().get(0));
+
+        view.setGodCards(godCards);
+        view.setColoredGodCard(View.getGodCards().get(0));
+        view.setSelectedGodCards(new ArrayList<>());
+        view.setPlayersNum(2);
     }
 
     @Test
     void processingMessageA() {
-
-        commandCharacter = inputA.apply();
-
+        commandCharacter = inputA;
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getColoredGodCard(),view.getGodCards().get(view.getGodCards().size()));
-        assertEquals(controller.isMessageReady(),false);
-
-        ctrlStatus.processingMessage(commandCharacter);
-
-        assertEquals(view.getColoredGodCard(),view.getGodCards().get(view.getGodCards().size() - 1));
+        assertEquals(view.getColoredGodCard(),view.getGodCards().get(view.getGodCards().size() -  1));
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(view.getColoredGodCard(),view.getGodCards().get(view.getGodCards().size() - 2));
         assertEquals(controller.isMessageReady(),false);
+
+        ctrlStatus.processingMessage(commandCharacter);
+
+        assertEquals(view.getColoredGodCard(),view.getGodCards().get(view.getGodCards().size() - 3));
+        assertEquals(controller.isMessageReady(),false);
     }
 
     @Test
     void processingMessageD() {
-        view = new View();
-        view.viewSetUp();
-        commandCharacter = inputD.apply();
+        commandCharacter = inputD;
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getColoredGodCard(),View.getGodCards().get(0));
+        assertEquals(view.getColoredGodCard(),view.getGodCards().get(1));
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getColoredGodCard(),View.getGodCards().get(View.getGodCards().size() + 1));
+        assertEquals(view.getColoredGodCard(),view.getGodCards().get(2));
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getColoredGodCard(),View.getGodCards().get(View.getGodCards().size() + 2));
+        assertEquals(view.getColoredGodCard(),view.getGodCards().get(3));
         assertEquals(controller.isMessageReady(),false);
     }
 
     @Test
     void processingMessageEnterOrE() {
-        view = new View();
-        view.viewSetUp();
-        commandCharacter = inputEnter.apply();
-
-        assertEquals(controller.isMessageReady(),false);
-        assertTrue( View.getColoredGodCard() != null);
+        commandCharacter = inputEnter;
+        assertTrue( view.getColoredGodCard() != null);
+        assertTrue( view.getGodCards() != null);
+        assertTrue( view.getColoredGodCard() != null);
+        System.out.println(view.getGodCards().size());
 
         ctrlStatus.processingMessage(commandCharacter);
+        System.out.println(view.getGodCards().size());
 
-        assertTrue(View.getSelectedGodCards().size() == 1);
-        assertTrue( View.getGodCards().size() == 6);
+        assertTrue(view.getSelectedGodCards().size() == 1);
+        assertTrue( view.getGodCards().size() == 8);
         assertEquals(view.getColoredGodCard(),View.getGodCards().get(0));
-        assertEquals(controller.isMessageReady(),false);
 
-        commandCharacter = inputE.apply();
+        commandCharacter = inputE;
+        view.setColoredGodCard(View.getSelectedGodCards().stream().findAny().get());
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getSelectedGodCards().size() == 0);
-        assertTrue( View.getGodCards().size() == 7);
-        assertEquals(controller.isMessageReady(),false);
-        assertTrue( View.getColoredGodCard() != null);
+        assertTrue( view.getGodCards().size() == 9);
+        assertTrue( view.getColoredGodCard() != null);
+
+        assertThrows( NoSuchElementException.class , () -> view.setColoredGodCard(View.getSelectedGodCards().stream().findAny().get()));
+
+        commandCharacter = inputEnter;
+        view.setColoredGodCard(View.getGodCards().stream().findAny().get());
+        ctrlStatus.processingMessage(commandCharacter);
+
+        assertTrue(view.getSelectedGodCards().size() == 1);
+        assertTrue( view.getGodCards().size() == 8);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getSelectedGodCards().size() == 0);
-        assertEquals(controller.isMessageReady(),false);
-        assertTrue( View.getGodCards().size() == 7);
-        assertTrue( View.getColoredGodCard() != null);
-
-        commandCharacter = inputEnter.apply();
-        ctrlStatus.processingMessage(commandCharacter);
-
-        assertTrue(View.getSelectedGodCards().size() == 1);
-        assertTrue( View.getGodCards().size() == 6);
-        assertEquals(view.getColoredGodCard(),View.getGodCards().get(0));
-        assertEquals(controller.isMessageReady(),false);
-
-        commandCharacter = inputEnter.apply();
-        ctrlStatus.processingMessage(commandCharacter);
-
-        assertTrue(View.getSelectedGodCards().size() == 2);
-        assertTrue( View.getGodCards().size() == 5);
-        assertEquals(controller.isMessageReady(),true);
+        assertTrue(view.getSelectedGodCards().size() == 2);
+        assertTrue( view.getGodCards().size() == 7);
     }
 
     @Test
     void processingMessageW() {
-        commandCharacter = inputW.apply();
+        commandCharacter = inputW;
 
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageS() {
-        commandCharacter = inputS.apply();
+        commandCharacter = inputS;
 
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageF() {
-        commandCharacter = inputF.apply();
+        commandCharacter = inputF;
 
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageQ() {
-        commandCharacter = inputQ.apply();
+        commandCharacter = inputQ;
 
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(controller.isMessageReady(),false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void nextState() {
+
         controller.setPlayerState(PlayerState.ACTIVE);
         controller.setMatchState(MatchState.SELECTING_SPECIAL_COMMAND);
 
-        controller.nextState();
+        ctrlStatus.nextState(controller);
 
         assertEquals( controller.getControlState().getClass() , new SelectingSpecialCommandStatus().getClass() );
 
         controller.setPlayerState(PlayerState.IDLE);
         controller.setMatchState(MatchState.SELECTING_SPECIAL_COMMAND);
-        controller.nextState();
+        ctrlStatus.nextState(controller);
 
         assertEquals( controller.getControlState().getClass(), new WaitingStatus().getClass() );
 
+        controller.setPlayerState(null);
+
+        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
+
+        controller.setPlayerState(PlayerState.ACTIVE);
+        controller.setMatchState(null);
+
+        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
     }
 
 }

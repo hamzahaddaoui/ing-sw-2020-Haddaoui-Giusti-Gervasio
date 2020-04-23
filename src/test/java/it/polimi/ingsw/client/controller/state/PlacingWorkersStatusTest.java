@@ -9,14 +9,11 @@ import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlacingWorkersStatusTest {
-
 
     InsertCharacter inputA = InsertCharacter.A;
     InsertCharacter inputD = InsertCharacter.D;
@@ -26,11 +23,13 @@ class PlacingWorkersStatusTest {
     InsertCharacter inputQ = InsertCharacter.Q;
     InsertCharacter inputS = InsertCharacter.S;
     InsertCharacter inputEnter = InsertCharacter.ENTER;
-    CommandCharacter commandCharacter;
-    View view;
+    InsertCharacter commandCharacter;
+
+    View view = new View();
     Controller controller = new Controller();
-    ControlState ctrlStatus = new SelectionNumberStatus();
+    ControlState ctrlStatus = new PlacingWorkersStatus();
     Set<Position> placingAvailableCells = new HashSet<>();
+    Map<Position, Set<Position>> workersAvailableCells = View.getWorkersAvailableCells();
 
     Position position00=new Position(0,0);
     Position position01=new Position(0,1);
@@ -86,184 +85,198 @@ class PlacingWorkersStatusTest {
         placingAvailableCells.add(position43);
         placingAvailableCells.add(position44);
 
-        controller = new Controller();
-        ctrlStatus = new PlacingWorkersStatus();
         controller.setState(ctrlStatus);
-        View.setPlacingAvailableCells(placingAvailableCells);
+        view.setPlacingAvailableCells(placingAvailableCells);
+        view.setWorkersAvailableCells(new HashMap<>());
     }
 
 
     @Test
     void processingMessageA() {
-        commandCharacter = inputA.apply();
+        commandCharacter = inputA;
 
-        if(View.getColoredPosition() == null){
-            View.setColoredPosition(position00);
-        }
+        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
 
-        ctrlStatus.processingMessage(commandCharacter);
-
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position40);
-        assertTrue(View.getWorkersPositions() == null );
+        if(view.getColoredPosition() == null)
+            view.setColoredPosition(position00);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position30);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position40);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position20);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position30);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
-        View.getPlacingAvailableCells().remove(position10);
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position00);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position20);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
-        View.getPlacingAvailableCells().remove(position40);
-        View.getPlacingAvailableCells().remove(position30);
+        view.getPlacingAvailableCells().remove(position10);
+        ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position20);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position00);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
+        view.getPlacingAvailableCells().remove(position40);
+        view.getPlacingAvailableCells().remove(position30);
+        ctrlStatus.processingMessage(commandCharacter);
+
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position20);
+        assertTrue(view.getWorkersPositions().size() == 0 );
     }
 
     @Test
     void processingMessageD() {
-        commandCharacter = inputD.apply();
+        view.setColoredPosition(null);
+        commandCharacter = inputD;
 
-        if(View.getColoredPosition() == null){
-            View.setColoredPosition(position40);
+        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
+
+        if(view.getColoredPosition() == null){
+            view.setColoredPosition(position40);
         }
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position00);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position00);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position10);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position10);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position20);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position20);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
-        View.getPlacingAvailableCells().remove(position30);
+        view.getPlacingAvailableCells().remove(position30);
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position40);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position40);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
-        View.getPlacingAvailableCells().remove(position00);
-        View.getPlacingAvailableCells().remove(position10);
+        view.getPlacingAvailableCells().remove(position00);
+        view.getPlacingAvailableCells().remove(position10);
+        ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position20);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position20);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
     }
 
     @Test
     void processingMessageS() {
-        commandCharacter = inputS.apply();
+        view.setColoredPosition(null);
+        commandCharacter = inputS;
 
-        if(View.getColoredPosition() == null){
-            View.setColoredPosition(position00);
+        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
+
+        if(view.getColoredPosition() == null){
+            view.setColoredPosition(position00);
         }
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position04);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position04);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position03);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position03);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position02);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position02);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
-        View.getPlacingAvailableCells().remove(position01);
+        view.getPlacingAvailableCells().remove(position01);
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position00);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position00);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
-        View.getPlacingAvailableCells().remove(position04);
-        View.getPlacingAvailableCells().remove(position03);
+        view.getPlacingAvailableCells().remove(position04);
+        view.getPlacingAvailableCells().remove(position03);
+        ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position02);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position02);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
     }
 
     @Test
     void processingMessageW() {
-        commandCharacter = inputW.apply();
+        view.setColoredPosition(null);
+        commandCharacter = inputW;
 
-        if(View.getColoredPosition() == null){
-            View.setColoredPosition(position04);
+        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
+
+        if(view.getColoredPosition() == null){
+            view.setColoredPosition(position04);
         }
 
         ctrlStatus.processingMessage(commandCharacter);
 
         assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
         assertEquals(View.getColoredPosition(), position00);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position01);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position01);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position02);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position02);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
-        View.getPlacingAvailableCells().remove(position03);
+        view.getPlacingAvailableCells().remove(position03);
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position04);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position04);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
-        View.getPlacingAvailableCells().remove(position00);
-        View.getPlacingAvailableCells().remove(position01);
+        view.getPlacingAvailableCells().remove(position00);
+        view.getPlacingAvailableCells().remove(position01);
+        ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getPlacingAvailableCells().contains(View.getColoredPosition()));
-        assertEquals(View.getColoredPosition(), position02);
-        assertTrue(View.getWorkersPositions() == null );
+        assertTrue(view.getPlacingAvailableCells().contains(view.getColoredPosition()));
+        assertEquals(view.getColoredPosition(), position02);
+        assertTrue(view.getWorkersPositions().size() == 0 );
 
     }
 
     @Test
     void processingMessageEnter() {
-        commandCharacter = inputEnter.apply();
+        view.setWorkersAvailableCells(workersAvailableCells);
+        view.setColoredPosition(null);
+        commandCharacter = inputEnter;
 
         if(View.getColoredPosition() == null){
             View.setColoredPosition(position04);
@@ -271,55 +284,53 @@ class PlacingWorkersStatusTest {
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(View.getWorkersPositions().size() == 1 );
-        assertTrue(!View.getPlacingAvailableCells().contains(View.getWorkersPositions().stream().findAny().get()));
-        assertTrue(View.getPlacingAvailableCells().size() + View.getWorkersPositions().size() == 25);
-        assertTrue( View.getPlacingAvailableCells().contains(View.getColoredPosition()) );
-        assertTrue(controller.isMessageReady() == false);
+        System.out.println(View.getWorkersAvailableCells().keySet().stream().count());
 
+        assertTrue(View.getWorkersAvailableCells().keySet().size() == 1 );
+        assertTrue(!View.getPlacingAvailableCells().contains(View.getWorkersPositions().stream().findAny().get()));
+        assertTrue(View.getPlacingAvailableCells().size() + View.getWorkersAvailableCells().keySet().size() == 25);
+        assertTrue( View.getPlacingAvailableCells().contains(View.getColoredPosition()) );
 
         ctrlStatus.processingMessage(commandCharacter);
 
         assertTrue(View.getWorkersPositions().size() == 2 );
         assertTrue(View.getWorkersPositions().stream().filter(position -> View.getPlacingAvailableCells().contains(position)).count() == 0);
         assertTrue(View.getPlacingAvailableCells().size() + View.getWorkersPositions().size() == 25);
-        assertTrue(controller.isMessageReady() == true);
 
     }
 
     @Test
     void processingMessageE() {
-        commandCharacter = inputE.apply();
+        commandCharacter = inputE;
 
-        assertTrue(controller.isMessageReady() == false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(controller.isMessageReady() == false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
     }
 
     @Test
     void processingMessageQ() {
-        commandCharacter = inputQ.apply();
+        commandCharacter = inputQ;
 
-        assertTrue(controller.isMessageReady() == false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(controller.isMessageReady() == false);
-
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageF() {
-        commandCharacter = inputF.apply();
+        commandCharacter = inputF;
 
-        assertTrue(controller.isMessageReady() == false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(controller.isMessageReady() == false);
+        assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
     }
 
@@ -327,15 +338,24 @@ class PlacingWorkersStatusTest {
     void nextState() {
         controller.setPlayerState(PlayerState.ACTIVE);
         controller.setMatchState(MatchState.RUNNING);
-        controller.nextState();
+        ctrlStatus.nextState(controller);
 
         assertEquals( controller.getControlState().getClass() , new RunningStatus().getClass() );
 
         controller.setPlayerState(PlayerState.IDLE);
         controller.setMatchState(MatchState.RUNNING);
-        controller.nextState();
+        ctrlStatus.nextState(controller);
 
         assertEquals( controller.getControlState().getClass(), new WaitingStatus().getClass() );
+
+        controller.setPlayerState(null);
+
+        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
+
+        controller.setPlayerState(PlayerState.ACTIVE);
+        controller.setMatchState(null);
+
+        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
     }
 
 }

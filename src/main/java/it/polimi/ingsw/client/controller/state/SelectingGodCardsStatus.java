@@ -15,20 +15,26 @@ public class SelectingGodCardsStatus extends ControlState {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
+        if(viewObject == null)
+            throw new IllegalArgumentException(" ViewObject is empty");
+
         if(View.getGodCards() == null)
             throw new IllegalArgumentException(" GodCards is empty");
-        if(View.getColoredGodCard() == null)
-            throw new IllegalArgumentException(" ColoredGodCard is empty");
 
         return commandCharacter.executeSelectingGodCardsStatus();
     }
 
     @Override
     public void nextState(Controller ctrl) {
+
+        if (ctrl.getPlayerState()== null)
+            throw new IllegalArgumentException(" PlayersState is null ");
+        if (ctrl.getMatchState()== null)
+            throw new IllegalArgumentException(" MatchState is null ");
+
         if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND)
             ctrl.setState(new SelectingSpecialCommandStatus());
         else ctrl.setState(new WaitingStatus());
     }
-
 
 }

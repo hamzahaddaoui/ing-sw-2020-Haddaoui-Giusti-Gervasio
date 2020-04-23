@@ -4,9 +4,7 @@ import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.Position;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public class EnterCommand implements CommandCharacter {
@@ -32,18 +30,21 @@ public class EnterCommand implements CommandCharacter {
     @Override
     public boolean executePlacingWorkerStatus() {
         Position coloredPosition = View.getColoredPosition();
-        Set<Position> workersPositions = View.getWorkersPositions();
+        Map<Position, Set<Position>> workersAvailableCells = View.getWorkersAvailableCells();
         Set<Position> placingAvailableCells = View.getPlacingAvailableCells();
 
-        if(coloredPosition!=null &&
-                !placingAvailableCells.contains(coloredPosition) &&
-                !workersPositions.contains(coloredPosition)){
-            workersPositions.add(coloredPosition);
+        System.out.println(View.getWorkersAvailableCells().keySet().size());
+        System.out.println(placingAvailableCells.contains(coloredPosition));
+        System.out.println(workersAvailableCells.containsKey(coloredPosition));
+
+
+        if( placingAvailableCells.contains(coloredPosition) && !workersAvailableCells.containsKey(coloredPosition)){
+            workersAvailableCells.put(coloredPosition, new HashSet<Position>());
+            System.out.println(workersAvailableCells.keySet().stream().count());
             placingAvailableCells.remove(coloredPosition);
-            if(workersPositions.size()==2){
-                return true;
-            }
             View.setColoredPosition(placingAvailableCells.stream().findFirst().get());
+            if(workersAvailableCells.keySet().stream().count()==2)
+                return true;
         }
         return false;
     }
@@ -101,13 +102,22 @@ public class EnterCommand implements CommandCharacter {
         ArrayList<String> godCards = View.getGodCards();
         Integer playersNum = View.getPlayersNum();
         String coloredGodCard = View.getColoredGodCard();
+
         ArrayList<String> selectedGodCards = View.getSelectedGodCards();
 
-        if(coloredGodCard!=null && selectedGodCards.size() < playersNum){
+        if(View.getColoredGodCard() == null)
+            throw new IllegalArgumentException(" ColoredGodCard is empty");
+        if(!godCards.contains(coloredGodCard))
+            throw new IllegalArgumentException(" This card is not in the GodCards Deck ");
+
+
+        if(coloredGodCard!=null && (selectedGodCards.size() < playersNum)){
             selectedGodCards.add(coloredGodCard);
             godCards.remove(godCards.indexOf(coloredGodCard));
-            if(selectedGodCards.size() < playersNum)
+            if(selectedGodCards.size() < playersNum){
                 View.setColoredGodCard(godCards.get(0));
+                return false;
+            }
             else{
                 View.setColoredGodCard(null);
                 return true;

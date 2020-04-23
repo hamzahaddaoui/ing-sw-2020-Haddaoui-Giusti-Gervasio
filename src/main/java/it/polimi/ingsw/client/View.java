@@ -61,10 +61,19 @@ public class View extends Observable implements Runnable, Observer{
         View.placingAvailableCells = placingAvailableCells;
     }
 
+    public static Map<Position, Set<Position>> getWorkersAvailableCells() {
+        return workersAvailableCells;
+    }
+
+    public static void setWorkersAvailableCells(Map<Position, Set<Position>> workersAvailableCells) {
+        View.workersAvailableCells = workersAvailableCells;
+    }
+
     public void viewSetUp(){
-        coloredPlayersNum.add(2);
-        coloredPlayersNum.add(3);
-        playersNum = coloredPlayersNum.get(0);
+        coloredPlayersNum = new ArrayList<>();
+        View.coloredPlayersNum.add(2);
+        View.coloredPlayersNum.add(3);
+        View.playersNum = View.coloredPlayersNum.get(0);
     }
 
     @Override
@@ -171,6 +180,10 @@ public class View extends Observable implements Runnable, Observer{
         coloredPosition = position;
     }
 
+    public static void setSelectedGodCards(ArrayList<String> selectedGodCards) {
+        View.selectedGodCards = selectedGodCards;
+    }
+
     public static ArrayList<String> getSelectedGodCards() {
         return selectedGodCards;
     }
@@ -194,6 +207,7 @@ public class View extends Observable implements Runnable, Observer{
     public static Integer getPlayersNum() {
         return playersNum;
     }
+
 
     public static Map<Position, Cell> getBillboardStatus() {
         return billboardStatus;
