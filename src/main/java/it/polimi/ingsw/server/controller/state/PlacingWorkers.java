@@ -16,10 +16,9 @@ public class PlacingWorkers extends State {
         Set<Position> initializedPositions = messageEvent.getInitializedPositions();
 
         if(initializedPositions.stream().distinct().count() != 2
+            || !getPlacingAvailableCells(matchID).containsAll(initializedPositions)
             || !(initializedPositions.stream().allMatch(this::checkPosition)))
-        //TODO VERIFICARE SE SONO DISPONIBILI LE CELLE!!!
         {
-
             notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), messageEvent.getPlayerID()),matchID)));
         }
 

@@ -22,13 +22,12 @@ public class Running extends State{
         }
 
         else if (messageEvent.getSpecialFunction()) {
-            //TODO VERIFICARE CHE SPECIAL FUNCTION AVAILABLE X WORKER SCELTO
-            /*if (isSpecialFunctionAvailable(matchID).keySet().){
+            if (isSpecialFunctionAvailable(matchID).keySet().size() == 2 || isSpecialFunctionAvailable(matchID).get(messageEvent.getStartPosition())){
                 setUnsetSpecialFunction(matchID, messageEvent.getSpecialFunction());
             }
             else{
                 notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), messageEvent.getPlayerID()),matchID)));
-            }*/
+            }
         }
 
         else{
