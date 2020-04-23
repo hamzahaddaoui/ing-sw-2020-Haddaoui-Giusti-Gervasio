@@ -16,6 +16,11 @@ public class SelectionNumberStatus extends ControlState {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
+        if(View.getColoredPlayersNum() == null)
+            throw new IllegalArgumentException(" ColoredPlayersNum is empty");
+        if(View.getPlayersNum() == null)
+            throw new IllegalArgumentException(" PlayerNum is empty");
+
         return commandCharacter.executeNumberStatus();
 
     }

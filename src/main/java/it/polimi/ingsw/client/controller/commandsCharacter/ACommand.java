@@ -30,6 +30,7 @@ public class ACommand implements CommandCharacter {
      */
     @Override
     public boolean executePlacingWorkerStatus() {
+
         Position coloredPosition = View.getColoredPosition();
 
         while(View.getPlacingAvailableCells().contains(coloredPosition)){

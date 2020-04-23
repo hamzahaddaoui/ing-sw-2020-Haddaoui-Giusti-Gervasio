@@ -14,12 +14,13 @@ public class SelectingGodCardsStatus extends ControlState {
 
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
-        return commandCharacter.executeSelectingGodCardsStatus();
 
-        //A scorre in alto il set
-        //D scorre in basso il set
-        //Enter accetta la GodCardSelezionata, o se sono state inserite tutte le posizioni serve per conferma finale
-        // E ritorna indietro e deselezionare le carte
+        if(View.getGodCards() == null)
+            throw new IllegalArgumentException(" GodCards is empty");
+        if(View.getColoredGodCard() == null)
+            throw new IllegalArgumentException(" ColoredGodCard is empty");
+
+        return commandCharacter.executeSelectingGodCardsStatus();
     }
 
     @Override
@@ -28,4 +29,6 @@ public class SelectingGodCardsStatus extends ControlState {
             ctrl.setState(new SelectingSpecialCommandStatus());
         else ctrl.setState(new WaitingStatus());
     }
+
+
 }

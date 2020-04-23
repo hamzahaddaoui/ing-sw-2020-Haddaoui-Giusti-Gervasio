@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class SelectionNumberStatusTest {
@@ -24,10 +25,10 @@ class SelectionNumberStatusTest {
     InsertCharacter inputS = InsertCharacter.S;
     InsertCharacter inputEnter = InsertCharacter.ENTER;
     CommandCharacter commandCharacter;
-    View view;
+    View view = new View();
     Controller controller = new Controller();
     ControlState ctrlStatus = new SelectionNumberStatus();
-    ArrayList<String> godCards ;
+    ArrayList<String> godCards = new ArrayList<String>();
 
     @BeforeEach
     void setUp(){
@@ -41,15 +42,12 @@ class SelectionNumberStatusTest {
         godCards.add("PAN");
         godCards.add("PROMETHEUS");
 
-        controller = new Controller();
-        ctrlStatus = new SelectionNumberStatus();
         controller.setState(ctrlStatus);
-        View.setGodCards(godCards);
+        view.setGodCards(godCards);
     }
 
     @Test
     void processingMessageA() {
-        view = new View();
         view.viewSetUp();
         commandCharacter = inputA.apply();
 
@@ -64,17 +62,16 @@ class SelectionNumberStatusTest {
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(controller.isMessageReady(),false);
-        assertEquals(View.getPlayersNum(),2);
+        assertEquals(view.getPlayersNum(),2);
 
         ctrlStatus.processingMessage(commandCharacter);
 
         assertEquals(controller.isMessageReady(),false);
-        assertEquals(View.getPlayersNum(),3);
+        assertEquals(view.getPlayersNum(),3);
     }
 
     @Test
     void processingMessageD() {
-        view = new View();
         view.viewSetUp();
         commandCharacter = inputD.apply();
 
@@ -99,7 +96,6 @@ class SelectionNumberStatusTest {
 
     @Test
     void processingMessageW() {
-        view = new View();
         view.viewSetUp();
         commandCharacter = inputW.apply();
 
@@ -193,13 +189,13 @@ class SelectionNumberStatusTest {
         controller.setMatchState(MatchState.SELECTING_GOD_CARDS);
         controller.nextState();
 
-        assertEquals(controller.isMessageReady(),true);
         assertEquals(View.getColoredGodCard(), View.getGodCards().get(0));
-        assertEquals( controller.getControlState() , new SelectingGodCardsStatus() );
+        assertEquals( controller.getControlState().getClass(), new SelectingGodCardsStatus().getClass() );
 
         controller.setPlayerState(PlayerState.IDLE);
         controller.setMatchState(MatchState.SELECTING_GOD_CARDS);
+        controller.nextState();
 
-        assertEquals( controller.getControlState() , new WaitingStatus() );
+        assertEquals( controller.getControlState().getClass() , new WaitingStatus().getClass()  );
     }
 }

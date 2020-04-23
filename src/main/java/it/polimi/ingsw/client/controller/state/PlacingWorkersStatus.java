@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 
+import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.utilities.MatchState;
@@ -10,10 +11,17 @@ public class PlacingWorkersStatus extends ControlState {
 
     @Override
     public boolean processingMessage(Object viewObject) {
+
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
+        if(View.getPlacingAvailableCells() == null)
+            throw new IllegalArgumentException(" PlacingAvailableCell is empty");
+        if(View.getColoredPosition() == null)
+            throw new IllegalArgumentException(" ColoredPosition is empty");
+
         return commandCharacter.executePlacingWorkerStatus();
+
     }
 
     @Override

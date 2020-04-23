@@ -49,7 +49,7 @@ public class ECommand implements CommandCharacter {
         ArrayList<String> godCards = View.getGodCards();
         ArrayList<String> selectedGodCards = View.getSelectedGodCards();
 
-        if(coloredGodCard!=null){
+        if(coloredGodCard != null && selectedGodCards.size() > 0){
             godCards.add(coloredGodCard);
             selectedGodCards.remove(selectedGodCards.indexOf(coloredGodCard));
             View.setColoredGodCard(godCards.get(0));

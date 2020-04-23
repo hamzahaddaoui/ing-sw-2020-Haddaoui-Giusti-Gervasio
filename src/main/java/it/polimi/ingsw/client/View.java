@@ -57,6 +57,10 @@ public class View extends Observable implements Runnable, Observer{
         View.godCards = godCards;
     }
 
+    public static void setPlacingAvailableCells(Set<Position> placingAvailableCells) {
+        View.placingAvailableCells = placingAvailableCells;
+    }
+
     public void viewSetUp(){
         coloredPlayersNum.add(2);
         coloredPlayersNum.add(3);
@@ -94,6 +98,10 @@ public class View extends Observable implements Runnable, Observer{
         }*/
 
         setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
+
+        if(View.getColoredPosition() == null){
+            View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
+        }
 
          outputStream.println("Insert a nickname: ");
          inputMessage = scanner.nextLine();
