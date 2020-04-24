@@ -42,7 +42,7 @@ public class PlayerTestVasio {
         assertFalse(p1.hasSpecialFunction());
         assertFalse(p1.hasFinished());
         assertFalse(p1.isTerminateTurnAvailable());
-        assertFalse(p1.isSpecialFunctionAvailable());
+        //assertTrue(p1.isSpecialFunctionAvailable().isEmpty());
     }
 
     @Test
@@ -108,9 +108,8 @@ public class PlayerTestVasio {
         System.out.println(getBillboardStat());
         worker = new Position(2, 0); p.setCurrentWorker(worker);
         assertFalse(p.hasSpecialFunction());
-        assertTrue(p.isSpecialFunctionAvailable());
+        assertTrue(p.isSpecialFunctionAvailable().get(worker));
         p.setUnsetSpecialFunction(true);
-        assertFalse(p.isSpecialFunctionAvailable());
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
         build = new Position(2, 1); p.playerAction(build);
         assertFalse(p.hasFinished());
@@ -137,9 +136,8 @@ public class PlayerTestVasio {
         p.playerAction(build); match.checkPlayers();
         p = p1; System.out.println(getBillboardStat());
         worker = new Position(1, 0); p.setCurrentWorker(worker);
-        assertFalse(p.isSpecialFunctionAvailable());
+        assertTrue(p.isSpecialFunctionAvailable().get(worker));
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-        assertFalse(p.isSpecialFunctionAvailable());
         assertFalse(p.hasSpecialFunction());
         System.out.println("Prometheus - moves from x=1 y=0 to x=2 y=0 \n\n");
         worker = new Position(2, 0);

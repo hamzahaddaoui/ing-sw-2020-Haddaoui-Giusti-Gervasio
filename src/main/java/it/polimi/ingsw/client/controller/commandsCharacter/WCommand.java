@@ -38,12 +38,12 @@ public class WCommand implements CommandCharacter {
     /**
      * Method that adapt the coordinate of the position
      *
-     * @param coordinate  Y coordinate of the position
-     * @return  correct Y coordinate
+     * @param coordinate  X coordinate of the position
+     * @return  correct X coordinate
      */
     private int checkCorrectCoordinate(int coordinate){
-        coordinate++;
-        if(coordinate>4) coordinate-=5;
+        coordinate--;
+        if(coordinate<0) coordinate+=5;
         return coordinate;
     }
 
@@ -61,7 +61,7 @@ public class WCommand implements CommandCharacter {
         Position coloredPosition = View.getColoredPosition();
 
         if (View.getStartingPosition()!=null) {
-            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
+            coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
             View.setColoredPosition(coloredPosition);
         }
         return false;

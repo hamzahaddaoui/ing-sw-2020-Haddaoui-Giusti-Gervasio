@@ -68,6 +68,8 @@ public class EnterCommand implements CommandCharacter {
                         .contains(View.getColoredPosition())) {
             Controller.getMessage().setStartPosition(View.getStartingPosition());
             Controller.getMessage().setEndPosition(View.getColoredPosition());
+            View.setStartingPosition(null);
+            View.setColoredPosition(null);
             return true;
         }
         else return false;

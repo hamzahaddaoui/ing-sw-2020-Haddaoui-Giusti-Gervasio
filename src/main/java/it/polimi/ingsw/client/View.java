@@ -42,7 +42,7 @@ public class View extends Observable implements Runnable, Observer{
 
     private static Map<Integer, String> matchPlayers;
     private static boolean terminateTurnAvailable;
-    private static boolean specialFunctionAvailable;
+    private static Map<Position,Boolean> specialFunctionAvailable;
 
     private static String inputMessage;
     private static char inputCharacter;
@@ -227,8 +227,8 @@ public class View extends Observable implements Runnable, Observer{
         return terminateTurnAvailable;
     }
 
-    public static boolean isSpecialFunctionAvailable() {
-        return specialFunctionAvailable;
+    public static boolean isSpecialFunctionAvailable(Position position) {
+        return specialFunctionAvailable.get(position);
     }
 
     /*
@@ -243,5 +243,9 @@ public class View extends Observable implements Runnable, Observer{
 
     public static void setPlayersNum (int selectedPlayersNum) {
         playersNum = selectedPlayersNum;
+    }
+
+    public static void setSpecialFunctionAvailable(Map<Position,Boolean> modelMap) {
+        specialFunctionAvailable = modelMap;
     }
 }

@@ -35,12 +35,12 @@ public class SCommand implements CommandCharacter {
     /**
      * Method that adapt the coordinate of the position
      *
-     * @param coordinate  Y coordinate of the position
-     * @return  correct Y coordinate
+     * @param coordinate  X coordinate of the position
+     * @return  correct X coordinate
      */
     private int checkCorrectCoordinate(int coordinate){
-        coordinate--;
-        if(coordinate<0) coordinate+=5;
+        coordinate++;
+        if(coordinate>4) coordinate-=5;
         return coordinate;
     }
 
