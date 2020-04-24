@@ -86,21 +86,19 @@ public class Player{
         return selectedWorker;
     }
 
-
-
-
-
-
     public boolean hasSpecialFunction() {
         return specialFunction;
     }
+
     public Map<Position, Boolean> isSpecialFunctionAvailable(){
         return specialFunctionAvailable;
     }
+
     public void setUnsetSpecialFunction(boolean specialFunction){
         this.specialFunction = specialFunction;
         commands.notifySpecialFunction(this);
     }
+
     public void setUnsetSpecialFunctionAvailable(Map<Position, Boolean> specialFunctionAvailable){
         this.specialFunctionAvailable = specialFunctionAvailable;
     }
