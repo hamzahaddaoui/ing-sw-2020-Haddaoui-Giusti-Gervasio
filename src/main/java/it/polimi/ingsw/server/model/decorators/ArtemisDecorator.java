@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,26 +49,21 @@ public class ArtemisDecorator extends CommandsDecorator {
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
-                player.setUnsetSpecialFunction(true);
-                if(player.hasSpecialFunction()){
-
-                }
-              /*  //  devo fare il secondo move
-                if (secondMoveDone=false && this.startingPosition != null)
+                player.setUnsetSpecialFunction(canDoSecondMove(player));
+                if(player.hasSpecialFunction() && !secondMoveDone){
                     player.setTurnState(MOVE);
+                }
                 else{
                     startingPosition=null;
                     secondMoveDone=false;
                     player.setTurnState(BUILD);
-                }*/
+                }
                 break;
             case BUILD:
-                if (losingCondition(player)){
-                    player.setHasFinished();
-                }
-                player.setTerminateTurnAvailable();
+                player.setHasFinished();
                 break;
-    }}
+        }
+    }
 
     /**
      * change the position of the worker with BasicCommands's moveWorker method
@@ -109,6 +105,23 @@ public class ArtemisDecorator extends CommandsDecorator {
                     .stream()
                     .filter(position -> position != this.startingPosition)
                     .collect(Collectors.toSet());}
+    }
+
+    /**
+     * Method that establish if the current worker can move for the second time
+     *
+     * @param player  is the current player
+     * @return  true can move for the second time, else false
+     */
+    private boolean canDoSecondMove(Player player){
+
+        return player.getWorkers()
+                .stream()
+                .filter(worker -> player.getCurrentWorker() == worker)
+                .map( worker -> worker.canDoSomething(MOVE))
+                .findAny()
+                .get();
+
     }
 
 }

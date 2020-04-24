@@ -25,7 +25,7 @@ public class SelectingSpecialCommandStatus extends ControlState {
     public void nextState(Controller ctrl) {
         if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.PLACING_WORKERS){
             ctrl.setState(new PlacingWorkersStatus());
-            View.getColoredPosition().set(0,0);
+            View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
         }
         else ctrl.setState(new WaitingStatus());
     }

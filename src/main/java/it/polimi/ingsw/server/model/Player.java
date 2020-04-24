@@ -178,9 +178,6 @@ public class Player{
         this.terminateTurnAvailable = true;
     }
 
-
-    //in prima move -> imposto STARTING_POSITION
-
     public void playerAction(Position position){
         switch (turnState) {
             case MOVE:

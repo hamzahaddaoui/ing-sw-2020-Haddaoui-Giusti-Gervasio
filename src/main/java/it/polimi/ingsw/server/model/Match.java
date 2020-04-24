@@ -91,9 +91,6 @@ public class Match {
         return moveUpActive;
     }
 
-
-
-
     public void resetLosers(){
         losers.clear();
     }

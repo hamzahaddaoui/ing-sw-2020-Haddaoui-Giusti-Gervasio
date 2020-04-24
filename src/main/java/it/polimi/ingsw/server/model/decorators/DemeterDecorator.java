@@ -18,10 +18,10 @@ import static it.polimi.ingsw.utilities.TurnState.IDLE;
  */
 
 public class DemeterDecorator extends CommandsDecorator {
-
     static final GodCards card = GodCards.Demeter;
 
     private Position firstBuildPosition;
+    private boolean secondBuildDone;
 
     /**
      * decorate the object Command with Demeter's special power
@@ -40,23 +40,25 @@ public class DemeterDecorator extends CommandsDecorator {
      *
      * @param player  is the current player
      */
-    @Override
     public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:
+                secondBuildDone = false;
+                firstBuildPosition = null;
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
-                this.firstBuildPosition=null;
                 player.setTurnState(BUILD);
                 break;
             case BUILD:
-                if (this.firstBuildPosition!=null && player.hasSpecialFunction())
-                    player.setTurnState(BUILD);
-                else{
-                    this.firstBuildPosition=null;
+                if (losingCondition(player) || secondBuildDone){
                     player.setHasFinished();
-                    }
+                }
+                else{
+                    player.setTerminateTurnAvailable();
+                }
+                break;
+            default:
                 break;
         }
     }
@@ -70,18 +72,16 @@ public class DemeterDecorator extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        super.build(position, player);
-
         if (this.firstBuildPosition == null){
             this.firstBuildPosition = position;
         }
         else {
-            if (player.hasSpecialFunction() && this.firstBuildPosition != null) {
-                this.firstBuildPosition=null;
+           this.secondBuildDone = true;
             }
-        }
 
+        super.build(position, player);
     }
+
 
     /**
      * method that compute the set of the available buildings
