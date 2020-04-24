@@ -21,6 +21,7 @@ public class ArtemisDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Artemis;
 
     private Position startingPosition=null;
+    private boolean secondMoveDone;
 
     /**
      * decorate the object Command with Artemis's special power
@@ -42,18 +43,29 @@ public class ArtemisDecorator extends CommandsDecorator {
     public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:
+                startingPosition = null;
+                secondMoveDone = false;
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
-                if (player.hasSpecialFunction() && this.startingPosition != null)//ho già fatto prima mossa e Special Function
+                player.setUnsetSpecialFunction(true);
+                if(player.hasSpecialFunction()){
+
+                }
+              /*  //  devo fare il secondo move
+                if (secondMoveDone=false && this.startingPosition != null)
                     player.setTurnState(MOVE);
                 else{
                     startingPosition=null;
+                    secondMoveDone=false;
                     player.setTurnState(BUILD);
-                }
+                }*/
                 break;
             case BUILD:
-                player.setHasFinished();
+                if (losingCondition(player)){
+                    player.setHasFinished();
+                }
+                player.setTerminateTurnAvailable();
                 break;
     }}
 
@@ -67,8 +79,12 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        if(this.startingPosition==null)
+
+        if(this.startingPosition==null){
             this.startingPosition=position;
+        }
+        else this.secondMoveDone = true;
+
         super.moveWorker(position, player);
     }
 

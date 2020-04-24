@@ -67,7 +67,7 @@ public enum GodCards {
     abstract Commands apply(Commands commands);
 }
 
-/*Apollo("Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated"),
+/*  Apollo("Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated"),
     Artemis("Your Worker may move one additional time, but not back to its initial space")
     Athena("If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn")
     Atlas("Your Worker may build a dome at any level")

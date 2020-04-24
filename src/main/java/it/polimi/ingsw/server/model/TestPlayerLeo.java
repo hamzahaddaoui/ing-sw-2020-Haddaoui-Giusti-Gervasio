@@ -41,7 +41,6 @@ class TestPlayerLeo {
         assertFalse(p1.hasSpecialFunction());
         assertFalse(p1.hasFinished());
         assertFalse(p1.isTerminateTurnAvailable());
-        //assertTrue(p1.isSpecialFunctionAvailable().isEmpty());
     }
     
     @Test
@@ -63,20 +62,20 @@ class TestPlayerLeo {
         testMatchCreator();
         Set<GodCards> cards = new HashSet<>();
 
-        cards.add(GodCards.Athena);
-        cards.add(GodCards.Atlas);
-        cards.add(GodCards.Hephaestus);
+        cards.add(GodCards.Apollo);
+        cards.add(GodCards.Artemis);
+        cards.add(GodCards.Demeter);
 
         match.setCards(cards);
         match.nextState();
 
-        p1.setCommands(GodCards.Athena);
-        p2.setCommands(GodCards.Atlas);
-        p3.setCommands(GodCards.Hephaestus);
+        p1.setCommands(GodCards.Apollo);
+        p2.setCommands(GodCards.Artemis);
+        p3.setCommands(GodCards.Demeter);
 
-        assertTrue(p1.getCommands() instanceof AthenaDecorator);
-        assertTrue(p2.getCommands() instanceof AtlasDecorator);
-        assertTrue(p3.getCommands() instanceof HephaestusDecorator);
+        assertTrue(p1.getCommands() instanceof ApolloDecorator);
+        assertTrue(p2.getCommands() instanceof ArtemisDecorator);
+        assertTrue(p3.getCommands() instanceof DemeterDecorator);
 
         assertEquals(Collections.emptyMap(), p1.getWorkersAvailableCells());
         assertEquals(match.getBillboard().getCells().keySet(), p1.getPlacingAvailableCells());
@@ -86,12 +85,15 @@ class TestPlayerLeo {
     @Test
     void testPlacing(){
         testSelectingCard();
+        //APOLLO
         p1.setWorker(new Position(0,0));
         p1.setWorker(new Position(0,1));
         assertTrue(p1.hasPlacedWorkers());
+        //ARTEMIS
         p2.setWorker(new Position(2,3));
         p2.setWorker(new Position(2,4));
         assertTrue(p2.hasPlacedWorkers());
+        //DEMETER
         p3.setWorker(new Position(4,3));
         p3.setWorker(new Position(4,4));
         assertTrue(p3.hasPlacedWorkers());

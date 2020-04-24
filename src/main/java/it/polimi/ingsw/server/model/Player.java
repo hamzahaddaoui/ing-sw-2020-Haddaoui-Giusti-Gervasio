@@ -103,10 +103,6 @@ public class Player{
         this.specialFunctionAvailable = specialFunctionAvailable;
     }
 
-
-
-
-
     public boolean hasFinished() {
         return (playerState==PlayerState.IDLE);
     }
@@ -114,8 +110,6 @@ public class Player{
     public boolean isTerminateTurnAvailable(){
         return terminateTurnAvailable;
     }
-
-
 
     public void setMatch(Match match){
         this.match = match;
@@ -134,7 +128,6 @@ public class Player{
         if (workers.size() == 2){
             placedWorkers = true;
         }
-
     }
 
     public void setCurrentWorker(Position position) throws IllegalArgumentException{
@@ -170,8 +163,6 @@ public class Player{
         this.turnState = turnState;
     }
 
-
-
     public void setHasFinished() {
         specialFunction = false;
         currentWorker = null;
@@ -187,6 +178,8 @@ public class Player{
         this.terminateTurnAvailable = true;
     }
 
+
+    //in prima move -> imposto STARTING_POSITION
 
     public void playerAction(Position position){
         switch (turnState) {
@@ -208,8 +201,6 @@ public class Player{
         else if (commands.losingCondition(this))
             playerState = PlayerState.LOST;
     }
-
-
 
     public Set<Position> getPlacingAvailableCells(){
         return commands.computeAvailablePlacing(this);
