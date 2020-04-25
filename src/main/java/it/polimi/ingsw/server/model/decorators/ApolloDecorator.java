@@ -7,6 +7,9 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.utilities.TurnState.BUILD;
+import static it.polimi.ingsw.utilities.TurnState.MOVE;
+
 /**
  * @author giusti-leo
  *
@@ -48,7 +51,6 @@ public class ApolloDecorator extends CommandsDecorator {
         }
     }
 
-
     /**
      * method that allow the change of the positions of the workers
      *
@@ -57,25 +59,31 @@ public class ApolloDecorator extends CommandsDecorator {
      */
     private void exchangePosition(Player player,Position position){
 
-        Billboard billboard=player.getMatch().getBillboard();
-        Worker myWorker= player.getCurrentWorker();
-        Player opponentPlayer=findOpponentPlayer(position, player);
-        Position actualPosition=myWorker.getPosition();
-
-        Worker opponentWorker= opponentPlayer
-                .getWorkers()
-                .stream()
-                .filter(worker1 -> worker1.getPosition()==position)
-                .findAny()
-                .get();
+        Billboard billboard = player.getMatch().getBillboard();
+        Worker myWorker = player.getCurrentWorker();
+        Player opponentPlayer = findOpponentPlayer(position, player);
+        Worker opponentWorker = findOpponentWorker(position, opponentPlayer);
+        Position actualPosition = myWorker.getPosition();
 
         billboard.resetPlayer(position);
         myWorker.setPosition(position);
+        player.getWorkersAvailableCells().remove(actualPosition);
         billboard.setPlayer(position, player.getID());
+        player.getWorkers().stream().forEach(worker -> {
+            worker.setAvailableCells(MOVE, player.getCommands().computeAvailableMovements(player, worker));
+            worker.setAvailableCells(BUILD, player.getCommands().computeAvailableBuildings(player, worker));
+        });
+        player.getWorkersAvailableCells();
 
         billboard.resetPlayer(actualPosition);
         opponentWorker.setPosition(actualPosition);
+        opponentPlayer.getWorkersAvailableCells().remove(position);
         billboard.setPlayer(actualPosition, opponentPlayer.getID());
+        opponentPlayer.getWorkers().stream().forEach(worker -> {
+            worker.setAvailableCells(MOVE, player.getCommands().computeAvailableMovements(opponentPlayer, worker));
+            worker.setAvailableCells(BUILD, player.getCommands().computeAvailableBuildings(opponentPlayer, worker));
+        });
+        opponentPlayer.getWorkersAvailableCells();
     }
 
     /**
@@ -99,6 +107,24 @@ public class ApolloDecorator extends CommandsDecorator {
     }
 
     /**
+     * find the opponentWorker that is in the that position
+     *
+     * @param position  that is selected
+     * @param player  current player that move his worker
+     * @return  the Worker that occupy the cell "position"
+     */
+    private Worker findOpponentWorker (Position position, Player player) {
+        Position pos= position;
+
+        return player
+                .getWorkers()
+                .stream()
+                .filter(worker1 -> worker1.getPosition().getX() == pos.getX() &&  worker1.getPosition().getY() == pos.getY())
+                .findAny()
+                .get();
+    }
+
+    /**
      * method that show the list of cells that are available for the standard movement of the player
      *
      * @param player  is the current player
@@ -108,7 +134,7 @@ public class ApolloDecorator extends CommandsDecorator {
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
 
         Billboard billboard = player.getMatch().getBillboard();
-        Position currentPosition = player.getCurrentWorker().getPosition();
+        Position currentPosition = worker.getPosition();
 
         return worker
                 .getPosition()
@@ -121,6 +147,15 @@ public class ApolloDecorator extends CommandsDecorator {
                                 billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
+    }
+
+    private void setAvailableCells(Player player) {
+        Set<Worker> workers =player.getWorkers();
+
+        workers.forEach(worker -> {
+            worker.setAvailableCells(MOVE, player.getCommands().computeAvailableMovements(player, worker));
+            worker.setAvailableCells(BUILD, player.getCommands().computeAvailableBuildings(player, worker));
+        });
     }
 
 }

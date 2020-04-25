@@ -82,7 +82,6 @@ public class DemeterDecorator extends CommandsDecorator {
         super.build(position, player);
     }
 
-
     /**
      * method that compute the set of the available buildings
      * if it's the first build action, BasicCommands's computeAvailableBuildings method

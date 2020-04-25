@@ -112,6 +112,7 @@ class TestPlayerLeo {
         {
             //---------turno di APOLLO------------------------------------------------------
             p = p1;
+            System.out.println("TURNO DI " + p.getCommands().getClass() +"\n\n");
             System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(0, 0);
@@ -122,6 +123,8 @@ class TestPlayerLeo {
             p.playerAction(worker);
             match.checkPlayers();
 
+            showAvailablePositionsMove(p);
+
             //COSTRUISCO
             build = new Position(0, 0);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -129,37 +132,46 @@ class TestPlayerLeo {
             p.playerAction(build);
             match.checkPlayers();
             //FINE
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
 
+            showAvailablePositionsBuild(p);
 
             //---------turno di ARTEMIS------------------------------------------------------
             p = p2;
+            System.out.println("TURNO DI " + p.getCommands().getClass() +"\n\n");
             System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 3);
             p.setCurrentWorker(worker);
+            showAvailablePositionsMove(p);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=3 to x=2 y=2\n\n");
             worker = new Position(2, 2);
             p.playerAction(worker);
             match.checkPlayers();
+            showAvailablePositionsMove(p);
 
             //COSTRUISCO
             build = new Position(2, 1);
-            p.setUnsetSpecialFunction(true);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - builds a block in x=2 y=1\n\n");
+            showAvailablePositionsBuild(p);
             p.playerAction(build);
             match.checkPlayers();
             //FINE
 
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
+
             //---------turno di DEMETER------------------------------------------------------
             p = p3;
+            System.out.println("TURNO DI " + p.getCommands().getClass() +"\n\n");
             System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(4, 4);
             p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("DEMETER - moves from x=4 y=4 to x=3 y=4\n\n");
+            showAvailablePositionsMove(p);
             worker = new Position(3, 4);
             p.playerAction(worker);
             match.checkPlayers();
@@ -168,15 +180,20 @@ class TestPlayerLeo {
             build = new Position(3, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("DEMETER - builds a block in x=3 y=3\n\n");
+            showAvailablePositionsBuild(p);
             p.playerAction(build);
             match.checkPlayers();
+            showAvailablePositionsBuild(p);
 
             build = new Position(2, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("DEMETER - builds a block in x=3 y=3\n\n");
+            showAvailablePositionsBuild(p);
             p.playerAction(build);
             match.checkPlayers();
+            showAvailablePositionsBuild(p);
 
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
 
             //FINE
         }
@@ -187,47 +204,67 @@ class TestPlayerLeo {
         {
             //---------turno di APOLLO------------------------------------------------------
             p = p1;
+            System.out.println("TURNO DI " + p.getCommands().getClass() +"\n\n");
             System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(1, 1);
             p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("APOLLO - moves from x=1 y=1 to x=2 y=2 (EXCHANGE POSITION)\n\n");
+            showAvailablePositionsMove(p);
             worker = new Position(2, 2);
             p.playerAction(worker);
+            showAvailablePositionsMove(p);
             match.checkPlayers();
 
             //COSTRUISCO
             build = new Position(3, 1);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("APOLLO - builds a block in x=3 y=1\n\n");
+            showAvailablePositionsBuild(p);
             p.playerAction(build);
             match.checkPlayers();
+            showAvailablePositionsBuild(p);
             //FINE
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
 
             //---------turno di ARTEMIS------------------------------------------------------
             p = p2;
+            System.out.println("TURNO DI " + p.getCommands().getClass() +"\n\n");
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(1, 1);
             p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=1 y=1 to x=2 y=1\n\n");
+            showAvailablePositionsMove(p);
             worker = new Position(2, 1);
+            System.out.println("TURNO : " + p.getTurnState() + "\n\n");
             p.playerAction(worker);
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
+            showAvailablePositionsMove(p);
             match.checkPlayers();
-
+            System.out.println("TURNO : " + p.getTurnState() + "\n\n");
             //MI MUOVO
-            worker = new Position(3, 1);
+            p.setUnsetSpecialFunction(false);
+            showAvailablePositionsMove(p);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=1 to x=3 y=1\n\n");
+            worker = new Position(3, 1);
             p.playerAction(worker);
+            System.out.println("TURNO : " + p.getTurnState() + "\n\n");
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
+            match.checkPlayers();
+            showAvailablePositionsMove(p);
 
+            showAvailablePositionsBuild(p);
             //COSTRUISCO
             build = new Position(2, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            System.out.println("Atlas - builds a block in x=2 y=1\n\n");
+            System.out.println("ARTEMIS - builds a block in x=2 y=1\n\n");
             p.playerAction(build);
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             match.checkPlayers();
             //FINE
 
@@ -285,6 +322,8 @@ class TestPlayerLeo {
             //---------turno di ARTEMIS------------------------------------------------------
             p = p2;
             System.out.println(getBillboardStat());
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
+            showAvailablePositionsMove(p);
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 4);
             p.setCurrentWorker(worker);
@@ -292,14 +331,19 @@ class TestPlayerLeo {
             System.out.println("ARTEMIS - moves from x=2 y=4 to x=3 y=4\n\n");
             worker = new Position(3,4);
             p.playerAction(worker);
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
+            showAvailablePositionsMove(p);
             match.checkPlayers();
 
             //MI MUOVO
+            p.setUnsetSpecialFunction(false);
             worker = new Position(3, 3);
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=1 to x=3 y=3\n\n");
             p.playerAction(worker);
-
+            match.checkPlayers();
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             //COSTRUISCO
             build = new Position(3,2);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -374,6 +418,7 @@ class TestPlayerLeo {
             match.checkPlayers();
 
             //MI MUOVO
+            p.setUnsetSpecialFunction(false);
             worker = new Position(2, 4);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=1 to x=2 y=4\n\n");
@@ -521,22 +566,23 @@ class TestPlayerLeo {
             match.checkPlayers();
 
             //MI MUOVO
+            p.setUnsetSpecialFunction(false);
             worker = new Position(3, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=3 y=2 to x=3 y=3\n\n");
             p.playerAction(worker);
 
-            //COSTRUISCO
+            /*//COSTRUISCO
             build = new Position(3,4);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - builds a block in x=3 y=4\n\n");
             p.playerAction(build);
-
+*/
             if (match.checkPlayers()){
                 System.out.println("MATCH FINISHED - WINNER IS "+p.toString());
             }
         }
-        
+
     }
     
     String getBillboardStat(){
@@ -577,6 +623,14 @@ class TestPlayerLeo {
                         .append((position.getY()==4) ? "\n" : " "));
 
         return output.toString();
+    }
+
+    private void showAvailablePositionsMove(Player p){
+        p.getWorkers().stream().forEach(worker -> System.out.println(" *"+ worker.getAvailableCells(TurnState.MOVE) +"* "));
+    }
+
+    private void showAvailablePositionsBuild(Player p){
+        p.getWorkers().stream().forEach(worker -> System.out.println(" *"+ worker.getAvailableCells(TurnState.BUILD) +"* "));
     }
 
 }

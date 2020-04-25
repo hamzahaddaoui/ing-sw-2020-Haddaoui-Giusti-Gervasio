@@ -49,19 +49,19 @@ public class ArtemisDecorator extends CommandsDecorator {
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
-                player.setUnsetSpecialFunction(canDoSecondMove(player));
-                if(player.hasSpecialFunction() && !secondMoveDone){
-                    player.setTurnState(MOVE);
-                }
-                else{
-                    startingPosition=null;
-                    secondMoveDone=false;
-                    player.setTurnState(BUILD);
-                }
+                player.setTurnState(BUILD);
                 break;
             case BUILD:
                 player.setHasFinished();
                 break;
+        }
+    }
+
+    @Override
+    public void notifySpecialFunction(Player player){
+        if (!player.hasSpecialFunction()){
+            player.setUnsetSpecialFunctionAvailable(null);
+            player.setTurnState(MOVE);
         }
     }
 
@@ -76,12 +76,24 @@ public class ArtemisDecorator extends CommandsDecorator {
     @Override
     public void moveWorker(Position position, Player player) {
 
-        if(this.startingPosition==null){
-            this.startingPosition=position;
-        }
-        else this.secondMoveDone = true;
+        Position currentPosition = player.getCurrentWorker().getPosition();
 
         super.moveWorker(position, player);
+
+        player.getWorkersAvailableCells().remove(currentPosition);
+        player.getWorkers().stream().forEach(worker -> {
+            worker.setAvailableCells(MOVE, this.computeAvailableMovements(player, worker));
+            worker.setAvailableCells(BUILD, this.computeAvailableBuildings(player, worker));
+        });
+        player.getWorkersAvailableCells();
+
+        if(this.startingPosition==null){
+            this.startingPosition=currentPosition;
+            player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
+        }
+        else{
+            this.secondMoveDone = true;
+        }
     }
 
     /**
@@ -97,13 +109,20 @@ public class ArtemisDecorator extends CommandsDecorator {
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
             Set<Position> result = super.computeAvailableMovements(player, worker);
 
-            if(this.startingPosition==null)
+            result
+                .stream()
+                .forEach(position -> System.out.print(" *" + position + "* ,"));
+            System.out.println();
+
+            if(this.startingPosition == null && secondMoveDone == false)
                 return result;
 
             else{
             return  result
                     .stream()
-                    .filter(position -> position != this.startingPosition)
+                    .filter(position -> player.getCurrentWorker() == )
+                    .filter(position -> position.getX() != this.startingPosition.getX() &&
+                            position.getY() != this.startingPosition.getY())
                     .collect(Collectors.toSet());}
     }
 
@@ -113,14 +132,14 @@ public class ArtemisDecorator extends CommandsDecorator {
      * @param player  is the current player
      * @return  true can move for the second time, else false
      */
-    private boolean canDoSecondMove(Player player){
+    private Map<Position, Boolean> canDoSecondMove(Player player){
 
-        return player.getWorkers()
+        return player
+                .getWorkers()
                 .stream()
-                .filter(worker -> player.getCurrentWorker() == worker)
-                .map( worker -> worker.canDoSomething(MOVE))
-                .findAny()
-                .get();
+                .filter(worker -> worker.getPosition().getY() == player.getCurrentWorker().getPosition().getY())
+                .filter(worker -> worker.getPosition().getX() == player.getCurrentWorker().getPosition().getX())
+                .collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(MOVE)));
 
     }
 

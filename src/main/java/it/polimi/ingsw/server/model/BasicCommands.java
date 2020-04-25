@@ -62,6 +62,7 @@ public class BasicCommands implements Commands {
         billboard.resetPlayer(worker.getPosition());
         worker.setPosition(position);
         billboard.setPlayer(position, player.getID());
+        System.out.println("POS :" + worker.getPosition() + "\n\n");
     }
 
     @Override

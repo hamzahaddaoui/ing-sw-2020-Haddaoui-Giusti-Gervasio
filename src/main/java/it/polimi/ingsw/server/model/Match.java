@@ -169,7 +169,6 @@ public class Match {
         return false;
     }
 
-
     public void nextTurn() throws UnsupportedOperationException{
         if (winner!=null || currentState == MatchState.FINISHED)
             throw new UnsupportedOperationException("Match is finished!");
