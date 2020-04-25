@@ -11,14 +11,14 @@ import it.polimi.ingsw.utilities.Position;
 public class SelectingSpecialCommandStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) throws NullPointerException{
+    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
 
-        if (viewObject == null)
-            throw new NullPointerException("Null message!");
+        if (!(viewObject instanceof InsertCharacter))
+            throw new IllegalArgumentException("Comando non riconosciuto!");
 
-        InsertCharacter characterView = (InsertCharacter) viewObject;
-        CommandCharacter commandCharacter = characterView.apply();
-        return commandCharacter.executeSpecialCommandsStatus();
+            InsertCharacter characterView = (InsertCharacter) viewObject;
+            CommandCharacter commandCharacter = characterView.apply();
+            return commandCharacter.executeSpecialCommandsStatus();
     }
 
     @Override

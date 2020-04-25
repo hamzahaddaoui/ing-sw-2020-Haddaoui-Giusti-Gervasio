@@ -9,7 +9,7 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
 
-public class Controller extends Observable<String> implements Observer<Object> {
+public class Controller extends Observable<MessageEvent> implements Observer<Object> {
 
     private ControlState controlState;
     private PlayerState playerState;
@@ -46,8 +46,7 @@ public class Controller extends Observable<String> implements Observer<Object> {
                 message.setPlayerID(View.getPlayerID());
             if (matchState != null)
                 message.setMatchID(View.getMatchID());
-            String json = new Gson().toJson(message);
-            notify(json);
+            notify(message);
         }
 
         //dopo l'invio reset degli attributi del messaggio a null

@@ -52,8 +52,8 @@ public class DCommand implements CommandCharacter {
     /**
      * Method that adapt the coordinate of the position
      *
-     * @param  coordinate  X coordinate of the position
-     * @return  correct X coordinate
+     * @param  coordinate  Y coordinate of the position
+     * @return  correct Y coordinate
      */
     private int checkCorrectCoordinate(int coordinate){
         coordinate++;
@@ -80,14 +80,19 @@ public class DCommand implements CommandCharacter {
             View.setColoredPosition( View
                 .getWorkersPositions()
                 .stream()
-                .filter(position -> position != coloredPosition)
+                .filter(position -> !position.equals(coloredPosition))
                 .findAny()
                 .get());
 
         }
         else {
-        coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
-        View.setColoredPosition(coloredPosition); }
+            CardinalDirection offset = View.getStartingPosition().checkMutualPosition(coloredPosition);
+            if (offset == CardinalDirection.NORTH ||
+                    offset == CardinalDirection.NORTHWEST ||
+                    offset == CardinalDirection.SOUTH ||
+                    offset == CardinalDirection.SOUTHWEST)
+                View.setColoredPosition(View.getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.EAST));
+        }
         return false;
     }
 

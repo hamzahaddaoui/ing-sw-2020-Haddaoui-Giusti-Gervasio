@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
 import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.utilities.CardinalDirection;
 import it.polimi.ingsw.utilities.Position;
 
 public class SCommand implements CommandCharacter {
@@ -35,12 +36,12 @@ public class SCommand implements CommandCharacter {
     /**
      * Method that adapt the coordinate of the position
      *
-     * @param coordinate  Y coordinate of the position
-     * @return  correct Y coordinate
+     * @param coordinate  X coordinate of the position
+     * @return  correct X coordinate
      */
     private int checkCorrectCoordinate(int coordinate){
-        coordinate--;
-        if(coordinate<0) coordinate+=5;
+        coordinate++;
+        if(coordinate>4) coordinate-=5;
         return coordinate;
     }
 
@@ -57,8 +58,12 @@ public class SCommand implements CommandCharacter {
         Position coloredPosition = View.getColoredPosition();
 
         if (View.getStartingPosition()!=null) {
-            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
-            View.setColoredPosition(coloredPosition);
+            CardinalDirection offset = View.getStartingPosition().checkMutualPosition(coloredPosition);
+            if (offset == CardinalDirection.WEST ||
+                    offset == CardinalDirection.NORTHWEST ||
+                    offset == CardinalDirection.EAST ||
+                    offset == CardinalDirection.NORTHEAST)
+                View.setColoredPosition(View.getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.SOUTH));
         }
         return false;
     }

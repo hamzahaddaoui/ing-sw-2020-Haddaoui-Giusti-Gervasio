@@ -5,7 +5,11 @@ import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 public class RunningStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) {
+    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
+
+        if (!(viewObject instanceof InsertCharacter))
+            throw new IllegalArgumentException("Comando non riconosciuto!");
+
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
         return commandCharacter.executeRunningStatus();

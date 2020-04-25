@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.controller.commandsCharacter;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.Position;
 
 public class FCommand implements CommandCharacter {
 
@@ -28,8 +29,11 @@ public class FCommand implements CommandCharacter {
 
     @Override
     public boolean executeRunningStatus() {
-        if (View.isSpecialFunctionAvailable()) {
-            Controller.getMessage().setSpecialFunction(true);
+        Position start = View.getStartingPosition();
+        MessageEvent msg = Controller.getMessage();
+        if (start!=null && View.isSpecialFunctionAvailable(start)) {
+            msg.setStartPosition(start);
+            msg.setSpecialFunction(true);
             return true;
         }
         else return false;

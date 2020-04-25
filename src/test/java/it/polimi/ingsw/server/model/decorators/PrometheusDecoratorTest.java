@@ -95,9 +95,10 @@ class PrometheusDecoratorTest {
     void turn_SpecialFunction_NoBuildBeforeMovingPermitted() {
         testingPosition.add(new Position(2,3));
         billboard.incrementTowerHeight(new Position(2,3));
+        player.getCurrentWorker().setAvailableCells(MOVE,testingPosition);
         player.getCurrentWorker().setAvailableCells(BUILD,testingPosition);
         commands.notifySpecialFunction(player);
-        assertFalse(player.isSpecialFunctionAvailable());
+        assertTrue(player.isSpecialFunctionAvailable().get(position1));
     }
 
     @Test
@@ -105,7 +106,7 @@ class PrometheusDecoratorTest {
         testingPosition.add(new Position(2,3));
         player.getCurrentWorker().setAvailableCells(BUILD,testingPosition);
         player.setPlayerState();
-        assertTrue(player.isSpecialFunctionAvailable());
+        assertTrue(player.isSpecialFunctionAvailable().get(position1));
     }
 
     @Test
