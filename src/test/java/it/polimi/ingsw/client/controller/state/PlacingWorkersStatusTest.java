@@ -91,9 +91,10 @@ class PlacingWorkersStatusTest {
     }
 
 
-    @Test
-    void processingMessageA() {
-        commandCharacter = inputA;
+    @Test // decrement coordinate X
+    void processingMessageW() {
+        view.setColoredPosition(null);
+        commandCharacter = inputW;
 
         assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
 
@@ -134,10 +135,10 @@ class PlacingWorkersStatusTest {
         assertTrue(view.getWorkersPositions().size() == 0 );
     }
 
-    @Test
-    void processingMessageD() {
+    @Test // increase coordinate X
+    void processingMessageS() {
         view.setColoredPosition(null);
-        commandCharacter = inputD;
+        commandCharacter = inputS;
 
         assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
 
@@ -180,10 +181,10 @@ class PlacingWorkersStatusTest {
 
     }
 
-    @Test
-    void processingMessageS() {
+    @Test // decrement coordinate Y
+    void processingMessageA() {
         view.setColoredPosition(null);
-        commandCharacter = inputS;
+        commandCharacter = inputA;
 
         assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
 
@@ -226,10 +227,10 @@ class PlacingWorkersStatusTest {
 
     }
 
-    @Test
-    void processingMessageW() {
+    @Test // increase coordinate Y
+    void processingMessageD() {
         view.setColoredPosition(null);
-        commandCharacter = inputW;
+        commandCharacter = inputD;
 
         assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
 

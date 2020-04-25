@@ -36,12 +36,12 @@ public class DCommand implements CommandCharacter {
 
         while (true) {
             System.out.println(coloredPosition);
-            coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
-            if (View.getPlacingAvailableCells().contains(coloredPosition)) {
+            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
+            if (View.getPlacingAvailableCells().contains(coloredPosition)) {/*
                 System.out.println();
                 System.out.println("Colored position");
                 System.out.println(coloredPosition.getX());
-                System.out.println();
+                System.out.println();*/
                 View.setColoredPosition(coloredPosition);
                 break;
             }

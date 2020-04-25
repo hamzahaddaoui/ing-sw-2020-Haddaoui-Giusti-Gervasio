@@ -81,10 +81,12 @@ public class DemeterDecoratorTest {
         assertTrue( player1.getTurnState() == TurnState.BUILD);
 
         commands1.build(position11,player1);
+
+        commands1.build(position10,player1);
+
         commands1.nextState(player1);
 
-
-        assertTrue(player1.hasFinished()==true);
+        assertTrue(player1.hasFinished() == true);
         assertTrue( player1.getTurnState() == TurnState.IDLE);
     }
 

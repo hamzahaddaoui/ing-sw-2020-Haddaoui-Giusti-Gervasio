@@ -24,7 +24,7 @@ public class SCommand implements CommandCharacter {
         Position coloredPosition = View.getColoredPosition();
 
         while (true) {
-            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
+            coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
             if (View.getPlacingAvailableCells().contains(coloredPosition)) {
                 View.setColoredPosition(coloredPosition);
                 break;

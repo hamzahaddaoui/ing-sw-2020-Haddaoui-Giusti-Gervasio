@@ -36,7 +36,7 @@ public class ACommand implements CommandCharacter {
         Position coloredPosition = View.getColoredPosition();
 
         while (true) {
-            coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
+            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
             if (View.getPlacingAvailableCells().contains(coloredPosition)) {
                 View.setColoredPosition(coloredPosition);
                 break;

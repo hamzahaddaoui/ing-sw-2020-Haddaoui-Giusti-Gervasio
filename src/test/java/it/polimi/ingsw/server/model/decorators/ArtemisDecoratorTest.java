@@ -88,10 +88,14 @@ public class ArtemisDecoratorTest {
         match.nextState();
         match.nextState();
         match.nextState();
+        assertTrue( player1.getTurnState() == IDLE);
         commands1.nextState(player1);
+        assertTrue( player1.getTurnState() == TurnState.MOVE);
         commands1.moveWorker(position11, player1);
-        player1.setUnsetSpecialFunction(true);
         commands1.nextState(player1);
+        assertTrue( player1.getTurnState() == TurnState.BUILD);
+        player1.setUnsetSpecialFunction(false);
+
 
         assertTrue( player1.getTurnState() == TurnState.MOVE);
     }
@@ -107,7 +111,7 @@ public class ArtemisDecoratorTest {
         match.nextState();
         match.nextState();
         match.nextState();
-
+//Init
         Worker worker = player1.getCurrentWorker();
         Set<Position> positionSet0 = commands1.computeAvailableMovements(player1, worker);
 
@@ -123,14 +127,15 @@ public class ArtemisDecoratorTest {
 
         assertTrue( positionCheck.containsAll(positionSet0));
         assertTrue( positionSet0.containsAll(positionCheck));
-
+//First move
+        commands1.nextState(player1);
         commands1.moveWorker(position23, player1);
-        worker = player1.getCurrentWorker();
         Set<Position> positionSet1 = commands1.computeAvailableMovements(player1, worker);
 
-        assertTrue( positionSet1.contains(position33));
+        positionSet1.stream().forEach(w -> System.out.println(w));
 
-        worker = player1.getCurrentWorker();
+        assertTrue( !positionSet1.contains(position33));
+
         Set<Position> positionSet2 = commands1.computeAvailableMovements(player1, worker);
         positionCheck.clear();
         positionCheck.add(position12);
@@ -139,11 +144,26 @@ public class ArtemisDecoratorTest {
         positionCheck.add(position22);
         positionCheck.add(position24);
         positionCheck.add(position32);
-        positionCheck.add(position33);
         positionCheck.add(position34);
+
+        //positionCheck.stream().forEach(w -> System.out.println( " --- " + w +  " --- " ));
+        //positionSet2.stream().forEach(w -> System.out.println( " * " + w +  " * " ));
 
         assertTrue( positionCheck.containsAll(positionSet2));
         assertTrue( positionSet2.containsAll(positionCheck));
+
+        System.out.println( player1.getTurnState() );
+        commands1.nextState(player1);
+
+        assertTrue(player1.getTurnState() == TurnState.BUILD);
+
+        player1.setUnsetSpecialFunction(false);
+
+        assertTrue(!player1.getWorkersAvailableCells().isEmpty());
+
+        commands1.moveWorker(position22, player1);
+
+        assertTrue(player1.getTurnState() == TurnState.MOVE);
 
     }
 }

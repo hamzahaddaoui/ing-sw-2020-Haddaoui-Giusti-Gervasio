@@ -13,7 +13,6 @@ public class WCommand implements CommandCharacter {
         return false;
     }
 
-
     /**
      * Method that change the selectedPosition with the first next empty cells behind the selectedPosition
      * it can change the side of the billboard selection
@@ -26,7 +25,7 @@ public class WCommand implements CommandCharacter {
         Position coloredPosition = View.getColoredPosition();
 
         while (true) {
-            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
+            coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
             if (View.getPlacingAvailableCells().contains(coloredPosition)) {
                 View.setColoredPosition(coloredPosition);
                 break;

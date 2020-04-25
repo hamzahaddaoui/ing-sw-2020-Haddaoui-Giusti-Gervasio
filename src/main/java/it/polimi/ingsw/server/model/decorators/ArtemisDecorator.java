@@ -85,13 +85,15 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
+        if(startingPosition != null)
+            secondMoveDone = true;
         if(!secondMoveDone){
             startingPosition = player.getCurrentWorker().getPosition();
         }
-        else {
-            secondMoveDone = true;
-        }
         super.moveWorker( position , player );
+        if(!secondMoveDone){
+            player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
+        }
     }
 
     /**
