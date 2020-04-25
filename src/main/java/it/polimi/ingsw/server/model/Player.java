@@ -130,6 +130,13 @@ public class Player{
         }
     }
 
+    public void setCurrWorker(Position position) {
+        Optional<Worker> optionalWorker = workers.stream().filter(worker -> worker.getPosition().equals(position)).findAny();
+        if ( optionalWorker.isPresent()) {
+            currentWorker = optionalWorker.get();
+            }
+    }
+
     public void setCurrentWorker(Position position) throws IllegalArgumentException{
         Optional<Worker> optionalWorker = workers.stream().filter(worker -> worker.getPosition().equals(position)).findAny();
         if (! selectedWorker && optionalWorker.isPresent()){
@@ -210,7 +217,7 @@ public class Player{
         return positionSetMap;
     }
 
-    private void setAvailableCells() {
+    public void setAvailableCells() {
         workers.forEach(worker -> {
             worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));
             worker.setAvailableCells(BUILD, commands.computeAvailableBuildings(this, worker));

@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.Map;
 import java.util.Set;
@@ -52,11 +53,20 @@ public class ArtemisDecorator extends CommandsDecorator {
                 player.setTurnState(BUILD);
                 break;
             case BUILD:
+                startingPosition = null;
+                secondMoveDone = false;
                 player.setHasFinished();
                 break;
         }
     }
 
+    /**
+     * Method that is called if the gamer set the special function.
+     * If the gamer call it (FALSE) -> from true to false as OR function , the next turn will be MOVE.
+     * Reset of Map of setUnsetSpecialFunctionAvailable
+     *
+     * @param player
+     */
     @Override
     public void notifySpecialFunction(Player player){
         if (!player.hasSpecialFunction()){
@@ -75,25 +85,13 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-
-        Position currentPosition = player.getCurrentWorker().getPosition();
-
-        super.moveWorker(position, player);
-
-        player.getWorkersAvailableCells().remove(currentPosition);
-        player.getWorkers().stream().forEach(worker -> {
-            worker.setAvailableCells(MOVE, this.computeAvailableMovements(player, worker));
-            worker.setAvailableCells(BUILD, this.computeAvailableBuildings(player, worker));
-        });
-        player.getWorkersAvailableCells();
-
-        if(this.startingPosition==null){
-            this.startingPosition=currentPosition;
-            player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
+        if(!secondMoveDone){
+            startingPosition = player.getCurrentWorker().getPosition();
         }
-        else{
-            this.secondMoveDone = true;
+        else {
+            secondMoveDone = true;
         }
+        super.moveWorker( position , player );
     }
 
     /**
@@ -107,23 +105,16 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-            Set<Position> result = super.computeAvailableMovements(player, worker);
-
-            result
-                .stream()
-                .forEach(position -> System.out.print(" *" + position + "* ,"));
-            System.out.println();
-
-            if(this.startingPosition == null && secondMoveDone == false)
-                return result;
-
-            else{
-            return  result
+        if(this.startingPosition == null && !secondMoveDone){
+            return super.computeAvailableMovements(player, worker);
+        }
+        else{
+            return super
+                    .computeAvailableMovements(player, worker)
                     .stream()
-                    .filter(position -> player.getCurrentWorker() == )
-                    .filter(position -> position.getX() != this.startingPosition.getX() &&
-                            position.getY() != this.startingPosition.getY())
-                    .collect(Collectors.toSet());}
+                    .filter(p -> startingPosition.getY() != p.getY() || startingPosition.getX() != p.getX())
+                    .collect(Collectors.toSet());
+        }
     }
 
     /**
@@ -137,8 +128,8 @@ public class ArtemisDecorator extends CommandsDecorator {
         return player
                 .getWorkers()
                 .stream()
-                .filter(worker -> worker.getPosition().getY() == player.getCurrentWorker().getPosition().getY())
-                .filter(worker -> worker.getPosition().getX() == player.getCurrentWorker().getPosition().getX())
+                .filter(worker -> worker.getPosition().getY() == player.getCurrentWorker().getPosition().getY() &&
+                         worker.getPosition().getX() == player.getCurrentWorker().getPosition().getX())
                 .collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(MOVE)));
 
     }

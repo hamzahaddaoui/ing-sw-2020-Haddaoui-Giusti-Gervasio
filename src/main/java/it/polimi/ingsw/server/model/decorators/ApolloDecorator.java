@@ -59,31 +59,32 @@ public class ApolloDecorator extends CommandsDecorator {
      */
     private void exchangePosition(Player player,Position position){
 
-        Billboard billboard = player.getMatch().getBillboard();
         Worker myWorker = player.getCurrentWorker();
         Player opponentPlayer = findOpponentPlayer(position, player);
         Worker opponentWorker = findOpponentWorker(position, opponentPlayer);
         Position actualPosition = myWorker.getPosition();
 
-        billboard.resetPlayer(position);
-        myWorker.setPosition(position);
-        player.getWorkersAvailableCells().remove(actualPosition);
-        billboard.setPlayer(position, player.getID());
-        player.getWorkers().stream().forEach(worker -> {
-            worker.setAvailableCells(MOVE, player.getCommands().computeAvailableMovements(player, worker));
-            worker.setAvailableCells(BUILD, player.getCommands().computeAvailableBuildings(player, worker));
-        });
-        player.getWorkersAvailableCells();
+        realizationMove(player,position,actualPosition,myWorker);
 
-        billboard.resetPlayer(actualPosition);
-        opponentWorker.setPosition(actualPosition);
-        opponentPlayer.getWorkersAvailableCells().remove(position);
-        billboard.setPlayer(actualPosition, opponentPlayer.getID());
-        opponentPlayer.getWorkers().stream().forEach(worker -> {
-            worker.setAvailableCells(MOVE, player.getCommands().computeAvailableMovements(opponentPlayer, worker));
-            worker.setAvailableCells(BUILD, player.getCommands().computeAvailableBuildings(opponentPlayer, worker));
-        });
-        opponentPlayer.getWorkersAvailableCells();
+        realizationMove(opponentPlayer,actualPosition,position,opponentWorker);
+    }
+
+    /**
+     * Method that change the position of the workers, and compute the new available cells
+     *
+     * @param player  the current player
+     * @param nextPosition  the future position
+     * @param actualPosition  starting position
+     * @param worker  the worker used
+     */
+    private void realizationMove(Player player, Position nextPosition, Position actualPosition, Worker worker){
+        Billboard billboard = player.getMatch().getBillboard();
+
+        billboard.resetPlayer(nextPosition);
+        worker.setPosition(nextPosition);
+        player.getWorkersAvailableCells().remove(actualPosition);
+        billboard.setPlayer(nextPosition, player.getID());
+        player.setAvailableCells();
     }
 
     /**
@@ -147,15 +148,6 @@ public class ApolloDecorator extends CommandsDecorator {
                                 billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
                 .filter(position -> !billboard.getDome(position))
                 .collect(Collectors.toSet());
-    }
-
-    private void setAvailableCells(Player player) {
-        Set<Worker> workers =player.getWorkers();
-
-        workers.forEach(worker -> {
-            worker.setAvailableCells(MOVE, player.getCommands().computeAvailableMovements(player, worker));
-            worker.setAvailableCells(BUILD, player.getCommands().computeAvailableBuildings(player, worker));
-        });
     }
 
 }

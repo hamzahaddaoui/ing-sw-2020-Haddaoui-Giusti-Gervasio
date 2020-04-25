@@ -146,8 +146,10 @@ class TestPlayerLeo {
             showAvailablePositionsMove(p);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=3 to x=2 y=2\n\n");
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             worker = new Position(2, 2);
             p.playerAction(worker);
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             match.checkPlayers();
             showAvailablePositionsMove(p);
 
@@ -238,6 +240,7 @@ class TestPlayerLeo {
             p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=1 y=1 to x=2 y=1\n\n");
+            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             showAvailablePositionsMove(p);
             worker = new Position(2, 1);
             System.out.println("TURNO : " + p.getTurnState() + "\n\n");
@@ -246,6 +249,7 @@ class TestPlayerLeo {
             showAvailablePositionsMove(p);
             match.checkPlayers();
             System.out.println("TURNO : " + p.getTurnState() + "\n\n");
+
             //MI MUOVO
             p.setUnsetSpecialFunction(false);
             showAvailablePositionsMove(p);
@@ -322,6 +326,7 @@ class TestPlayerLeo {
             //---------turno di ARTEMIS------------------------------------------------------
             p = p2;
             System.out.println(getBillboardStat());
+            System.out.println(p.getTurnState());
             p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             showAvailablePositionsMove(p);
             //INIZIO TURNO - MI MUOVO
@@ -331,19 +336,22 @@ class TestPlayerLeo {
             System.out.println("ARTEMIS - moves from x=2 y=4 to x=3 y=4\n\n");
             worker = new Position(3,4);
             p.playerAction(worker);
+            System.out.println(p.getTurnState());
             p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             showAvailablePositionsMove(p);
             match.checkPlayers();
 
             //MI MUOVO
             p.setUnsetSpecialFunction(false);
-            worker = new Position(3, 3);
-            p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
+            System.out.println(p.getTurnState());
+            //p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=1 to x=3 y=3\n\n");
+            worker = new Position(3, 3);
             p.playerAction(worker);
             match.checkPlayers();
             p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
+
             //COSTRUISCO
             build = new Position(3,2);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -419,9 +427,9 @@ class TestPlayerLeo {
 
             //MI MUOVO
             p.setUnsetSpecialFunction(false);
-            worker = new Position(2, 4);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=1 to x=2 y=4\n\n");
+            worker = new Position(2, 4);
             p.playerAction(worker);
 
             //COSTRUISCO
@@ -567,9 +575,9 @@ class TestPlayerLeo {
 
             //MI MUOVO
             p.setUnsetSpecialFunction(false);
-            worker = new Position(3, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=3 y=2 to x=3 y=3\n\n");
+            worker = new Position(3, 3);
             p.playerAction(worker);
 
             /*//COSTRUISCO
