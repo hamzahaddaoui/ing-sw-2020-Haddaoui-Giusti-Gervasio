@@ -7,6 +7,8 @@ import it.polimi.ingsw.utilities.TurnState;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.utilities.TurnState.MOVE;
+
 public class MinotaurDecorator extends CommandsDecorator {
 
     static final GodCards card = GodCards.Minotaur;

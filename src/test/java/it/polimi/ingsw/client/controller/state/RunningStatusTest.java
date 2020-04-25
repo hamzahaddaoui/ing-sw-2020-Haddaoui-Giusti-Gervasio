@@ -2,16 +2,14 @@ package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.utilities.CardinalDirection;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,6 +71,7 @@ class RunningStatusTest {
         settingAvailableMap();
         View.setSpecialFunctionAvailable(availableMap);
         MessageEvent msg = Controller.getMessage();
+        ArrayList<Position> availableTest;
 
         state.processingMessage(InsertCharacter.D);
         assertEquals(posWorker2,View.getColoredPosition());
@@ -85,9 +84,17 @@ class RunningStatusTest {
         assertEquals(posWorker2,View.getStartingPosition());
         assertEquals(posWorker2,msg.getStartPosition());
         assertTrue(msg.getSpecialFunction());
-        View.setColoredPosition(new Position(0,0));
+        availableTest = new ArrayList<Position>(View.getWorkersAvailableCells().get(View.getStartingPosition()));
+        View.setColoredPosition(availableTest.get(0));
+        assertEquals(new Position(4,4),View.getColoredPosition());
         state.processingMessage(InsertCharacter.W);
+        assertEquals(new Position(4,4),View.getColoredPosition());
         state.processingMessage(InsertCharacter.A);
+        assertEquals(new Position(4,3),View.getColoredPosition());
+        state.processingMessage(InsertCharacter.W);
+        assertFalse(state.processingMessage(InsertCharacter.ENTER));
+        state.processingMessage(InsertCharacter.S);
+        state.processingMessage(InsertCharacter.D);
         assertTrue(state.processingMessage(InsertCharacter.ENTER));
         assertEquals(new Position(4,4),msg.getEndPosition());
     }

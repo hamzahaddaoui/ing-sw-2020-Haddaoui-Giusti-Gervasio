@@ -78,15 +78,18 @@ public class ACommand implements CommandCharacter {
             View.setColoredPosition (View
                                         .getWorkersPositions()
                                         .stream()
-                                        .filter(position -> position.getX() != coloredPosition.getX() &&
-                                                                position.getY() != coloredPosition.getY())
+                                        .filter(position -> !position.equals(coloredPosition))
                                         .findAny()
                                         .get());
 
         }
         else {
-            coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
-            View.setColoredPosition(coloredPosition);
+            CardinalDirection offset = View.getStartingPosition().checkMutualPosition(coloredPosition);
+            if (offset == CardinalDirection.NORTH ||
+                    offset == CardinalDirection.NORTHEAST ||
+                    offset == CardinalDirection.SOUTH ||
+                    offset == CardinalDirection.SOUTHEAST)
+                     View.setColoredPosition(View.getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.WEST));
         }
         return false;
     }

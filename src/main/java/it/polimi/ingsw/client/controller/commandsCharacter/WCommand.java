@@ -61,8 +61,12 @@ public class WCommand implements CommandCharacter {
         Position coloredPosition = View.getColoredPosition();
 
         if (View.getStartingPosition()!=null) {
-            coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
-            View.setColoredPosition(coloredPosition);
+            CardinalDirection offset = View.getStartingPosition().checkMutualPosition(coloredPosition);
+            if (offset == CardinalDirection.WEST ||
+                    offset == CardinalDirection.SOUTHWEST ||
+                    offset == CardinalDirection.EAST ||
+                    offset == CardinalDirection.SOUTHEAST)
+                View.setColoredPosition(View.getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.NORTH));
         }
         return false;
     }
