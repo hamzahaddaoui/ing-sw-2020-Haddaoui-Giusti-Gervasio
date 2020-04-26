@@ -67,17 +67,16 @@ public class View extends Observable<MessageEvent> implements Runnable, Observer
     @Override
     public void update(MessageEvent message){
         //se ricevo un messaggio dal model
+        fetchingMessage(message); //analisi del messaggio e reset dei dati del client
 
-        fetchingMessage(message);
-
-        //aggiorna la scacchiera a video
+        //aggiorna la scacchiera a video -> interazione con la CLI/GUI
 
         if(playerState == PlayerState.LOST ){
-            outputStream.println(" DAMN! YOU ARE A LOSER ");
+            outputStream.println(" DAMN! YOU ARE A LOSER "); // OPPURE SCHERMATA GUI
         }
 
         else if(playerState == PlayerState.WIN){
-            outputStream.println(" YOU WIN ");
+            outputStream.println(" YOU WIN "); // OPPURE SCHERMATA GUI
         }
 
         // DISCONNESSIONE DEL CLIENT
@@ -96,12 +95,16 @@ public class View extends Observable<MessageEvent> implements Runnable, Observer
 
             notify(vcEvent);
         }*/
+
          outputStream.println("Insert a nickname: ");
          inputMessage = scanner.nextLine();
          nickname = inputMessage;
-         scanner.close();
-         //notify(inputMessage);
+         while(playerID != null && matchID != null ) {
+             //if nickname incorrect Write new Nick, send it and expect next message
+             //notify(inputMessage);
 
+         }
+        scanner.close();
 
         setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
 
