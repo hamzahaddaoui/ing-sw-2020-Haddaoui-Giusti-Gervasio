@@ -63,14 +63,12 @@ public class BasicCommands implements Commands {
         worker.setPosition(position);
         billboard.setPlayer(position, player.getID());
 
-        System.out.println("POS :" + worker.getPosition() + "\n\n");
     }
 
     @Override
     public void build(Position position, Player player) {
         player.getMatch().getBillboard().incrementTowerHeight(position);
     }
-
 
     /**
      * method that show the list of cells that are available for the standard movement of the player

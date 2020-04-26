@@ -69,7 +69,7 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void notifySpecialFunction(Player player){
-        if (!player.hasSpecialFunction()){
+        if (player.hasSpecialFunction()){
             player.setUnsetSpecialFunctionAvailable(null);
             player.setTurnState(MOVE);
         }

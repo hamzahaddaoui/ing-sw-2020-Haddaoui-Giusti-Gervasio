@@ -94,7 +94,7 @@ public class ArtemisDecoratorTest {
         commands1.moveWorker(position11, player1);
         commands1.nextState(player1);
         assertTrue( player1.getTurnState() == TurnState.BUILD);
-        player1.setUnsetSpecialFunction(false);
+        player1.setUnsetSpecialFunction(true);
 
 
         assertTrue( player1.getTurnState() == TurnState.MOVE);
@@ -127,12 +127,14 @@ public class ArtemisDecoratorTest {
 
         assertTrue( positionCheck.containsAll(positionSet0));
         assertTrue( positionSet0.containsAll(positionCheck));
-//First move
+
+        //First move
+
         commands1.nextState(player1);
         commands1.moveWorker(position23, player1);
         Set<Position> positionSet1 = commands1.computeAvailableMovements(player1, worker);
 
-        positionSet1.stream().forEach(w -> System.out.println(w));
+        // positionSet1.stream().forEach(w -> System.out.println(w));
 
         assertTrue( !positionSet1.contains(position33));
 
@@ -152,12 +154,12 @@ public class ArtemisDecoratorTest {
         assertTrue( positionCheck.containsAll(positionSet2));
         assertTrue( positionSet2.containsAll(positionCheck));
 
-        System.out.println( player1.getTurnState() );
+        //System.out.println( player1.getTurnState() );
         commands1.nextState(player1);
 
         assertTrue(player1.getTurnState() == TurnState.BUILD);
 
-        player1.setUnsetSpecialFunction(false);
+        player1.setUnsetSpecialFunction(true);
 
         assertTrue(!player1.getWorkersAvailableCells().isEmpty());
 

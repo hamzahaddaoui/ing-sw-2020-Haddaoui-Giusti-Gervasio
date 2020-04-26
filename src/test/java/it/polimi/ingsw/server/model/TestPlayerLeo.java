@@ -103,7 +103,7 @@ class TestPlayerLeo {
         match.nextState();
     }
 
-    @Test
+    @Test  //simulation of match (6 rounds)
     void testMatch(){
         Position worker, build;
         testPlacing();
@@ -254,7 +254,7 @@ class TestPlayerLeo {
             System.out.println("TURNO : " + p.getTurnState() + "\n\n");
 
             //MI MUOVO
-            p.setUnsetSpecialFunction(false);
+            p.setUnsetSpecialFunction(true);
             showAvailablePositionsMove(p);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=1 to x=3 y=1\n\n");
@@ -345,7 +345,7 @@ class TestPlayerLeo {
             match.checkPlayers();
 
             //MI MUOVO
-            p.setUnsetSpecialFunction(false);
+            p.setUnsetSpecialFunction(true);
             System.out.println(p.getTurnState());
             //p.getWorkers().stream().forEach(worker1 -> System.out.println(worker1.getPosition()));
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -429,7 +429,7 @@ class TestPlayerLeo {
             match.checkPlayers();
 
             //MI MUOVO
-            p.setUnsetSpecialFunction(false);
+            p.setUnsetSpecialFunction(true);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=2 y=1 to x=2 y=4\n\n");
             worker = new Position(2, 4);
@@ -577,18 +577,12 @@ class TestPlayerLeo {
             match.checkPlayers();
 
             //MI MUOVO
-            p.setUnsetSpecialFunction(false);
+            p.setUnsetSpecialFunction(true);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("ARTEMIS - moves from x=3 y=2 to x=3 y=3\n\n");
             worker = new Position(3, 3);
             p.playerAction(worker);
 
-            /*//COSTRUISCO
-            build = new Position(3,4);
-            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            System.out.println("ARTEMIS - builds a block in x=3 y=4\n\n");
-            p.playerAction(build);
-*/
             if (match.checkPlayers()){
                 System.out.println("MATCH FINISHED - WINNER IS "+p.toString());
             }
