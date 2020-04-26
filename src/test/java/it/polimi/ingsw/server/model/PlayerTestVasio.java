@@ -179,11 +179,13 @@ public class PlayerTestVasio {
         worker = new Position(1,1); p.setCurrentWorker(worker);
         p.setUnsetSpecialFunction(true);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-        build = new Position(2,0); p.playerAction(build);
-        assertEquals(TurnState.MOVE ,p.getTurnState());
+        build = new Position(1,0); p.playerAction(build);
         match.checkPlayers();
-        assertTrue(match.getLosers().contains(p));
-        p = p2; System.out.println(getBillboardStat());
+        worker = new Position(2,0); p.playerAction(worker);
+        match.checkPlayers();
+        System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+        /*assertTrue(match.getLosers().contains(p));
+        p = p2; System.out.println(getBillboardStat());*/
     }
 
     String getBillboardStat(){

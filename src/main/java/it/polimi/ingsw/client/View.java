@@ -50,7 +50,6 @@ public class View extends Observable implements Runnable, Observer{
     public View() {
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
-
     }
 
     public static void setGodCards(ArrayList<String> godCards) {
@@ -106,24 +105,22 @@ public class View extends Observable implements Runnable, Observer{
             notify(vcEvent);
         }*/
 
-        setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
+        // setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
 
-        if(View.getColoredPosition() == null){
+        /* if(View.getColoredPosition() == null){
             View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
-        }
-
-         outputStream.println("Insert a nickname: ");
-         inputMessage = scanner.nextLine();
-         scanner.close();
-         notify(inputMessage);
-
-         while( playerState != PlayerState.LOST  || playerState != PlayerState.WIN ){
+        }*/
+            outputStream.println("Insert a nickname: \n");
+            inputMessage = scanner.nextLine();
+            //scanner.close();
+            notify(inputMessage);
+         //while( playerState != PlayerState.LOST  || playerState != PlayerState.WIN ){
              /*
               *  il controller lato server potrebbe scrivere /dare consigli standard
               *  su cosa il client deve inserire in quel momento
               *
               */
-             try {
+             /*try {
                  outputStream.println();
                  inputCharacter = dataInputStream.readChar();
                  if(InsertCharacter.values().equals(inputCharacter)){
@@ -136,7 +133,7 @@ public class View extends Observable implements Runnable, Observer{
                  e.printStackTrace();
              }
 
-         }
+         }*/
 
     }
 

@@ -28,10 +28,10 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
     public void update(Object viewObject) {
 
         messageReady = false;
-        message = null;
+        //inserisci reset messaggio
 
-        PlayerState newPlayerState = View.getPlayerState();
-        MatchState newMatchState = View.getMatchState();
+        PlayerState newPlayerState = null; //View.getPlayerState();
+        MatchState newMatchState = null;   //View.getMatchState();
 
         if (newPlayerState != this.playerState || newMatchState != this.matchState) {
             this.playerState = newPlayerState;
