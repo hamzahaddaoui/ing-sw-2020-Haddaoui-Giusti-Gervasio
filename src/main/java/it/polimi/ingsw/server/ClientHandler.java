@@ -67,9 +67,12 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                     while (true) {
                         String inputObject = (String) input.readObject();
                         MessageEvent messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
-                        if (messageEvent.getInfo().equals("Heartbeat Message"))
-                            continue;
-                        if (this.playerID.equals(messageEvent.getPlayerID())) {
+                        //########DEBUG#######################
+                        System.out.println(messageEvent);
+                        //####################################
+                        if (messageEvent.getInfo().equals("Heartbeat Message")) {
+                        }
+                        else if (this.playerID.equals(messageEvent.getPlayerID())) {
                             messageEvent.setClientHandler(this);
                             notify(messageEvent);
                         }
@@ -81,6 +84,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                 }
             catch (SocketTimeoutException e) {
                 System.out.println("Timeout. Connection " + client.getInetAddress() + " closed");
+
             }
             finally {
                 try {
@@ -90,6 +94,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                     messageEvent.setMatchID(matchID);
                     notify(messageEvent);
                     client.close();
+                    heartbeatService.shutdown();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -97,6 +102,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         }
         catch (IOException ex) {
             System.out.println("client " + client.getInetAddress() + " connection dropped");
+            heartbeatService.shutdown();
         }
     }
 

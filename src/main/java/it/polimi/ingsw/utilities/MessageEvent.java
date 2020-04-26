@@ -294,4 +294,36 @@ public class MessageEvent {
     public void setFinished(boolean finished){
         this.finished = finished;
     }
+
+    @Override
+    public String toString(){
+        return "MessageEvent{" +
+               "info='" + info + '\'' +
+               ", matchID=" + matchID +
+               ", playerID=" + playerID +
+               ", nickname='" + nickname + '\'' +
+               ", playersNum=" + playersNum +
+               ", godCards=" + godCards +
+               ", godCard='" + godCard + '\'' +
+               ", initializedPositions=" + initializedPositions +
+               ", startPosition=" + startPosition +
+               ", endPosition=" + endPosition +
+               ", endTurn=" + endTurn +
+               ", specialFunction=" + specialFunction +
+               ", exit=" + exit +
+               ", matchState=" + matchState +
+               ", playerState=" + playerState +
+               ", turnState=" + turnState +
+               ", error=" + error +
+               ", matchCards=" + matchCards +
+               ", availablePlacingCells=" + availablePlacingCells +
+               ", billboardStatus=" + billboardStatus +
+               ", workersAvailableCells=" + workersAvailableCells +
+               ", terminateTurnAvailable=" + terminateTurnAvailable +
+               ", specialFunctionAvailable=" + specialFunctionAvailable +
+               ", matchPlayers=" + matchPlayers +
+               ", winner=" + winner +
+               ", finished=" + finished +
+               '}';
+    }
 }

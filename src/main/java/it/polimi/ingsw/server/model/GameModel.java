@@ -38,7 +38,7 @@ public class GameModel extends Observable<MessageEvent> {
                     .keySet()
                     .stream()
                     .map(activeMatches::get)
-                    .filter(match -> match.isStarted() && (match.getPlayersNum() == null))
+                    .filter(match -> !match.isStarted() && (match.getPlayersNum() == 0))
                     .count();
     }
 
@@ -47,7 +47,7 @@ public class GameModel extends Observable<MessageEvent> {
                 .keySet()
                 .stream()
                 .map(activeMatches::get)
-                .filter(match -> match.isStarted() && (match.getPlayersNum() != null))
+                .filter(match -> !match.isStarted() && (match.getPlayersNum() != 0))
                 .count();
     }
 
@@ -58,17 +58,26 @@ public class GameModel extends Observable<MessageEvent> {
      * @return false if the nickname is not available, true otherwise
      */
     public static boolean isNickAvailable(String nickname){
-        return playersWaitingList
-                .stream()
-                .noneMatch(player -> player.toString().equals(nickname))
+        return initializedPlayers
+                       .keySet()
+                       .stream()
+                       .map(initializedPlayers::get)
+                       .noneMatch(player -> player.toString()
+                               .equals(nickname))
+               &&
+               playersWaitingList
+                       .stream()
+                       .noneMatch(player -> player.toString()
+                               .equals(nickname))
                &&
                activeMatches
                        .keySet()
                        .stream()
                        .map(activeMatches::get)
-                       .filter(Match::isStarted)
+                       .filter(match -> !match.isStarted())
                        .noneMatch(match -> match.getPlayers()
-                               .stream().anyMatch(player -> player.toString().equals(nickname)));
+                               .stream().anyMatch(player -> player.toString()
+                                       .equals(nickname)));
     }
 
     public static Integer getInitMatchID(){
@@ -78,7 +87,7 @@ public class GameModel extends Observable<MessageEvent> {
                     .keySet()
                     .stream()
                     .map(activeMatches::get)
-                    .filter(match -> match.isStarted() && (match.getPlayersNum() != null))
+                    .filter(match -> !match.isStarted() && (match.getPlayersNum() != 0))
                     .findFirst()
                     .get()
                     .getID();
@@ -102,11 +111,16 @@ public class GameModel extends Observable<MessageEvent> {
      * Creates a new instance of match, with an assigned unique ID
      */
     public synchronized static int createMatch(Integer playerID){
-        progressiveMatchID++;
-
-        activeMatches.put(progressiveMatchID,
-                new Match(progressiveMatchID, initializedPlayers.remove(playerID)));
-        return progressiveMatchID;
+        try{
+            progressiveMatchID++;
+            activeMatches.put(progressiveMatchID,
+                    new Match(progressiveMatchID, initializedPlayers.remove(playerID)));
+                    return progressiveMatchID;
+        }
+        catch (NullPointerException e){
+            progressiveMatchID--;
+            return 0;
+        }
     }
 
     /**
