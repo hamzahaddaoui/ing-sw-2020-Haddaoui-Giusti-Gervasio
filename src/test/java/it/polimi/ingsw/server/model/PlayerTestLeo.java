@@ -17,7 +17,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TestPlayerLeo {
+class PlayerTestLeo {
     Player p1, p2, p3;
     Player p;
     Match match;
