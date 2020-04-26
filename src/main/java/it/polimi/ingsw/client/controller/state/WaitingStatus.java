@@ -10,6 +10,9 @@ public class WaitingStatus extends ControlState {
     @Override
     public boolean processingMessage(Object viewObject) {
         //forse faccio qualcosa nella view
+        if (!(viewObject instanceof InsertCharacter))
+            throw new IllegalArgumentException("Comando non riconosciuto!");
+
         return false;
     }
 

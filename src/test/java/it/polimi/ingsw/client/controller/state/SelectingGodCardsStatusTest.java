@@ -96,10 +96,10 @@ class SelectingGodCardsStatusTest {
         assertTrue( view.getColoredGodCard() != null);
         assertTrue( view.getGodCards() != null);
         assertTrue( view.getColoredGodCard() != null);
-        System.out.println(view.getGodCards().size());
+        //System.out.println(view.getGodCards().size());
 
         ctrlStatus.processingMessage(commandCharacter);
-        System.out.println(view.getGodCards().size());
+        //System.out.println(view.getGodCards().size());
 
         assertTrue(view.getSelectedGodCards().size() == 1);
         assertTrue( view.getGodCards().size() == 8);

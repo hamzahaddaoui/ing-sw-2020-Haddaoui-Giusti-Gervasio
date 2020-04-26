@@ -16,6 +16,9 @@ public class SelectingSpecialCommandStatus extends ControlState {
         if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
 
+        if(View.getGodCards() == null)
+            throw new IllegalArgumentException(" GodCards is empty");
+
             InsertCharacter characterView = (InsertCharacter) viewObject;
             CommandCharacter commandCharacter = characterView.apply();
             return commandCharacter.executeSpecialCommandsStatus();
@@ -25,7 +28,9 @@ public class SelectingSpecialCommandStatus extends ControlState {
     public void nextState(Controller ctrl) {
         if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.PLACING_WORKERS){
             ctrl.setState(new PlacingWorkersStatus());
-            View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
+
+            if(View.getColoredPosition()==null)
+                View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
         }
         else ctrl.setState(new WaitingStatus());
     }

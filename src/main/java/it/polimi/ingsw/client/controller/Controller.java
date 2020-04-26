@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.controller;
 
-
 import com.google.gson.Gson;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.state.ControlState;
@@ -9,7 +8,7 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
 
-public class Controller extends Observable<MessageEvent> implements Observer<Object> {
+public class Controller extends Observable<MessageEvent> implements Observer {
 
     private ControlState controlState;
     private PlayerState playerState;
@@ -26,19 +25,22 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
 
     @Override
     public void update(Object viewObject) {
-
         messageReady = false;
-        message = null;
 
         PlayerState newPlayerState = View.getPlayerState();
         MatchState newMatchState = View.getMatchState();
-
-        if (newPlayerState != this.playerState || newMatchState != this.matchState) {
+        // CASO if -> sono nel inserimento Nickname
+        // Caso else -> altro caso
+        if(newMatchState == null && newPlayerState == null){
+            reset();
+        }
+        else if(newPlayerState != this.playerState || newMatchState != this.matchState){
             this.playerState = newPlayerState;
             this.matchState = newMatchState;
             nextState();
         }
 
+        //agisco andando a processare il messaggio dopo aver effettuato il controllo
         messageReady = controlState.processingMessage(viewObject);
 
         if (messageReady) {
@@ -46,10 +48,12 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
                 message.setPlayerID(View.getPlayerID());
             if (matchState != null)
                 message.setMatchID(View.getMatchID());
+            //invio il messaggio precedentemente compilato
             notify(message);
+            //dopo l'invio reset degli attributi del messaggio a null
+            reset();
         }
 
-        //dopo l'invio reset degli attributi del messaggio a null
     }
 
     public void nextState(){
@@ -87,9 +91,36 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         matchState = matState;
     }
 
-
     public boolean isMessageReady(){
         return messageReady;
+    }
+
+    public void reset (){
+        message.setMatchID(null);
+        message.setPlayerID(null);
+        message.setNickname(null);
+        message.setPlayersNum(2);
+        message.setGodCards(null);
+        message.setGodCard(null);
+        message.setInitializedPositions(null);
+        message.setStartPosition(null);
+        message.setEndPosition(null);
+        message.setEndTurn(null);
+        message.setSpecialFunction(null);
+        message.setExit(false);
+        message.setMatchState(null);
+        message.setPlayerState(null);
+        message.setTurnState(null);
+        message.setError(false);
+        message.setMatchCards(null);
+        message.setAvailablePlacingCells(null);
+        message.setBillboardStatus(null);
+        message.setWorkersAvailableCells(null);
+        message.setTerminateTurnAvailable(null);
+        message.setSpecialFunctionAvailable(null);
+        message.setMatchPlayers(null);
+        message.setWinner(null);
+        message.setFinished(false);
     }
 
     /*MessageEvent message; //

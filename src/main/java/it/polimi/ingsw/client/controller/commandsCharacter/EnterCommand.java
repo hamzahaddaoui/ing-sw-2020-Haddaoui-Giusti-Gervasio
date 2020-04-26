@@ -33,9 +33,9 @@ public class EnterCommand implements CommandCharacter {
         Map<Position, Set<Position>> workersAvailableCells = View.getWorkersAvailableCells();
         Set<Position> placingAvailableCells = View.getPlacingAvailableCells();
 
-        System.out.println(View.getWorkersAvailableCells().keySet().size());
+        /*System.out.println(View.getWorkersAvailableCells().keySet().size());
         System.out.println(placingAvailableCells.contains(coloredPosition));
-        System.out.println(workersAvailableCells.containsKey(coloredPosition));
+        System.out.println(workersAvailableCells.containsKey(coloredPosition));*/
 
 
         if( placingAvailableCells.contains(coloredPosition) && !workersAvailableCells.containsKey(coloredPosition)){

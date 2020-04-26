@@ -19,6 +19,7 @@ public class Client {
 
         //default view
         //richiedo all'utente qual'è l'ip del server al quale vuole collegarsi
+
         String ip = "127.0.0.1";
 
         try {
@@ -36,13 +37,13 @@ public class Client {
         executor.submit(networkHandler);        //si mette in ascolto di messaggi
         executor.submit(view);
 
-
         //per chiudere la connessione
         /*try {
             networkHandler.stop();
         } catch (IOException e) {
             e.printStackTrace();
         }*/
+
     }
 
 }

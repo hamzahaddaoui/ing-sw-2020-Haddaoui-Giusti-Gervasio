@@ -19,8 +19,6 @@ public class StartingStatus extends ControlState {
 
         Controller.getMessage().setNickname((String) viewObject);
         return true;
-
-
     }
 
     @Override

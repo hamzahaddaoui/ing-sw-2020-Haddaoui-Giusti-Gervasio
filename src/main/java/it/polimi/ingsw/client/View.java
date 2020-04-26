@@ -1,5 +1,8 @@
 package it.polimi.ingsw.client;
 
+// REALIZZARE NOTIFY
+// REALIZZARE UPDATE
+
 import it.polimi.ingsw.client.controller.state.InsertCharacter;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
@@ -13,8 +16,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class View extends Observable implements Runnable, Observer{
+public class View extends Observable<MessageEvent> implements Runnable, Observer<MessageEvent>{
 
 
     private Scanner scanner;
@@ -23,15 +27,17 @@ public class View extends Observable implements Runnable, Observer{
 
     private static Integer matchID;
     private static Integer playerID;
+    private static String nickname;
     private static PlayerState playerState;
     private static MatchState matchState;
     private static TurnState turnState;
 
     private static ArrayList<Integer> coloredPlayersNum;
     private static Integer playersNum;
-
-    private static ArrayList<String> selectedGodCards; //sono le carte che vengono inserite in fase di SelectedSpecialCommandsStatus
-    private static ArrayList<String> godCards; //sono le carte che vengono inserite in fase di SelectingGodCardsStatus
+    //sono le carte che vengono inserite in fase di SelectedSpecialCommandsStatus
+    private static ArrayList<String> selectedGodCards;
+    //sono le carte che vengono inserite in fase di SelectingGodCardsStatus, inizialmente prese dal Server
+    private static ArrayList<String> godCards;
     private static String coloredGodCard;
 
     private static Map<Position, Cell> billboardStatus;
@@ -44,6 +50,11 @@ public class View extends Observable implements Runnable, Observer{
     private static boolean terminateTurnAvailable;
     private static Map<Position,Boolean> specialFunctionAvailable;
 
+    /*  -------
+        ------- CLI - VIEW
+        -------
+    */
+
     private static String inputMessage;
     private static char inputCharacter;
 
@@ -53,39 +64,19 @@ public class View extends Observable implements Runnable, Observer{
 
     }
 
-    public static void setGodCards(ArrayList<String> godCards) {
-        View.godCards = godCards;
-    }
-
-    public static void setPlacingAvailableCells(Set<Position> placingAvailableCells) {
-        View.placingAvailableCells = placingAvailableCells;
-    }
-
-    public static Map<Position, Set<Position>> getWorkersAvailableCells() {
-        return workersAvailableCells;
-    }
-
-    public static void setWorkersAvailableCells(Map<Position, Set<Position>> workersAvailableCells) {
-        View.workersAvailableCells = workersAvailableCells;
-    }
-
-    public void viewSetUp(){
-        coloredPlayersNum = new ArrayList<>();
-        View.coloredPlayersNum.add(2);
-        View.coloredPlayersNum.add(3);
-        View.playersNum = View.coloredPlayersNum.get(0);
-    }
-
     @Override
-    public void update(Object message){
+    public void update(MessageEvent message){
         //se ricevo un messaggio dal model
+
+        fetchingMessage(message);
+
         //aggiorna la scacchiera a video
 
-        if(playerState != PlayerState.LOST ){
+        if(playerState == PlayerState.LOST ){
             outputStream.println(" DAMN! YOU ARE A LOSER ");
         }
 
-        else if(playerState != PlayerState.WIN){
+        else if(playerState == PlayerState.WIN){
             outputStream.println(" YOU WIN ");
         }
 
@@ -105,17 +96,18 @@ public class View extends Observable implements Runnable, Observer{
 
             notify(vcEvent);
         }*/
+         outputStream.println("Insert a nickname: ");
+         inputMessage = scanner.nextLine();
+         nickname = inputMessage;
+         scanner.close();
+         //notify(inputMessage);
+
 
         setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
 
         if(View.getColoredPosition() == null){
             View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
         }
-
-         outputStream.println("Insert a nickname: ");
-         inputMessage = scanner.nextLine();
-         scanner.close();
-         notify(inputMessage);
 
          while( playerState != PlayerState.LOST  || playerState != PlayerState.WIN ){
              /*
@@ -127,7 +119,7 @@ public class View extends Observable implements Runnable, Observer{
                  outputStream.println();
                  inputCharacter = dataInputStream.readChar();
                  if(InsertCharacter.values().equals(inputCharacter)){
-                    notify(inputCharacter);
+                    //notify(inputCharacter);
                  }
                  else{
                      outputStream.println(" Carattere non disponibile ");
@@ -139,6 +131,103 @@ public class View extends Observable implements Runnable, Observer{
          }
 
     }
+
+    public void fetchingMessage(MessageEvent message){
+        if(message.getMatchID() != null)
+            setMatchID(message.getMatchID());
+        if(message.getPlayerID() != null)
+            setPlayerID(message.getPlayerID());
+        if(message.getMatchState() != null)
+            setMatchState(message.getMatchState());
+        if(message.getPlayerState() != null)
+            setPlayerState(message.getPlayerState());
+        if(message.getTurnState() != null)
+            setTurnState(message.getTurnState());
+        if(message.getPlayersNum() != null)
+            setPlayersNum(message.getPlayersNum());
+        if(message.getGodCards() != null)
+            setGodCards(message.getGodCards());
+        if(message.getMatchCards() != null && View.getMatchState() == MatchState.SELECTING_GOD_CARDS)
+            setGodCards(message.getMatchCards());
+        if(message.getGodCard() != null)
+            setColoredGodCard(message.getGodCard());
+        if(message.getStartPosition() != null)
+            setStartingPosition(message.getStartPosition());
+        if(message.getSpecialFunctionAvailable() != null)
+            setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
+        if(message.getMatchCards() != null && View.getMatchState() == MatchState.SELECTING_GOD_CARDS)
+            setGodCards(message.getMatchCards());
+        if(message.getAvailablePlacingCells() != null)
+            setPlacingAvailableCells(message.getAvailablePlacingCells());
+        if(message.getBillboardStatus() != null)
+            setBillboardStatus(message.getBillboardStatus());
+        if(message.getWorkersAvailableCells() != null)
+            setWorkersAvailableCells(message.getWorkersAvailableCells());
+        if(message.getTerminateTurnAvailable() != null)
+            setTerminateTurnAvailable(message.getTerminateTurnAvailable());
+        if(message.getMatchPlayers() != null)
+            setMatchPlayers(message.getMatchPlayers());
+    }
+
+    public static void setGodCards(ArrayList<String> godCards) {
+        View.godCards = godCards;
+    }
+
+    public static void setPlacingAvailableCells(Set<Position> placingAvailableCells) {
+        View.placingAvailableCells = placingAvailableCells;
+    }
+
+    public static Map<Position, Set<Position>> getWorkersAvailableCells() {
+        return workersAvailableCells;
+    }
+
+    public static void setWorkersAvailableCells(Map<Position, Set<Position>> workersAvailableCells) {
+        View.workersAvailableCells = workersAvailableCells;
+    }
+
+    public static void setMatchID(Integer matchID) {
+        View.matchID = matchID;
+    }
+
+    public static void setPlayerID(Integer playerID) {
+        View.playerID = playerID;
+    }
+
+    public static void setPlayerState(PlayerState playerState) {
+        View.playerState = playerState;
+    }
+
+    public static void setMatchState(MatchState matchState) {
+        View.matchState = matchState;
+    }
+
+    public static TurnState getTurnState() {
+        return turnState;
+    }
+
+    public static void setTurnState(TurnState turnState) {
+        View.turnState = turnState;
+    }
+
+    public static void setBillboardStatus(Map<Position, Cell> billboardStatus) {
+        View.billboardStatus = billboardStatus;
+    }
+
+    public static void setMatchPlayers(Map<Integer, String> matchPlayers) {
+        View.matchPlayers = matchPlayers;
+    }
+
+    public static void setTerminateTurnAvailable(boolean terminateTurnAvailable) {
+        View.terminateTurnAvailable = terminateTurnAvailable;
+    }
+
+    public void viewSetUp(){
+        coloredPlayersNum = new ArrayList<>();
+        View.coloredPlayersNum.add(2);
+        View.coloredPlayersNum.add(3);
+        View.playersNum = View.coloredPlayersNum.get(0);
+    }
+
 
     public static ArrayList<String> getGodCards() {
         return godCards;

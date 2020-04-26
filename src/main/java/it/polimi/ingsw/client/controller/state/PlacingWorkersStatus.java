@@ -12,6 +12,9 @@ public class PlacingWorkersStatus extends ControlState {
     @Override
     public boolean processingMessage(Object viewObject) {
 
+        if (!(viewObject instanceof InsertCharacter))
+            throw new IllegalArgumentException("Comando non riconosciuto!");
+
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 

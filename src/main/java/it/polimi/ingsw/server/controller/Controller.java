@@ -14,8 +14,6 @@ import static it.polimi.ingsw.server.model.GameModel.*;
 public class Controller extends Observable<MessageEvent> implements Observer<MessageEvent> {
     static ExecutorService executor = Executors.newSingleThreadExecutor();
 
-
-
     @Override
     public void update(MessageEvent messageEvent){
         executor.submit(() -> new ControllerJob(messageEvent));
@@ -43,7 +41,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
             State controllerBehaviour;
             Integer playerID = messageEvent.getPlayerID();
             Integer matchID = messageEvent.getMatchID();
-
 
             if (playerID == null) {
                 controllerBehaviour = new FirstPlayerAccess();

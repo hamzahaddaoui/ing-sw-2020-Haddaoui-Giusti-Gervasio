@@ -15,14 +15,13 @@ public class MessageEvent {
     private Integer                         matchID;
     private Integer                         playerID;
 
-
     //user to controller
     private String                          nickname;
 
     private Integer                         playersNum;
     private Set<String>                     godCards; //le Carte selezionate in fase di SelectingGodCards del controller
 
-    private String                          godCard; //Carta Selzeionata in fase di SelectionSpecialFunction del controller
+    private String                          godCard; //Carta Selezionata in fase di SelectionSpecialFunction del controller
 
     private Set<Position>                   initializedPositions;   //le 2 posizioni in cui inizializzo i workers
 
@@ -40,9 +39,7 @@ public class MessageEvent {
     private TurnState                       turnState;
     private Boolean                         error;
 
-
-
-    private Set<String>                     matchCards;
+    private Set<String>                     matchCards;             //Carte del gioco
     private Set<Position>                   availablePlacingCells;
 
     private Map<Position, Cell>             billboardStatus;

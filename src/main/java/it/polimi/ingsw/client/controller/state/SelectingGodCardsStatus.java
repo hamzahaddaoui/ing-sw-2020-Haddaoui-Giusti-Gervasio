@@ -12,14 +12,17 @@ public class SelectingGodCardsStatus extends ControlState {
     @Override
     public boolean processingMessage(Object viewObject) {
 
+        if (!(viewObject instanceof InsertCharacter))
+            throw new IllegalArgumentException("Comando non riconosciuto!");
+
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
+        if(View.getGodCards() == null)
+            throw new IllegalArgumentException(" MatchCards is empty");
+
         if(viewObject == null)
             throw new IllegalArgumentException(" ViewObject is empty");
-
-        if(View.getGodCards() == null)
-            throw new IllegalArgumentException(" GodCards is empty");
 
         return commandCharacter.executeSelectingGodCardsStatus();
     }
