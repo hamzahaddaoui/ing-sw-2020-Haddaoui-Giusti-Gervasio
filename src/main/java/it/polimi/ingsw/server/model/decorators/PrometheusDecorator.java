@@ -36,7 +36,6 @@ public class PrometheusDecorator extends CommandsDecorator {
             case IDLE:
                 hasBuiltBeforeMoving = false;
                 player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player));
-
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
@@ -107,8 +106,16 @@ public class PrometheusDecorator extends CommandsDecorator {
 
     @Override
     public void notifySpecialFunction(Player player){
+        Billboard billboard = player.getMatch().getBillboard();
+        Position avoidPosition;
+
         if (player.hasSpecialFunction()){
             player.setUnsetSpecialFunctionAvailable(null);
+            if (checkCells(player,player.getCurrentWorker())) {
+                avoidPosition = player.getCurrentWorker().getAvailableCells(MOVE).stream()
+                        .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(player.getCurrentWorker().getPosition()))
+                        .findAny().get();
+                player.getCurrentWorker().getAvailableCells(BUILD).remove(avoidPosition); }
             player.setTurnState(BUILD);
         }
     }
@@ -128,7 +135,6 @@ public class PrometheusDecorator extends CommandsDecorator {
      */
 
     private Map<Position, Boolean> canBuildBeforeMove(Player player){
-
         return player.getWorkers().stream().collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(BUILD)));
 
 
@@ -148,6 +154,14 @@ public class PrometheusDecorator extends CommandsDecorator {
         else retVal = !losingCondition(player);
         player.setTurnState(prec);
         return retVal;*/
+    }
 
+    private boolean checkCells(Player player, Worker worker) {
+      Billboard billboard = player.getMatch().getBillboard();
+
+      long num = worker.getAvailableCells(MOVE).stream()
+              .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(worker.getPosition()))
+              .count();
+      return num == 1;
     }
 }
