@@ -1,6 +1,9 @@
 package it.polimi.ingsw.server.controller.state;
 
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.Observer;
+
+import java.util.List;
 
 import static it.polimi.ingsw.server.Server.addClientSocket;
 import static it.polimi.ingsw.server.Server.removeClientSocket;
@@ -19,12 +22,10 @@ public class FirstPlayerAccess extends State {
 
         Integer playerID = createPlayer(messageEvent.getNickname());
         addClientSocket(playerID, messageEvent.getClientHandler());
-
         //se il nick non è disponibile, elimino il player e il suo rif al clienthandler
         //dopo aver mandato la notifica di errore
         if (! isNickAvailable(messageEvent.getNickname())) {
             notify(basicErrorConfig(new MessageEvent(), playerID));
-
             removeInitPlayer(playerID);
             removeClientSocket(playerID);
             return;
@@ -35,26 +36,28 @@ public class FirstPlayerAccess extends State {
             matchID = getInitMatchID();
             addPlayerToMatch(matchID, playerID);
             checkMatchStart(matchID);
+            clientHandlerUpdate(matchID, playerID);
         }
 
         //CREO UN MATCH
         else if (((playersWaiting != 0) && (playersWaiting >= (2 * notInitMatches))) || ((playersWaiting == 0) && (notInitMatches == 0))) {
-                matchID = createMatch(playerID);
+            matchID = createMatch(playerID);
+            super.clientHandlerUpdate(matchID, playerID);
         }
 
         //AGGIUNGO IL PLAYER ALLA WAITING LIST
         else{
+
             addPlayerToWaitingList(playerID);
             message = new MessageEvent();
             message.setPlayerID(playerID);
             notify(message);
+            clientHandlerUpdate(matchID, playerID);
         }
-
-        clientHandlerUpdate(matchID, playerID);
     }
 
     @Override
-    public void viewNotify(Integer matchID){
+    public void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID){
     }
 
     @Override

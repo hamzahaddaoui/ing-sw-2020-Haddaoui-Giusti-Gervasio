@@ -5,20 +5,23 @@ import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.Collections;
+import java.util.List;
+
 import static it.polimi.ingsw.server.Server.getClientHandler;
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public abstract class State extends Controller{
     public abstract void handleRequest(MessageEvent messageEvent);
 
-    public void viewNotify(Integer matchID){
+    public void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID){
         MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
         getMatchPlayers(matchID)
                 .keySet()
-                .forEach(player -> notify(basicPlayerConfig(message, player)));
+                .forEach(player -> notify(observers, basicPlayerConfig(message, player)));
     }
 
     public void exit(Integer matchID){

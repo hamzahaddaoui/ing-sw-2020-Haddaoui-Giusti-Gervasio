@@ -13,60 +13,68 @@ import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class Controller extends Observable<MessageEvent> implements Observer<MessageEvent> {
     static ExecutorService executor = Executors.newSingleThreadExecutor();
-
-
+    private Map<MatchState, State> stateMap;
 
     @Override
     public void update(MessageEvent messageEvent){
-        executor.submit(() -> new ControllerJob(messageEvent));
+        checkInput(messageEvent);
     }
 
-    private class ControllerJob implements Runnable{
-        private final Map<MatchState, State> stateMap;
-        MessageEvent messageEvent;
-        public ControllerJob(MessageEvent messageEvent){
-            stateMap = Collections.unmodifiableMap(new HashMap<MatchState, State>() {
-                {
-                    put(MatchState.GETTING_PLAYERS_NUM, new GettingPlayersNum());
-                    put(MatchState.WAITING_FOR_PLAYERS, new WaitingForPlayers());
-                    put(MatchState.SELECTING_GOD_CARDS, new SelectingGodCards());
-                    put(MatchState.SELECTING_SPECIAL_COMMAND, new SelectingSpecialCommand());
-                    put(MatchState.PLACING_WORKERS, new PlacingWorkers());
-                    put(MatchState.RUNNING, new Running());
-                }
-            });
-            this.messageEvent = messageEvent;
+
+    public void checkInput(MessageEvent messageEvent){
+        State controllerBehaviour;
+        Integer playerID = messageEvent.getPlayerID();
+        Integer matchID = messageEvent.getMatchID();
+
+        if (playerID == null) {
+            controllerBehaviour = new FirstPlayerAccess();
+            matchID = messageEvent.getClientHandler().getMatchID();
+        }
+        else if ((matchID != null) && (Objects.equals(getPlayerState(matchID, playerID), PlayerState.ACTIVE))){
+            //controllerBehaviour = stateMap.get(getMatchState(matchID));
+            controllerBehaviour = getBehaviour(matchID);
+
+        }
+        else {
+            return;
         }
 
-        @Override
-        public void run(){
-            State controllerBehaviour;
-            Integer playerID = messageEvent.getPlayerID();
-            Integer matchID = messageEvent.getMatchID();
+        if (messageEvent.isExit()){
+            controllerBehaviour.exit(matchID);
+        }
+        else {
+            controllerBehaviour.handleRequest(messageEvent);
+
+            matchID = messageEvent.getClientHandler().getMatchID();
+            controllerBehaviour = getBehaviour(matchID);
+            controllerBehaviour.viewNotify(getObservers(), matchID);
+        }
+
+    }
 
 
-            if (playerID == null) {
-                controllerBehaviour = new FirstPlayerAccess();
-                matchID = messageEvent.getClientHandler().getMatchID();
-            }
-            else if ((matchID != null) && (Objects.equals(getPlayerState(matchID, playerID), PlayerState.ACTIVE))){
-                controllerBehaviour = stateMap.get(getMatchState(matchID));
-            }
-            else {
-                return;
-            }
 
-            if (messageEvent.isExit()){
-                controllerBehaviour.exit(matchID);
-            }
-            else {
-                controllerBehaviour.handleRequest(messageEvent);
-                controllerBehaviour.viewNotify(matchID);
-            }
+    State getBehaviour(Integer matchID){
+        switch (getMatchState(matchID)){
+            case GETTING_PLAYERS_NUM:
+                return new GettingPlayersNum();
+            case WAITING_FOR_PLAYERS:
+                return new WaitingForPlayers();
+            case SELECTING_GOD_CARDS:
+                return new SelectingGodCards();
+            case SELECTING_SPECIAL_COMMAND:
+                return new SelectingSpecialCommand();
+            case PLACING_WORKERS:
+                return new PlacingWorkers();
+            case RUNNING:
+                return new Running();
+            default:
+                return null;
 
         }
     }
 }
+
 
 
 

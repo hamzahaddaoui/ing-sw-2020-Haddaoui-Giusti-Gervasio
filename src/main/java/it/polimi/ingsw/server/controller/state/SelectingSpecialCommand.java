@@ -1,7 +1,9 @@
 package it.polimi.ingsw.server.controller.state;
 
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.Observer;
 
+import java.util.List;
 import java.util.Set;
 
 import static it.polimi.ingsw.server.model.GameModel.*;
@@ -26,11 +28,11 @@ public class SelectingSpecialCommand extends State {
     }
 
     @Override
-    public void viewNotify(Integer matchID){
+    public void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID){
         MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
         message.setMatchCards(getMatchCards(matchID));
         getMatchPlayers(matchID)
                 .keySet()
-                .forEach(player -> notify(basicPlayerConfig(message, player)));
+                .forEach(player -> notify(observers, basicPlayerConfig(message, player)));
     }
 }
