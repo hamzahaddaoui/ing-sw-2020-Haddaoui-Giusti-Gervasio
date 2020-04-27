@@ -50,7 +50,7 @@ public class Running extends State{
         getMatchPlayers(matchID)
                 .keySet()
                 .forEach(player -> {
-                    MessageEvent message = basicMatchConfig(basicPlayerConfig(new MessageEvent(), player), matchID);
+                    MessageEvent message = basicPlayerConfig(basicMatchConfig(new MessageEvent(), matchID), player);
                     if (getPlayerState(matchID,player) == PlayerState.ACTIVE){
                         message.setWorkersAvailableCells(getWorkersAvailableCells(matchID));
                         message.setSpecialFunctionAvailable(isSpecialFunctionAvailable(matchID));

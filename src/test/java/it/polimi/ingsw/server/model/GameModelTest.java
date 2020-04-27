@@ -22,13 +22,10 @@ class GameModelTest {
     void matchCreation(){
         assertEquals(0,createMatch(3));
         int pid = createPlayer("Hamza");
-        assertFalse(isNickAvailable("Hamza"));
 
         int pid2 = createPlayer("lol");
-        assertFalse(isNickAvailable("lol"));
 
         int pid3 = createPlayer("pippo");
-        assertFalse(isNickAvailable("pippo"));
 
         int mid = createMatch(pid);
         addPlayerToWaitingList(pid2);

@@ -80,7 +80,7 @@ public class BasicCommands implements Commands {
         try{
             Set<Position> positions = new HashSet<>();
             player.getMatch().getBillboard().getCells().forEach((key,val) -> {
-                if (val.getPlayerID() == null){
+                if (val.getPlayerID() == 0){
                     positions.add(key);
                 }
             });
@@ -106,7 +106,7 @@ public class BasicCommands implements Commands {
                     .getPosition()
                     .neighbourPositions()
                     .stream()
-                    .filter(position -> billboard.getPlayer(position) == null)
+                    .filter(position -> billboard.getPlayer(position) == 0)
                     .filter(position -> (billboard.getTowerHeight(position) <= billboard.getTowerHeight(worker.getPosition())) ||
                             (player.getMatch().isMoveUpActive() &&
                                     billboard.getTowerHeight(position) == (billboard.getTowerHeight(worker.getPosition()) + 1)))
@@ -126,7 +126,7 @@ public class BasicCommands implements Commands {
                 .getPosition()
                 .neighbourPositions()
                 .stream()
-                .filter(position -> billboard.getPlayer(position) == null)
+                .filter(position -> billboard.getPlayer(position) == 0)
                 .filter(position -> ! billboard.getDome(position))
                 .collect(Collectors.toSet());
     }

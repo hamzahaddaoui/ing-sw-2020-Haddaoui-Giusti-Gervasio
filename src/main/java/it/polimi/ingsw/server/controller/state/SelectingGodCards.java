@@ -13,7 +13,7 @@ public class SelectingGodCards extends State {
     @Override
     public void handleRequest(MessageEvent messageEvent){
         Integer matchID = messageEvent.getMatchID();
-        Set<String> cardList = messageEvent.getGodCards();
+        Set<String> cardList = messageEvent.getMatchCards();
 
         if (cardList.size()==getMatchPlayers(matchID).size()
             &&!getGameCards().containsAll(cardList)

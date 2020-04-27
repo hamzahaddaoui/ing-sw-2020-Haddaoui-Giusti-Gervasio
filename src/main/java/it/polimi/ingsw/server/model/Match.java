@@ -136,7 +136,7 @@ public class Match {
                 .getCells()
                 .keySet()
                 .stream()
-                .filter(position -> billboard.getPlayer(position) != null && billboard.getPlayer(position) == player.getID())
+                .filter(position -> billboard.getPlayer(position) != 0 && billboard.getPlayer(position) == player.getID())
                 .forEach(billboard::resetPlayer);
     }
 
@@ -173,9 +173,9 @@ public class Match {
         if (winner!=null || currentState == MatchState.FINISHED)
             throw new UnsupportedOperationException("Match is finished!");
 
-        /*if (currentPlayer.getPlayerState() == PlayerState.ACTIVE){
+        if (currentPlayer.getPlayerState() == PlayerState.ACTIVE){
             currentPlayer.resetPlayerState();
-        }*/
+        }
         currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
         currentPlayer.setPlayerState();
     }

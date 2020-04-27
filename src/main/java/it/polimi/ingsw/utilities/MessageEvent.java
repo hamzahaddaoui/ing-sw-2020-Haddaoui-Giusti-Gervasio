@@ -44,13 +44,13 @@ public class MessageEvent {
 
     private Map<Position, Cell>             billboardStatus;
 
-    private Map<Position, Set<Position>>    workersAvailableCells;  //
+    private Map<Position, Set<Position>>    workersAvailableCells;
 
 
     private Boolean                         terminateTurnAvailable; //
-    private Map<Position,Boolean>           specialFunctionAvailable;//worker+disponibilità special function
+    private Map<Position,Boolean>           specialFunctionAvailable;//worker+disponibilità special function -
 
-    private Map<Integer, String>            matchPlayers;           //i giocatori del gioco
+    private Map<Integer, String>            matchPlayers;           //i giocatori del gioco -
     //private int                           activeMatches;
     //private int                           playersConnected;
 

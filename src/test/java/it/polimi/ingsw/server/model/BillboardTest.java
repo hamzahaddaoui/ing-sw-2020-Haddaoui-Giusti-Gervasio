@@ -46,7 +46,7 @@ class BillboardTest {
 
     @Test
     void setPlayer() {
-        assertNull(billboard.getPlayer(position));
+        assertEquals(0, billboard.getPlayer(position));
         billboard.setPlayer(position, 10);
         assertEquals(10, billboard.getPlayer(position));
     }
@@ -55,7 +55,7 @@ class BillboardTest {
     void resetPlayer() {
         billboard.setPlayer(position, 10);
         billboard.resetPlayer(position);
-        assertEquals(null, billboard.getPlayer(position));
+        assertEquals(0, billboard.getPlayer(position));
     }
 
     @Test
@@ -101,7 +101,7 @@ class BillboardTest {
                 Position position = new Position(x,y);
                 assertEquals(cells.get(position).getTowerHeight(), 3);
                 assertTrue(cells.get(position).isDome());
-                assertNull(cells.get(position).getPlayerID());
+                assertEquals(0, cells.get(position).getPlayerID());
             }
         }
     }

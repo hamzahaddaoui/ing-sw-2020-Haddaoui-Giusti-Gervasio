@@ -455,7 +455,7 @@ class PlayerTestHamza {
                 .stream()
                 .sorted()
                 .forEach(position -> output
-                        .append(match.getBillboard().getPlayer(position)==null ? "[ ]": (match.getPlayerNick(match.getBillboard().getPlayer(position))))
+                        .append(match.getBillboard().getPlayer(position)==0 ? "[ ]": (match.getPlayerNick(match.getBillboard().getPlayer(position))))
                         .append((position.getY()==4) ? "\n" : " "));
 
         output.append("\n");

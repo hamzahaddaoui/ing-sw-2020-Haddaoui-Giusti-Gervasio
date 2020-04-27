@@ -17,6 +17,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
 
     @Override
     public void update(MessageEvent messageEvent){
+        //executor.submit(()->checkInput(messageEvent));
         checkInput(messageEvent);
     }
 
@@ -28,12 +29,9 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
 
         if (playerID == null) {
             controllerBehaviour = new FirstPlayerAccess();
-            matchID = messageEvent.getClientHandler().getMatchID();
         }
         else if ((matchID != null) && (Objects.equals(getPlayerState(matchID, playerID), PlayerState.ACTIVE))){
-            //controllerBehaviour = stateMap.get(getMatchState(matchID));
             controllerBehaviour = getBehaviour(matchID);
-
         }
         else {
             return;
@@ -45,9 +43,13 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
         else {
             controllerBehaviour.handleRequest(messageEvent);
 
+            playerID = messageEvent.getClientHandler().getPlayerID();
             matchID = messageEvent.getClientHandler().getMatchID();
-            controllerBehaviour = getBehaviour(matchID);
-            controllerBehaviour.viewNotify(getObservers(), matchID);
+
+            if (matchID != null) {
+                controllerBehaviour = getBehaviour(matchID);
+                controllerBehaviour.viewNotify(getObservers(), matchID);
+            }
         }
 
     }
@@ -72,6 +74,10 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
                 return null;
 
         }
+    }
+
+    public List<Observer<MessageEvent>> getObs(){
+        return getObservers();
     }
 }
 

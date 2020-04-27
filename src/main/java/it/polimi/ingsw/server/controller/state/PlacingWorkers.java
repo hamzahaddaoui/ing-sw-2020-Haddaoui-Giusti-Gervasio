@@ -17,11 +17,14 @@ public class PlacingWorkers extends State {
 
         Set<Position> initializedPositions = messageEvent.getInitializedPositions();
 
+
+
         if(initializedPositions.stream().distinct().count() != 2
             || !getPlacingAvailableCells(matchID).containsAll(initializedPositions)
             || !(initializedPositions.stream().allMatch(this::checkPosition)))
         {
-            notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), messageEvent.getPlayerID()),matchID)));
+            notify(basicErrorConfig(basicPlayerConfig(basicMatchConfig(new MessageEvent(), messageEvent.getMatchID()),messageEvent.getPlayerID())));
+            return;
         }
 
         initializedPositions.forEach(position -> placeWorker(matchID, position));
@@ -39,10 +42,11 @@ public class PlacingWorkers extends State {
         getMatchPlayers(matchID)
                 .keySet()
                 .forEach(player -> {
-                    MessageEvent message = basicMatchConfig(basicPlayerConfig(new MessageEvent(), player), matchID);
+                    MessageEvent message = basicPlayerConfig(basicMatchConfig(new MessageEvent(), matchID), player);
                     if (getPlayerState(matchID,player) == PlayerState.ACTIVE)
                         message.setAvailablePlacingCells(getPlacingAvailableCells(matchID));
                     notify(observers, message);
+                    System.out.println(message);
                 });
     }
 

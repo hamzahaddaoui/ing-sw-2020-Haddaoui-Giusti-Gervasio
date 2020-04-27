@@ -52,7 +52,7 @@ public class Server {
         controller.addObserver(clientHandler);  //clientHandler osserva controller (comunicazioni CONTROLLER-VIEW)
 
         executor.submit(clientHandler);
-
+        System.out.println("NEW CLIENT HANDLER ADDED");
       } catch (IOException e) {
         System.out.println("connection dropped");
       }

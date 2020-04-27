@@ -149,6 +149,11 @@ public class Player{
         }
     }
 
+    public void resetPlayerState(){
+        this.playerState = PlayerState.IDLE;
+    }
+
+
     public void win(){
         playerState = PlayerState.WIN;
     }

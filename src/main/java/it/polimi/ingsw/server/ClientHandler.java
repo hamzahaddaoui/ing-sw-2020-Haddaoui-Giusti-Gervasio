@@ -61,72 +61,25 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
 
     @Override
     public void run() {
-        //String inputObject;
-        //MessageEvent messageEvent;
-        //try {
-            System.out.println("Connected to " + client.getInetAddress());
-            heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT / 2, TimeUnit.MILLISECONDS);
-            Thread reader = new Thread(this::inputHandler);
-            reader.start();
-            while(reader.isAlive());
-            System.out.println("Closed");
-
-            //inputHandler.submit(this::inputHandler);
-            /*try {
-                try{
-                    while (true) {
-
-                        System.out.println("Getting input");
-                        inputObject = (String) input.readObject();
-                        messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
-                        System.out.println(messageEvent);
-                        if (! messageEvent.getInfo().equals("Heartbeat Message")) {
-                            messageEvent.setClientHandler(this);
-                            //notify(messageEvent);
-                        }
-                    }
-                }
-                catch (ClassNotFoundException | ClassCastException exception) {
-                    System.out.println("invalid stream from client");
-                }
-            }
-            catch (SocketTimeoutException e) {
-                System.out.println("Timeout. Connection " + client.getInetAddress() + " closed");
-            }
-        }
-        catch (IOException ex) {
-            System.out.println("client " + client.getInetAddress() + " connection dropped");
-        }
-        System.out.println("exit");
-        try {
-            messageEvent = new MessageEvent();
-            messageEvent.setExit(true);
-            messageEvent.setInfo("CLOSING COMMUNICATION");
-            messageEvent.setPlayerID(playerID);
-            messageEvent.setMatchID(matchID);
-            notify(messageEvent);
-            client.close();
-            heartbeatService.shutdownNow();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
+        System.out.println("Connected to " + client.getInetAddress());
+        Thread reader = new Thread(this::inputHandler);
+        heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT / 2, TimeUnit.MILLISECONDS);
+        reader.start();
     }
 
     @Override
     public void update(MessageEvent message){
-        /*if (!message.getPlayerID().equals(this.playerID)){
+        if (message.getPlayerID() != null && !message.getPlayerID().equals(this.playerID)){
             //non è per me!!!
             return;
-        }*/
+        }
 
-        String json = new GsonBuilder().create().toJson(message, MessageEvent.class);
+        String json = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(message, MessageEvent.class);
         System.out.println("SENDING "+ json);
         outputTaskQueue.submit(() -> {
             try {
                 output.reset();
                 output.writeObject(json);
-                System.out.println("inviato!");
                 output.flush();
             }
             catch(IOException e){
@@ -140,7 +93,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         MessageEvent message =  new MessageEvent();
         message.setInfo("Heartbeat Message");
 
-        update(message);
+        //update(message);
 
         heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT/2, TimeUnit.MILLISECONDS);
     }
@@ -152,16 +105,19 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
             while (true) {
                 inputObject = (String) input.readObject();
                 messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
-                System.out.println(messageEvent);
+
                 if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
+                    System.out.println(messageEvent);
                     messageEvent.setClientHandler(this);
+                    messageEvent.setPlayerID(playerID);
+                    messageEvent.setMatchID(matchID);
                     notify(messageEvent);
-                    System.out.println("CICLO CONCLUSO");
-                    TimeUnit.SECONDS.sleep(6);
                 }
             }
-        } catch (ClassNotFoundException | ClassCastException | IOException | InterruptedException exception) {
+        } catch (ClassNotFoundException | ClassCastException | IOException exception) {
             System.out.println("invalid stream from client");
         }
+
+        //finally con chiusura
     }
 }

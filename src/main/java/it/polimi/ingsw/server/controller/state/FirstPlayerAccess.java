@@ -22,10 +22,13 @@ public class FirstPlayerAccess extends State {
 
         Integer playerID = createPlayer(messageEvent.getNickname());
         addClientSocket(playerID, messageEvent.getClientHandler());
+        clientHandlerUpdate(matchID, playerID);
+
+
         //se il nick non è disponibile, elimino il player e il suo rif al clienthandler
         //dopo aver mandato la notifica di errore
         if (! isNickAvailable(messageEvent.getNickname())) {
-            notify(basicErrorConfig(new MessageEvent(), playerID));
+            notify(List.of(messageEvent.getClientHandler()), basicErrorConfig(new MessageEvent(), playerID));
             removeInitPlayer(playerID);
             removeClientSocket(playerID);
             return;
@@ -42,16 +45,15 @@ public class FirstPlayerAccess extends State {
         //CREO UN MATCH
         else if (((playersWaiting != 0) && (playersWaiting >= (2 * notInitMatches))) || ((playersWaiting == 0) && (notInitMatches == 0))) {
             matchID = createMatch(playerID);
-            super.clientHandlerUpdate(matchID, playerID);
+            clientHandlerUpdate(matchID, playerID);
         }
 
         //AGGIUNGO IL PLAYER ALLA WAITING LIST
         else{
-
-            addPlayerToWaitingList(playerID);
             message = new MessageEvent();
             message.setPlayerID(playerID);
-            notify(message);
+            notify(List.of(messageEvent.getClientHandler()), message);
+            addPlayerToWaitingList(playerID);
             clientHandlerUpdate(matchID, playerID);
         }
     }

@@ -44,7 +44,7 @@ public abstract class State extends Controller{
     protected MessageEvent basicMatchConfig(MessageEvent messageEvent, Integer matchID){
         messageEvent.setMatchID(matchID);
         messageEvent.setMatchState(getMatchState(matchID));
-        messageEvent.setBillboardStatus(Collections.unmodifiableMap(getBillboardStatus(matchID)));
+        messageEvent.setBillboardStatus(getBillboardStatus(matchID));
         messageEvent.setMatchPlayers(Collections.unmodifiableMap(getMatchPlayers(matchID)));
         messageEvent.setWinner(getMatchWinner(matchID));
         messageEvent.setFinished(getMatchState(matchID) == MatchState.FINISHED);
@@ -79,8 +79,8 @@ public abstract class State extends Controller{
     }
 
     protected boolean checkPosition(Position position){
-        return (position.getX() > 0 && position.getX() < 4
-                && position.getY() > 0 && position.getY() < 4);
+        return (position.getX() >= 0 && position.getX() <= 4
+                && position.getY() >= 0 && position.getY() <= 4);
     }
 
     protected void clientHandlerUpdate(Integer matchID, Integer playerID){

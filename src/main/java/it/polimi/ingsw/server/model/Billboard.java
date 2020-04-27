@@ -46,7 +46,7 @@ public class Billboard {
         cellSet.get(position).setDome(true);
     }
 
-    public Integer getPlayer(Position position) {
+    public int getPlayer(Position position) {
         return cellSet.get(position).getPlayerID();
     }
 
@@ -55,6 +55,6 @@ public class Billboard {
     }
 
     public void resetPlayer(Position position) {
-        cellSet.get(position).setPlayerID(null);
+        cellSet.get(position).setPlayerID(0);
     }
 }

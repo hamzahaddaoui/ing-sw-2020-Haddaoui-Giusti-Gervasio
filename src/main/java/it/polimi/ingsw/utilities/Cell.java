@@ -3,7 +3,7 @@ package it.polimi.ingsw.utilities;
 public class Cell {
     private int towerHeight;
     private boolean dome;
-    private Integer playerID;
+    private int playerID;
 
     public int getTowerHeight(){
         return towerHeight;
@@ -13,7 +13,7 @@ public class Cell {
         return dome;
     }
 
-    public Integer getPlayerID(){
+    public int getPlayerID(){
         return playerID;
     }
 
@@ -25,7 +25,7 @@ public class Cell {
         this.dome = dome;
     }
 
-    public void setPlayerID(Integer playerID){
+    public void setPlayerID(int playerID){
         this.playerID = playerID;
     }
 }

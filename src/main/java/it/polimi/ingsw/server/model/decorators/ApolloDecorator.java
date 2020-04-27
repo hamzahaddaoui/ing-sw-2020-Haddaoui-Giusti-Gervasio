@@ -43,7 +43,7 @@ public class ApolloDecorator extends CommandsDecorator {
     public void moveWorker(Position position, Player player) {
         Billboard billboard = player.getMatch().getBillboard();
 
-        if(billboard.getCells().get(position).getPlayerID() != null && billboard.getPlayer(position) != player.getID() ){
+        if(billboard.getCells().get(position).getPlayerID() != 0 && billboard.getPlayer(position) != player.getID() ){
             exchangePosition(player,position);
         }
         else{
@@ -142,7 +142,7 @@ public class ApolloDecorator extends CommandsDecorator {
                 .neighbourPositions()
                 .stream()
                 .filter(position -> billboard.getPlayer(position) != billboard.getPlayer(currentPosition) ||
-                        billboard.getPlayer(position) == null)
+                        billboard.getPlayer(position) == 0)
                 .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(currentPosition) ||
                         (player.getMatch().isMoveUpActive() &&
                                 billboard.getTowerHeight(position) == billboard.getTowerHeight(currentPosition)+1))
