@@ -7,6 +7,7 @@ import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 
 import java.io.IOException;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -18,6 +19,7 @@ import java.util.concurrent.*;
 public class ClientHandler extends Observable<MessageEvent> implements Observer<MessageEvent>, Runnable {
     private final ExecutorService outputTaskQueue = Executors.newSingleThreadExecutor();
     private final ScheduledExecutorService heartbeatService = Executors.newSingleThreadScheduledExecutor();
+    private final ExecutorService inputHandler = Executors.newSingleThreadExecutor();
     private final Socket client;
 
     private Integer playerID;
@@ -59,70 +61,76 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
 
     @Override
     public void run() {
-        try {
+        //String inputObject;
+        //MessageEvent messageEvent;
+        //try {
             System.out.println("Connected to " + client.getInetAddress());
             heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT / 2, TimeUnit.MILLISECONDS);
+            Thread reader = new Thread(this::inputHandler);
+            reader.start();
+            while(reader.isAlive());
+            System.out.println("Closed");
 
-            try {
+            //inputHandler.submit(this::inputHandler);
+            /*try {
+                try{
                     while (true) {
-                        String inputObject = (String) input.readObject();
-                        MessageEvent messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
-                        //########DEBUG#######################
+
+                        System.out.println("Getting input");
+                        inputObject = (String) input.readObject();
+                        messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
                         System.out.println(messageEvent);
-                        //####################################
-                        if (messageEvent.getInfo().equals("Heartbeat Message")) {
-                        }
-                        else if (this.playerID.equals(messageEvent.getPlayerID())) {
+                        if (! messageEvent.getInfo().equals("Heartbeat Message")) {
                             messageEvent.setClientHandler(this);
-                            notify(messageEvent);
+                            //notify(messageEvent);
                         }
                     }
-                    //client.close();
                 }
-            catch (ClassNotFoundException | ClassCastException exception) {
+                catch (ClassNotFoundException | ClassCastException exception) {
                     System.out.println("invalid stream from client");
                 }
+            }
             catch (SocketTimeoutException e) {
                 System.out.println("Timeout. Connection " + client.getInetAddress() + " closed");
-
-            }
-            finally {
-                try {
-                    MessageEvent messageEvent = new MessageEvent();
-                    messageEvent.setExit(true);
-                    messageEvent.setPlayerID(playerID);
-                    messageEvent.setMatchID(matchID);
-                    notify(messageEvent);
-                    client.close();
-                    heartbeatService.shutdown();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
         catch (IOException ex) {
             System.out.println("client " + client.getInetAddress() + " connection dropped");
-            heartbeatService.shutdown();
         }
-    }
+        System.out.println("exit");
+        try {
+            messageEvent = new MessageEvent();
+            messageEvent.setExit(true);
+            messageEvent.setInfo("CLOSING COMMUNICATION");
+            messageEvent.setPlayerID(playerID);
+            messageEvent.setMatchID(matchID);
+            notify(messageEvent);
+            client.close();
+            heartbeatService.shutdownNow();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
+    }
 
     @Override
     public void update(MessageEvent message){
-        if (!message.getPlayerID().equals(this.playerID)){
+        /*if (!message.getPlayerID().equals(this.playerID)){
             //non è per me!!!
             return;
-        }
+        }*/
 
-        String json = new GsonBuilder().create().toJson(message);
-
+        String json = new GsonBuilder().create().toJson(message, MessageEvent.class);
+        System.out.println("SENDING "+ json);
         outputTaskQueue.submit(() -> {
             try {
                 output.reset();
                 output.writeObject(json);
+                System.out.println("inviato!");
                 output.flush();
             }
             catch(IOException e){
+                System.out.println("errore nell'invio");
                 System.err.println(e.getMessage());
             }
         });
@@ -132,17 +140,28 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         MessageEvent message =  new MessageEvent();
         message.setInfo("Heartbeat Message");
 
-        String json = new GsonBuilder().create().toJson(message);
-
-        try {
-            output.reset();
-            output.writeObject(json);
-            output.flush();
-        }
-        catch(IOException e){
-            System.err.println(e.getMessage());
-        }
+        update(message);
 
         heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT/2, TimeUnit.MILLISECONDS);
+    }
+
+    void inputHandler(){
+        String inputObject;
+        MessageEvent messageEvent;
+        try {
+            while (true) {
+                inputObject = (String) input.readObject();
+                messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
+                System.out.println(messageEvent);
+                if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
+                    messageEvent.setClientHandler(this);
+                    notify(messageEvent);
+                    System.out.println("CICLO CONCLUSO");
+                    TimeUnit.SECONDS.sleep(6);
+                }
+            }
+        } catch (ClassNotFoundException | ClassCastException | IOException | InterruptedException exception) {
+            System.out.println("invalid stream from client");
+        }
     }
 }

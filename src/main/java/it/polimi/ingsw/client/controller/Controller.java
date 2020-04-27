@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller;
 
+
 import com.google.gson.Gson;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.state.ControlState;
@@ -25,7 +26,9 @@ public class Controller extends Observable<MessageEvent> implements Observer {
 
     @Override
     public void update(Object viewObject) {
+
         messageReady = false;
+        message = null;
 
         PlayerState newPlayerState = View.getPlayerState();
         MatchState newMatchState = View.getMatchState();
@@ -92,6 +95,7 @@ public class Controller extends Observable<MessageEvent> implements Observer {
         playerState = plState;
         matchState = matState;
     }
+
 
     public boolean isMessageReady(){
         return messageReady;

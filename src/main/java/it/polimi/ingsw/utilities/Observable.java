@@ -19,6 +19,10 @@ public class Observable<T> {
         }
     }
 
+    public List<Observer<T>> getObservers(){
+        return observers;
+    }
+
     protected void notify(T message){
         synchronized (observers) {
             for(Observer<T> observer : observers){
@@ -26,5 +30,14 @@ public class Observable<T> {
             }
         }
     }
+
+    protected void notify(List<Observer<T>> observerList, T message){
+        synchronized (observerList) {
+            for(Observer<T> observer : observerList){
+                observer.update(message);
+            }
+        }
+    }
+
 
 }

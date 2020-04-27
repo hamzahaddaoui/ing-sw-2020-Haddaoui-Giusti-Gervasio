@@ -1,10 +1,9 @@
 package it.polimi.ingsw.server.controller.state;
 
 import it.polimi.ingsw.server.Server;
-import it.polimi.ingsw.utilities.MatchState;
-import it.polimi.ingsw.utilities.MessageEvent;
-import it.polimi.ingsw.utilities.PlayerState;
-import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.*;
+
+import java.util.List;
 
 import static it.polimi.ingsw.server.model.GameModel.*;
 
@@ -47,7 +46,7 @@ public class Running extends State{
     }
 
     @Override
-    public void viewNotify(Integer matchID){
+    public void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID){
         getMatchPlayers(matchID)
                 .keySet()
                 .forEach(player -> {
@@ -57,7 +56,7 @@ public class Running extends State{
                         message.setSpecialFunctionAvailable(isSpecialFunctionAvailable(matchID));
                         message.setTerminateTurnAvailable(isTerminateTurnAvailable(matchID));
                     }
-                    notify(message);
+                    notify(observers, message);
                 });
         if (getMatchState(matchID) == MatchState.FINISHED) {
             getMatchPlayers(matchID).keySet().forEach(this::clientHandlerReset);

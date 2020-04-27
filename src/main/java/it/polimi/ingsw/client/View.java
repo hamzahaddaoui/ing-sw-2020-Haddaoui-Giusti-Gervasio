@@ -18,9 +18,8 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class View extends Observable<Object> implements Runnable, Observer<MessageEvent>{
+public class View extends Observable implements Runnable, Observer{
 
-    private static boolean alive = false; //-> indica se il client deve essere disconnesso in base allo stato del match
 
     private Scanner scanner;
     private DataInputStream dataInputStream;
@@ -51,11 +50,6 @@ public class View extends Observable<Object> implements Runnable, Observer<Messa
     private static boolean terminateTurnAvailable;
     private static Map<Position,Boolean> specialFunctionAvailable;
 
-    /*  -------
-        ------- CLI - VIEW
-        -------
-    */
-
     private static String inputMessage;
     private static char inputCharacter;
 
@@ -63,6 +57,29 @@ public class View extends Observable<Object> implements Runnable, Observer<Messa
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
 
+    }
+
+    public static void setGodCards(ArrayList<String> godCards) {
+        View.godCards = godCards;
+    }
+
+    public static void setPlacingAvailableCells(Set<Position> placingAvailableCells) {
+        View.placingAvailableCells = placingAvailableCells;
+    }
+
+    public static Map<Position, Set<Position>> getWorkersAvailableCells() {
+        return workersAvailableCells;
+    }
+
+    public static void setWorkersAvailableCells(Map<Position, Set<Position>> workersAvailableCells) {
+        View.workersAvailableCells = workersAvailableCells;
+    }
+
+    public void viewSetUp(){
+        coloredPlayersNum = new ArrayList<>();
+        View.coloredPlayersNum.add(2);
+        View.coloredPlayersNum.add(3);
+        View.playersNum = View.coloredPlayersNum.get(0);
     }
 
     @Override
@@ -121,16 +138,7 @@ public class View extends Observable<Object> implements Runnable, Observer<Messa
                 ex.printStackTrace();
             }
 
-        /*
-
-         ----- DA INSERIRE NEL UPDATE ------
-
-         */
-            setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
-
-            if (View.getColoredPosition() == null) {
-                View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
-            }
+         }
 
 
             //DISCONNESSIONE DEL CLIENT

@@ -59,7 +59,6 @@ public class MessageEvent {
     private boolean                         finished;               //se il match è finito
 
 
-
     public ClientHandler getClientHandler(){
         return clientHandler;
     }
@@ -291,6 +290,7 @@ public class MessageEvent {
     public void setFinished(boolean finished){
         this.finished = finished;
     }
+
 
     @Override
     public String toString(){

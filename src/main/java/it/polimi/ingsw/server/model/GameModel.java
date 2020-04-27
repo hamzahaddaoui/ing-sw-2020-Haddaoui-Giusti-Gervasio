@@ -58,14 +58,7 @@ public class GameModel extends Observable<MessageEvent> {
      * @return false if the nickname is not available, true otherwise
      */
     public static boolean isNickAvailable(String nickname){
-        return initializedPlayers
-                       .keySet()
-                       .stream()
-                       .map(initializedPlayers::get)
-                       .noneMatch(player -> player.toString()
-                               .equals(nickname))
-               &&
-               playersWaitingList
+        return playersWaitingList
                        .stream()
                        .noneMatch(player -> player.toString()
                                .equals(nickname))
@@ -225,7 +218,10 @@ public class GameModel extends Observable<MessageEvent> {
     }
 
     public static Integer getMatchWinner(Integer matchID){
-        return translateMatchID(matchID).getWinner().getID();
+        if (getMatchState(matchID) == MatchState.FINISHED) {
+            return translateMatchID(matchID).getWinner().getID();
+        }
+        else return null;
     }
 
     public static void deleteMatch(Integer matchID){
