@@ -5,6 +5,8 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.controller.state.InsertCharacter;
 import it.polimi.ingsw.utilities.MatchState;
+import it.polimi.ingsw.utilities.Observable;
+import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.TurnState;
 import it.polimi.ingsw.utilities.*;
@@ -12,18 +14,17 @@ import it.polimi.ingsw.utilities.*;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class View extends Observable implements Runnable, Observer{
+public class View extends Observable<Object> implements Runnable, Observer<MessageEvent> {
 
 
     private Scanner scanner;
     private DataInputStream dataInputStream;
     private PrintStream outputStream;
+
+    private static boolean error = false;
 
     private static Integer matchID;
     private static Integer playerID;
@@ -48,7 +49,7 @@ public class View extends Observable implements Runnable, Observer{
 
     private static Map<Integer, String> matchPlayers;
     private static boolean terminateTurnAvailable;
-    private static Map<Position,Boolean> specialFunctionAvailable;
+    private static Map<Position, Boolean> specialFunctionAvailable;
 
     private static String inputMessage;
     private static char inputCharacter;
@@ -59,23 +60,8 @@ public class View extends Observable implements Runnable, Observer{
 
     }
 
-    public static void setGodCards(ArrayList<String> godCards) {
-        View.godCards = godCards;
-    }
 
-    public static void setPlacingAvailableCells(Set<Position> placingAvailableCells) {
-        View.placingAvailableCells = placingAvailableCells;
-    }
-
-    public static Map<Position, Set<Position>> getWorkersAvailableCells() {
-        return workersAvailableCells;
-    }
-
-    public static void setWorkersAvailableCells(Map<Position, Set<Position>> workersAvailableCells) {
-        View.workersAvailableCells = workersAvailableCells;
-    }
-
-    public void viewSetUp(){
+    public void viewSetUp() {
         coloredPlayersNum = new ArrayList<>();
         View.coloredPlayersNum.add(2);
         View.coloredPlayersNum.add(3);
@@ -83,17 +69,15 @@ public class View extends Observable implements Runnable, Observer{
     }
 
     @Override
-    public void update(MessageEvent message){
+    public void update(MessageEvent message) {
         //se ricevo un messaggio dal model
         fetchingMessage(message); //analisi del messaggio e reset dei dati del client
 
         //aggiorna la scacchiera a video -> interazione con la CLI/GUI
 
-        if(playerState == PlayerState.LOST ){
+        if (playerState == PlayerState.LOST) {
             outputStream.println(" DAMN! YOU ARE A LOSER "); // OPPURE SCHERMATA GUI
-        }
-
-        else if(playerState == PlayerState.WIN){
+        } else if (playerState == PlayerState.WIN) {
             outputStream.println(" YOU WIN "); // OPPURE SCHERMATA GUI
         }
 
@@ -101,55 +85,52 @@ public class View extends Observable implements Runnable, Observer{
     }
 
     @Override
-    public void run(){
-        /*VCEvent vcEvent = new VCEvent("nick", new Position(2,2));
-        while(true) {
-
-            int x, y;
-            System.out.println("Insert position X");
-            x = scanner.nextInt();
-            System.out.println("Insert position Y");
-            y = scanner.nextInt();
-
-            notify(vcEvent);
-        }*/
-    try {
-        while (alive) {
-
-            outputStream.println("Insert a nickname: ");
-            inputMessage = scanner.nextLine();
-            scanner.reset();
-            nickname = inputMessage;
-            notify(inputMessage);
-
-            try {
-
-                while (playerState != PlayerState.WIN || playerState != PlayerState.LOST || matchState != MatchState.FINISHED) {
-                    // tipologia di inserimento richiesto       USELESS OR USEFUL ?
-                    //outputStream.println();
-                    inputCharacter = dataInputStream.readChar();
-                    if (InsertCharacter.values().equals(inputCharacter)) {
-                        notify(inputCharacter);
-                    } else {
-                        outputStream.println(" Carattere non disponibile ");
-                    }
+    public void run () {
+        try {
+            while (true) {
+                if(nickname == null){
+                outputStream.println("Insert a nickname: \n");
+                inputMessage = scanner.nextLine();
+                scanner.reset();
+                nickname = inputMessage;
+                notify(inputMessage);
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+                else if(error == true){
+                    outputStream.println("Your Nickname is already used! \n\nInsert a new nickname: \n");
+                    inputMessage = scanner.nextLine();
+                    scanner.reset();
+                    nickname = inputMessage;
+                    notify(inputMessage);
+                }
 
-         }
+
+                try {
+                    while (playerState != PlayerState.WIN || playerState != PlayerState.LOST || matchState != MatchState.FINISHED) {
+                        // tipologia di inserimento richiesto       USELESS OR USEFUL ?
+                        //outputStream.println();
+                        inputCharacter = dataInputStream.readChar();
+                        if (InsertCharacter.values().equals(inputCharacter)) {
+                            notify(inputCharacter);
+                        } else {
+                            outputStream.println(" Carattere non disponibile ");
+                        }
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+            }
 
 
             //DISCONNESSIONE DEL CLIENT
 
-            alive = false;
-        }
-    }
-        catch(NullPointerException ex){
-            ex.getMessage();
-        }
+        } catch(NullPointerException ex)
 
+    {
+        ex.getMessage();
+    } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void fetchingMessage(MessageEvent message){
@@ -169,6 +150,7 @@ public class View extends Observable implements Runnable, Observer{
             setGodCards(message.getGodCards());
         if(message.getMatchCards() != null && View.getMatchState() == MatchState.SELECTING_GOD_CARDS)
             setGodCards(message.getMatchCards());
+        setError(message.getError());
         if(message.getGodCard() != null)
             setColoredGodCard(message.getGodCard());
         if(message.getStartPosition() != null)
@@ -189,6 +171,10 @@ public class View extends Observable implements Runnable, Observer{
             setMatchPlayers(message.getMatchPlayers());
     }
 
+    public static void setError(boolean error) {
+        View.error = error;
+    }
+
     public static void setGodCards(ArrayList<String> godCards) {
         View.godCards = godCards;
     }
@@ -201,7 +187,7 @@ public class View extends Observable implements Runnable, Observer{
         return workersAvailableCells;
     }
 
-    public static void setWorkersAvailableCells(Map<Position, Set<Position>> workersAvailableCells) {
+    public static void setWorkersAvailableCells(Map workersAvailableCells) {
         View.workersAvailableCells = workersAvailableCells;
     }
 
@@ -240,14 +226,6 @@ public class View extends Observable implements Runnable, Observer{
     public static void setTerminateTurnAvailable(boolean terminateTurnAvailable) {
         View.terminateTurnAvailable = terminateTurnAvailable;
     }
-
-    public void viewSetUp(){
-        coloredPlayersNum = new ArrayList<>();
-        View.coloredPlayersNum.add(2);
-        View.coloredPlayersNum.add(3);
-        View.playersNum = View.coloredPlayersNum.get(0);
-    }
-
 
     public static ArrayList<String> getGodCards() {
         return godCards;
