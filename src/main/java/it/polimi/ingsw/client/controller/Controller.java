@@ -29,8 +29,10 @@ public class Controller extends Observable<MessageEvent> implements Observer {
 
         PlayerState newPlayerState = View.getPlayerState();
         MatchState newMatchState = View.getMatchState();
+
         // CASO if -> sono nel inserimento Nickname
         // Caso else -> altro caso
+
         if(newMatchState == null && newPlayerState == null){
             reset();
         }

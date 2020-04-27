@@ -18,8 +18,9 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class View extends Observable<MessageEvent> implements Runnable, Observer<MessageEvent>{
+public class View extends Observable<Object> implements Runnable, Observer<MessageEvent>{
 
+    private static boolean alive = false; //-> indica se il client deve essere disconnesso in base allo stato del match
 
     private Scanner scanner;
     private DataInputStream dataInputStream;
@@ -95,43 +96,51 @@ public class View extends Observable<MessageEvent> implements Runnable, Observer
 
             notify(vcEvent);
         }*/
+    try {
+        while (alive) {
 
-         outputStream.println("Insert a nickname: ");
-         inputMessage = scanner.nextLine();
-         nickname = inputMessage;
-         while(playerID != null && matchID != null ) {
-             //if nickname incorrect Write new Nick, send it and expect next message
-             //notify(inputMessage);
+            outputStream.println("Insert a nickname: ");
+            inputMessage = scanner.nextLine();
+            scanner.reset();
+            nickname = inputMessage;
+            notify(inputMessage);
 
-         }
-        scanner.close();
+            try {
 
-        setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
+                while (playerState != PlayerState.WIN || playerState != PlayerState.LOST || matchState != MatchState.FINISHED) {
+                    // tipologia di inserimento richiesto       USELESS OR USEFUL ?
+                    //outputStream.println();
+                    inputCharacter = dataInputStream.readChar();
+                    if (InsertCharacter.values().equals(inputCharacter)) {
+                        notify(inputCharacter);
+                    } else {
+                        outputStream.println(" Carattere non disponibile ");
+                    }
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 
-        if(View.getColoredPosition() == null){
-            View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
+        /*
+
+         ----- DA INSERIRE NEL UPDATE ------
+
+         */
+            setColoredPosition(getPlacingAvailableCells().stream().findFirst().get());
+
+            if (View.getColoredPosition() == null) {
+                View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
+            }
+
+
+            //DISCONNESSIONE DEL CLIENT
+
+            alive = false;
         }
-
-         while( playerState != PlayerState.LOST  || playerState != PlayerState.WIN ){
-             /*
-              *  il controller lato server potrebbe scrivere /dare consigli standard
-              *  su cosa il client deve inserire in quel momento
-              *
-              */
-             try {
-                 outputStream.println();
-                 inputCharacter = dataInputStream.readChar();
-                 if(InsertCharacter.values().equals(inputCharacter)){
-                    //notify(inputCharacter);
-                 }
-                 else{
-                     outputStream.println(" Carattere non disponibile ");
-                 }
-             } catch (IOException e) {
-                 e.printStackTrace();
-             }
-
-         }
+    }
+        catch(NullPointerException ex){
+            ex.getMessage();
+        }
 
     }
 

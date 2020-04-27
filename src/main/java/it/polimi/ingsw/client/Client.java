@@ -37,7 +37,12 @@ public class Client {
         executor.submit(networkHandler);        //si mette in ascolto di messaggi
         executor.submit(view);
 
+        /*while(view.isAlive()){
+
+        }*/
+
         //per chiudere la connessione
+
         /*try {
             networkHandler.stop();
         } catch (IOException e) {
