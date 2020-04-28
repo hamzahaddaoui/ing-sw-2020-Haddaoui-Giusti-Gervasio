@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.controller;
 
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.client.Player;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.state.ControlState;
 import it.polimi.ingsw.client.controller.state.StartingStatus;
@@ -28,10 +29,9 @@ public class Controller extends Observable<MessageEvent> implements Observer {
     public void update(Object viewObject) {
 
         messageReady = false;
-        message = null;
 
-        PlayerState newPlayerState = View.getPlayerState();
-        MatchState newMatchState = View.getMatchState();
+        PlayerState newPlayerState = Player.getPlayerState();
+        MatchState newMatchState = Player.getMatchState();
 
         // CASO if -> sono nel inserimento Nickname
         // Caso else -> altro caso
@@ -50,9 +50,9 @@ public class Controller extends Observable<MessageEvent> implements Observer {
 
         if (messageReady) {
             if (playerState != null)
-                message.setPlayerID(View.getPlayerID());
+                message.setPlayerID(Player.getPlayerID());
             if (matchState != null)
-                message.setMatchID(View.getMatchID());
+                message.setMatchID(Player.getMatchID());
             //invio il messaggio precedentemente compilato
             notify(message);
             //dopo l'invio reset degli attributi del messaggio a null
@@ -95,7 +95,6 @@ public class Controller extends Observable<MessageEvent> implements Observer {
         playerState = plState;
         matchState = matState;
     }
-
 
     public boolean isMessageReady(){
         return messageReady;

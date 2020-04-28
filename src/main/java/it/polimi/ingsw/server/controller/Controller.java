@@ -54,8 +54,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
 
     }
 
-
-
     State getBehaviour(Integer matchID){
         switch (getMatchState(matchID)){
             case GETTING_PLAYERS_NUM:

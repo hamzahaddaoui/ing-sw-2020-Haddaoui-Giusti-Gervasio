@@ -34,8 +34,8 @@ public class Client {
         view.addObserver(controller);           //controller osserva la view
         controller.addObserver(networkHandler); //networkHandler osserva il controller
 
-        executor.submit(networkHandler);        //si mette in ascolto di messaggi
-        executor.submit(view);
+        executor.submit(networkHandler);//si mette in ascolto di messaggi
+        view.init();
 
         /*while(view.isAlive()){
 
