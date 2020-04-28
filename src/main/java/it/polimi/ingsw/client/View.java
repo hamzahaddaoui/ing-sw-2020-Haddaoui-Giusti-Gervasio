@@ -4,6 +4,7 @@ package it.polimi.ingsw.client;
 // REALIZZARE UPDATE
 
 import it.polimi.ingsw.client.controller.state.InsertCharacter;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
@@ -25,6 +26,7 @@ public class View extends Observable<Object> implements Runnable, Observer<Messa
     private PrintStream outputStream;
 
     private static boolean error = false;
+    private static boolean update = false;
 
     private static Integer matchID;
     private static Integer playerID;
@@ -53,11 +55,12 @@ public class View extends Observable<Object> implements Runnable, Observer<Messa
 
     private static String inputMessage;
     private static char inputCharacter;
+    private static String outputMessage;
 
     public View() {
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
-
+        outputMessage = "Insert your Nickname :\n";
     }
 
 
@@ -70,40 +73,85 @@ public class View extends Observable<Object> implements Runnable, Observer<Messa
 
     @Override
     public void update(MessageEvent message) {
-        //se ricevo un messaggio dal model
         fetchingMessage(message); //analisi del messaggio e reset dei dati del client
 
-        //aggiorna la scacchiera a video -> interazione con la CLI/GUI
+        processingOutputMessage(); //preparo il messaggio che poi verrà mandato tramite run()
 
-        if (playerState == PlayerState.LOST) {
-            outputStream.println(" DAMN! YOU ARE A LOSER "); // OPPURE SCHERMATA GUI
-        } else if (playerState == PlayerState.WIN) {
-            outputStream.println(" YOU WIN "); // OPPURE SCHERMATA GUI
-        }
-
-        // DISCONNESSIONE DEL CLIENT
+        // DISCONNESSIONE DEL CLIENT effettuata da run
     }
 
     @Override
     public void run () {
         try {
-            while (true) {
+            while (playerState != PlayerState.LOST || playerState != PlayerState.WIN || matchState != MatchState.FINISHED) {
                 if(nickname == null){
-                outputStream.println("Insert a nickname: \n");
-                inputMessage = scanner.nextLine();
-                scanner.reset();
-                nickname = inputMessage;
-                notify(inputMessage);
-                }
-                else if(error == true){
-                    outputStream.println("Your Nickname is already used! \n\nInsert a new nickname: \n");
+                    outputStream.println(outputMessage);
                     inputMessage = scanner.nextLine();
                     scanner.reset();
                     nickname = inputMessage;
                     notify(inputMessage);
                 }
-
-
+                else if(error == true){
+                    scanner = new Scanner(System.in);
+                    outputStream.println(outputMessage);
+                    inputMessage = scanner.nextLine();
+                    scanner.reset();
+                    nickname = inputMessage;
+                    notify(inputMessage);
+                    error = false;
+                    scanner.close();
+                }
+                else if(playerState == null ||  playerState == PlayerState.INITIALIZED || (PlayerState.IDLE==playerState && MatchState.WAITING_FOR_PLAYERS==matchState)){
+                    if(dataInputStream == null)
+                        dataInputStream = new DataInputStream(System.in);
+                    outputStream.println(outputMessage);
+                    inputCharacter = dataInputStream.readChar();
+                    notify(inputCharacter);
+                }
+                else if(matchState == MatchState.WAITING_FOR_PLAYERS ){
+                    outputStream.println(outputMessage);
+                    inputCharacter = dataInputStream.readChar();
+                    notify(inputCharacter);
+                }
+                else if(playerState == PlayerState.ACTIVE && matchState == MatchState.GETTING_PLAYERS_NUM){
+                    if(coloredPlayersNum == null){
+                        outputStream.println("Select the number\n");
+                        playersNum = coloredPlayersNum.get(0);
+                        update = true;
+                    }
+                    if(update)    {               //IDEA -> quando cambia coloredPlayersNum in A e D metto update a true
+                        outputStream.println("Actual number : " + coloredPlayersNum);   update = false;}
+                    inputCharacter = dataInputStream.readChar();
+                    notify(inputCharacter);
+                }
+                else if(playerState == PlayerState.ACTIVE && matchState == MatchState.SELECTING_GOD_CARDS){
+                    if(selectedGodCards.size() == 0){
+                        outputStream.println("->" + godCards);
+                        outputStream.println(outputMessage);
+                    }
+                    if(coloredGodCard == null){
+                        setColoredGodCard(godCards.get(0));
+                        update = true;
+                    }
+                    if(update=true) //IDEA -> quando cambia coloredGodCard in A, D metto update a true
+                        outputStream.println("Actual  God is :" + coloredGodCard);
+                    inputCharacter = dataInputStream.readChar();
+                    notify(inputCharacter);
+                }
+                else if(playerState == PlayerState.ACTIVE && matchState == MatchState.SELECTING_SPECIAL_COMMAND){ //Idle
+                    outputStream.println(outputMessage);
+                    if(coloredGodCard == null){
+                        setColoredGodCard(selectedGodCards.get(0));
+                        outputStream.println("Choose a card from this deck " + selectedGodCards);
+                        update = true;
+                    }
+                    if(update){ //IDEA -> quando cambia coloredGodCard in A, D metto update a true
+                        outputStream.println("Actual God is " + coloredGodCard);
+                    }
+                    inputCharacter = dataInputStream.readChar();
+                    notify(inputCharacter);
+                    update = false;
+                }
                 try {
                     while (playerState != PlayerState.WIN || playerState != PlayerState.LOST || matchState != MatchState.FINISHED) {
                         // tipologia di inserimento richiesto       USELESS OR USEFUL ?
@@ -134,41 +182,41 @@ public class View extends Observable<Object> implements Runnable, Observer<Messa
     }
 
     public void fetchingMessage(MessageEvent message){
-        if(message.getMatchID() != null)
-            setMatchID(message.getMatchID());
-        if(message.getPlayerID() != null)
-            setPlayerID(message.getPlayerID());
-        if(message.getMatchState() != null)
-            setMatchState(message.getMatchState());
-        if(message.getPlayerState() != null)
-            setPlayerState(message.getPlayerState());
-        if(message.getTurnState() != null)
-            setTurnState(message.getTurnState());
-        if(message.getPlayersNum() != null)
-            setPlayersNum(message.getPlayersNum());
-        if(message.getGodCards() != null)
-            setGodCards(message.getGodCards());
-        if(message.getMatchCards() != null && View.getMatchState() == MatchState.SELECTING_GOD_CARDS)
-            setGodCards(message.getMatchCards());
+        if(message.getMatchID() != null)  setMatchID(message.getMatchID());
+        if(message.getPlayerID() != null) setPlayerID(message.getPlayerID());
+        if(message.getMatchState() != null){setMatchState(message.getMatchState()); update=true;}
+        if(message.getPlayerState() != null){setPlayerState(message.getPlayerState()); update=true;}
+        if(message.getTurnState() != null){ setTurnState(message.getTurnState()); update=true;}
+        if(message.getPlayersNum() != null){ setPlayersNum(message.getPlayersNum()); update=true;}
+        if(message.getGodCards() != null){ setGodCards(message.getGodCards()); update=true;}
+        if(message.getMatchCards() != null && View.getMatchState() == MatchState.SELECTING_GOD_CARDS){setGodCards(message.getMatchCards()); update=true;}
         setError(message.getError());
-        if(message.getGodCard() != null)
-            setColoredGodCard(message.getGodCard());
-        if(message.getStartPosition() != null)
-            setStartingPosition(message.getStartPosition());
-        if(message.getSpecialFunctionAvailable() != null)
-            setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
-        if(message.getMatchCards() != null && View.getMatchState() == MatchState.SELECTING_GOD_CARDS)
-            setGodCards(message.getMatchCards());
-        if(message.getAvailablePlacingCells() != null)
-            setPlacingAvailableCells(message.getAvailablePlacingCells());
-        if(message.getBillboardStatus() != null)
-            setBillboardStatus(message.getBillboardStatus());
-        if(message.getWorkersAvailableCells() != null)
-            setWorkersAvailableCells(message.getWorkersAvailableCells());
-        if(message.getTerminateTurnAvailable() != null)
-            setTerminateTurnAvailable(message.getTerminateTurnAvailable());
-        if(message.getMatchPlayers() != null)
-            setMatchPlayers(message.getMatchPlayers());
+        if(message.getGodCard() != null) setColoredGodCard(message.getGodCard());
+        if(message.getStartPosition() != null){setStartingPosition(message.getStartPosition()); update=true;}
+        if(message.getSpecialFunctionAvailable() != null){setSpecialFunctionAvailable(message.getSpecialFunctionAvailable()); update=true;}
+        if(message.getMatchCards() != null && View.getMatchState() == MatchState.SELECTING_GOD_CARDS){setGodCards(message.getMatchCards()); update=true;}
+        if(message.getAvailablePlacingCells() != null){setPlacingAvailableCells(message.getAvailablePlacingCells()); update=true;}
+        if(message.getBillboardStatus() != null){setBillboardStatus(message.getBillboardStatus()); update=true;}
+        if(message.getWorkersAvailableCells() != null){setWorkersAvailableCells(message.getWorkersAvailableCells()); update=true;}
+        if(message.getTerminateTurnAvailable() != null){setTerminateTurnAvailable(message.getTerminateTurnAvailable()); update=true;}
+        if(message.getMatchPlayers() != null){setMatchPlayers(message.getMatchPlayers()); update=true;}
+    }
+
+    public void processingOutputMessage(){
+        if(error) outputMessage = "Your nickname is already used. Change it :\n";
+        else if(playerState == null || playerState == PlayerState.IDLE || playerState == PlayerState.INITIALIZED) outputMessage = "Wait for yor turn :\n";
+        else if(matchState == MatchState.GETTING_PLAYERS_NUM)  outputMessage = "Insert num of player between 2 or 3 :\n";
+        else if(matchState == MatchState.WAITING_FOR_PLAYERS) outputMessage = "Waiting for players..\n";
+        else if(matchState == MatchState.SELECTING_GOD_CARDS) outputMessage = "Make your choice \n";// + godCards.stream().forEach(god -> System.out.println(god));
+        else if(matchState == MatchState.SELECTING_SPECIAL_COMMAND) outputMessage = "Select your special power \n"; // System.out.println(selectedGodCards);
+        else if(matchState == MatchState.PLACING_WORKERS) outputMessage = "Choose your position with A,D,W,S button\n";// + System.out.println("Your position actual is X:"+ coloredPosition.getX() + ", Y: " + coloredPosition.getY()+ "\n");
+        else if(matchState == MatchState.RUNNING && playerState== PlayerState.ACTIVE && TurnState.IDLE== turnState) outputMessage = "Choose a worker\n";
+        else if(matchState == MatchState.RUNNING && playerState== PlayerState.ACTIVE && TurnState.MOVE== turnState) outputMessage = "Move your worker\n";
+        else if(matchState == MatchState.RUNNING && playerState== PlayerState.ACTIVE && TurnState.BUILD== turnState) outputMessage = "Build with your worker\n";
+        else if(matchState == MatchState.FINISHED) outputMessage = "The match is finished. \n";
+        else if (playerState == PlayerState.LOST) outputMessage= " DAMN! YOU ARE A LOSER \n"; // OPPURE SCHERMATA GUI
+        else if (playerState == PlayerState.WIN) outputMessage= "YOU WIN \n"; // OPPURE SCHERMATA GUI
+
     }
 
     public static void setError(boolean error) {
@@ -294,7 +342,6 @@ public class View extends Observable<Object> implements Runnable, Observer<Messa
     public static Integer getPlayersNum() {
         return playersNum;
     }
-
 
     public static Map<Position, Cell> getBillboardStatus() {
         return billboardStatus;
