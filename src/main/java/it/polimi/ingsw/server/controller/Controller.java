@@ -17,8 +17,8 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
 
     @Override
     public void update(MessageEvent messageEvent){
-        //executor.submit(()->checkInput(messageEvent));
-        checkInput(messageEvent);
+        executor.submit(()->checkInput(messageEvent));
+        //checkInput(messageEvent);
     }
 
 

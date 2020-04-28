@@ -73,7 +73,6 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
             //non è per me!!!
             return;
         }
-
         String json = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(message, MessageEvent.class);
         System.out.println("SENDING "+ json);
         outputTaskQueue.submit(() -> {
@@ -104,7 +103,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         try {
             while (true) {
                 inputObject = (String) input.readObject();
-                messageEvent = new Gson().fromJson(inputObject, MessageEvent.class);
+                messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
 
                 if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
                     System.out.println(messageEvent);

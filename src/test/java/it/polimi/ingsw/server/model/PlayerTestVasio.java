@@ -190,7 +190,7 @@ public class PlayerTestVasio {
 
     String getBillboardStat(){
         StringBuilder output = new StringBuilder();
-        match.getBillboard().getCells().keySet().stream().sorted().forEach(position -> output.append(match.getBillboard().getPlayer(position)==null ? "[ ]": (match.getPlayerNick(match.getBillboard().getPlayer(position)))).append((position.getY()==4) ? "\n" : " "));
+        match.getBillboard().getCells().keySet().stream().sorted().forEach(position -> output.append(match.getBillboard().getPlayer(position)==0 ? "[ ]": (match.getPlayerNick(match.getBillboard().getPlayer(position)))).append((position.getY()==4) ? "\n" : " "));
         output.append("\n");
         match.getBillboard().getCells().keySet().stream().sorted().forEach(position -> output.append(match.getBillboard().getDome(position) ? "[D]" : "["+match.getBillboard().getTowerHeight(position)+"]").append((position.getY()==4) ? "\n" : " "));
         return output.toString();

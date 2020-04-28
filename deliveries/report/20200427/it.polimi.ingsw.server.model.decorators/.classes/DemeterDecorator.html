@@ -1,0 +1,217 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DemeterDecorator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model.decorators</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DemeterDecorator (it.polimi.ingsw.server.model.decorators)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DemeterDecorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (29/ 29)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DemeterDecorator$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (30/ 30)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model.decorators;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.model.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.Position;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.Set;
+<i>7</i>&nbsp;import java.util.stream.Collectors;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import static it.polimi.ingsw.utilities.TurnState.*;
+<i>10</i>&nbsp;import static it.polimi.ingsw.utilities.TurnState.IDLE;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * @author giusti-leo
+<i>14</i>&nbsp; *
+<i>15</i>&nbsp; * Demeter Commands Decorator
+<i>16</i>&nbsp; * Description: &quot;Your Worker may build one additional time, but not on the same space&quot;
+<i>17</i>&nbsp; * Differente methods from Basic Commands: nextState, build, computeAvailableBuildings
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;public class DemeterDecorator extends CommandsDecorator {
+<b class="fc"><i>21</i>&nbsp;    static final GodCards card = GodCards.Demeter;</b>
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    private Position firstBuildPosition;
+<i>24</i>&nbsp;    private boolean secondBuildDone;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * decorate the object Command with Demeter&#39;s special power
+<i>28</i>&nbsp;     *
+<i>29</i>&nbsp;     * @param commands represent the player behaviour
+<i>30</i>&nbsp;     */
+<b class="fc"><i>31</i>&nbsp;    public DemeterDecorator(Commands commands){</b>
+<b class="fc"><i>32</i>&nbsp;        this.commands=commands;</b>
+<b class="fc"><i>33</i>&nbsp;        this.firstBuildPosition=null;</b>
+<b class="fc"><i>34</i>&nbsp;    }</b>
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    /**
+<i>37</i>&nbsp;     * method that manage the selection of the next player&#39;s state
+<i>38</i>&nbsp;     * if Special Function is TRUE and the first building is done-&gt; nextTurn is BUILD
+<i>39</i>&nbsp;     * else -&gt; nextTurn is IDLE
+<i>40</i>&nbsp;     *
+<i>41</i>&nbsp;     * @param player  is the current player
+<i>42</i>&nbsp;     */
+<i>43</i>&nbsp;    public void nextState(Player player) {
+<b class="fc"><i>44</i>&nbsp;        switch (player.getTurnState()) {</b>
+<i>45</i>&nbsp;            case IDLE:
+<b class="fc"><i>46</i>&nbsp;                secondBuildDone = false;</b>
+<b class="fc"><i>47</i>&nbsp;                firstBuildPosition = null;</b>
+<b class="fc"><i>48</i>&nbsp;                player.setTurnState(MOVE);</b>
+<b class="fc"><i>49</i>&nbsp;                break;</b>
+<i>50</i>&nbsp;            case MOVE:
+<b class="fc"><i>51</i>&nbsp;                player.setTurnState(BUILD);</b>
+<b class="fc"><i>52</i>&nbsp;                break;</b>
+<i>53</i>&nbsp;            case BUILD:
+<b class="fc"><i>54</i>&nbsp;                if (losingCondition(player) || secondBuildDone){</b>
+<b class="fc"><i>55</i>&nbsp;                    player.setHasFinished();</b>
+<i>56</i>&nbsp;                }
+<i>57</i>&nbsp;                else{
+<b class="fc"><i>58</i>&nbsp;                    player.setTerminateTurnAvailable();</b>
+<i>59</i>&nbsp;                }
+<b class="fc"><i>60</i>&nbsp;                break;</b>
+<i>61</i>&nbsp;            default:
+<i>62</i>&nbsp;                break;
+<i>63</i>&nbsp;        }
+<b class="fc"><i>64</i>&nbsp;    }</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    /**
+<i>67</i>&nbsp;     * method of construction&#39;s action -&gt; BasicCommands&#39;s build method
+<i>68</i>&nbsp;     * if it&#39;s the first building action, set the firstBuildPosition
+<i>69</i>&nbsp;     * if it&#39;s the second building action, reset the firstBuildPosition
+<i>70</i>&nbsp;     *
+<i>71</i>&nbsp;     * @param position  is the position that player have inserted
+<i>72</i>&nbsp;     */
+<i>73</i>&nbsp;    @Override
+<i>74</i>&nbsp;    public void build(Position position, Player player) {
+<b class="fc"><i>75</i>&nbsp;        if (this.firstBuildPosition == null){</b>
+<b class="fc"><i>76</i>&nbsp;            this.firstBuildPosition = position;</b>
+<i>77</i>&nbsp;        }
+<i>78</i>&nbsp;        else {
+<b class="fc"><i>79</i>&nbsp;           this.secondBuildDone = true;</b>
+<i>80</i>&nbsp;            }
+<i>81</i>&nbsp;
+<b class="fc"><i>82</i>&nbsp;        super.build(position, player);</b>
+<b class="fc"><i>83</i>&nbsp;    }</b>
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    /**
+<i>86</i>&nbsp;     * method that compute the set of the available buildings
+<i>87</i>&nbsp;     * if it&#39;s the first build action, BasicCommands&#39;s computeAvailableBuildings method
+<i>88</i>&nbsp;     * if it&#39;s the second build action, BasicCommands&#39;s computeAvailableBuildings method less firstBuildPosition
+<i>89</i>&nbsp;     *
+<i>90</i>&nbsp;     * @param player  is the current player
+<i>91</i>&nbsp;     * @param worker  is the current worker
+<i>92</i>&nbsp;     * @return  the set of the position where the worker can build on
+<i>93</i>&nbsp;     */
+<i>94</i>&nbsp;    @Override
+<i>95</i>&nbsp;    public Set&lt;Position&gt; computeAvailableBuildings(Player player, Worker worker) {
+<b class="fc"><i>96</i>&nbsp;        Set&lt;Position&gt; result=super.computeAvailableBuildings(player, worker);</b>
+<i>97</i>&nbsp;
+<b class="fc"><i>98</i>&nbsp;            if(this.firstBuildPosition==null)</b>
+<b class="fc"><i>99</i>&nbsp;                return result;</b>
+<i>100</i>&nbsp;            else{
+<b class="fc"><i>101</i>&nbsp;                return result</b>
+<b class="fc"><i>102</i>&nbsp;                        .stream()</b>
+<b class="fc"><i>103</i>&nbsp;                        .filter(position -&gt; position != this.firstBuildPosition)</b>
+<b class="fc"><i>104</i>&nbsp;                        .collect(Collectors.toSet());</b>
+<i>105</i>&nbsp;            }
+<i>106</i>&nbsp;        }
+<i>107</i>&nbsp;
+<i>108</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-27 21:11</div>
+</div>
+</body>
+</html>

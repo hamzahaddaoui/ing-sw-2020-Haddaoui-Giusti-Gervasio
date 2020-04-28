@@ -29,6 +29,9 @@ public class GameModel extends Observable<MessageEvent> {
     -------------------------------------------------------------------------------
      */
 
+    private GameModel(){}
+
+
     public static int getPlayersWaitingListSize(){
         return playersWaitingList.size();
     }
@@ -256,7 +259,7 @@ public class GameModel extends Observable<MessageEvent> {
      * @param matchID selected match
      * @param card special card selected by the current user
      */
-    public static void selectPlayerCard(Integer matchID, String card){
+    public synchronized static void selectPlayerCard(Integer matchID, String card){
         translateMatchID(matchID).getCurrentPlayer().setCommands(GodCards.valueOf(card));
     }
 
