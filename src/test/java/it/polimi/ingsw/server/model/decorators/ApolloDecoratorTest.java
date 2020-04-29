@@ -98,7 +98,7 @@ class ApolloDecoratorTest {
         commands1.moveWorker(position13, player1);
 
         assertEquals(match.getBillboard().getPlayer(position13),player1.getID());
-        assertEquals(match.getBillboard().getPlayer(position12),null);
+        assertEquals(match.getBillboard().getPlayer(position12),0);
         assertEquals(match.getBillboard().getPlayer(position11),player2.getID());
 
     }

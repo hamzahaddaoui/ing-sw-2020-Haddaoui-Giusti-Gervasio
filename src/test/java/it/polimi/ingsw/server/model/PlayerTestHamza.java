@@ -455,7 +455,10 @@ class PlayerTestHamza {
                 .stream()
                 .sorted()
                 .forEach(position -> output
-                        .append(match.getBillboard().getPlayer(position)==0 ? "[ ]": (match.getPlayerNick(match.getBillboard().getPlayer(position))))
+                        .append(match.getBillboard().getPlayer(position)==0 ? "⬜️": "")
+                        .append(match.getBillboard().getPlayer(position)==11 ? "🟥":"" )
+                        .append(match.getBillboard().getPlayer(position)==22 ? "🟩":"" )
+                        .append(match.getBillboard().getPlayer(position)==33 ? "🟦":"" )
                         .append((position.getY()==4) ? "\n" : " "));
 
         output.append("\n");
@@ -466,7 +469,12 @@ class PlayerTestHamza {
                 .stream()
                 .sorted()
                 .forEach(position -> output
-                        .append(match.getBillboard().getDome(position) ? "[D]" : "["+match.getBillboard().getTowerHeight(position)+"]")
+                        .append(match.getBillboard().getDome(position) ? "⏺" : "")
+                        .append(!match.getBillboard().getDome(position) && match.getBillboard().getTowerHeight(position) == 0 ? "0️⃣": "")
+                        .append(!match.getBillboard().getDome(position) && match.getBillboard().getTowerHeight(position) == 1 ? "1️⃣": "")
+                        .append(!match.getBillboard().getDome(position) && match.getBillboard().getTowerHeight(position) == 2 ? "2️⃣": "")
+                        .append(!match.getBillboard().getDome(position) && match.getBillboard().getTowerHeight(position) == 3 ? "3️⃣": "")
+
                         .append((position.getY()==4) ? "\n" : " "));
         return output.toString();
     }
@@ -481,7 +489,7 @@ class PlayerTestHamza {
                 .forEach(position -> output
                         .append(cells.contains(position) ? "\u2B1B" : "")
                         .append(!(p.getCurrentWorker().getPosition().equals(position)) && !cells.contains(position) ? "\u2B1C" : "")
-                        .append((p.getCurrentWorker().getPosition().equals(position)) ? "\u2705" : "")
+                        .append((p.getCurrentWorker().getPosition().equals(position)) ? "\uD83D\uDC77\uD83C\uDFFB" : "")
                         .append((position.getY()==4) ? "\n" : " "));
 
         return output.toString();
