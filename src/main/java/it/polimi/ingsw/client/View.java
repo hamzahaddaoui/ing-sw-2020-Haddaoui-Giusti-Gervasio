@@ -1,10 +1,8 @@
 package it.polimi.ingsw.client;
 
-// REALIZZARE NOTIFY
-// REALIZZARE UPDATE
-
 import it.polimi.ingsw.client.controller.state.InsertCharacter;
 import it.polimi.ingsw.server.controller.state.WaitingForPlayers;
+import it.polimi.ingsw.server.model.Billboard;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
@@ -12,9 +10,7 @@ import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.TurnState;
 import it.polimi.ingsw.utilities.*;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,48 +26,142 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     private DataInputStream dataInputStream;
     private PrintStream outputStream;
 
-    private static boolean update = false;
-
-    private static String inputMessage;
     private static char inputCharacter;
-    private static String outputMessage;
-
-   // executor.submit(()-> inputListener(messageEvent));
 
 
     @Override // lato NETWORK HANDLER
     public void update(MessageEvent messageEvent) {
         if(messageEvent.getError()) insertNickName();
-        else if(!active){
+        else if(!active && !messageEvent.getError()){
             active = true;
+            fetchingInit(messageEvent);
+            fetching(messageEvent);
+            checkStatus();
+            doUpdate();
             executorInput.submit(()-> inputListener());
         }
         else{
-            executorUpdate.submit(()-> fetching(messageEvent));
+            fetching(messageEvent);
+            checkStatus();
+            doUpdate();
         }
     }
 
-    public void updatingDate(MessageEvent messageEvent){
-        PlayerState playerState = Player.getPlayerState();
-        MatchState matchState = Player.getMatchState();
+    public void checkStatus(){
+        switch(Player.getMatchState()){
+            case GETTING_PLAYERS_NUM:{
+            Player.setColoredPlayersNum(new ArrayList<>());
+            ArrayList<Integer> numPlayer = Player.getColoredPlayersNum();
+            numPlayer.add(2);
+            numPlayer.add(3);
+            Player.setPlayersNum(numPlayer.get(0));
+        }
+            case WAITING_FOR_PLAYERS: outputStream.println("WAIT YOUR TURN...");
+            case SELECTING_GOD_CARDS:{
+            GameBoard.setColoredGodCard(GameBoard.getMatchCards().get(0));
+        }
+            case SELECTING_SPECIAL_COMMAND:{
+            GameBoard.setColoredGodCard(GameBoard.getSelectedGodCards().get(0));
+        }
+            case PLACING_WORKERS:{
+                GameBoard.setColoredPosition(GameBoard.getPlacingAvailableCells().stream().findAny().get());
+            }
+            case RUNNING: {
+                if(Player.getPlayerState()== PlayerState.ACTIVE && Player.getTurnState()== TurnState.IDLE){
+                    GameBoard.setColoredPosition(GameBoard.getWorkersPositions().stream().findAny().get());
+                }
+                if(Player.getPlayerState()== PlayerState.ACTIVE && Player.getTurnState()== TurnState.MOVE){
+                    GameBoard.setColoredPosition(GameBoard.getWorkersAvailableCells().get(GameBoard.getStartingPosition()).stream().findAny().get());
+                }
+                if(Player.getPlayerState()== PlayerState.ACTIVE && Player.getTurnState()== TurnState.BUILD){
+                    GameBoard.setColoredPosition(GameBoard.getWorkersAvailableCells().get(GameBoard.getStartingPosition()).stream().findAny().get());
+                }
+            }
+    }}
 
-        if(messageEvent.)
+    public void fetchingInit(MessageEvent messageEvent){
+        if(messageEvent.getPlayerID() != null && messageEvent.getPlayerID() != Player.getPlayerID()){
+            Player.setPlayerID(messageEvent.getPlayerID());
+        }
+        if(messageEvent.getMatchID() != null && messageEvent.getMatchID() != Player.getMatchID()){
+            Player.setMatchID(messageEvent.getMatchID());
+        }
+    }
 
+    public void fetching(MessageEvent messageEvent){
+        if(messageEvent.getMatchState() != Player.getMatchState() && messageEvent.getMatchState() != null){
+            Player.setMatchState(messageEvent.getMatchState());
+        }
+        if(messageEvent.getPlayerState() != Player.getPlayerState() && messageEvent.getPlayerState() != null){
+            Player.setPlayerState(messageEvent.getPlayerState());
+        }
+        if(messageEvent.getTurnState() != Player.getTurnState() && messageEvent.getTurnState() != null){
+            Player.setTurnState(messageEvent.getTurnState());
+        }
+        if(messageEvent.getMatchCards() != GameBoard.getMatchCards() && messageEvent.getMatchCards() != null){
+            GameBoard.setMatchCards(messageEvent.getMatchCards());
+        }
+        if(messageEvent.getAvailablePlacingCells() != GameBoard.getPlacingAvailableCells() && messageEvent.getAvailablePlacingCells() != null){
+            GameBoard.setPlacingAvailableCells(messageEvent.getAvailablePlacingCells());
+        }
+        if(messageEvent.getBillboardStatus() != GameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
+            GameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
+        }
+        if(messageEvent.getWorkersAvailableCells() != GameBoard.getWorkersAvailableCells() && messageEvent.getWorkersAvailableCells()!=  null){
+            GameBoard.setWorkersAvailableCells(messageEvent.getWorkersAvailableCells());
+        }
+        if(messageEvent.getTerminateTurnAvailable() != Player.isTerminateTurnAvailable() && messageEvent.getTerminateTurnAvailable() != null){
+            Player.setTerminateTurnAvailable(messageEvent.getTerminateTurnAvailable());
+        }
+        if(messageEvent.getSpecialFunctionAvailable() != Player.getSpecialFunctionAvailable() && messageEvent.getSpecialFunctionAvailable() != null){
+            Player.setSpecialFunctionAvailable(messageEvent.getSpecialFunctionAvailable());
+        }
+        if(messageEvent.getMatchPlayers() != Player.getMatchPlayers() && messageEvent.getMatchPlayers()!=null){
+            Player.setMatchPlayers(messageEvent.getMatchPlayers());
+        }
+    }
+
+    public void doUpdate(){
+        executorUpdate.submit(()-> view());
+    }
+
+    public void view(){
+        // mostra la visione a schermo a seconda del differente stato del Match o del player
     }
 
     public void inputListener(){
-        //try{
+        try{
+            scanner.close();
+            dataInputStream = new DataInputStream(System.in);
             while(active){
+                inputCharacter = dataInputStream.readChar();
+                notify(inputCharacter);
+            }
+            dataInputStream.close();
+        }
+        catch(EOFException ex){
+            ex.printStackTrace();
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                System.out.println("This match is finished. ");
+                view();
 
-            //}
-        //}
-        //catch(IOException ex){
+                   // ---- DISCONNESSIONE CLIENT ----
 
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void init(){   // -> insert IP
         scanner = new Scanner(System.in);
+        outputStream = new PrintStream(System.out);
+        active = false;
         outputStream.println( "Insert your ip : ");
         Player.setIp(scanner.nextLine());
         outputStream.println( "Insert your nickname : ");
@@ -86,136 +176,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         notify(Player.getNickname());
     }
 
-    public void fetching(MessageEvent messageEvent){
-
-    }
-
-    public void processingOutputMessage() {
-        if (error) outputMessage = "Your nickname is already used. Change it :\n";
-        else if (playerState == null || playerState == PlayerState.IDLE || playerState == PlayerState.INITIALIZED)
-            outputMessage = "Wait for yor turn :\n";
-        else if (matchState == MatchState.GETTING_PLAYERS_NUM)
-            outputMessage = "Insert num of player between 2 or 3 :\n";
-        else if (matchState == MatchState.WAITING_FOR_PLAYERS) outputMessage = "Waiting for players..\n";
-        else if (matchState == MatchState.SELECTING_GOD_CARDS)
-            outputMessage = "Make your choice \n";// + godCards.stream().forEach(god -> System.out.println(god));
-        else if (matchState == MatchState.SELECTING_SPECIAL_COMMAND)
-            outputMessage = "Select your special power \n"; // System.out.println(selectedGodCards);
-        else if (matchState == MatchState.PLACING_WORKERS)
-            outputMessage = "Choose your position with A,D,W,S button\n";// + System.out.println("Your position actual is X:"+ coloredPosition.getX() + ", Y: " + coloredPosition.getY()+ "\n");
-        else if (matchState == MatchState.RUNNING && playerState == PlayerState.ACTIVE && TurnState.IDLE == turnState)
-            outputMessage = "Choose a worker\n";
-        else if (matchState == MatchState.RUNNING && playerState == PlayerState.ACTIVE && TurnState.MOVE == turnState)
-            outputMessage = "Move your worker\n";
-        else if (matchState == MatchState.RUNNING && playerState == PlayerState.ACTIVE && TurnState.BUILD == turnState)
-            outputMessage = "Build with your worker\n";
-        else if (matchState == MatchState.FINISHED) outputMessage = "The match is finished. \n";
-        else if (playerState == PlayerState.LOST)
-            outputMessage = " DAMN! YOU ARE A LOSER \n"; // OPPURE SCHERMATA GUI
-        else if (playerState == PlayerState.WIN) outputMessage = "YOU WIN \n"; // OPPURE SCHERMATA GUI
-
-    }
 }
-
-/*
-    @Override
-    public void run () {
-        try {
-            while (playerState != PlayerState.LOST || playerState != PlayerState.WIN || matchState != MatchState.FINISHED) {
-                if (nickname == null) {
-                    outputStream.println(outputMessage);
-                    inputMessage = scanner.nextLine();
-                    scanner.reset();
-                    nickname = inputMessage;
-                    notify(inputMessage);
-                } else if (error == true) {
-                    scanner = new Scanner(System.in);
-                    outputStream.println(outputMessage);
-                    inputMessage = scanner.nextLine();
-                    scanner.reset();
-                    nickname = inputMessage;
-                    notify(inputMessage);
-                    error = false;
-                    scanner.close();
-                } else if (playerState == null || playerState == PlayerState.INITIALIZED || (PlayerState.IDLE == playerState && MatchState.WAITING_FOR_PLAYERS == matchState)) {
-                    if (dataInputStream == null)
-                        dataInputStream = new DataInputStream(System.in);
-                    outputStream.println(outputMessage);
-                    inputCharacter = dataInputStream.readChar();
-                    notify(inputCharacter);
-                }
-                else if(matchState == MatchState.WAITING_FOR_PLAYERS ){
-                    outputStream.println(outputMessage);
-                    inputCharacter = dataInputStream.readChar();
-                    notify(inputCharacter);
-                }
-                else if(playerState == PlayerState.ACTIVE && matchState == MatchState.GETTING_PLAYERS_NUM){
-                    if(coloredPlayersNum == null){
-                        outputStream.println("Select the number\n");
-                        playersNum = coloredPlayersNum.get(0);
-                        update = true;
-                    }
-                    if(update)    {               //IDEA -> quando cambia coloredPlayersNum in A e D metto update a true
-                        outputStream.println("Actual number : " + coloredPlayersNum);   update = false;}
-                    inputCharacter = dataInputStream.readChar();
-                    notify(inputCharacter);
-                }
-                else if(playerState == PlayerState.ACTIVE && matchState == MatchState.SELECTING_GOD_CARDS){
-                    if(selectedGodCards.size() == 0){
-                        outputStream.println("->" + godCards);
-                        outputStream.println(outputMessage);
-                    }
-                    if(coloredGodCard == null){
-                        setColoredGodCard(godCards.get(0));
-                        update = true;
-                    }
-                    if(update=true) //IDEA -> quando cambia coloredGodCard in A, D metto update a true
-                        outputStream.println("Actual  God is :" + coloredGodCard);
-                    inputCharacter = dataInputStream.readChar();
-                    notify(inputCharacter);
-                }
-                else if(playerState == PlayerState.ACTIVE && matchState == MatchState.SELECTING_SPECIAL_COMMAND){ //Idle
-                    outputStream.println(outputMessage);
-                    if(coloredGodCard == null){
-                        setColoredGodCard(selectedGodCards.get(0));
-                        outputStream.println("Choose a card from this deck " + selectedGodCards);
-                        update = true;
-                    }
-                    if(update){ //IDEA -> quando cambia coloredGodCard in A, D metto update a true
-                        outputStream.println("Actual God is " + coloredGodCard);
-                    }
-                    inputCharacter = dataInputStream.readChar();
-                    notify(inputCharacter);
-                    update = false;
-                }
-                try {
-                    while (playerState != PlayerState.WIN || playerState != PlayerState.LOST || matchState != MatchState.FINISHED) {
-                        // tipologia di inserimento richiesto       USELESS OR USEFUL ?
-                        //outputStream.println();
-                        inputCharacter = dataInputStream.readChar();
-                        if (InsertCharacter.values().equals(inputCharacter)) {
-                            notify(inputCharacter);
-                        } else {
-                            outputStream.println(" Carattere non disponibile ");
-                        }
-                    }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-            }
-
-
-            //DISCONNESSIONE DEL CLIENT
-
-        } catch(NullPointerException ex)
-
-    {
-        ex.getMessage();
-    } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     /*public void fetchingMessage (MessageEvent message){
         if(message.getError() == true) managementError();

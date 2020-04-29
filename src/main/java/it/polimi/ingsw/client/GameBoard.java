@@ -11,7 +11,7 @@ public class GameBoard {
     //sono le carte che vengono inserite in fase di SelectedSpecialCommandsStatus
     private static ArrayList<String> selectedGodCards;
     //sono le carte che vengono inserite in fase di SelectingGodCardsStatus, inizialmente prese dal Server
-    private static ArrayList<String> godCards;
+    private static ArrayList<String> matchCards;
 
     private static String coloredGodCard;
 
@@ -22,8 +22,9 @@ public class GameBoard {
     private static Position startingPosition;
     private static Position coloredPosition;
 
-    public static void setGodCards(ArrayList<String> godCards) {
-        GameBoard.godCards = godCards;
+    public static void setMatchCards(Set<String> godCards) {
+        GameBoard.matchCards = null;
+        GameBoard.matchCards = new ArrayList<>(godCards);
     }
 
     public static void setPlacingAvailableCells(Set<Position> placingAvailableCells) {
@@ -38,8 +39,8 @@ public class GameBoard {
         GameBoard.workersAvailableCells = workersAvailableCells;
     }
 
-    public static ArrayList<String> getGodCards() {
-        return godCards;
+    public static ArrayList<String> getMatchCards() {
+        return matchCards;
     }
 
     public static Set<Position> getPlacingAvailableCells() {
@@ -78,10 +79,6 @@ public class GameBoard {
         GameBoard.startingPosition = startingPosition;
     }
 
-    public static void setSelectedGodCards(ArrayList<String> selectedGodCards) {
-        GameBoard.selectedGodCards = selectedGodCards;
-    }
-
     public static Map<Position, Cell> getBillboardStatus() {
         return billboardStatus;
     }
@@ -96,7 +93,8 @@ public class GameBoard {
         return workersAvailableCells.containsKey(position);
     }
 
-    public static void setGodCards (Set<String> godCards) {
+    public static void setSelectedGodCards (Set<String> godCards) {
+        selectedGodCards = null;
         selectedGodCards = new ArrayList<String>(godCards);
     }
 

@@ -99,6 +99,10 @@ public class Player {
         return specialFunctionAvailable.get(position);
     }
 
+    public static Map<Position, Boolean> getSpecialFunctionAvailable(){
+        return specialFunctionAvailable;
+    }
+
     public static void setPlayersNum (int selectedPlayersNum) {
         playersNum = selectedPlayersNum;
     }
