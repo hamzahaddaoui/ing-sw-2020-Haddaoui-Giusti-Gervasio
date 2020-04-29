@@ -34,19 +34,19 @@ public class MessageEvent {
     private boolean                         exit;                   //SE l'utente esce. mando prima questo
 
     //controller to view
-    private MatchState                      matchState; //-
-    private PlayerState                     playerState; //-
-    private TurnState                       turnState; //-
-    private Boolean                         error; //-
+    private MatchState                      matchState;
+    private PlayerState                     playerState;
+    private TurnState                       turnState;
+    private Boolean                         error;
 
-    private Set<String>                     matchCards;             //Carte del gioco //-
-    private Set<Position>                   availablePlacingCells; //-
+    private Set<String>                     matchCards;             //Carte del gioco
+    private Set<Position>                   availablePlacingCells;
 
-    private Map<Position, Cell>             billboardStatus;  //-
+    private Map<Position, Cell>             billboardStatus;
 
-    private Map<Position, Set<Position>>    workersAvailableCells; //-
+    private Map<Position, Set<Position>>    workersAvailableCells;
 
-    private Boolean                         terminateTurnAvailable; //-
+    private Boolean                         terminateTurnAvailable;
     private Map<Position,Boolean>           specialFunctionAvailable;//worker+disponibilità special function -
 
     private Map<Integer, String>            matchPlayers;           //i giocatori del gioco -
