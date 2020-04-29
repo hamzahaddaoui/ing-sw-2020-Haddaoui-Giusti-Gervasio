@@ -10,124 +10,124 @@ import java.util.Map;
 
 public class Player {
 
-    private static String ip;
-    private static Integer matchID;
-    private static Integer playerID;
-    private static String nickname;
-    private static PlayerState playerState;
-    private static MatchState matchState;
-    private static TurnState turnState;
+    private String ip;
+    private Integer matchID;
+    private Integer playerID;
+    private String nickname;
+    private PlayerState playerState;
+    private MatchState matchState;
+    private TurnState turnState;
 
-    private static ArrayList<Integer> coloredPlayersNum;
-    private static Integer playersNum;
+    private ArrayList<Integer> coloredPlayersNum;
+    private Integer playersNum;
 
-    private static Map<Integer, String> matchPlayers;
-    private static boolean terminateTurnAvailable;
-    private static Map<Position, Boolean> specialFunctionAvailable;
+    private Map<Integer, String> matchPlayers;
+    private boolean terminateTurnAvailable;
+    private Map<Position, Boolean> specialFunctionAvailable;
 
-    private static boolean error = false;
+    private boolean error = false;
 
-    public static void setError(boolean error) {
-        Player.error = error;
+    public void setError(boolean newError) {
+        error = newError;
     }
 
-    public static void setMatchID(Integer matchID) {
-        Player.matchID = matchID;
+    public void setMatchID(Integer newMatchID) {
+        matchID = newMatchID;
     }
 
-    public static void setPlayerID(Integer playerID) {
-        Player.playerID = playerID;
+    public void setPlayerID(Integer newPlayerID) {
+        playerID = newPlayerID;
     }
 
-    public static void setPlayerState(PlayerState playerState) {
-        Player.playerState = playerState;
+    public void setPlayerState(PlayerState newPlayerState) {
+        playerState = newPlayerState;
     }
 
-    public static void setMatchState(MatchState matchState) {
-        Player.matchState = matchState;
+    public void setMatchState(MatchState newMatchState) {
+        matchState = newMatchState;
     }
 
-    public static TurnState getTurnState() {
+    public TurnState getTurnState() {
         return turnState;
     }
 
-    public static void setTurnState(TurnState turnState) {
-        Player.turnState = turnState;
+    public void setTurnState(TurnState newTurnState) {
+        turnState = newTurnState;
     }
 
-    public static void setMatchPlayers(Map<Integer, String> matchPlayers) {
-        Player.matchPlayers = matchPlayers;
+    public void setMatchPlayers(Map<Integer, String> newMatchPlayers) {
+        matchPlayers = newMatchPlayers;
     }
 
-    public static void setTerminateTurnAvailable(boolean terminateTurnAvailable) {
-        Player.terminateTurnAvailable = terminateTurnAvailable;
+    public void setTerminateTurnAvailable(boolean newTerminateTurnAvailable) {
+        terminateTurnAvailable = newTerminateTurnAvailable;
     }
 
-    public static Integer getMatchID() {
+    public Integer getMatchID() {
         return matchID;
     }
 
-    public static Integer getPlayerID() {
+    public Integer getPlayerID() {
         return playerID;
     }
 
-    public static ArrayList<Integer> getColoredPlayersNum() {
+    public ArrayList<Integer> getColoredPlayersNum() {
         return coloredPlayersNum;
     }
 
-    public static void setColoredPlayersNum(ArrayList<Integer> coloredPlayersNum) {
-        Player.coloredPlayersNum = coloredPlayersNum;
+    public void setColoredPlayersNum(ArrayList<Integer> newColoredPlayersNum) {
+        coloredPlayersNum = newColoredPlayersNum;
     }
 
-    public static PlayerState getPlayerState() {
+    public PlayerState getPlayerState() {
         return playerState;
     }
 
-    public static MatchState getMatchState() {
+    public MatchState getMatchState() {
         return matchState;
     }
 
-    public static Integer getPlayersNum() {
+    public Integer getPlayersNum() {
         return playersNum;
     }
 
-    public static boolean isTerminateTurnAvailable() {
+    public boolean isTerminateTurnAvailable() {
         return terminateTurnAvailable;
     }
 
-    public static boolean isSpecialFunctionAvailable(Position position) {
+    public boolean isSpecialFunctionAvailable(Position position) {
         return specialFunctionAvailable.get(position);
     }
 
-    public static Map<Position, Boolean> getSpecialFunctionAvailable(){
+    public Map<Position, Boolean> getSpecialFunctionAvailable(){
         return specialFunctionAvailable;
     }
 
-    public static void setPlayersNum (int selectedPlayersNum) {
+    public void setPlayersNum (int selectedPlayersNum) {
         playersNum = selectedPlayersNum;
     }
 
-    public static void setSpecialFunctionAvailable(Map<Position,Boolean> modelMap) {
+    public void setSpecialFunctionAvailable(Map<Position,Boolean> modelMap) {
         specialFunctionAvailable = modelMap;
     }
 
-    public static void setNickname(String nickname) {
-        Player.nickname = nickname;
+    public void setNickname(String newNickname) {
+        nickname = newNickname;
     }
 
-    public static String getIp() {
+    public String getIp() {
         return ip;
     }
 
-    public static void setIp(String ip) {
-        Player.ip = ip;
+    public void setIp(String newIp) {
+        ip = newIp;
     }
 
-    public static String getNickname() {
+    public String getNickname() {
         return nickname;
     }
 
-    public static Map<Integer, String> getMatchPlayers() {
+    public Map<Integer, String> getMatchPlayers() {
         return matchPlayers;
     }
 }

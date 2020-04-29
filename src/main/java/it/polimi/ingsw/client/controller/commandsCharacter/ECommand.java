@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
-import it.polimi.ingsw.client.View;
+
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.View;
 
 import java.util.ArrayList;
 
@@ -26,11 +27,15 @@ public class ECommand implements CommandCharacter {
      */
     @Override
     public boolean executeRunningStatus() {
-        if (View.isTerminateTurnAvailable()) {
-        Controller.getMessage().setEndTurn(true);
-        return true;
+        if (View.getPlayer().isTerminateTurnAvailable()) {
+            Controller.getMessage().setEndTurn(true);
+            View.doUpdate();
+            return true;
         }
-        else return false;
+        else {
+            View.doUpdate();
+            return false;
+        }
     }
 
     @Override
@@ -45,9 +50,9 @@ public class ECommand implements CommandCharacter {
      */
     @Override
     public boolean executeSelectingGodCardsStatus() {
-        String coloredGodCard = View.getColoredGodCard();
-        ArrayList<String> godCards = View.getGodCards();
-        ArrayList<String> selectedGodCards = View.getSelectedGodCards();
+        String coloredGodCard = View.getGameBoard().getColoredGodCard();
+        ArrayList<String> godCards = View.getGameBoard().getMatchCards();
+        ArrayList<String> selectedGodCards = View.getGameBoard().getSelectedGodCards();
 
         if(!selectedGodCards.contains(coloredGodCard)){
             throw new IllegalArgumentException(" This card is not in the SelectedCard Deck ");
@@ -56,14 +61,14 @@ public class ECommand implements CommandCharacter {
         if(coloredGodCard != null && selectedGodCards.size() > 0 && selectedGodCards.contains(coloredGodCard)){
             selectedGodCards.remove(selectedGodCards.indexOf(coloredGodCard));
             godCards.add(coloredGodCard);
-            View.setColoredGodCard(godCards.get(0));
+            View.getGameBoard().setColoredGodCard(godCards.get(0));
         }
+        View.doUpdate();
         return false;
     }
 
     @Override
     public void executeWaitingStatus() {
-
     }
 
 }

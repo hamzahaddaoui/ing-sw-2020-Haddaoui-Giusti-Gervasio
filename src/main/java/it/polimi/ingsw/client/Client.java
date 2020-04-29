@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.View;
 
 import java.io.IOException;
 import java.net.Socket;

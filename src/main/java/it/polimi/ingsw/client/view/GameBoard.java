@@ -8,92 +8,91 @@ import java.util.Map;
 import java.util.Set;
 
 public class GameBoard {
-    //sono le carte che vengono inserite in fase di SelectedSpecialCommandsStatus
-    private static ArrayList<String> selectedGodCards;
-    //sono le carte che vengono inserite in fase di SelectingGodCardsStatus, inizialmente prese dal Server
-    private static ArrayList<String> matchCards;
 
-    private static String coloredGodCard;
+    private ArrayList<String> selectedGodCards; // usate per la Selection Special Command
+    private ArrayList<String> matchCards; //date dal Server, usate per la Selecting God Card
 
-    private static Map<Position, Cell> billboardStatus;
-    private static Map<Position, Set<Position>> workersAvailableCells;
-    private static Set<Position> placingAvailableCells;
+    private String coloredGodCard;
 
-    private static Position startingPosition;
-    private static Position coloredPosition;
+    private Map<Position, Cell> billboardStatus;
+    private Map<Position, Set<Position>> workersAvailableCells;
+    private Set<Position> placingAvailableCells;
 
-    public static void setMatchCards(Set<String> godCards) {
-        GameBoard.matchCards = null;
-        GameBoard.matchCards = new ArrayList<>(godCards);
+    private Position startingPosition;
+    private Position coloredPosition;
+
+    public void setMatchCards(Set<String> godCards) {
+        matchCards = null;
+        matchCards = new ArrayList<>(godCards);
     }
 
-    public static void setPlacingAvailableCells(Set<Position> placingAvailableCells) {
-        GameBoard.placingAvailableCells = placingAvailableCells;
+    public void setPlacingAvailableCells(Set<Position> newPlacingAvailableCells) {
+        placingAvailableCells = newPlacingAvailableCells;
     }
 
-    public static Map<Position, Set<Position>> getWorkersAvailableCells() {
+    public Map<Position, Set<Position>> getWorkersAvailableCells() {
         return workersAvailableCells;
     }
 
-    public static void setWorkersAvailableCells(Map workersAvailableCells) {
-        GameBoard.workersAvailableCells = workersAvailableCells;
+    public void setWorkersAvailableCells(Map newWorkersAvailableCells) {
+        workersAvailableCells = newWorkersAvailableCells;
     }
 
-    public static ArrayList<String> getMatchCards() {
+    public ArrayList<String> getMatchCards() {
         return matchCards;
     }
 
-    public static Set<Position> getPlacingAvailableCells() {
+    public Set<Position> getPlacingAvailableCells() {
         return placingAvailableCells;
     }
 
-    public static String getColoredGodCard() {
+    public String getColoredGodCard() {
         return coloredGodCard;
     }
 
-    public static Position getStartingPosition() {
+    public Position getStartingPosition() {
         return startingPosition;
     }
 
-    public static Position getColoredPosition() {
+    public Position getColoredPosition() {
         return coloredPosition;
     }
 
-    public static void setColoredPosition(Position position) {
+    public void setColoredPosition(Position position) {
         coloredPosition = position;
     }
 
-    public static ArrayList<String> getSelectedGodCards() {
+    public ArrayList<String> getSelectedGodCards() {
         return selectedGodCards;
     }
 
-    public static void setBillboardStatus(Map<Position, Cell> billboardStatus) {
-        GameBoard.billboardStatus = billboardStatus;
+    public void setBillboardStatus(Map<Position, Cell> newBillboardStatus) {
+        billboardStatus = newBillboardStatus;
     }
 
-    public static void setColoredGodCard(String coloredGodCard) {
-        GameBoard.coloredGodCard = coloredGodCard;
+    public void setColoredGodCard(String GodCard) {
+        coloredGodCard = GodCard;
     }
 
-    public static void setStartingPosition(Position startingPosition) {
-        GameBoard.startingPosition = startingPosition;
+    public void setStartingPosition(Position position) {
+        startingPosition = position;
     }
 
-    public static Map<Position, Cell> getBillboardStatus() {
+    public Map<Position, Cell> getBillboardStatus() {
         return billboardStatus;
     }
 
-    public static Set<Position> getWorkersAvailableCells(Position position) {
+    public Set<Position> getWorkersAvailableCells(Position position) {
         return workersAvailableCells.get(position);
     }
 
-    public static Set<Position> getWorkersPositions() { return workersAvailableCells.keySet();}
+    public Set<Position> getWorkersPositions() { return workersAvailableCells.keySet();}
 
-    public static boolean isWorkerPresent(Position position) {
+    public boolean isWorkerPresent(Position position) {
         return workersAvailableCells.containsKey(position);
     }
 
-    public static void setSelectedGodCards (Set<String> godCards) {
+    public void setSelectedGodCards (Set<String> godCards) {
         selectedGodCards = null;
         selectedGodCards = new ArrayList<String>(godCards);
     }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
-import it.polimi.ingsw.client.View;
+
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
 
@@ -8,7 +9,6 @@ public class FCommand implements CommandCharacter {
 
     @Override
     public boolean executeNumberStatus() {
-
         //messaggio View: "non fa nulla"
         return false;
     }
@@ -26,17 +26,21 @@ public class FCommand implements CommandCharacter {
      *
      * @return              true if you can send the message, false otherwise
      */
-
     @Override
     public boolean executeRunningStatus() {
-        Position start = View.getStartingPosition();
+        Position start = View.getGameBoard().getStartingPosition();
         MessageEvent msg = Controller.getMessage();
-        if (start!=null && View.isSpecialFunctionAvailable(start)) {
+
+        if (start!=null && View.getPlayer().isSpecialFunctionAvailable(start)) {
             msg.setStartPosition(start);
             msg.setSpecialFunction(true);
+            View.doUpdate();
             return true;
         }
-        else return false;
+        else {
+            View.doUpdate();
+            return false;
+        }
     }
 
     @Override

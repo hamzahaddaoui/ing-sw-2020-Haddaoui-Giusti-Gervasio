@@ -1,10 +1,9 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
-import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
 public class PlacingWorkersStatus extends ControlState {
@@ -18,13 +17,13 @@ public class PlacingWorkersStatus extends ControlState {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
-        if(View.getPlacingAvailableCells() == null)
+        if(View.getGameBoard().getPlacingAvailableCells() == null)
             throw new IllegalArgumentException(" PlacingAvailableCell is empty ");
 
-        if(View.getColoredPosition() == null)
+        if(View.getGameBoard().getColoredPosition() == null)
             throw new IllegalArgumentException(" ColoredPosition is empty ");
 
-        if(!View.getPlacingAvailableCells().contains(View.getColoredPosition()))
+        if(!View.getGameBoard().getPlacingAvailableCells().contains(View.getGameBoard().getColoredPosition()))
             throw new IllegalArgumentException(" Colored Position is not in Placing Available Cells ");
 
         return commandCharacter.executePlacingWorkerStatus();

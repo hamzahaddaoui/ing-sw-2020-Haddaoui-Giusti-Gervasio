@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.MatchState;
-import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
 public class WaitingStatus extends ControlState {
@@ -28,4 +27,5 @@ public class WaitingStatus extends ControlState {
             ctrl.setState(new RunningStatus());
         else ctrl.setState(this);
     }
+
 }

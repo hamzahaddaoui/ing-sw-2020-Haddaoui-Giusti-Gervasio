@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
-import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.CardinalDirection;
 import it.polimi.ingsw.utilities.Position;
 
@@ -18,9 +18,10 @@ public class ACommand implements CommandCharacter {
      */
     @Override
     public boolean executeNumberStatus() {
-        ArrayList<Integer> coloredPlayersNum = View.getColoredPlayersNum();
+        ArrayList<Integer> coloredPlayersNum = View.getPlayer().getColoredPlayersNum();
 
-        View.setPlayersNum(coloredPlayersNum.get(abs(coloredPlayersNum.indexOf(View.getPlayersNum()) - 1) % coloredPlayersNum.size()));
+        View.getPlayer().setPlayersNum(coloredPlayersNum.get(abs(coloredPlayersNum.indexOf(View.getPlayer().getPlayersNum()) - 1) % coloredPlayersNum.size()));
+        View.doUpdate();
         return false;
     }
 
@@ -33,16 +34,17 @@ public class ACommand implements CommandCharacter {
     @Override
     public boolean executePlacingWorkerStatus() {
 
-        Position coloredPosition = View.getColoredPosition();
+        Position coloredPosition = View.getGameBoard().getColoredPosition();
 
         while (true) {
             coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
-            if (View.getPlacingAvailableCells().contains(coloredPosition)) {
-                View.setColoredPosition(coloredPosition);
+            if (View.getGameBoard().getPlacingAvailableCells().contains(coloredPosition)) {
+                View.getGameBoard().setColoredPosition(coloredPosition);
                 break;
             }
         }
 
+        View.doUpdate();
         return false;
     }
 
@@ -70,12 +72,12 @@ public class ACommand implements CommandCharacter {
     @Override
     public boolean executeRunningStatus() {
 
-        Position coloredPosition = View.getColoredPosition();
+        Position coloredPosition = View.getGameBoard().getColoredPosition();
 
-        if (View.getStartingPosition() == null) {
-            //ArrayList<Position> positions = new ArrayList<>(View.getWorkersPositions());
+        if (View.getGameBoard().getStartingPosition() == null) {
 
-            View.setColoredPosition (View
+            View.getGameBoard().setColoredPosition (View
+                                        .getGameBoard()
                                         .getWorkersPositions()
                                         .stream()
                                         .filter(position -> !position.equals(coloredPosition))
@@ -84,13 +86,14 @@ public class ACommand implements CommandCharacter {
 
         }
         else {
-            CardinalDirection offset = View.getStartingPosition().checkMutualPosition(coloredPosition);
+            CardinalDirection offset = View.getGameBoard().getStartingPosition().checkMutualPosition(coloredPosition);
             if (offset == CardinalDirection.NORTH ||
                     offset == CardinalDirection.NORTHEAST ||
                     offset == CardinalDirection.SOUTH ||
                     offset == CardinalDirection.SOUTHEAST)
-                     View.setColoredPosition(View.getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.WEST));
+                     View.getGameBoard().setColoredPosition(View.getGameBoard().getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.WEST));
         }
+        View.doUpdate();
         return false;
     }
 
@@ -104,10 +107,11 @@ public class ACommand implements CommandCharacter {
      */
     @Override
     public boolean executeSpecialCommandsStatus() {
-        int posColoredCard = View.getSelectedGodCards().indexOf(View.getColoredGodCard());
+        int posColoredCard = View.getGameBoard().getSelectedGodCards().indexOf(View.getGameBoard().getColoredGodCard());
         if (posColoredCard == 0)
-            posColoredCard = View.getPlayersNum();
-        View.setColoredGodCard(View.getSelectedGodCards().get(posColoredCard-1));
+            posColoredCard = View.getPlayer().getPlayersNum();
+        View.getGameBoard().setColoredGodCard(View.getGameBoard().getSelectedGodCards().get(posColoredCard-1));
+        View.doUpdate();
         return false;
     }
 
@@ -118,9 +122,10 @@ public class ACommand implements CommandCharacter {
      */
     @Override
     public boolean executeSelectingGodCardsStatus() {
-        ArrayList<String> godCards=View.getGodCards();
+        ArrayList<String> godCards=View.getGameBoard().getMatchCards();
 
-        View.setColoredGodCard(godCards.get(abs(godCards.indexOf(View.getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
+        View.getGameBoard().setColoredGodCard(godCards.get(abs(godCards.indexOf(View.getGameBoard().getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
+        View.doUpdate();
         return false;
     }
 

@@ -1,8 +1,7 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
-import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.CardinalDirection;
-import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
 
 public class WCommand implements CommandCharacter {
@@ -22,15 +21,16 @@ public class WCommand implements CommandCharacter {
     @Override
     public boolean executePlacingWorkerStatus() {
 
-        Position coloredPosition = View.getColoredPosition();
+        Position coloredPosition = View.getGameBoard().getColoredPosition();
 
         while (true) {
             coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
-            if (View.getPlacingAvailableCells().contains(coloredPosition)) {
-                View.setColoredPosition(coloredPosition);
+            if (View.getGameBoard().getPlacingAvailableCells().contains(coloredPosition)) {
+                View.getGameBoard().setColoredPosition(coloredPosition);
                 break;
             }
         }
+        View.doUpdate();
         return false;
     }
 
@@ -57,16 +57,17 @@ public class WCommand implements CommandCharacter {
     @Override
     public boolean executeRunningStatus() {
 
-        Position coloredPosition = View.getColoredPosition();
+        Position coloredPosition = View.getGameBoard().getColoredPosition();
 
-        if (View.getStartingPosition()!=null) {
-            CardinalDirection offset = View.getStartingPosition().checkMutualPosition(coloredPosition);
+        if (View.getGameBoard().getStartingPosition()!=null) {
+            CardinalDirection offset = View.getGameBoard().getStartingPosition().checkMutualPosition(coloredPosition);
             if (offset == CardinalDirection.WEST ||
                     offset == CardinalDirection.SOUTHWEST ||
                     offset == CardinalDirection.EAST ||
                     offset == CardinalDirection.SOUTHEAST)
-                View.setColoredPosition(View.getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.NORTH));
+                View.getGameBoard().setColoredPosition(View.getGameBoard().getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.NORTH));
         }
+        View.doUpdate();
         return false;
     }
 

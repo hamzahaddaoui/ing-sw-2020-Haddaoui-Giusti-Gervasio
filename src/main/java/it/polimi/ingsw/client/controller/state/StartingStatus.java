@@ -1,10 +1,8 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
-import it.polimi.ingsw.utilities.MessageEvent;
 
 
 public class StartingStatus extends ControlState {

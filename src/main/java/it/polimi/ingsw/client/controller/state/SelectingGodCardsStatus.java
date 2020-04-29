@@ -1,10 +1,9 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
-import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
 public class SelectingGodCardsStatus extends ControlState {
@@ -18,7 +17,7 @@ public class SelectingGodCardsStatus extends ControlState {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
-        if(View.getGodCards() == null)
+        if(View.getGameBoard().getMatchCards() == null)
             throw new IllegalArgumentException(" MatchCards is empty");
 
         if(viewObject == null)

@@ -1,15 +1,16 @@
 package it.polimi.ingsw.client.view;
 
+import it.polimi.ingsw.client.controller.state.InsertCharacter;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.PlayerState;
-import it.polimi.ingsw.utilities.TurnState;
 import it.polimi.ingsw.utilities.*;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class View extends Observable<Object> implements Observer<MessageEvent> {
 
@@ -19,12 +20,12 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     private Scanner scanner;
     private DataInputStream dataInputStream;
     private PrintStream outputStream;
-
-    private static char inputCharacter;
+    private char inputCharacter;
+    private InsertCharacter insertCharacter;
     private static boolean active = false;
 
-    private GameBoard gameBoard;
-    private Player player;
+    private static GameBoard gameBoard;
+    private static Player player;
 
     @Override // lato NETWORK HANDLER
     public void update(MessageEvent messageEvent) {
@@ -67,20 +68,25 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
                 if(player.getPlayerState()== PlayerState.ACTIVE)
                     switch(player.getTurnState()){
                         case IDLE:{
-                        gameBoard.setColoredPosition(gameBoard.getWorkersPositions().stream().findAny().get());
-                    }
+                            gameBoard.setColoredPosition(gameBoard.getWorkersPositions().stream().findAny().get());
+                        }
                         case MOVE:{
-                        gameBoard.setColoredPosition(gameBoard.getWorkersAvailableCells().get(gameBoard.getStartingPosition()).stream().findAny().get());
-                    }
+                            gameBoard.setColoredPosition(gameBoard.getWorkersAvailableCells().get(gameBoard.getStartingPosition()).stream().findAny().get());
+                        }
                         case BUILD:{
-                        gameBoard.setColoredPosition(gameBoard.getWorkersAvailableCells().get(gameBoard.getStartingPosition()).stream().findAny().get());
-                    }
+                            gameBoard.setColoredPosition(gameBoard.getWorkersAvailableCells().get(gameBoard.getStartingPosition()).stream().findAny().get());
+                        }
+                }
+                else if(player.getPlayerState() == PlayerState.LOST || player.getPlayerState() == PlayerState.WIN){
+                    active = false;
+                }
             }
-    }
+            case FINISHED:
+                active = false;
         }
     }
 
-    public void fetchingInit(MessageEvent messageEvent){
+    public static void fetchingInit(MessageEvent messageEvent){
         if(messageEvent.getPlayerID() != null && messageEvent.getPlayerID() != player.getPlayerID()){
             player.setPlayerID(messageEvent.getPlayerID());
         }
@@ -90,6 +96,9 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     }
 
     public void fetching(MessageEvent messageEvent){
+        if(messageEvent.getMatchID() != null && messageEvent.getMatchID() != player.getMatchID()){
+            player.setMatchID(messageEvent.getMatchID());
+        }
         if(messageEvent.getMatchState() != player.getMatchState() && messageEvent.getMatchState() != null){
             player.setMatchState(messageEvent.getMatchState());
         }
@@ -122,21 +131,23 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         }
     }
 
-    public void doUpdate(){
+    public static void doUpdate(){
         executorUpdate.submit(()-> view());
     }
 
-    public void view(){
+    public static void view(){
         // mostra la visione a schermo a seconda del differente stato del Match o del player
     }
 
     public void inputListener(){
         try{
-            scanner.close();
             dataInputStream = new DataInputStream(System.in);
+            scanner.close();
             while(active){
                 inputCharacter = dataInputStream.readChar();
-                notify(inputCharacter);
+                if(commute(inputCharacter))
+                    notify(insertCharacter);
+                else outputStream.println("Errore di inserimento...");
             }
             dataInputStream.close();
         }
@@ -159,6 +170,15 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         }
     }
 
+    private boolean commute(char inputCharacter){
+        List<InsertCharacter> insertCharacters = Arrays.stream(InsertCharacter.values()).filter(insertCharacter1 -> insertCharacter1.equals(inputCharacter)).collect(Collectors.toList());
+        if(insertCharacters != null){
+            insertCharacter = insertCharacters.get(0);
+            return true;
+        }
+        else return false;
+    }
+
     public void init(){   // -> insert IP
         gameBoard = new GameBoard();
         player = new Player();
@@ -179,19 +199,12 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         notify(player.getNickname());
     }
 
-    public GameBoard getGameBoard() {
+    public static GameBoard getGameBoard() {
         return gameBoard;
     }
 
-    public void setGameBoard(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
-    }
-
-    public Player getPlayer() {
+    public static Player getPlayer() {
         return player;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 }
