@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
+import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.CardinalDirection;
 import it.polimi.ingsw.utilities.Position;
@@ -20,13 +21,18 @@ public class WCommand implements CommandCharacter {
      */
     @Override
     public boolean executePlacingWorkerStatus() {
+        GameBoard gameBoard = View.getGameBoard();
+        Position coloredPosition = gameBoard.getColoredPosition();
 
-        Position coloredPosition = View.getGameBoard().getColoredPosition();
+        if(coloredPosition == null)
+            throw new IllegalArgumentException(" Colored position is null");
+        if(gameBoard.getPlacingAvailableCells() == null)
+            throw new IllegalArgumentException(" Placing Available cell is null");
 
         while (true) {
             coloredPosition.setX(checkCorrectCoordinate(coloredPosition.getX()));
-            if (View.getGameBoard().getPlacingAvailableCells().contains(coloredPosition)) {
-                View.getGameBoard().setColoredPosition(coloredPosition);
+            if (gameBoard.getPlacingAvailableCells().contains(coloredPosition)) {
+                gameBoard.setColoredPosition(coloredPosition);
                 break;
             }
         }
@@ -41,8 +47,11 @@ public class WCommand implements CommandCharacter {
      * @return  correct X coordinate
      */
     private int checkCorrectCoordinate(int coordinate){
+        if(coordinate>4 || coordinate <0)
+            throw new IllegalArgumentException(" Illegal coordinate! ");
         coordinate--;
-        if(coordinate<0) coordinate+=5;
+        if(coordinate<0)
+            coordinate+=5;
         return coordinate;
     }
 

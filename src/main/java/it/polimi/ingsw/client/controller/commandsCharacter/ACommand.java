@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
+import it.polimi.ingsw.client.view.GameBoard;
+import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.CardinalDirection;
 import it.polimi.ingsw.utilities.Position;
@@ -18,9 +20,15 @@ public class ACommand implements CommandCharacter {
      */
     @Override
     public boolean executeNumberStatus() {
-        ArrayList<Integer> coloredPlayersNum = View.getPlayer().getColoredPlayersNum();
+        Player player = View.getPlayer();
+        ArrayList<Integer> coloredPlayersNum = player.getColoredPlayersNum();
 
-        View.getPlayer().setPlayersNum(coloredPlayersNum.get(abs(coloredPlayersNum.indexOf(View.getPlayer().getPlayersNum()) - 1) % coloredPlayersNum.size()));
+        if(player.getPlayersNum() == null)
+            throw new IllegalArgumentException(" Players Num is empty.");
+        if(player.getColoredPlayersNum() == null)
+            throw new IllegalArgumentException(" Colored Players num is empty.");
+
+        player.setPlayersNum(coloredPlayersNum.get(abs(coloredPlayersNum.indexOf(player.getPlayersNum()) - 1) % coloredPlayersNum.size()));
         View.doUpdate();
         return false;
     }
@@ -33,13 +41,18 @@ public class ACommand implements CommandCharacter {
      */
     @Override
     public boolean executePlacingWorkerStatus() {
+        GameBoard gameBoard = View.getGameBoard();
+        Position coloredPosition = gameBoard.getColoredPosition();
 
-        Position coloredPosition = View.getGameBoard().getColoredPosition();
+        if(coloredPosition == null)
+            throw new IllegalArgumentException(" Colored position is null");
+        if(gameBoard.getPlacingAvailableCells() == null)
+            throw new IllegalArgumentException(" Placing Available cell is null");
 
         while (true) {
             coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
-            if (View.getGameBoard().getPlacingAvailableCells().contains(coloredPosition)) {
-                View.getGameBoard().setColoredPosition(coloredPosition);
+            if (gameBoard.getPlacingAvailableCells().contains(coloredPosition)) {
+                gameBoard.setColoredPosition(coloredPosition);
                 break;
             }
         }
@@ -55,8 +68,12 @@ public class ACommand implements CommandCharacter {
      * @return  correct Y coordinate
      */
     private int checkCorrectCoordinate(int coordinate) {
+        if(coordinate>4 || coordinate <0)
+            throw new IllegalArgumentException(" Illegal coordinate! ");
+
         coordinate--;
-        if(coordinate<0) coordinate+=5;
+        if(coordinate<0)
+            coordinate+=5;
         return coordinate;
     }
 
@@ -107,10 +124,11 @@ public class ACommand implements CommandCharacter {
      */
     @Override
     public boolean executeSpecialCommandsStatus() {
-        int posColoredCard = View.getGameBoard().getSelectedGodCards().indexOf(View.getGameBoard().getColoredGodCard());
+        GameBoard gameBoard = View.getGameBoard();
+        int posColoredCard = gameBoard.getSelectedGodCards().indexOf(gameBoard.getColoredGodCard());
         if (posColoredCard == 0)
             posColoredCard = View.getPlayer().getPlayersNum();
-        View.getGameBoard().setColoredGodCard(View.getGameBoard().getSelectedGodCards().get(posColoredCard-1));
+        gameBoard.setColoredGodCard(gameBoard.getSelectedGodCards().get(posColoredCard-1));
         View.doUpdate();
         return false;
     }
@@ -122,9 +140,15 @@ public class ACommand implements CommandCharacter {
      */
     @Override
     public boolean executeSelectingGodCardsStatus() {
-        ArrayList<String> godCards=View.getGameBoard().getMatchCards();
+        GameBoard gameBoard = View.getGameBoard();
+        ArrayList<String> godCards = gameBoard.getMatchCards();
 
-        View.getGameBoard().setColoredGodCard(godCards.get(abs(godCards.indexOf(View.getGameBoard().getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
+        if(godCards == null)
+            throw new IllegalArgumentException(" GodCards is empty ");
+        if(gameBoard.getColoredGodCard() == null)
+            throw new IllegalArgumentException(" Colored GodCard is empty ");
+
+        gameBoard.setColoredGodCard(godCards.get(abs(godCards.indexOf(gameBoard.getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
         View.doUpdate();
         return false;
     }

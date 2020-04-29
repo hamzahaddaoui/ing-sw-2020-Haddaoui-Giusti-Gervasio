@@ -21,7 +21,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
         //checkInput(messageEvent);
     }
 
-
     public void checkInput(MessageEvent messageEvent){
         State controllerBehaviour;
         Integer playerID = messageEvent.getPlayerID();

@@ -11,7 +11,6 @@ public class GameBoard {
 
     private ArrayList<String> selectedGodCards; // usate per la Selection Special Command
     private ArrayList<String> matchCards; //date dal Server, usate per la Selecting God Card
-
     private String coloredGodCard;
 
     private Map<Position, Cell> billboardStatus;

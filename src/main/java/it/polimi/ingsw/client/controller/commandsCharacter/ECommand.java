@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller.commandsCharacter;
 
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
 
 import java.util.ArrayList;
@@ -50,18 +51,29 @@ public class ECommand implements CommandCharacter {
      */
     @Override
     public boolean executeSelectingGodCardsStatus() {
-        String coloredGodCard = View.getGameBoard().getColoredGodCard();
-        ArrayList<String> godCards = View.getGameBoard().getMatchCards();
-        ArrayList<String> selectedGodCards = View.getGameBoard().getSelectedGodCards();
+        GameBoard gameBoard = View.getGameBoard();
+        String coloredGodCard = gameBoard.getColoredGodCard();
+        ArrayList<String> godCards = gameBoard.getMatchCards();
+        ArrayList<String> selectedGodCards = gameBoard.getSelectedGodCards();
 
+        if(godCards == null){
+            throw new IllegalArgumentException(" godCards empty ");
+        }
+        if(selectedGodCards == null){
+            throw new IllegalArgumentException(" selectedGodCards empty ");
+        }
+        if(coloredGodCard == null){
+            throw new IllegalArgumentException(" None card selected ");
+        }
         if(!selectedGodCards.contains(coloredGodCard)){
             throw new IllegalArgumentException(" This card is not in the SelectedCard Deck ");
         }
 
-        if(coloredGodCard != null && selectedGodCards.size() > 0 && selectedGodCards.contains(coloredGodCard)){
+
+        if(selectedGodCards.contains(coloredGodCard)){
             selectedGodCards.remove(selectedGodCards.indexOf(coloredGodCard));
             godCards.add(coloredGodCard);
-            View.getGameBoard().setColoredGodCard(godCards.get(0));
+            gameBoard.setColoredGodCard(godCards.get(0));
         }
         View.doUpdate();
         return false;
