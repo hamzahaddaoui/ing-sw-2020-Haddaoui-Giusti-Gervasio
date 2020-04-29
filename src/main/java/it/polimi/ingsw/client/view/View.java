@@ -27,7 +27,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     private static GameBoard gameBoard;
     private static Player player;
 
-    @Override // lato NETWORK HANDLER
+    @Override
     public void update(MessageEvent messageEvent) {
         if(messageEvent.getError()) insertNickName();
         else if(!active && !messageEvent.getError()){
