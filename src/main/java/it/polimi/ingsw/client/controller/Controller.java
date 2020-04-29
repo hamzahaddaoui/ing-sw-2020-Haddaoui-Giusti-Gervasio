@@ -1,9 +1,6 @@
 package it.polimi.ingsw.client.controller;
 
-
-import com.google.gson.Gson;
-import it.polimi.ingsw.client.Player;
-import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.view.*;
 import it.polimi.ingsw.client.controller.state.ControlState;
 import it.polimi.ingsw.client.controller.state.StartingStatus;
 import it.polimi.ingsw.utilities.MatchState;
@@ -30,7 +27,8 @@ public class Controller extends Observable<MessageEvent> implements Observer {
 
         messageReady = false;
 
-        PlayerState newPlayerState = Player.getPlayerState();
+
+        PlayerState newPlayerState = View..getPlayerState();
         MatchState newMatchState = Player.getMatchState();
 
         // CASO if -> sono nel inserimento Nickname

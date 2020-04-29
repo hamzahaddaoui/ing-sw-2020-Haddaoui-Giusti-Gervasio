@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.client.view;
 
 import it.polimi.ingsw.utilities.Cell;
 import it.polimi.ingsw.utilities.Position;

@@ -1,12 +1,11 @@
 package it.polimi.ingsw.client.controller.state;
 
+import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.utilities.MatchState;
-import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
-import it.polimi.ingsw.utilities.Position;
 
 public class SelectingSpecialCommandStatus extends ControlState {
 
@@ -16,7 +15,7 @@ public class SelectingSpecialCommandStatus extends ControlState {
         if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
 
-        if(View.getGodCards() == null)
+        if(GameBoard.getMatchCards() == null)
             throw new IllegalArgumentException(" GodCards is empty");
 
             InsertCharacter characterView = (InsertCharacter) viewObject;
@@ -29,8 +28,8 @@ public class SelectingSpecialCommandStatus extends ControlState {
         if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.PLACING_WORKERS){
             ctrl.setState(new PlacingWorkersStatus());
 
-            if(View.getColoredPosition()==null)
-                View.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
+            if(GameBoard.getColoredPosition()==null)
+                GameBoard.setColoredPosition(View.getPlacingAvailableCells().stream().findAny().get());
         }
         else ctrl.setState(new WaitingStatus());
     }
