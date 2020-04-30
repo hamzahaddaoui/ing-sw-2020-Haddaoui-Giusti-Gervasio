@@ -68,7 +68,9 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
                 if(player.getPlayerState()== PlayerState.ACTIVE)
                     switch(player.getTurnState()){
                         case IDLE:{
-                            gameBoard.setColoredPosition(gameBoard.getWorkersPositions().stream().findAny().get());
+                            if(gameBoard.getWorkersAvailableCells().size()>0)
+                                gameBoard.setStartingPosition(gameBoard.getWorkersAvailableCells().keySet().stream().findAny().get());
+                            gameBoard.setColoredPosition(gameBoard.getStartingPosition());
                         }
                         case MOVE:{
                             gameBoard.setColoredPosition(gameBoard.getWorkersAvailableCells().get(gameBoard.getStartingPosition()).stream().findAny().get());
@@ -147,7 +149,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
                 inputCharacter = dataInputStream.readChar();
                 if(commute(inputCharacter))
                     notify(insertCharacter);
-                else outputStream.println("Errore di inserimento...");
+                else outputStream.println("Inserimento errato...");
             }
             dataInputStream.close();
         }
@@ -171,20 +173,20 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     }
 
     private boolean commute(char inputCharacter){
-        List<InsertCharacter> insertCharacters = Arrays.stream(InsertCharacter.values()).filter(insertCharacter1 -> insertCharacter1.equals(inputCharacter)).collect(Collectors.toList());
-        if(insertCharacters != null){
-            insertCharacter = insertCharacters.get(0);
+        InsertCharacter insertCharacters = Arrays.stream(InsertCharacter.values()).filter(insertCharacter1 -> insertCharacter1.equals(inputCharacter)).findFirst().get();
+        if(insertCharacters == null){
+            insertCharacter = insertCharacters;
             return true;
         }
         else return false;
     }
 
     public void init(){   // -> insert IP
-        gameBoard = new GameBoard();
+        active = false;
         player = new Player();
+        gameBoard = new GameBoard();
         scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
-        active = false;
         outputStream.println( "Insert your ip : ");
         player.setIp(scanner.nextLine());
         outputStream.println( "Insert your nickname : ");
@@ -207,4 +209,10 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         return player;
     }
 
+    public static View constructor(){
+        active = false;
+        player = new Player();
+        gameBoard = new GameBoard();
+        return new View();
+    }
 }

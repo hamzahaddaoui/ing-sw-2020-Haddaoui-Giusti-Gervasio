@@ -1,17 +1,18 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
+import it.polimi.ingsw.client.view.GameBoard;
+import it.polimi.ingsw.client.view.Player;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 
-import static java.lang.StrictMath.abs;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SelectingGodCardsStatusTest {
@@ -26,8 +27,10 @@ class SelectingGodCardsStatusTest {
     InsertCharacter inputEnter = InsertCharacter.ENTER;
     InsertCharacter commandCharacter;
 
-    View view = new View();
+    View view = View.constructor();
     Controller controller = new Controller();
+    Player player = View.getPlayer();
+    GameBoard gameBoard = View.getGameBoard();
     ControlState ctrlStatus = new SelectingGodCardsStatus();
     ArrayList<String> godCards = new ArrayList<>() ;
 
@@ -45,86 +48,90 @@ class SelectingGodCardsStatusTest {
 
         controller.setState(ctrlStatus);
 
-        view.setGodCards(godCards);
-        view.setColoredGodCard(View.getGodCards().get(0));
-        view.setSelectedGodCards(new ArrayList<>());
-        view.setPlayersNum(2);
-    }
+        gameBoard.setMatchCards(new HashSet<>(godCards));
+        gameBoard.setColoredGodCard(gameBoard.getMatchCards().get(0));
+        player.setPlayersNum(2);
 
-    @Test
-    void processingMessageA() {
-        commandCharacter = inputA;
-        ctrlStatus.processingMessage(commandCharacter);
-
-        assertEquals(view.getColoredGodCard(),view.getGodCards().get(view.getGodCards().size() -  1));
-        assertEquals(controller.isMessageReady(),false);
-
-        ctrlStatus.processingMessage(commandCharacter);
-
-        assertEquals(view.getColoredGodCard(),view.getGodCards().get(view.getGodCards().size() - 2));
-        assertEquals(controller.isMessageReady(),false);
-
-        ctrlStatus.processingMessage(commandCharacter);
-
-        assertEquals(view.getColoredGodCard(),view.getGodCards().get(view.getGodCards().size() - 3));
-        assertEquals(controller.isMessageReady(),false);
+        System.out.println("\n"+gameBoard.getMatchCards()+"\n");
     }
 
     @Test
     void processingMessageD() {
         commandCharacter = inputD;
-
+        gameBoard.setColoredGodCard(gameBoard.getMatchCards().get(gameBoard.getMatchCards().size() -  1));
+        System.out.println(gameBoard.getColoredGodCard());
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getColoredGodCard(),view.getGodCards().get(1));
+        assertEquals(gameBoard.getColoredGodCard(),gameBoard.getMatchCards().get(0));
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getColoredGodCard(),view.getGodCards().get(2));
+        assertEquals(gameBoard.getColoredGodCard(),gameBoard.getMatchCards().get(1));
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getColoredGodCard(),view.getGodCards().get(3));
+        assertEquals(gameBoard.getColoredGodCard(),gameBoard.getMatchCards().get(2));
+        assertEquals(controller.isMessageReady(),false);
+    }
+
+    @Test
+    void processingMessageA() {
+        commandCharacter = inputA;
+        System.out.println(gameBoard.getColoredGodCard());
+        gameBoard.setColoredGodCard(gameBoard.getMatchCards().get(0));
+        ctrlStatus.processingMessage(commandCharacter);
+
+        assertEquals(gameBoard.getColoredGodCard(),gameBoard.getMatchCards().get(gameBoard.getMatchCards().size() -  1));
+        assertEquals(controller.isMessageReady(),false);
+
+        ctrlStatus.processingMessage(commandCharacter);
+
+        assertEquals(gameBoard.getColoredGodCard(),gameBoard.getMatchCards().get(gameBoard.getMatchCards().size() -  2));
+        assertEquals(controller.isMessageReady(),false);
+
+        ctrlStatus.processingMessage(commandCharacter);
+
+        assertEquals(gameBoard.getColoredGodCard(),gameBoard.getMatchCards().get(gameBoard.getMatchCards().size() -  3));
         assertEquals(controller.isMessageReady(),false);
     }
 
     @Test
     void processingMessageEnterOrE() {
         commandCharacter = inputEnter;
-        assertTrue( view.getColoredGodCard() != null);
-        assertTrue( view.getGodCards() != null);
-        assertTrue( view.getColoredGodCard() != null);
+        assertTrue( gameBoard.getColoredGodCard() != null);
+        assertTrue( gameBoard.getMatchCards() != null);
+        assertTrue( gameBoard.getColoredGodCard() != null);
         //System.out.println(view.getGodCards().size());
 
         ctrlStatus.processingMessage(commandCharacter);
         //System.out.println(view.getGodCards().size());
 
-        assertTrue(view.getSelectedGodCards().size() == 1);
-        assertTrue( view.getGodCards().size() == 8);
-        assertEquals(view.getColoredGodCard(),View.getGodCards().get(0));
+        assertTrue(gameBoard.getSelectedGodCards().size() == 1);
+        assertTrue( gameBoard.getMatchCards().size() == 8);
+        assertEquals(gameBoard.getColoredGodCard(),gameBoard.getMatchCards().get(0));
 
         commandCharacter = inputE;
-        view.setColoredGodCard(View.getSelectedGodCards().stream().findAny().get());
+        gameBoard.setColoredGodCard(gameBoard.getSelectedGodCards().stream().findAny().get());
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue( view.getGodCards().size() == 9);
-        assertTrue( view.getColoredGodCard() != null);
+        assertTrue( gameBoard.getMatchCards().size() == 9);
+        assertTrue( gameBoard.getColoredGodCard() != null);
 
-        assertThrows( NoSuchElementException.class , () -> view.setColoredGodCard(View.getSelectedGodCards().stream().findAny().get()));
+        assertThrows( NoSuchElementException.class , () -> gameBoard.setColoredGodCard(gameBoard.getSelectedGodCards().stream().findAny().get()));
 
         commandCharacter = inputEnter;
-        view.setColoredGodCard(View.getGodCards().stream().findAny().get());
+        gameBoard.setColoredGodCard(gameBoard.getMatchCards().stream().findAny().get());
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(view.getSelectedGodCards().size() == 1);
-        assertTrue( view.getGodCards().size() == 8);
+        assertTrue(gameBoard.getSelectedGodCards().size() == 1);
+        assertTrue( gameBoard.getMatchCards().size() == 8);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertTrue(view.getSelectedGodCards().size() == 2);
-        assertTrue( view.getGodCards().size() == 7);
+        assertTrue(gameBoard.getSelectedGodCards().size() == 2);
+        assertTrue( gameBoard.getMatchCards().size() == 7);
     }
 
     @Test

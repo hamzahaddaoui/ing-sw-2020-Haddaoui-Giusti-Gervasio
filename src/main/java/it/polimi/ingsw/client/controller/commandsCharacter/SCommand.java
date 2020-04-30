@@ -36,6 +36,7 @@ public class SCommand implements CommandCharacter {
                 break;
             }
         }
+        System.out.println("\nYou are on ( " + coloredPosition.getX() + " , " +coloredPosition.getY() + " )  cell   \n");
         View.doUpdate();
         return false;
     }

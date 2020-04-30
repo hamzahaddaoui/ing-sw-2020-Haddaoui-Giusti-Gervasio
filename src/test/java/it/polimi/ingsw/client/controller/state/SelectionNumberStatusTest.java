@@ -1,14 +1,16 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
+import it.polimi.ingsw.client.view.GameBoard;
+import it.polimi.ingsw.client.view.Player;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,10 +27,12 @@ class SelectionNumberStatusTest {
     InsertCharacter inputS = InsertCharacter.S;
     InsertCharacter inputEnter = InsertCharacter.ENTER;
     InsertCharacter commandCharacter;
-    View view = new View();
+    View view = View.constructor();
     Controller controller = new Controller();
     ControlState ctrlStatus = new SelectionNumberStatus();
     ArrayList<String> godCards = new ArrayList<String>();
+    Player player = view.getPlayer();
+    GameBoard gameBoard = view.getGameBoard();
 
     @BeforeEach
     void setUp(){
@@ -43,53 +47,55 @@ class SelectionNumberStatusTest {
         godCards.add("PROMETHEUS");
 
         controller.setState(ctrlStatus);
-        view.setGodCards(godCards);
-        view.setColoredPlayersNum(new ArrayList<>());
-        view.getColoredPlayersNum().add(2);
-        view.getColoredPlayersNum().add(3);
-        view.setPlayersNum(View.getColoredPlayersNum().get(0));
+        gameBoard.setMatchCards(new HashSet<>(godCards));
+        player.setColoredPlayersNum(new ArrayList<>());
+        player.getColoredPlayersNum().add(2);
+        player.getColoredPlayersNum().add(3);
+        player.setPlayersNum(player.getColoredPlayersNum().get(0));
+
+        System.out.println("\n"+player.getColoredPlayersNum()+"\n");
     }
 
     @Test
     void processingMessageA() {
         commandCharacter = inputA;
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),3);
+        assertEquals(player.getPlayersNum(),3);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),3);
+        assertEquals(player.getPlayersNum(),3);
     }
 
     @Test
     void processingMessageD() {
         commandCharacter = inputD;
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),3);
+        assertEquals(player.getPlayersNum(),3);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),3);
+        assertEquals(player.getPlayersNum(),3);
         assertEquals(controller.isMessageReady(),false);
     }
 
@@ -97,12 +103,12 @@ class SelectionNumberStatusTest {
     void processingMessageW() {
         commandCharacter = inputW;
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
@@ -110,12 +116,12 @@ class SelectionNumberStatusTest {
     void processingMessageS() {
         commandCharacter = inputS;
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
@@ -123,12 +129,12 @@ class SelectionNumberStatusTest {
     void processingMessageE() {
         commandCharacter = inputE;
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
@@ -136,12 +142,12 @@ class SelectionNumberStatusTest {
     void processingMessageQ() {
         commandCharacter = inputQ;
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
@@ -149,24 +155,29 @@ class SelectionNumberStatusTest {
     void processingMessageF() {
         commandCharacter = inputF;
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertEquals(controller.isMessageReady(),false);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
     @Test
     void processingMessageEnter() {
-        commandCharacter = inputEnter;
+        commandCharacter = inputD;
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),2);
 
         ctrlStatus.processingMessage(commandCharacter);
 
-        assertEquals(view.getPlayersNum(),2);
+        assertEquals(player.getPlayersNum(),3);
+
+        commandCharacter = inputEnter;
+        ctrlStatus.processingMessage(commandCharacter);
+
+        assertEquals(player.getPlayersNum(),3);
         assertTrue(ctrlStatus.processingMessage(commandCharacter));
     }
 
@@ -176,7 +187,7 @@ class SelectionNumberStatusTest {
         controller.setMatchState(MatchState.SELECTING_GOD_CARDS);
         controller.nextState();
 
-        assertEquals(View.getColoredGodCard(), View.getGodCards().get(0));
+        assertEquals(gameBoard.getColoredGodCard(), gameBoard.getMatchCards().get(0));
         assertEquals( controller.getControlState().getClass(), new SelectingGodCardsStatus().getClass() );
 
         controller.setPlayerState(PlayerState.IDLE);

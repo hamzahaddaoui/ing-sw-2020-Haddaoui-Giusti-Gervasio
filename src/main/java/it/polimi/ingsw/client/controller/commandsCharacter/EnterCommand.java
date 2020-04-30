@@ -20,9 +20,9 @@ public class EnterCommand implements CommandCharacter {
     public boolean executeNumberStatus() {
         Player player = View.getPlayer();
         if(player.getPlayersNum() == null)
-            throw new IllegalArgumentException(" Players num is empty.");
+            throw new IllegalArgumentException("Players num is empty.");
         Controller.getMessage().setPlayersNum(player.getPlayersNum());
-        System.out.println("Number selected");
+        System.out.println("Number selected: " + player.getPlayersNum());
         View.doUpdate();
         return true;
     }
@@ -41,10 +41,12 @@ public class EnterCommand implements CommandCharacter {
         Set<Position> workersPositions = gameBoard.getWorkersPositions();
         Set<Position> placingAvailableCells = gameBoard.getPlacingAvailableCells();
 
-        if(workersPositions == null)
+        if(workersPositions == null){
             gameBoard.setWorkersAvailableCells(new HashMap());
+            workersPositions = gameBoard.getWorkersPositions();
+        }
 
-        if(placingAvailableCells != null)
+        if(placingAvailableCells == null)
             throw new IllegalArgumentException(" placingAvailableCells is empty.");
         if(coloredPosition == null)
             throw new IllegalArgumentException(" coloredPosition is empty.");
@@ -54,16 +56,18 @@ public class EnterCommand implements CommandCharacter {
             throw new IllegalArgumentException(" Posizione non disponibile! ");
 
         if( placingAvailableCells.contains(coloredPosition) && !workersPositions.contains(coloredPosition)){
-            workersPositions.add(coloredPosition);
             placingAvailableCells.remove(coloredPosition);
+            gameBoard.getWorkersAvailableCells().put(coloredPosition, new HashSet<>());
             gameBoard.setColoredPosition(placingAvailableCells.stream().findFirst().get());
+            System.out.println("( "+coloredPosition.getX() + " , " +coloredPosition.getY() +" )  has been insert");
             if(workersPositions.size() == 2){
                 System.out.println("Placing done");
                 Controller.getMessage().setInitializedPositions(workersPositions);
                 View.doUpdate();
                 return true;
             }
-            System.out.println("Place the other worker");
+            if(workersPositions.size() == 1)
+                System.out.println("Place the other worker");
             View.doUpdate();
             return true;
         }
@@ -145,20 +149,24 @@ public class EnterCommand implements CommandCharacter {
         if(selectedGodCards.size() < playersNum){
             selectedGodCards.add(coloredGodCard);
             godCards.remove(godCards.indexOf(coloredGodCard));
+            System.out.println(coloredGodCard + " has been insert");
             if(selectedGodCards.size() < playersNum){
                 gameBoard.setColoredGodCard(godCards.get(0));
                 System.out.println("Select next card");
+                System.out.println("MatchCards "+godCards);
                 View.doUpdate();
                 return false;
             }
             else if(playersNum == selectedGodCards.size()){
                 Controller.getMessage().setGodCards(new HashSet<>(selectedGodCards));
                 System.out.println("Cards Selected.");
+                System.out.println("Your cards are "+ selectedGodCards);
                 gameBoard.setColoredGodCard(null);
                 View.doUpdate();
                 return true;
             }
         }
+        System.out.println("Colored Godcard is " + gameBoard.getColoredGodCard());
         View.doUpdate();
         return false;
     }

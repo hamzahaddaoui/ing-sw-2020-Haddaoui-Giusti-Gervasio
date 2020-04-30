@@ -74,7 +74,9 @@ public class ECommand implements CommandCharacter {
             selectedGodCards.remove(selectedGodCards.indexOf(coloredGodCard));
             godCards.add(coloredGodCard);
             gameBoard.setColoredGodCard(godCards.get(0));
+            System.out.println("\n"+coloredGodCard + " has been removed\n");
         }
+        System.out.println("MatchCards "+godCards);
         View.doUpdate();
         return false;
     }

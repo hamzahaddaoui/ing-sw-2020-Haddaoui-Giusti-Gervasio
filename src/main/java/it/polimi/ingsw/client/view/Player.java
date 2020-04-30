@@ -6,6 +6,7 @@ import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Player {
@@ -18,12 +19,12 @@ public class Player {
     private MatchState matchState;
     private TurnState turnState;
 
-    private ArrayList<Integer> coloredPlayersNum;
-    private Integer playersNum;
+    private ArrayList<Integer> coloredPlayersNum = new ArrayList<>();
+    private Integer playersNum = null;
 
-    private Map<Integer, String> matchPlayers;
-    private boolean terminateTurnAvailable;
-    private Map<Position, Boolean> specialFunctionAvailable;
+    private Map<Integer, String> matchPlayers = new HashMap<>();
+    private boolean terminateTurnAvailable = false;
+    private Map<Position, Boolean> specialFunctionAvailable = new HashMap<>();
 
     private boolean error = false;
 

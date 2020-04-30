@@ -1,8 +1,9 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.utilities.CardinalDirection;
+import it.polimi.ingsw.client.view.GameBoard;
+import it.polimi.ingsw.client.view.Player;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RunningStatusTest {
 
+    View view = View.constructor();
     Controller controller = new Controller();
     ControlState state;
     Set<Position> worker1 = new HashSet<>();
@@ -23,6 +25,8 @@ class RunningStatusTest {
     Map<Position,Boolean> availableMap = new HashMap<>();
     Position posWorker1 = new Position(1,1);
     Position posWorker2 = new Position(3,4);
+    Player player = view.getPlayer();
+    GameBoard gameBoard = view.getGameBoard();
 
     void settingAvailableCells() {
 

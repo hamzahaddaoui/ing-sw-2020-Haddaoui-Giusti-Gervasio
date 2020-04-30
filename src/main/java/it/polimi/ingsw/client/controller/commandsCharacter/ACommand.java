@@ -29,6 +29,7 @@ public class ACommand implements CommandCharacter {
             throw new IllegalArgumentException(" Colored Players num is empty.");
 
         player.setPlayersNum(coloredPlayersNum.get(abs(coloredPlayersNum.indexOf(player.getPlayersNum()) - 1) % coloredPlayersNum.size()));
+        System.out.println(  " You select match of n. player " + player.getPlayersNum());
         View.doUpdate();
         return false;
     }
@@ -56,7 +57,7 @@ public class ACommand implements CommandCharacter {
                 break;
             }
         }
-
+        System.out.println("\nYou are on ( " + coloredPosition.getX() + " , " +coloredPosition.getY() + " )  cell   \n");
         View.doUpdate();
         return false;
     }
@@ -141,6 +142,7 @@ public class ACommand implements CommandCharacter {
     @Override
     public boolean executeSelectingGodCardsStatus() {
         GameBoard gameBoard = View.getGameBoard();
+        Player player = View.getPlayer();
         ArrayList<String> godCards = gameBoard.getMatchCards();
 
         if(godCards == null)
@@ -149,6 +151,7 @@ public class ACommand implements CommandCharacter {
             throw new IllegalArgumentException(" Colored GodCard is empty ");
 
         gameBoard.setColoredGodCard(godCards.get(abs(godCards.indexOf(gameBoard.getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
+        System.out.println(  "\nYou select match of n."+ player.getPlayersNum()+ " player " );
         View.doUpdate();
         return false;
     }

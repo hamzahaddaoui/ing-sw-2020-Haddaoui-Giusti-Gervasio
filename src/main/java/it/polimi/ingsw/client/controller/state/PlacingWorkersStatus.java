@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
+import it.polimi.ingsw.utilities.Position;
 
 public class PlacingWorkersStatus extends ControlState {
 
@@ -21,7 +22,7 @@ public class PlacingWorkersStatus extends ControlState {
             throw new IllegalArgumentException(" PlacingAvailableCell is empty ");
 
         if(View.getGameBoard().getColoredPosition() == null)
-            throw new IllegalArgumentException(" ColoredPosition is empty ");
+            View.getGameBoard().setColoredPosition( View.getGameBoard().getPlacingAvailableCells().stream().findAny().get());
 
         if(!View.getGameBoard().getPlacingAvailableCells().contains(View.getGameBoard().getColoredPosition()))
             throw new IllegalArgumentException(" Colored Position is not in Placing Available Cells ");

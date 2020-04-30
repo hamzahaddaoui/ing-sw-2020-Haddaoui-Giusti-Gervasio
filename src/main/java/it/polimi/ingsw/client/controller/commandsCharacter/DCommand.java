@@ -26,6 +26,7 @@ public class DCommand implements CommandCharacter {
             throw new IllegalArgumentException(" Colored Players num is empty.");
 
         player.setPlayersNum(coloredPlayersNum.get((coloredPlayersNum.indexOf(player.getPlayersNum()) + 1) % coloredPlayersNum.size()));
+        System.out.println(  "\nYou select match of n."+ player.getPlayersNum()+ " player " );
         View.doUpdate();
         return false;
     }
@@ -47,13 +48,13 @@ public class DCommand implements CommandCharacter {
             throw new IllegalArgumentException(" Placing Available cell is null");
 
         while (true) {
-            System.out.println(coloredPosition);
             coloredPosition.setY(checkCorrectCoordinate(coloredPosition.getY()));
             if (gameBoard.getPlacingAvailableCells().contains(coloredPosition)) {
                 gameBoard.setColoredPosition(coloredPosition);
                 break;
             }
         }
+        System.out.println("\nYou are on ( " + coloredPosition.getX() + " , " +coloredPosition.getY() + " )  cell   \n");
         View.doUpdate();
         return false;
     }
@@ -144,6 +145,7 @@ public class DCommand implements CommandCharacter {
             throw new IllegalArgumentException(" Colored GodCard is empty ");
 
         gameBoard.setColoredGodCard(godCards.get((godCards.indexOf(gameBoard.getColoredGodCard()) + 1) % godCards.size()));
+        System.out.println("Colored Godcard is " + gameBoard.getColoredGodCard());
         View.doUpdate();
         return false;
     }
