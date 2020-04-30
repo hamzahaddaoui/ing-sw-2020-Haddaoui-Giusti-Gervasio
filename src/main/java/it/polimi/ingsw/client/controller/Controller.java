@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.controller;
 
 import it.polimi.ingsw.client.controller.state.ControlState;
 import it.polimi.ingsw.client.controller.state.StartingStatus;
+import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
@@ -40,9 +41,9 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         if(newMatchState == null && newPlayerState == null){
             reset();
         }
-        else if(newPlayerState != this.playerState || newMatchState != this.matchState){
-            this.playerState = newPlayerState;
-            this.matchState = newMatchState;
+        else if(newPlayerState != playerState || newMatchState != matchState){
+            playerState = newPlayerState;
+            matchState = newMatchState;
             nextState();
         }
 
@@ -53,9 +54,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
                 message.setPlayerID(View.getPlayer().getPlayerID());
             if (matchState != null)
                 message.setMatchID(View.getPlayer().getMatchID());
-            //invio il messaggio precedentemente compilato
             notify(message);
-            //dopo l'invio reset degli attributi del messaggio a null
             reset();
         }
 

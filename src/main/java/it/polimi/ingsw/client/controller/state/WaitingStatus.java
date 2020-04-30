@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.server.controller.state.GettingPlayersNum;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 
@@ -17,7 +18,9 @@ public class WaitingStatus extends ControlState {
 
     @Override
     public void nextState(Controller ctrl) {
-        if (ctrl.getMatchState() == MatchState.SELECTING_GOD_CARDS && ctrl.getPlayerState() == PlayerState.ACTIVE)
+        if (ctrl.getMatchState() == MatchState.GETTING_PLAYERS_NUM && ctrl.getPlayerState() == PlayerState.ACTIVE)
+            ctrl.setState(new SelectionNumberStatus());
+        else if (ctrl.getMatchState() == MatchState.SELECTING_GOD_CARDS && ctrl.getPlayerState() == PlayerState.ACTIVE)
             ctrl.setState(new SelectingGodCardsStatus());
         else if (ctrl.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND && ctrl.getPlayerState() == PlayerState.ACTIVE)
             ctrl.setState(new SelectingSpecialCommandStatus());
