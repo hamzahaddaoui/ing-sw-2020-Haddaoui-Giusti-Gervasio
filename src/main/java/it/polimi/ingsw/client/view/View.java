@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.view;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.controller.state.InsertCharacter;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
@@ -71,6 +72,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
                             if(gameBoard.getWorkersAvailableCells().size()>0)
                                 gameBoard.setStartingPosition(gameBoard.getWorkersAvailableCells().keySet().stream().findAny().get());
                             gameBoard.setColoredPosition(gameBoard.getStartingPosition());
+                            System.out.println("\nWait for your turn.\n");
                         }
                         case MOVE:{
                             gameBoard.setColoredPosition(gameBoard.getWorkersAvailableCells().get(gameBoard.getStartingPosition()).stream().findAny().get());

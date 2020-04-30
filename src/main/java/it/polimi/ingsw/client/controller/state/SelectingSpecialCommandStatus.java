@@ -14,19 +14,21 @@ public class SelectingSpecialCommandStatus extends ControlState {
         if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
 
-        if(View.getGameBoard().getMatchCards() == null)
-            throw new IllegalArgumentException(" GodCards is empty");
-
             InsertCharacter characterView = (InsertCharacter) viewObject;
             CommandCharacter commandCharacter = characterView.apply();
-            return commandCharacter.executeSpecialCommandsStatus();
+
+           try {
+               return commandCharacter.executeSpecialCommandsStatus();
+           } catch (IllegalArgumentException e) {
+               e.getMessage();
+               return false;
+           }
     }
 
     @Override
     public void nextState(Controller ctrl) {
-        if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.PLACING_WORKERS){
+        if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.PLACING_WORKERS)
             ctrl.setState(new PlacingWorkersStatus());
-        }
         else ctrl.setState(new WaitingStatus());
     }
 }

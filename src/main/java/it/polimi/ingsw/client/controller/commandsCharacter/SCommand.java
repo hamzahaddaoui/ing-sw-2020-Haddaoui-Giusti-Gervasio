@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.CardinalDirection;
 import it.polimi.ingsw.utilities.Position;
+import javafx.geometry.Pos;
 
 public class SCommand implements CommandCharacter {
 
@@ -65,16 +66,27 @@ public class SCommand implements CommandCharacter {
      * @return              always false, you can't notify the message yet
      */
     @Override
-    public boolean executeRunningStatus() {
-        Position coloredPosition = View.getGameBoard().getColoredPosition();
+    public boolean executeRunningStatus() throws IllegalArgumentException{
+        GameBoard gameBoard = View.getGameBoard();
+        Position coloredPosition = gameBoard.getColoredPosition();
+        Position startingPosition = gameBoard.getStartingPosition();
 
-        if (View.getGameBoard().getStartingPosition()!=null) {
-            CardinalDirection offset = View.getGameBoard().getStartingPosition().checkMutualPosition(coloredPosition);
+
+        if (startingPosition==null)
+            throw new IllegalArgumentException("command not available yet. Choose your worker first");
+        else{
+            CardinalDirection offset = startingPosition.checkMutualPosition(coloredPosition);
             if (offset == CardinalDirection.WEST ||
                     offset == CardinalDirection.NORTHWEST ||
                     offset == CardinalDirection.EAST ||
-                    offset == CardinalDirection.NORTHEAST)
-                View.getGameBoard().setColoredPosition(View.getGameBoard().getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.SOUTH));
+                    offset == CardinalDirection.NORTHEAST) {
+                gameBoard.setColoredPosition(coloredPosition.translateCardinalDirectionToPosition(CardinalDirection.SOUTH));
+                coloredPosition = gameBoard.getColoredPosition();
+                if (gameBoard.getWorkersAvailableCells(startingPosition).contains(coloredPosition))
+                    System.out.println("\nYou are now in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ") who's available for your worker");
+                else System.out.println("\nYou are now in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ") who's not available for your worker " +
+                    "so you can't select this position!"); }
+            else throw new IllegalArgumentException("you are trying to exit from your neighboring cells. Nice try! :)");
         }
         View.doUpdate();
         return false;
@@ -88,10 +100,5 @@ public class SCommand implements CommandCharacter {
     @Override
     public boolean executeSelectingGodCardsStatus() {
         return false;
-    }
-
-    @Override
-    public void executeWaitingStatus() {
-
     }
 }

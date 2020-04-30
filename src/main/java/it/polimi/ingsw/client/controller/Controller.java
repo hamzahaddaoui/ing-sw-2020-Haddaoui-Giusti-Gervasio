@@ -108,20 +108,20 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         message.setEndPosition(null);
         message.setEndTurn(null);
         message.setSpecialFunction(null);
-        message.setExit(false);
-        message.setMatchState(null);
-        message.setPlayerState(null);
-        message.setTurnState(null);
-        message.setError(false);
-        message.setMatchCards(null);
-        message.setAvailablePlacingCells(null);
-        message.setBillboardStatus(null);
-        message.setWorkersAvailableCells(null);
-        message.setTerminateTurnAvailable(null);
-        message.setSpecialFunctionAvailable(null);
-        message.setMatchPlayers(null);
-        message.setWinner(null);
-        message.setFinished(false);
+        //message.setExit(false);
+        //message.setMatchState(null);
+        //message.setPlayerState(null);
+        //message.setTurnState(null);
+        //message.setError(false);
+        //message.setMatchCards(null);
+        //message.setAvailablePlacingCells(null);
+        //message.setBillboardStatus(null);
+        //message.setWorkersAvailableCells(null);
+        //message.setTerminateTurnAvailable(null);
+        //message.setSpecialFunctionAvailable(null);
+        //message.setMatchPlayers(null);
+        //message.setWinner(null);
+        //message.setFinished(false);
     }
 
     /*

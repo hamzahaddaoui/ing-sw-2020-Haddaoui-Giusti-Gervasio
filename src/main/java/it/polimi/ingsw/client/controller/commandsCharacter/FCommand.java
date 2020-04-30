@@ -27,20 +27,21 @@ public class FCommand implements CommandCharacter {
      * @return              true if you can send the message, false otherwise
      */
     @Override
-    public boolean executeRunningStatus() {
+    public boolean executeRunningStatus() throws IllegalArgumentException {
         Position start = View.getGameBoard().getStartingPosition();
         MessageEvent msg = Controller.getMessage();
 
-        if (start!=null && View.getPlayer().isSpecialFunctionAvailable(start)) {
+        if (start == null)
+            throw new IllegalArgumentException("you need to choose the current worker first");
+
+        if (View.getPlayer().isSpecialFunctionAvailable(start)) {
             msg.setStartPosition(start);
             msg.setSpecialFunction(true);
+            System.out.println("\n You have chosen to enable the special function! \n");
             View.doUpdate();
             return true;
         }
-        else {
-            View.doUpdate();
-            return false;
-        }
+        else throw new IllegalArgumentException("the special function is not available for this worker");
     }
 
     @Override
@@ -51,11 +52,6 @@ public class FCommand implements CommandCharacter {
     @Override
     public boolean executeSelectingGodCardsStatus() {
         return false;
-    }
-
-    @Override
-    public void executeWaitingStatus() {
-
     }
 
 }

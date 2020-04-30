@@ -4,7 +4,9 @@ import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
+
 
 import java.util.*;
 
@@ -84,22 +86,34 @@ public class EnterCommand implements CommandCharacter {
      * @return              true if you can send the message, false otherwise
      */
     @Override
-    public boolean executeRunningStatus() {
+    public boolean executeRunningStatus() throws IllegalArgumentException{
+        GameBoard gameBoard = View.getGameBoard();
+        Position startingPosition = gameBoard.getStartingPosition();
+        Position coloredPosition = gameBoard.getColoredPosition();
+        MessageEvent message = Controller.getMessage();
 
-        if (View.getGameBoard().getStartingPosition()==null) {
-            View.getGameBoard().setStartingPosition(View.getGameBoard().getColoredPosition());
+        if (coloredPosition == null)
+            throw new IllegalArgumentException("position not set");
+
+        if (startingPosition==null) {
+            gameBoard.setStartingPosition(coloredPosition);
+            System.out.println("\nHai scelto il worker in posizione: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ")\n");
+            View.doUpdate();
             return false;
         }
-        else if (View.getGameBoard()
-                        .getWorkersAvailableCells(View.getGameBoard().getStartingPosition())
-                        .contains(View.getGameBoard().getColoredPosition())) {
-            Controller.getMessage().setStartPosition(View.getGameBoard().getStartingPosition());
-            Controller.getMessage().setEndPosition(View.getGameBoard().getColoredPosition());
-            View.getGameBoard().setStartingPosition(null);
-            View.getGameBoard().setColoredPosition(null);
+        else if (gameBoard
+                        .getWorkersAvailableCells(startingPosition)
+                        .contains(coloredPosition)) {
+            message.setStartPosition(startingPosition);
+            message.setEndPosition(coloredPosition);
+            gameBoard.setStartingPosition(null);
+            gameBoard.setColoredPosition(null);
+            System.out.println("\nHai selezionato la posizione (" + coloredPosition.getX() + "," + coloredPosition.getY() +
+                    ") per il tuo worker in posizione (" + startingPosition.getX() + "," + coloredPosition.getY() + ")\n");
+            View.doUpdate();
             return true;
         }
-        else return false;
+        else throw new IllegalArgumentException("position not available");
     }
 
     /**
@@ -109,14 +123,23 @@ public class EnterCommand implements CommandCharacter {
      * @return  true if the colored god card is contained in View's set of god cards, false otherwise
      */
     @Override
-    public boolean executeSpecialCommandsStatus() {
-        String coloredGodCard = View.getGameBoard().getColoredGodCard();
+    public boolean executeSpecialCommandsStatus() throws IllegalArgumentException{
+        GameBoard gameBoard = View.getGameBoard();
+        String coloredGodCard = gameBoard.getColoredGodCard();
+        ArrayList<String> selectedGodCards = gameBoard.getSelectedGodCards();
 
-        if (View.getGameBoard().getSelectedGodCards().contains(coloredGodCard)) {
+        if (coloredGodCard==null)
+            throw new IllegalArgumentException("there's no card selected");
+
+        if(selectedGodCards == null)
+            throw new IllegalArgumentException(" selected god cards is empty");
+
+        if (selectedGodCards.contains(coloredGodCard)) {
             Controller.getMessage().setGodCard(coloredGodCard);
+            View.doUpdate();
             return true;
         }
-        else return false;
+        else throw new IllegalArgumentException("card not present in selected god cards");
     }
 
     /**
@@ -170,10 +193,4 @@ public class EnterCommand implements CommandCharacter {
         View.doUpdate();
         return false;
     }
-
-    @Override
-    public void executeWaitingStatus() {
-
-    }
-
 }

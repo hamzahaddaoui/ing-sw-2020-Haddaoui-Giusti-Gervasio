@@ -27,16 +27,14 @@ public class ECommand implements CommandCharacter {
      * @return              true if you can send the message, false otherwise
      */
     @Override
-    public boolean executeRunningStatus() {
+    public boolean executeRunningStatus() throws IllegalArgumentException{
         if (View.getPlayer().isTerminateTurnAvailable()) {
             Controller.getMessage().setEndTurn(true);
+            System.out.println("\nYou have chosen to end your turn!\n");
             View.doUpdate();
             return true;
         }
-        else {
-            View.doUpdate();
-            return false;
-        }
+        else throw new IllegalArgumentException("you can't terminate your turn in this moment");
     }
 
     @Override
@@ -79,10 +77,6 @@ public class ECommand implements CommandCharacter {
         System.out.println("MatchCards "+godCards);
         View.doUpdate();
         return false;
-    }
-
-    @Override
-    public void executeWaitingStatus() {
     }
 
 }
