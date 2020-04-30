@@ -48,10 +48,11 @@ class ControllerTest {
         assertTrue(controller.getControlState().getClass() == StartingStatus.class);
         assertTrue(controller.isMessageReady());
 
+        //WAITING_FOR_PLAYERS
+
         player.setPlayerState(PlayerState.INITIALIZED);
         player.setMatchState(MatchState.WAITING_FOR_PLAYERS);
         controller.update(InsertCharacter.A);
-        //WAITING_FOR_PLAYERS
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
         assertTrue(!controller.isMessageReady());
@@ -90,11 +91,12 @@ class ControllerTest {
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
         assertTrue(!controller.isMessageReady());
+
+        //GETTING_PLAYERS_NUM
 
         player.setPlayerState(PlayerState.ACTIVE);
         player.setMatchState(MatchState.GETTING_PLAYERS_NUM);
         controller.update(InsertCharacter.A);
-        //GETTING_PLAYERS_NUM
 
         assertTrue(controller.getControlState().getClass() == SelectionNumberStatus.class);
         assertTrue(!controller.isMessageReady());
@@ -133,24 +135,25 @@ class ControllerTest {
 
         assertTrue(controller.getControlState().getClass() == SelectionNumberStatus.class);
         assertTrue(controller.isMessageReady());
-
+        
+        //SELECTING_GOD_CARDS
+        player.setPlayersNum(3);
         player.setPlayerState(PlayerState.ACTIVE);
         player.setMatchState(MatchState.SELECTING_GOD_CARDS);
         controller.update(InsertCharacter.A);
-        //SelectionNumberStatus
 
-        assertTrue(controller.getControlState().getClass() == SelectionNumberStatus.class);
+        assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
         assertTrue(!controller.isMessageReady());
 
         controller.update(InsertCharacter.A);
 
-        assertTrue(controller.getControlState().getClass() == SelectionNumberStatus.class);
+        assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
         assertTrue(!controller.isMessageReady());
 
         controller.update(InsertCharacter.ENTER);
 
-        assertTrue(controller.getControlState().getClass() == SelectionNumberStatus.class);
-        assertTrue(controller.isMessageReady());
+        assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
+        assertTrue(!controller.isMessageReady());
 
         player.setPlayerState(PlayerState.ACTIVE);
         player.setMatchState(MatchState.SELECTING_GOD_CARDS);
@@ -206,7 +209,11 @@ class ControllerTest {
         assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
         assertTrue(!controller.isMessageReady());
 
+        controller.update(InsertCharacter.ENTER);
 
+        assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
+        assertTrue(controller.isMessageReady());
+//SELECTING SPECIAL COMMANDS
 
     }
 }
