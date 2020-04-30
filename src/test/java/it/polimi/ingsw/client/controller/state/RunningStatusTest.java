@@ -25,8 +25,8 @@ class RunningStatusTest {
     Map<Position,Boolean> availableMap = new HashMap<>();
     Position posWorker1 = new Position(1,1);
     Position posWorker2 = new Position(3,4);
-    Player player = view.getPlayer();
-    GameBoard gameBoard = view.getGameBoard();
+    Player player = View.getPlayer();
+    GameBoard gameBoard = View.getGameBoard();
 
     void settingAvailableCells() {
 
@@ -56,7 +56,7 @@ class RunningStatusTest {
         state = controller.getControlState();
 
         settingAvailableCells();
-        View.setWorkersAvailableCells(testMap);
+        gameBoard.setWorkersAvailableCells(testMap);
     }
 
     @AfterEach
@@ -70,31 +70,37 @@ class RunningStatusTest {
 
     @Test
     void simulateTurn() {
-        View.setColoredPosition(posWorker1);
-        View.setStartingPosition(null);
+        gameBoard.setColoredPosition(posWorker1);
+        gameBoard.setStartingPosition(null);
         settingAvailableMap();
-        View.setSpecialFunctionAvailable(availableMap);
+        player.setSpecialFunctionAvailable(availableMap);
         MessageEvent msg = Controller.getMessage();
         ArrayList<Position> availableTest;
 
         state.processingMessage(InsertCharacter.D);
-        assertEquals(posWorker2,View.getColoredPosition());
+        assertEquals(posWorker2,gameBoard.getColoredPosition());
         state.processingMessage(InsertCharacter.A);
-        assertEquals(posWorker1,View.getColoredPosition());
+        assertEquals(posWorker1,gameBoard.getColoredPosition());
         state.processingMessage(InsertCharacter.A);
-        assertEquals(posWorker2,View.getColoredPosition());
+        assertEquals(posWorker2,gameBoard.getColoredPosition());
         state.processingMessage(InsertCharacter.ENTER);
         state.processingMessage(InsertCharacter.F);
-        assertEquals(posWorker2,View.getStartingPosition());
+        assertEquals(posWorker2,gameBoard.getStartingPosition());
         assertEquals(posWorker2,msg.getStartPosition());
         assertTrue(msg.getSpecialFunction());
-        availableTest = new ArrayList<Position>(View.getWorkersAvailableCells().get(View.getStartingPosition()));
-        View.setColoredPosition(availableTest.get(0));
-        assertEquals(new Position(4,4),View.getColoredPosition());
-        state.processingMessage(InsertCharacter.W);
-        assertEquals(new Position(4,4),View.getColoredPosition());
+        availableTest = new ArrayList<Position>(gameBoard.getWorkersAvailableCells().get(gameBoard.getStartingPosition()));
+        gameBoard.setColoredPosition(availableTest.get(0));
+        assertEquals(new Position(4,4),gameBoard.getColoredPosition());
+
+        try { state.processingMessage(InsertCharacter.W);
+        } catch (IllegalArgumentException ex) {
+            ex.getMessage();
+            assertEquals("you are trying to exit from your neighboring cells. Nice try! :)",ex.getMessage());
+        }
+
+        assertEquals(new Position(4,4),gameBoard.getColoredPosition());
         state.processingMessage(InsertCharacter.A);
-        assertEquals(new Position(4,3),View.getColoredPosition());
+        assertEquals(new Position(4,3),gameBoard.getColoredPosition());
         state.processingMessage(InsertCharacter.W);
         assertFalse(state.processingMessage(InsertCharacter.ENTER));
         state.processingMessage(InsertCharacter.S);
@@ -103,4 +109,9 @@ class RunningStatusTest {
         assertEquals(new Position(4,4),msg.getEndPosition());
     }
 
+    @Test
+    public void nextStateTest() {
+        state.nextState(controller);
+        assertEquals(WaitingStatus.class,controller.getControlState().getClass());
+    }
 }

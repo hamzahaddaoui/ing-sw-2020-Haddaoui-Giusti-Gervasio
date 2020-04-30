@@ -30,8 +30,8 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
 
     @Override
     public void update(MessageEvent messageEvent) {
-        if(messageEvent.getError()) insertNickName();
-        else if(!active && !messageEvent.getError()){
+        if(messageEvent.getError()!=null && messageEvent.getError()) insertNickName();
+        else if(!active && (messageEvent.getError()==null || !messageEvent.getError())){
             active = true;
             fetchingInit(messageEvent);
             fetching(messageEvent);
@@ -83,6 +83,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
                 }
                 else if(player.getPlayerState() == PlayerState.LOST || player.getPlayerState() == PlayerState.WIN){
                     active = false;
+                    Client.close();
                 }
             }
             case FINISHED:
@@ -124,7 +125,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         if(messageEvent.getWorkersAvailableCells() != gameBoard.getWorkersAvailableCells() && messageEvent.getWorkersAvailableCells()!=  null){
             gameBoard.setWorkersAvailableCells(messageEvent.getWorkersAvailableCells());
         }
-        if(messageEvent.getTerminateTurnAvailable() != player.isTerminateTurnAvailable() && messageEvent.getTerminateTurnAvailable() != null){
+        if( messageEvent.getTerminateTurnAvailable() != null && messageEvent.getTerminateTurnAvailable() != player.isTerminateTurnAvailable()){
             player.setTerminateTurnAvailable(messageEvent.getTerminateTurnAvailable());
         }
         if(messageEvent.getSpecialFunctionAvailable() != player.getSpecialFunctionAvailable() && messageEvent.getSpecialFunctionAvailable() != null){
@@ -175,12 +176,17 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     }
 
     private boolean commute(char inputCharacter){
-        InsertCharacter insertCharacters = Arrays.stream(InsertCharacter.values()).filter(insertCharacter1 -> insertCharacter1.equals(inputCharacter)).findFirst().get();
-        if(insertCharacters == null){
+        if (Set.of(InsertCharacter.values()).stream().anyMatch(insertCharacter1 -> insertCharacter1.getCode()==(int) inputCharacter)) {
+            insertCharacter = Set.of(InsertCharacter.values()).stream().filter(insertCharacter1 -> insertCharacter1.getCode()==(int) inputCharacter).findAny().get();
+            return true; }
+        else return false;
+
+        /*InsertCharacter insertCharacters = Arrays.stream(InsertCharacter.values()).filter(insertCharacter1 -> insertCharacter1.equals(inputCharacter)).findFirst().get();
+        if(insertCharacters==null){
             insertCharacter = insertCharacters;
             return true;
         }
-        else return false;
+        else return false;*/
     }
 
     public void init(){   // -> insert IP
@@ -217,4 +223,6 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         gameBoard = new GameBoard();
         return new View();
     }
+
+    public boolean isActive() { return active;}
 }

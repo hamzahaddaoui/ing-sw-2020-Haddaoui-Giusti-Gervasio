@@ -13,16 +13,19 @@ import java.util.concurrent.Executors;
 public class Client {
     static ExecutorService executor = Executors.newCachedThreadPool();
     static Socket server;
+    static NetworkHandler networkHandler;
+    static View view;
+    static Controller controller;
+    static Scanner scanner;
 
     public static void main(String[] args) {
-        NetworkHandler networkHandler;
-        View view = new View();
-        Controller controller = new Controller();
-        Scanner scanner;
+        view = new View();
+        controller = new Controller();
 
         //TODO COME GESTIRE LA CHIUSURA DEL SOCKET A FINE PARTITA
 
         try {
+            System.out.println("Inserisci indirizzo ip: ");
             scanner = new Scanner(System.in);
             String ip = scanner.next();
             networkHandler = new NetworkHandler(ip);
@@ -41,6 +44,17 @@ public class Client {
         view.init();
 
     }
+
+    public static void close() {
+        if (!view.isActive()) {
+            try {
+                networkHandler.stop();
+            } catch (IOException e) {
+                e.getMessage();
+            }
+        }
+    }
+
 
         /*while(view.isAlive()){
 

@@ -100,7 +100,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         message.setMatchID(null);
         message.setPlayerID(null);
         message.setNickname(null);
-        message.setPlayersNum(2);
+        message.setPlayersNum(null);
         message.setGodCards(null);
         message.setGodCard(null);
         message.setInitializedPositions(null);

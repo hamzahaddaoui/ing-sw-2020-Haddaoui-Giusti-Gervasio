@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client.controller;
 
 import it.polimi.ingsw.client.controller.state.InsertCharacter;
+import it.polimi.ingsw.client.view.GameBoard;
+import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +15,12 @@ import java.util.Set;
 class ControllerTest {
 
     Controller controller = new Controller();
-    View view = new View();
+    View view = View.constructor();
     Set<Position> pos = new HashSet<Position>();
     String stringMessage;
     InsertCharacter insertCharacter;
+    Player player = View.getPlayer();
+    GameBoard gameBoard = View.getGameBoard();
 
     void setCells() {
         for (int x = 0; x<5; x++)
@@ -26,9 +30,9 @@ class ControllerTest {
 
     @BeforeEach
     void initView() {
-        View.setColoredPlayersNum(new ArrayList<Integer>());
+        player.setColoredPlayersNum(new ArrayList<Integer>());
         setCells();
-        View.setPlacingAvailableCells(pos);
+        gameBoard.setPlacingAvailableCells(pos);
     }
 
 
@@ -36,8 +40,6 @@ class ControllerTest {
     @Test
     void update_Turn() {
         stringMessage = "LEO";
-        AssertEq();
         controller.update(stringMessage);
-
     }
 }

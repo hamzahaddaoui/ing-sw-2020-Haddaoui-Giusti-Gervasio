@@ -88,7 +88,6 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            while (true) {
                inputObject = (String) input.readObject();
                messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
-
                if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
                    notify(messageEvent);
                }

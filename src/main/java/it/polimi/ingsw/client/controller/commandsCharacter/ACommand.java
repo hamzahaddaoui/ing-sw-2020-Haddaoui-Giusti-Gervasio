@@ -142,7 +142,7 @@ public class ACommand implements CommandCharacter {
         if (godCards == null)
             throw new IllegalArgumentException("selected god cards is empty");
 
-        gameBoard.setColoredGodCard(godCards.get((godCards.indexOf(coloredCard) - 1) % godCards.size()));
+        gameBoard.setColoredGodCard(godCards.get(abs(godCards.indexOf(gameBoard.getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
         View.doUpdate();
         return false;
     }

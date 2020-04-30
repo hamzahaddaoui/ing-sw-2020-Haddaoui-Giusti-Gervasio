@@ -5,6 +5,12 @@ public class Cell {
     private boolean dome;
     private int playerID;
 
+    public Cell() {
+        towerHeight = 0;
+        dome = false;
+        playerID = 0;
+    }
+
     public int getTowerHeight(){
         return towerHeight;
     }

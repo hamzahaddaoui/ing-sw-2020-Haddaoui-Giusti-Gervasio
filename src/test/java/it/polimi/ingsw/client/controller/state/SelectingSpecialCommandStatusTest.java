@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.view.GameBoard;
+import it.polimi.ingsw.client.view.Player;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
@@ -16,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class SelectingSpecialCommandStatusTest {
 
     Controller controller = new Controller();
+    View view = View.constructor();
+    Player player = View.getPlayer();
+    GameBoard gameBoard = View.getGameBoard();
     ControlState state;
     InsertCharacter viewObject;
     Set<String> testingCards = new HashSet<String>();
@@ -28,13 +33,13 @@ class SelectingSpecialCommandStatusTest {
         testingCards.add("APOLLO");
         testingCards.add("ARTHEMIS");
 
-        View.setGodCards(testingCards);
-        View.setColoredGodCard("APOLLO");
-        View.setPlayersNum(2);
+        gameBoard.setSelectedGodCards(testingCards);
+        gameBoard.setColoredGodCard("APOLLO");
+        player.setPlayersNum(2);
     }
 
     @AfterEach
-    void tearDown() {View.setColoredGodCard("APOLLO");}
+    void tearDown() {gameBoard.setColoredGodCard("APOLLO");}
 
     @Test
     void processingMessage_String() {
@@ -45,14 +50,16 @@ class SelectingSpecialCommandStatusTest {
     void processingMessage_ACommand() {
         viewObject = InsertCharacter.A;
         state.processingMessage(viewObject);
-        assertEquals("ARTHEMIS",View.getColoredGodCard());
+        assertEquals("ARTHEMIS",gameBoard.getColoredGodCard());
     }
 
     @Test
     void processingMessage_DCommand() {
         viewObject = InsertCharacter.D;
         state.processingMessage(viewObject);
-        assertEquals("ARTHEMIS",View.getColoredGodCard());
+        assertEquals("ARTHEMIS",gameBoard.getColoredGodCard());
+        state.processingMessage(viewObject);
+        assertEquals("APOLLO",gameBoard.getColoredGodCard());
     }
 
     @Test

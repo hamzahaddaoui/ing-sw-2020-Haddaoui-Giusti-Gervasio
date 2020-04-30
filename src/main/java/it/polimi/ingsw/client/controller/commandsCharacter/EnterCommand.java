@@ -97,7 +97,7 @@ public class EnterCommand implements CommandCharacter {
 
         if (startingPosition==null) {
             gameBoard.setStartingPosition(coloredPosition);
-            System.out.println("\nHai scelto il worker in posizione: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ")\n");
+            System.out.println("\nYou've chosen the worker in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ")\n");
             View.doUpdate();
             return false;
         }
@@ -108,8 +108,8 @@ public class EnterCommand implements CommandCharacter {
             message.setEndPosition(coloredPosition);
             gameBoard.setStartingPosition(null);
             gameBoard.setColoredPosition(null);
-            System.out.println("\nHai selezionato la posizione (" + coloredPosition.getX() + "," + coloredPosition.getY() +
-                    ") per il tuo worker in posizione (" + startingPosition.getX() + "," + coloredPosition.getY() + ")\n");
+            System.out.println("\nYou've chosen the position (" + coloredPosition.getX() + "," + coloredPosition.getY() +
+                    ") for your worker in position (" + startingPosition.getX() + "," + coloredPosition.getY() + ")\n");
             View.doUpdate();
             return true;
         }
@@ -136,6 +136,7 @@ public class EnterCommand implements CommandCharacter {
 
         if (selectedGodCards.contains(coloredGodCard)) {
             Controller.getMessage().setGodCard(coloredGodCard);
+            System.out.println("\nYou've chosen " + coloredGodCard + "!\n");
             View.doUpdate();
             return true;
         }
