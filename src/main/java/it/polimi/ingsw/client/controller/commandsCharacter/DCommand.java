@@ -83,27 +83,35 @@ public class DCommand implements CommandCharacter {
      * @return              always false, you can't notify the message yet
      */
     @Override
-    public boolean executeRunningStatus() {
+    public boolean executeRunningStatus() throws IllegalArgumentException{
         GameBoard gameBoard = View.getGameBoard();
         Position coloredPosition = gameBoard.getColoredPosition();
+        Position startingPosition = gameBoard.getStartingPosition();
 
-        if (gameBoard.getStartingPosition() == null) {
+        if (startingPosition == null) {
+            Position finalColoredPosition = coloredPosition;
 
             gameBoard.setColoredPosition( gameBoard
                     .getWorkersPositions()
                     .stream()
-                    .filter(position -> !position.equals(coloredPosition))
+                    .filter(position -> !position.equals(finalColoredPosition))
                     .findAny()
                     .get());
 
         }
         else {
-            CardinalDirection offset = View.getGameBoard().getStartingPosition().checkMutualPosition(coloredPosition);
+            CardinalDirection offset = startingPosition.checkMutualPosition(coloredPosition);
             if (offset == CardinalDirection.NORTH ||
                     offset == CardinalDirection.NORTHWEST ||
                     offset == CardinalDirection.SOUTH ||
-                    offset == CardinalDirection.SOUTHWEST)
-                View.getGameBoard().setColoredPosition(View.getGameBoard().getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.EAST));
+                    offset == CardinalDirection.SOUTHWEST) {
+                gameBoard.setColoredPosition(coloredPosition.translateCardinalDirectionToPosition(CardinalDirection.EAST));
+                coloredPosition = gameBoard.getColoredPosition();
+                if (gameBoard.getWorkersAvailableCells(startingPosition).contains(coloredPosition))
+                    System.out.println("\nYou are now in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ") who's available for your worker");
+                else System.out.println("\nYou are now in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ") who's not available for your worker " +
+                    "so you can't select this position!"); }
+            else throw new IllegalArgumentException("you are trying to exit from your neighboring cells. Nice try! :)");
         }
         View.doUpdate();
         return false;
@@ -118,12 +126,18 @@ public class DCommand implements CommandCharacter {
      * @return  always false, you can't notify the message yet
      */
     @Override
-    public boolean executeSpecialCommandsStatus() {
-        int posColoredCard = View.getGameBoard().getSelectedGodCards().indexOf(View.getGameBoard().getColoredGodCard());
+    public boolean executeSpecialCommandsStatus() throws IllegalArgumentException{
 
-        if (posColoredCard == View.getPlayer().getPlayersNum()-1)
-            posColoredCard = -1;
-        View.getGameBoard().setColoredGodCard(View.getGameBoard().getSelectedGodCards().get(posColoredCard+1));
+        GameBoard gameBoard = View.getGameBoard();
+        ArrayList<String> godCards = gameBoard.getSelectedGodCards();
+        String coloredCard = gameBoard.getColoredGodCard();
+
+        if (coloredCard == null)
+            throw new IllegalArgumentException("no card selected");
+        if (godCards == null)
+            throw new IllegalArgumentException("selected god cards is empty");
+
+        gameBoard.setColoredGodCard(godCards.get((godCards.indexOf(coloredCard) + 1) % godCards.size()));
         View.doUpdate();
         return false;
     }
@@ -149,8 +163,4 @@ public class DCommand implements CommandCharacter {
         return false;
     }
 
-    @Override
-    public void executeWaitingStatus() {
-
-    }
 }

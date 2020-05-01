@@ -12,7 +12,12 @@ public class RunningStatus extends ControlState {
 
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
+        try {
         return commandCharacter.executeRunningStatus();
+        } catch (IllegalArgumentException e) {
+                    e.getMessage();
+                    return false;
+        }
     }
 
     @Override

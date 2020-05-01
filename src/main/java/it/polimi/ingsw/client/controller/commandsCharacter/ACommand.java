@@ -87,28 +87,36 @@ public class ACommand implements CommandCharacter {
      * @return              always false, you can't notify the message yet
      */
     @Override
-    public boolean executeRunningStatus() {
-
+    public boolean executeRunningStatus() throws IllegalArgumentException{
+        GameBoard gameBoard = View.getGameBoard();
         Position coloredPosition = View.getGameBoard().getColoredPosition();
+        Position startingPosition = gameBoard.getStartingPosition();
 
-        if (View.getGameBoard().getStartingPosition() == null) {
+        if (startingPosition== null) {
 
+            Position finalColoredPosition = coloredPosition;
             View.getGameBoard().setColoredPosition (View
                                         .getGameBoard()
                                         .getWorkersPositions()
                                         .stream()
-                                        .filter(position -> !position.equals(coloredPosition))
+                                        .filter(position -> !position.equals(finalColoredPosition))
                                         .findAny()
                                         .get());
 
         }
         else {
-            CardinalDirection offset = View.getGameBoard().getStartingPosition().checkMutualPosition(coloredPosition);
+            CardinalDirection offset = startingPosition.checkMutualPosition(coloredPosition);
             if (offset == CardinalDirection.NORTH ||
                     offset == CardinalDirection.NORTHEAST ||
                     offset == CardinalDirection.SOUTH ||
-                    offset == CardinalDirection.SOUTHEAST)
-                     View.getGameBoard().setColoredPosition(View.getGameBoard().getColoredPosition().translateCardinalDirectionToPosition(CardinalDirection.WEST));
+                    offset == CardinalDirection.SOUTHEAST) {
+                gameBoard.setColoredPosition(coloredPosition.translateCardinalDirectionToPosition(CardinalDirection.WEST));
+                coloredPosition = gameBoard.getColoredPosition();
+                if (gameBoard.getWorkersAvailableCells(startingPosition).contains(coloredPosition))
+                    System.out.println("\nYou are now in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ") who's available for your worker");
+                else System.out.println("\nYou are now in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ") who's not available for your worker " +
+                        "so you can't select this position!"); }
+            else throw new IllegalArgumentException("you are trying to exit from your neighboring cells. Nice try! :)");
         }
         View.doUpdate();
         return false;
@@ -123,12 +131,17 @@ public class ACommand implements CommandCharacter {
      * @return  always false, you can't notify the message yet
      */
     @Override
-    public boolean executeSpecialCommandsStatus() {
+    public boolean executeSpecialCommandsStatus() throws IllegalArgumentException{
         GameBoard gameBoard = View.getGameBoard();
-        int posColoredCard = gameBoard.getSelectedGodCards().indexOf(gameBoard.getColoredGodCard());
-        if (posColoredCard == 0)
-            posColoredCard = View.getPlayer().getPlayersNum();
-        gameBoard.setColoredGodCard(gameBoard.getSelectedGodCards().get(posColoredCard-1));
+        ArrayList<String> godCards = gameBoard.getSelectedGodCards();
+        String coloredCard = gameBoard.getColoredGodCard();
+
+        if (coloredCard == null)
+            throw new IllegalArgumentException("no card selected");
+        if (godCards == null)
+            throw new IllegalArgumentException("selected god cards is empty");
+
+        gameBoard.setColoredGodCard(godCards.get(abs(godCards.indexOf(gameBoard.getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
         View.doUpdate();
         return false;
     }
@@ -155,8 +168,4 @@ public class ACommand implements CommandCharacter {
         return false;
     }
 
-    @Override
-    public void executeWaitingStatus() {
-
-    }
 }

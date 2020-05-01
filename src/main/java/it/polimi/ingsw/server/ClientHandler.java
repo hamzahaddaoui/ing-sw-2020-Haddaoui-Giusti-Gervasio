@@ -74,7 +74,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
             return;
         }
         String json = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(message, MessageEvent.class);
-        System.out.println("SENDING "+ json);
+        //System.out.println("SENDING "+ json);
         outputTaskQueue.submit(() -> {
             try {
                 output.reset();
@@ -92,7 +92,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         MessageEvent message =  new MessageEvent();
         message.setInfo("Heartbeat Message");
 
-        //update(message);
+        update(message);
 
         heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT/2, TimeUnit.MILLISECONDS);
     }
@@ -104,9 +104,8 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
             while (true) {
                 inputObject = (String) input.readObject();
                 messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
-
+                System.out.println(messageEvent);
                 if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
-                    System.out.println(messageEvent);
                     messageEvent.setClientHandler(this);
                     messageEvent.setPlayerID(playerID);
                     messageEvent.setMatchID(matchID);

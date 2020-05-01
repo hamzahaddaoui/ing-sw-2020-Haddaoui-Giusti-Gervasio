@@ -14,5 +14,4 @@ public interface CommandCharacter {
 
     boolean executeSelectingGodCardsStatus();
 
-    void executeWaitingStatus();
 }
