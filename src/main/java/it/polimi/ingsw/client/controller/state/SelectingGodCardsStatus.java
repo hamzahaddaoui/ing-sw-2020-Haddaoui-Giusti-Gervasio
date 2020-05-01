@@ -26,17 +26,4 @@ public class SelectingGodCardsStatus extends ControlState {
         return commandCharacter.executeSelectingGodCardsStatus();
     }
 
-    @Override
-    public void nextState(Controller ctrl) {
-
-        if (ctrl.getPlayerState()== null)
-            throw new IllegalArgumentException(" PlayersState is null ");
-        if (ctrl.getMatchState()== null)
-            throw new IllegalArgumentException(" MatchState is null ");
-
-        if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND)
-            ctrl.setState(new SelectingSpecialCommandStatus());
-        else ctrl.setState(new WaitingStatus());
-    }
-
 }

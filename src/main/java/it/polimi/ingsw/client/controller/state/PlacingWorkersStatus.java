@@ -31,16 +31,4 @@ public class PlacingWorkersStatus extends ControlState {
 
     }
 
-    @Override
-    public void nextState(Controller ctrl) {
-
-        if (ctrl.getPlayerState()== null)
-            throw new IllegalArgumentException(" PlayersState is null ");
-        if (ctrl.getMatchState()== null)
-            throw new IllegalArgumentException(" MatchState is null ");
-
-        if (ctrl.getMatchState() == MatchState.RUNNING && ctrl.getPlayerState() == PlayerState.ACTIVE)
-            ctrl.setState(new RunningStatus());
-        else ctrl.setState(new WaitingStatus());
-    }
 }

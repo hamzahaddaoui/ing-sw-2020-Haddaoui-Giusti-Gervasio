@@ -1,13 +1,8 @@
 package it.polimi.ingsw.client.controller;
 
-import it.polimi.ingsw.client.controller.state.ControlState;
-import it.polimi.ingsw.client.controller.state.SelectionNumberStatus;
-import it.polimi.ingsw.client.controller.state.StartingStatus;
-import it.polimi.ingsw.client.controller.state.WaitingStatus;
-import it.polimi.ingsw.client.view.GameBoard;
+import it.polimi.ingsw.client.controller.state.*;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.server.model.Match;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
@@ -31,8 +26,13 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
 
     @Override
     public synchronized void update(Object viewObject){
-        checkStatus();
-        executor.submit(() -> execute(viewObject));
+        synchronized (View.getPlayer()){
+            synchronized (View.getGameBoard()){
+                checkState();
+                executor.submit(() -> execute(viewObject));
+            }
+        }
+
     }
 
     private synchronized void execute(Object viewObject) {
@@ -40,66 +40,54 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         messageReady = controlState.processingMessage(viewObject);
 
         if (messageReady) {
-            if (playerState != null)
-                message.setPlayerID(player.getPlayerID());
-            if (matchState != null)
-                message.setMatchID(player.getMatchID());
             notify(message);
             reset();
         }
-        System.out.print("\nctrl MATCHSTATE ->" + matchState);
-        System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
-        System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");
+
+        //System.out.println("\nCtrl ControlSTATE ->" + controlState + "  \n ");
     }
 
-    public synchronized void nextState(){
+    public synchronized void checkState(){
         MatchState matchState = View.getPlayer().getMatchState();
         PlayerState playerState = View.getPlayer().getPlayerState();
+
         if(playerState == null && matchState == null) {
             controlState = new StartingStatus();
             return;
         }
-        else if(matchState == null && playerState != null){
+        else if(matchState == null || playerState == PlayerState.IDLE || playerState == PlayerState.INITIALIZED){
             controlState = new WaitingStatus();
             return;
         }
-        switch (matchState){
-            case GETTING_PLAYERS_NUM: {
-                if(playerState == PlayerState.ACTIVE) {
-                    controlState = new SelectionNumberStatus();
+        else{
+            switch (matchState){
+                case GETTING_PLAYERS_NUM: {
+                    if(playerState == PlayerState.ACTIVE)
+                        controlState = new SelectionNumberStatus();
+                            return;
                 }
-                else{
-                    controlState = new WaitingStatus();
+                case SELECTING_GOD_CARDS: {
+                    if(playerState == PlayerState.ACTIVE)
+                        controlState = new SelectingGodCardsStatus();
+                            return;
                 }
-                return;
+                case SELECTING_SPECIAL_COMMAND: {
+                    if(playerState == PlayerState.ACTIVE)
+                        controlState = new SelectingSpecialCommandStatus();
+                            return;
+                }
+                case PLACING_WORKERS: {
+                    if(playerState == PlayerState.ACTIVE)
+                        controlState = new PlacingWorkersStatus();
+                            return;
+                }
+                case RUNNING: {
+                    if(playerState == PlayerState.ACTIVE)
+                        controlState = new RunningStatus();
+                            return;
+                }
             }
-            case : {
-                if(playerState == PlayerState.ACTIVE) {
-                    controlState = new SelectionNumberStatus();
-                }
-                else{
-                    controlState = new WaitingStatus();
-                }
-                return;
-            }
-
         }
-    }
-
-    public MatchState getMatchState() {
-        return this.matchState;
-    }
-
-    public void setMatchState(MatchState matchState){
-        this.matchState = matchState;
-    }
-
-    public PlayerState getPlayerState() {
-        return this.playerState;
-    }
-
-    public void setPlayerState(PlayerState playerState){
-        this.playerState = playerState;
     }
 
     public void setState(ControlState ctrlState){
@@ -111,11 +99,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
     }
 
     public ControlState getControlState() {return this.controlState;}
-
-    public void setPlayerAndMatchState(PlayerState plState,MatchState matState) {
-        playerState = plState;
-        matchState = matState;
-    }
 
     public void reset (){
         message.setMatchID(null);
@@ -131,17 +114,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         message.setSpecialFunction(null);
     }
 
-    private void checkStatus() {
-        PlayerState newPlayerState = player.getPlayerState();
-        MatchState newMatchState = player.getMatchState();
-        if (newMatchState == null && newPlayerState == null) {
-            reset();
-        } else if (newPlayerState != playerState || newMatchState != matchState) {
-            playerState = newPlayerState;
-            matchState = newMatchState;
-            nextState();
-        }
-    }
 
     /*
     ------------------- UTILE PER I TEST ------------------

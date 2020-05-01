@@ -28,12 +28,19 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     private static GameBoard gameBoard;
     private static Player player;
 
+    void View(){
+        active = false;
+        player = new Player();
+        gameBoard = new GameBoard();
+        scanner = new Scanner(System.in);
+
+    }
+
     @Override
     public void update(MessageEvent messageEvent) {
-        if(messageEvent.getError()!=null && messageEvent.getError()) insertNickName();
+        if(messageEvent.getError()!=null && messageEvent.getError()) init();
         else if(!active && (messageEvent.getError()==null || !messageEvent.getError())){
             active = true;
-            fetchingInit(messageEvent);
             fetching(messageEvent);
             checkStatus();
             doUpdate();
@@ -89,15 +96,6 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
             }
             case FINISHED:
                 active = false;
-        }
-    }
-
-    public static void fetchingInit(MessageEvent messageEvent){
-        if(messageEvent.getPlayerID() != null && messageEvent.getPlayerID() != player.getPlayerID()){
-            player.setPlayerID(messageEvent.getPlayerID());
-        }
-        if(messageEvent.getMatchID() != null && messageEvent.getMatchID() != player.getMatchID()){
-            player.setMatchID(messageEvent.getMatchID());
         }
     }
 
@@ -191,13 +189,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     }
 
     public void init(){   // -> insert IP
-        active = false;
-        player = new Player();
-        gameBoard = new GameBoard();
-        scanner = new Scanner(System.in);
         outputStream = new PrintStream(System.out);
-        outputStream.println( "Insert your ip : ");
-        player.setIp(scanner.nextLine());
         outputStream.println( "Insert your nickname : ");
         player.setNickname(scanner.nextLine());
         notify(player.getNickname());

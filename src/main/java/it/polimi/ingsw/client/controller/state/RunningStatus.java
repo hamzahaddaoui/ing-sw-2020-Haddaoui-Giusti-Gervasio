@@ -20,8 +20,4 @@ public class RunningStatus extends ControlState {
         }
     }
 
-    @Override
-    public void nextState(Controller ctrl) {
-        ctrl.setState(new WaitingStatus());
-    }
 }

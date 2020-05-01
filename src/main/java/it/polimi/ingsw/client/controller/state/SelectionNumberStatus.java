@@ -26,13 +26,4 @@ public class SelectionNumberStatus extends ControlState {
 
     }
 
-    @Override
-    public void nextState(Controller ctrl) {
-        if(ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_GOD_CARDS) {
-            ctrl.setState(new SelectingGodCardsStatus());
-            View.getGameBoard().setColoredGodCard(View.getGameBoard().getMatchCards().get(0));
-        }
-        else ctrl.setState(new WaitingStatus());
-    }
-
 }

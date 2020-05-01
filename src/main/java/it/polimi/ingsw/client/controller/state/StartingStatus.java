@@ -17,12 +17,5 @@ public class StartingStatus extends ControlState {
         return true;
     }
 
-    @Override
-    public void nextState(Controller ctrl) {
-        if(ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.GETTING_PLAYERS_NUM) {
-            ctrl.setState(new SelectionNumberStatus());
-        }
-        else ctrl.setState(new WaitingStatus());
-    }
 
 }

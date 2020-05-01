@@ -11,8 +11,6 @@ import java.util.Map;
 
 public class Player {
 
-    private Integer matchID;
-    private Integer playerID;
     private String nickname;
     private PlayerState playerState=null;
     private MatchState matchState=null;
