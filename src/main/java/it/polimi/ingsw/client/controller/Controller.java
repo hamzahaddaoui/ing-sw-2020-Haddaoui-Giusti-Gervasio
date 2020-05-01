@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller;
 
 import it.polimi.ingsw.client.controller.state.ControlState;
+import it.polimi.ingsw.client.controller.state.SelectionNumberStatus;
 import it.polimi.ingsw.client.controller.state.StartingStatus;
 import it.polimi.ingsw.client.controller.state.WaitingStatus;
 import it.polimi.ingsw.client.view.GameBoard;
@@ -64,7 +65,22 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         }
         switch (matchState){
             case GETTING_PLAYERS_NUM: {
-                
+                if(playerState == PlayerState.ACTIVE) {
+                    controlState = new SelectionNumberStatus();
+                }
+                else{
+                    controlState = new WaitingStatus();
+                }
+                return;
+            }
+            case : {
+                if(playerState == PlayerState.ACTIVE) {
+                    controlState = new SelectionNumberStatus();
+                }
+                else{
+                    controlState = new WaitingStatus();
+                }
+                return;
             }
 
         }

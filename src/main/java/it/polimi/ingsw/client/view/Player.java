@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class Player {
 
-    private String ip;
     private Integer matchID;
     private Integer playerID;
     private String nickname;
