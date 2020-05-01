@@ -44,41 +44,38 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         System.out.println("X");
         messageReady = false;
         System.out.println("\n" + viewObject + "\n");
-        synchronized (View.getPlayer()){
-            synchronized (controlState){
-            PlayerState newPlayerState = View.getPlayer().getPlayerState();
-            MatchState newMatchState = View.getPlayer().getMatchState();
-            System.out.print("\nView MATCHSTATE ->" + newMatchState);
-            System.out.print("  /  View PLAYERSTATE ->" + newPlayerState);
-            System.out.println(" /   Ctrl ControlSTATE ->" + controlState + "  \n ");
-            if (newMatchState == null && newPlayerState == null) {
-                reset();
-            } else if (newPlayerState != playerState || newMatchState != matchState) {
-                playerState = newPlayerState;
-                matchState = newMatchState;
-
+        PlayerState newPlayerState = View.getPlayer().getPlayerState();
+        MatchState newMatchState = View.getPlayer().getMatchState();
+        System.out.print("\nView MATCHSTATE ->" + newMatchState);
+        System.out.print("  /  View PLAYERSTATE ->" + newPlayerState);
+        System.out.println(" /   Ctrl ControlSTATE ->" + controlState + "  \n ");
+        if (newMatchState == null && newPlayerState == null) {
+            reset();
+        } else if (newPlayerState != playerState || newMatchState != matchState) {
+            playerState = newPlayerState;
+            matchState = newMatchState;
                 nextState();
-            }
+        }
 
-            System.out.print("\nctrl MATCHSTATE ->" + matchState);
-            System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
-            System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");
-            messageReady = controlState.processingMessage(viewObject);
+        System.out.print("\nctrl MATCHSTATE ->" + matchState);
+        System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
+        System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");
+        messageReady = controlState.processingMessage(viewObject);
 
-            if (messageReady) {
-                if (playerState != null)
-                    message.setPlayerID(View.getPlayer().getPlayerID());
-                if (matchState != null)
-                    message.setMatchID(View.getPlayer().getMatchID());
-                notify(message);
-                reset();
-            }
-            System.out.print("\nctrl MATCHSTATE ->" + matchState);
-            System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
-            System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");}}
+        if (messageReady) {
+            if (playerState != null)
+                message.setPlayerID(View.getPlayer().getPlayerID());
+            if (matchState != null)
+                message.setMatchID(View.getPlayer().getMatchID());
+            notify(message);
+            reset();
+        }
+        System.out.print("\nctrl MATCHSTATE ->" + matchState);
+        System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
+        System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");
     }
 
-    public void nextState(){
+    public synchronized void nextState(){
         controlState.nextState(this);
     }
 
