@@ -22,7 +22,6 @@ public class StartingStatus extends ControlState {
         if(ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.GETTING_PLAYERS_NUM) {
             ctrl.setState(new SelectionNumberStatus());
         }
-        //se non scegli il plasyersNum allora non hai diritto di parola finchè non vengono scelte le carte speciali
         else ctrl.setState(new WaitingStatus());
     }
 

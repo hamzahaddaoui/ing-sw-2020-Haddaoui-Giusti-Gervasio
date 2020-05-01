@@ -29,7 +29,6 @@ public class ACommand implements CommandCharacter {
             throw new IllegalArgumentException(" Colored Players num is empty.");
 
         player.setPlayersNum(coloredPlayersNum.get(abs(coloredPlayersNum.indexOf(player.getPlayersNum()) - 1) % coloredPlayersNum.size()));
-        System.out.println(  " You select match of n. player " + player.getPlayersNum());
         View.doUpdate();
         return false;
     }
@@ -151,7 +150,7 @@ public class ACommand implements CommandCharacter {
             throw new IllegalArgumentException(" Colored GodCard is empty ");
 
         gameBoard.setColoredGodCard(godCards.get(abs(godCards.indexOf(gameBoard.getColoredGodCard()) - 1 + godCards.size()) % godCards.size()));
-        System.out.println(  "\nYou select match of n."+ player.getPlayersNum()+ " player " );
+        System.out.println("Colored Godcard is " + gameBoard.getColoredGodCard());
         View.doUpdate();
         return false;
     }

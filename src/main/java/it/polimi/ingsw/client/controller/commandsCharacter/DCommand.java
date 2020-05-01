@@ -26,7 +26,6 @@ public class DCommand implements CommandCharacter {
             throw new IllegalArgumentException(" Colored Players num is empty.");
 
         player.setPlayersNum(coloredPlayersNum.get((coloredPlayersNum.indexOf(player.getPlayersNum()) + 1) % coloredPlayersNum.size()));
-        System.out.println(  "\nYou select match of n."+ player.getPlayersNum()+ " player " );
         View.doUpdate();
         return false;
     }
