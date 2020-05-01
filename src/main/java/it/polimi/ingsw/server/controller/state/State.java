@@ -12,56 +12,33 @@ import java.util.Collections;
 import java.util.List;
 
 import static it.polimi.ingsw.server.Server.getClientHandler;
+import static it.polimi.ingsw.server.Server.main;
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public abstract class State extends Controller{
-    public abstract void handleRequest(MessageEvent messageEvent);
-
-    public void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID){
-        MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
-        getMatchPlayers(matchID)
-                .keySet()
-                .forEach(player -> notify(observers, basicPlayerConfig(message, player)));
-    }
-
-    public void exit(Integer matchID){
-        getMatchPlayers(matchID)
-                .keySet()
-                .forEach(player -> {
-                    MessageEvent message = basicMatchConfig(basicPlayerConfig(new MessageEvent(), player), matchID);
-                    message.setError(true);
-                    message.setFinished(true);
-                    notify(message);
-                });
-        getMatchPlayers(matchID).keySet().forEach(this::clientHandlerReset);
-        getMatchPlayers(matchID).keySet().forEach(Server::removeClientSocket);
-        deleteMatch(matchID);
-    }
-
-
-
+    public abstract boolean handleRequest(MessageEvent messageEvent);
+    public abstract void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID);
 
     protected MessageEvent basicMatchConfig(MessageEvent messageEvent, Integer matchID){
+        messageEvent.setInfo("Match data update");
         messageEvent.setMatchID(matchID);
         messageEvent.setMatchState(getMatchState(matchID));
-        messageEvent.setBillboardStatus(getBillboardStatus(matchID));
+        messageEvent.setCurrentPlayer(getCurrentPlayer(matchID));
         messageEvent.setMatchPlayers(Collections.unmodifiableMap(getMatchPlayers(matchID)));
         messageEvent.setWinner(getMatchWinner(matchID));
         messageEvent.setFinished(getMatchState(matchID) == MatchState.FINISHED);
+        if(getMatchState(matchID) == MatchState.RUNNING || getMatchState(matchID) == MatchState.PLACING_WORKERS)
+            messageEvent.setBillboardStatus(getBillboardStatus(matchID));
 
         return messageEvent;
     }
 
     protected MessageEvent basicPlayerConfig(MessageEvent messageEvent, Integer playerID){
+        int matchID = messageEvent.getMatchID();
         messageEvent.setPlayerID(playerID);
-        messageEvent.setPlayerState(getPlayerState(messageEvent.getMatchID(), playerID));
-        messageEvent.setTurnState(getPlayerTurn(messageEvent.getMatchID(), playerID));
-        return messageEvent;
-    }
-
-    protected MessageEvent basicErrorConfig(MessageEvent messageEvent, Integer playerID){
-        messageEvent.setPlayerID(playerID);
-        messageEvent.setError(true);
+        messageEvent.setPlayerState(getPlayerState(matchID, playerID));
+        if(getMatchState(matchID) == MatchState.RUNNING)
+            messageEvent.setTurnState(getPlayerTurn(matchID, playerID));
         return messageEvent;
     }
 
@@ -71,7 +48,26 @@ public abstract class State extends Controller{
     }
 
 
-    protected void checkMatchStart(Integer matchID){
+    public void exit(List<Observer<MessageEvent>> observers, int matchID, int playerID){
+        MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
+        message.setFinished(true);
+        message.setInfo("A user has disconnected from the match. Closing...");
+        if (matchID!=0) {
+            getMatchPlayers(matchID)
+                    .keySet()
+                    .stream()
+                    .filter(player -> player != playerID)
+                    .forEach(player -> {
+                        basicPlayerConfig(message, player);
+                        notify(observers, message);
+                    });
+            getMatchPlayers(matchID).keySet().forEach(this::clientHandlerReset);
+            getMatchPlayers(matchID).keySet().forEach(Server::removeClientSocket);
+        }
+        deleteMatch(matchID);
+    }
+
+    protected void checkMatchStart(int matchID){
         if (isNumReached(matchID)) {
             startMatch(matchID);
             nextMatchState(matchID);
@@ -83,13 +79,8 @@ public abstract class State extends Controller{
                 && position.getY() >= 0 && position.getY() <= 4);
     }
 
-    protected void clientHandlerUpdate(Integer matchID, Integer playerID){
-        getClientHandler(playerID).setMatchID(matchID);
-        getClientHandler(playerID).setPlayerID(playerID);
-    }
-
-    protected void clientHandlerReset(Integer playerID){
-        getClientHandler(playerID).setMatchID(null);
-        getClientHandler(playerID).setPlayerID(null);
+    protected void clientHandlerReset(int playerID){
+        getClientHandler(playerID).setMatchID(0);
+        getClientHandler(playerID).setPlayerID(0);
     }
 }

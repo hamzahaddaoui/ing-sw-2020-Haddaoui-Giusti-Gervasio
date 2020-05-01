@@ -17,12 +17,6 @@ public class GameModel extends Observable<MessageEvent> {
     private static final LinkedList<Player> playersWaitingList = new LinkedList<>();
     private static final Map<Integer, Match> activeMatches = new HashMap<>(); //id match, match
 
-   //gestire multithreading.
-    //synchronized(GameModel.class)
-    //blocking queue??
-    //immutable objects?
-
-
     /*
     -------------------------------------------------------------------------------
     -----------------------MULTIPLAYER MANAGEMENT----------------------------------
@@ -30,7 +24,6 @@ public class GameModel extends Observable<MessageEvent> {
      */
 
     private GameModel(){}
-
 
     public static int getPlayersWaitingListSize(){
         return playersWaitingList.size();
@@ -54,30 +47,7 @@ public class GameModel extends Observable<MessageEvent> {
                 .count();
     }
 
-    /**
-     * Checks if the match waiting to start has a certain nickname available.
-     *
-     * @param nickname contains the nickname choosen by the user
-     * @return false if the nickname is not available, true otherwise
-     */
-    public static boolean isNickAvailable(String nickname){
-        return playersWaitingList
-                       .stream()
-                       .noneMatch(player -> player.toString()
-                               .equals(nickname))
-               &&
-               activeMatches
-                       .keySet()
-                       .stream()
-                       .map(activeMatches::get)
-                       .filter(match -> !match.isStarted())
-                       .noneMatch(match -> match.getPlayers()
-                               .stream().anyMatch(player -> player.toString()
-                                       .equals(nickname)));
-    }
-
-    public static Integer getInitMatchID(){
-        //sostituire con exception
+    public static int getInitMatchID(){
         if (getInitMatchesListSize() != 0)
             return activeMatches
                     .keySet()
@@ -88,19 +58,18 @@ public class GameModel extends Observable<MessageEvent> {
                     .get()
                     .getID();
         else
-            return null;
+            return 0;
     }
 
     public static int createPlayer(String nickname){
         Player player;
+        if (!isNickAvailable(nickname))
+            return 0;
+
         progressivePlayerID++;
         player = new Player(progressivePlayerID, nickname);
         initializedPlayers.put(progressivePlayerID, player);
         return progressivePlayerID;
-    }
-
-    public static void removeInitPlayer(Integer playerID){
-        initializedPlayers.remove(playerID);
     }
 
     /**
@@ -141,7 +110,7 @@ public class GameModel extends Observable<MessageEvent> {
         activeMatches.get(matchID).setPlayersNum(playerNum);
     }
 
-    public static Integer unstackPlayer(){
+    public static int unstackPlayer(){
         Player player = playersWaitingList.removeFirst();
         initializedPlayers.put(player.getID(), player);
         return player.getID();
@@ -179,18 +148,15 @@ public class GameModel extends Observable<MessageEvent> {
             return translateMatchID(matchID).getCurrentState();
         }
         catch (NullPointerException exception){
-            return null;
+            return MatchState.NONE;
         }
     }
 
-    public static void nextMatchState(Integer matchID){
-        try{
-            translateMatchID(matchID).nextState();
-        }
-        catch (NullPointerException ignored){}
+    public static void nextMatchState(int matchID){
+        translateMatchID(matchID).nextState();
     }
 
-    public static PlayerState getPlayerState(Integer matchID, Integer playerID){
+    public static PlayerState getPlayerState(int matchID, int playerID){
         try{
             return translatePlayerID(translateMatchID(matchID), playerID).getPlayerState();
         }
@@ -199,7 +165,7 @@ public class GameModel extends Observable<MessageEvent> {
         }
     }
 
-    public static TurnState getPlayerTurn(Integer matchID, Integer playerID){
+    public static TurnState getPlayerTurn(int matchID, int playerID){
         try{
             return translatePlayerID(translateMatchID(matchID), playerID).getTurnState();
         }
@@ -213,25 +179,25 @@ public class GameModel extends Observable<MessageEvent> {
      *
      * @param matchID selected match
      */
-    public static void nextMatchTurn(Integer matchID){
+    public static void nextMatchTurn(int matchID){
         try{
             translateMatchID(matchID).nextTurn();
         }
         catch (NullPointerException ignored){}
     }
 
-    public static Integer getMatchWinner(Integer matchID){
+    public static int getMatchWinner(int matchID){
         if (getMatchState(matchID) == MatchState.FINISHED) {
             return translateMatchID(matchID).getWinner().getID();
         }
-        else return null;
+        else return 0;
     }
 
-    public static void deleteMatch(Integer matchID){
+    public static void deleteMatch(int matchID){
         activeMatches.remove(matchID);
     }
 
-    public static void removeLosers(Integer matchID){
+    public static void removeLosers(int matchID){
         translateMatchID(matchID).resetLosers();
     }
 
@@ -286,6 +252,10 @@ public class GameModel extends Observable<MessageEvent> {
     -----------------------GAME MANAGEMENT-----------------------------------------
     -------------------------------------------------------------------------------
      */
+    public static int getCurrentPlayer(int matchID){
+        return translateMatchID(matchID).getCurrentPlayer().getID();
+    }
+
     public static boolean isTerminateTurnAvailable(Integer matchID){
         return translateMatchID(matchID).getCurrentPlayer().isTerminateTurnAvailable();
     }
@@ -313,11 +283,6 @@ public class GameModel extends Observable<MessageEvent> {
 
         match.checkPlayers();
     }
-
-    public static PlayerState getCurrentPlayerState(Integer matchID){
-        return translateMatchID(matchID).getCurrentPlayer().getPlayerState();
-    }
-
 
     /*
     -------------------------------------------------------------------------------
@@ -353,14 +318,14 @@ public class GameModel extends Observable<MessageEvent> {
                 .collect(Collectors.toSet());
     }
 
-    public static Set<Position> getWorkersPosition(Integer matchID){
+    /*public static Set<Position> getWorkersPosition(Integer matchID){
         return translateMatchID(matchID)
                 .getCurrentPlayer()
                 .getWorkers()
                 .stream()
                 .map(Worker::getPosition)
                 .collect(Collectors.toSet());
-    }
+    }*/
 
     public static Map<Position, Set<Position>> getWorkersAvailableCells(Integer matchID){
         return translateMatchID(matchID).getCurrentPlayer().getWorkersAvailableCells();
@@ -370,13 +335,13 @@ public class GameModel extends Observable<MessageEvent> {
         return translateMatchID(matchID).getCurrentPlayer().getPlacingAvailableCells();
     }
 
-    public static int getPlayersConnected(){
+    /*public static int getPlayersConnected(){
         return progressivePlayerID;
     }
 
     public static int getActiveMatches(){
         return progressiveMatchID;
-    }
+    }*/
 
     /*
     -------------------------------------------------------------------------------
@@ -390,7 +355,7 @@ public class GameModel extends Observable<MessageEvent> {
      * @param matchID id of the match whose instance is requested
      * @return the instance of match related to the matchID
      */
-    private static Match translateMatchID (Integer matchID){
+    private static Match translateMatchID (int matchID){
         return activeMatches
                 .get(matchID);
     }
@@ -401,7 +366,7 @@ public class GameModel extends Observable<MessageEvent> {
      * @param playerID id of the player whose instance is requested
      * @return the instance of player related to the playerID
      */
-    private static Player translatePlayerID (Match match, Integer playerID){
+    private static Player translatePlayerID (Match match, int playerID){
         if (match == null)
             return playersWaitingList
                     .stream()
@@ -414,6 +379,26 @@ public class GameModel extends Observable<MessageEvent> {
                 .stream()
                 .filter(player -> player.getID()==playerID)
                 .findAny().get();
+    }
+
+    /**
+     * Checks if the match waiting to start has a certain nickname available.
+     *
+     * @param nickname contains the nickname choosen by the user
+     * @return false if the nickname is not available, true otherwise
+     */
+    private static boolean isNickAvailable(String nickname){
+        return playersWaitingList.stream()
+                       .noneMatch(player -> player.toString().equals(nickname))
+               &&
+               activeMatches
+                       .keySet()
+                       .stream()
+                       .map(activeMatches::get)
+                       .filter(match -> !match.isStarted())
+                       .noneMatch(match -> match.getPlayers()
+                               .stream().anyMatch(player -> player.toString()
+                                       .equals(nickname)));
     }
 
 }

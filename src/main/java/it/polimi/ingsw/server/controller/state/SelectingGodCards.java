@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.controller.state;
 
-import it.polimi.ingsw.server.model.GameModel;
+import it.polimi.ingsw.server.ClientHandler;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observer;
 
@@ -11,22 +11,21 @@ import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class SelectingGodCards extends State {
     @Override
-    public void handleRequest(MessageEvent messageEvent){
-        Integer matchID = messageEvent.getMatchID();
+    public boolean handleRequest(MessageEvent messageEvent){
+        ClientHandler clientHandler = messageEvent.getClientHandler();
+        int matchID = clientHandler.getMatchID();
+        int playerID = clientHandler.getPlayerID();
         Set<String> cardList = messageEvent.getMatchCards();
 
-        if (cardList.size()==getMatchPlayers(matchID).size()
-            &&!getGameCards().containsAll(cardList)
-            && (cardList.size() != cardList.stream().distinct().count())){
-
-            notify(basicErrorConfig(basicMatchConfig(basicPlayerConfig(new MessageEvent(), messageEvent.getPlayerID()),matchID)));
-            return;
+        if (cardList.size()!=getMatchPlayers(matchID).size() || !getGameCards().containsAll(cardList) || (cardList.size() != cardList.stream().distinct().count())){
+            notify(List.of(messageEvent.getClientHandler()), basicErrorConfig((basicPlayerConfig(basicMatchConfig(new MessageEvent(), matchID), playerID))));
+            return false;
         }
-
 
         setMatchCards(matchID, cardList);
         nextMatchState(matchID);
         nextMatchTurn(matchID);
+        return true;
     }
 
     @Override
@@ -39,7 +38,7 @@ public class SelectingGodCards extends State {
     }
 
     @Override
-    public void exit(Integer matchID){
+    public void exit(List<Observer<MessageEvent>> observers, int matchID, int playerID){
 
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.utilities;
 
 public enum MatchState {
+    NONE,
     GETTING_PLAYERS_NUM,
     WAITING_FOR_PLAYERS,
     SELECTING_GOD_CARDS,

@@ -12,13 +12,13 @@ public class MessageEvent {
     //CONTROLLER_TO_CONTROLLER
     //CONTROLLER_TO_VIEW
 
-    private Integer                         matchID;
-    private Integer                         playerID;
+    private int                             matchID;
+    private int                             playerID;
 
     //user to controller
     private String                          nickname;
 
-    private Integer                         playersNum;
+    private int                         playersNum;
     private Set<String>                     godCards; //le Carte selezionate in fase di SelectingGodCards del controller
 
     private String                          godCard; //Carta Selezionata in fase di SelectionSpecialFunction del controller
@@ -28,8 +28,8 @@ public class MessageEvent {
     private Position                        startPosition;          //il worker che muovo
     private Position                        endPosition;            //la posizione finale del worker che voglio muovere
 
-    private Boolean                         endTurn;                //se decido di terminare il turno
-    private Boolean                         specialFunction;        //se decido di attivare la funzione speciale
+    private boolean                         endTurn;                //se decido di terminare il turno
+    private boolean                         specialFunction;        //se decido di attivare la funzione speciale
 
     private boolean                         exit;                   //SE l'utente esce. mando prima questo
 
@@ -37,7 +37,7 @@ public class MessageEvent {
     private MatchState                      matchState;
     private PlayerState                     playerState;
     private TurnState                       turnState;
-    private Boolean                         error;
+    private boolean                         error;
 
     private Set<String>                     matchCards;             //Carte del gioco
     private Set<Position>                   availablePlacingCells;
@@ -46,14 +46,15 @@ public class MessageEvent {
 
     private Map<Position, Set<Position>>    workersAvailableCells;
 
-    private Boolean                         terminateTurnAvailable;
+    private boolean                         terminateTurnAvailable;
     private Map<Position,Boolean>           specialFunctionAvailable;//worker+disponibilità special function -
 
     private Map<Integer, String>            matchPlayers;           //i giocatori del gioco -
+    private int                             currentPlayer;
     //private int                           activeMatches;
     //private int                           playersConnected;
 
-    private Integer                         winner;                 //chi è il vincitore se il match è finito
+    private int                             winner;                 //chi è il vincitore se il match è finito
 
     private boolean                         finished;               //se il match è finito
 
@@ -248,6 +249,14 @@ public class MessageEvent {
 
     public void setMatchPlayers(Map<Integer, String> matchPlayers){
         this.matchPlayers = matchPlayers;
+    }
+
+    public int getCurrentPlayer(){
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(int currentPlayer){
+        this.currentPlayer = currentPlayer;
     }
 
     /*public int getActiveMatches(){

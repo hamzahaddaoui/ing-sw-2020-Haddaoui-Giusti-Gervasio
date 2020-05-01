@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.server.ClientHandler;
 import it.polimi.ingsw.server.controller.state.*;
 import it.polimi.ingsw.server.model.GameModel;
 import it.polimi.ingsw.utilities.*;
@@ -12,69 +13,82 @@ import java.util.concurrent.Executors;
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class Controller extends Observable<MessageEvent> implements Observer<MessageEvent> {
-    static ExecutorService executor = Executors.newSingleThreadExecutor();
-    private Map<MatchState, State> stateMap;
+    static ExecutorService executor = Executors.newCachedThreadPool();
 
     @Override
     public void update(MessageEvent messageEvent){
         executor.submit(()->checkInput(messageEvent));
-        //checkInput(messageEvent);
     }
+
 
     public void checkInput(MessageEvent messageEvent){
         State controllerBehaviour;
-        Integer playerID = messageEvent.getPlayerID();
-        Integer matchID = messageEvent.getMatchID();
+        ClientHandler clientHandler = messageEvent.getClientHandler();
 
-        if (playerID == null) {
-            controllerBehaviour = new FirstPlayerAccess();
-        }
-        else if ((matchID != null) && (Objects.equals(getPlayerState(matchID, playerID), PlayerState.ACTIVE))){
-            controllerBehaviour = getBehaviour(matchID);
-        }
-        else {
-            return;
+        controllerBehaviour = getBehaviour(clientHandler.getMatchID(), clientHandler.getPlayerID());
+
+        if(messageEvent.isExit()){
+            controllerBehaviour.exit(getObservers(), clientHandler.getMatchID(), clientHandler.getPlayerID());
         }
 
-        if (messageEvent.isExit()){
-            controllerBehaviour.exit(matchID);
+        else if (controllerBehaviour.handleRequest(messageEvent)){
+            controllerBehaviour = getNotifyBehaviour(clientHandler.getMatchID());
+            controllerBehaviour.viewNotify(getObservers(), clientHandler.getMatchID());
         }
-        else {
-            controllerBehaviour.handleRequest(messageEvent);
+    }
 
-            playerID = messageEvent.getClientHandler().getPlayerID();
-            matchID = messageEvent.getClientHandler().getMatchID();
 
-            if (matchID != null) {
-                controllerBehaviour = getBehaviour(matchID);
-                controllerBehaviour.viewNotify(getObservers(), matchID);
+
+    private State getBehaviour(int matchID, int playerID){
+        if (matchID == 0){
+            return new FirstPlayerAccess();
+        }
+        else if(getPlayerState(matchID, playerID) == PlayerState.ACTIVE) {
+            switch (getMatchState(matchID)) {
+                case GETTING_PLAYERS_NUM:
+                    return new GettingPlayersNum();
+                case WAITING_FOR_PLAYERS:
+                    return new WaitingForPlayers();
+                case SELECTING_GOD_CARDS:
+                    return new SelectingGodCards();
+                case SELECTING_SPECIAL_COMMAND:
+                    return new SelectingSpecialCommand();
+                case PLACING_WORKERS:
+                    return new PlacingWorkers();
+                case RUNNING:
+                    return new Running();
+                default:
+                    return new None();
             }
         }
-
+        else if (getMatchState(matchID) == MatchState.WAITING_FOR_PLAYERS )
+            return new WaitingForPlayers();
+        else
+            return new None();
     }
 
-    State getBehaviour(Integer matchID){
-        switch (getMatchState(matchID)){
-            case GETTING_PLAYERS_NUM:
-                return new GettingPlayersNum();
-            case WAITING_FOR_PLAYERS:
-                return new WaitingForPlayers();
-            case SELECTING_GOD_CARDS:
-                return new SelectingGodCards();
-            case SELECTING_SPECIAL_COMMAND:
-                return new SelectingSpecialCommand();
-            case PLACING_WORKERS:
-                return new PlacingWorkers();
-            case RUNNING:
-                return new Running();
-            default:
-                return null;
-
+    private State getNotifyBehaviour(int matchID){
+        if (matchID == 0){
+            return new FirstPlayerAccess();
         }
-    }
-
-    public List<Observer<MessageEvent>> getObs(){
-        return getObservers();
+        else{
+            switch (getMatchState(matchID)) {
+                case GETTING_PLAYERS_NUM:
+                    return new GettingPlayersNum();
+                case WAITING_FOR_PLAYERS:
+                    return new WaitingForPlayers();
+                case SELECTING_GOD_CARDS:
+                    return new SelectingGodCards();
+                case SELECTING_SPECIAL_COMMAND:
+                    return new SelectingSpecialCommand();
+                case PLACING_WORKERS:
+                    return new PlacingWorkers();
+                case RUNNING:
+                    return new Running();
+                default:
+                    return new None();
+            }
+        }
     }
 }
 

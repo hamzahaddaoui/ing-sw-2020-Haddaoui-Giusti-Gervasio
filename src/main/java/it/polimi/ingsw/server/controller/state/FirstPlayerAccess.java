@@ -1,61 +1,86 @@
 package it.polimi.ingsw.server.controller.state;
 
+import it.polimi.ingsw.server.ClientHandler;
+import it.polimi.ingsw.server.model.GameModel;
+import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observer;
 
 import java.util.List;
+import java.util.Set;
 
 import static it.polimi.ingsw.server.Server.addClientSocket;
-import static it.polimi.ingsw.server.Server.removeClientSocket;
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class FirstPlayerAccess extends State {
 
 
     @Override
-    public void handleRequest(MessageEvent messageEvent){
-        Integer matchID = null;
-        MessageEvent message;
-        int playersWaiting = getPlayersWaitingListSize();
-        int notInitMatches = getNotInitMatchesListSize();
-        int initMatches = getInitMatchesListSize();
+    public boolean handleRequest(MessageEvent messageEvent){
+        ClientHandler clientHandler = messageEvent.getClientHandler();
+        int matchID;
+        int playerID;
 
-        Integer playerID = createPlayer(messageEvent.getNickname());
-        addClientSocket(playerID, messageEvent.getClientHandler());
-        clientHandlerUpdate(matchID, playerID);
+        synchronized (GameModel.class){
+            int playersWaiting = getPlayersWaitingListSize();
+            int notInitMatches = getNotInitMatchesListSize();
+            int initMatches = getInitMatchesListSize();
+            String nickname = messageEvent.getNickname();
+
+            if(nickname == null){
+                MessageEvent message = new MessageEvent();
+                message.setInfo("Please specify a nickname.");
+                notify(List.of(messageEvent.getClientHandler()), basicErrorConfig(message));
+            }
 
 
-        //se il nick non è disponibile, elimino il player e il suo rif al clienthandler
-        //dopo aver mandato la notifica di errore
-        if (! isNickAvailable(messageEvent.getNickname())) {
-            notify(List.of(messageEvent.getClientHandler()), basicErrorConfig(new MessageEvent(), playerID));
-            removeInitPlayer(playerID);
-            removeClientSocket(playerID);
-            return;
+            playerID = createPlayer(nickname) ;
+
+            if (playerID == 0){
+                MessageEvent message = new MessageEvent();
+                message.setError(true);
+                message.setInfo("Nickname not available.");
+                notify(List.of(messageEvent.getClientHandler()), basicErrorConfig(message));
+                return false;
+            }
+
+            addClientSocket(playerID, clientHandler);
+            clientHandler.setPlayerID(playerID);
+
+
+            if (playersWaiting == 0 && initMatches !=0){
+                matchID = getInitMatchID();
+                addPlayerToMatch(matchID, playerID);
+                clientHandler.setMatchID(matchID);
+                checkMatchStart(matchID);
+                return true;
+            }
+
+            //CREO UN MATCH
+            else if (((playersWaiting != 0) && (playersWaiting >= (2 * notInitMatches))) || ((playersWaiting == 0) && (notInitMatches == 0))) {
+                matchID = createMatch(playerID);
+                clientHandler.setMatchID(matchID);
+
+                MessageEvent message = new MessageEvent();
+                message.setInfo("Match created!");
+                notify(List.of(clientHandler), basicPlayerConfig(basicMatchConfig(message, matchID), playerID));
+                return false;
+            }
+
+            //AGGIUNGO IL PLAYER ALLA WAITING LIST
+            else{
+                addPlayerToWaitingList(playerID);
+
+                MessageEvent message = new MessageEvent();
+                message.setPlayerID(playerID);
+                message.setMatchState(MatchState.NONE);
+                message.setInfo("Wait for a match to start...");
+                notify(List.of(messageEvent.getClientHandler()), message);
+                return false;
+            }
+
         }
 
-        //AGGIUNGO IL PLAYER AL MATCH -> aggiorno tutti
-        if (playersWaiting == 0 && initMatches !=0){
-            matchID = getInitMatchID();
-            addPlayerToMatch(matchID, playerID);
-            checkMatchStart(matchID);
-            clientHandlerUpdate(matchID, playerID);
-        }
-
-        //CREO UN MATCH
-        else if (((playersWaiting != 0) && (playersWaiting >= (2 * notInitMatches))) || ((playersWaiting == 0) && (notInitMatches == 0))) {
-            matchID = createMatch(playerID);
-            clientHandlerUpdate(matchID, playerID);
-        }
-
-        //AGGIUNGO IL PLAYER ALLA WAITING LIST
-        else{
-            message = new MessageEvent();
-            message.setPlayerID(playerID);
-            notify(List.of(messageEvent.getClientHandler()), message);
-            addPlayerToWaitingList(playerID);
-            clientHandlerUpdate(matchID, playerID);
-        }
     }
 
     @Override
@@ -63,7 +88,7 @@ public class FirstPlayerAccess extends State {
     }
 
     @Override
-    public void exit(Integer matchID){
+    public void exit(List<Observer<MessageEvent>> observers, int matchID, int playerID){
 
     }
 }
