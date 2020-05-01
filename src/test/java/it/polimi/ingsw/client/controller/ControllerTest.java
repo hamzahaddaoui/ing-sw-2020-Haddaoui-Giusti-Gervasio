@@ -29,6 +29,7 @@ class ControllerTest {
     String stringMessage;
     Set <Position> placingAvailablePosition ;
 
+
     void setCells() {
         for (int x = 0; x<5; x++)
             for (int y = 0; y<5; y++)
@@ -42,6 +43,11 @@ class ControllerTest {
         player = view.getPlayer();
         gameBoard = view.getGameBoard();
         placingAvailablePosition = gameBoard.getPlacingAvailableCells();
+        ArrayList <Integer> nums = new ArrayList<>();
+        nums.add(2);
+        nums.add(3);
+        player.setColoredPlayersNum(nums);
+        player.setPlayersNum(player.getColoredPlayersNum().get(0));
     }
 
     @Test
@@ -146,7 +152,7 @@ class ControllerTest {
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == SelectionNumberStatus.class);
-        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
+        assertTrue(controller.getControlState().processingMessage(InsertCharacter.ENTER));
         
         //SELECTING_GOD_CARDS
         player.setPlayersNum(3);
@@ -212,7 +218,7 @@ class ControllerTest {
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
-        assertTrue(controller.getControlState().processingMessage(InsertCharacter.ENTER));
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
         controller.update(InsertCharacter.ENTER);
 
