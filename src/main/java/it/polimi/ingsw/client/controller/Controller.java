@@ -21,6 +21,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
     private PlayerState playerState;
     private static MessageEvent message;
     private boolean messageReady = false;
+    Player player = View.getPlayer();
 
     public Controller() {
         controlState = new StartingStatus();
@@ -31,20 +32,13 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
 
     @Override
     public void update(Object viewObject){
-        synchronized (this){
-        Player player = View.getPlayer();
-        GameBoard gameBoard = View.getGameBoard();
-        synchronized (player){
-            synchronized (gameBoard) {
-                executor.submit(() -> execute(viewObject));
-            }
-        }
-        notifyAll();}
+        checkStatus();
+        executor.submit(() -> execute(viewObject));
     }
 
     private synchronized void execute(Object viewObject) {
         messageReady = false;
-        Player player = View.getPlayer();
+        /*Player player = View.getPlayer();
         System.out.println("\n"+viewObject+"\n");
         PlayerState newPlayerState = player.getPlayerState();
         MatchState newMatchState = player.getMatchState();
@@ -61,7 +55,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
 
         System.out.print("\nctrl MATCHSTATE ->" + matchState);
         System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
-        System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");
+        System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");*/
         messageReady = controlState.processingMessage(viewObject);
 
         if (messageReady) {
@@ -124,20 +118,18 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         message.setEndPosition(null);
         message.setEndTurn(null);
         message.setSpecialFunction(null);
-        //message.setExit(false);
-        //message.setMatchState(null);
-        //message.setPlayerState(null);
-        //message.setTurnState(null);
-        //message.setError(false);
-        //message.setMatchCards(null);
-        //message.setAvailablePlacingCells(null);
-        //message.setBillboardStatus(null);
-        //message.setWorkersAvailableCells(null);
-        //message.setTerminateTurnAvailable(null);
-        //message.setSpecialFunctionAvailable(null);
-        //message.setMatchPlayers(null);
-        //message.setWinner(null);
-        //message.setFinished(false);
+    }
+
+    private void checkStatus() {
+        PlayerState newPlayerState = player.getPlayerState();
+        MatchState newMatchState = player.getMatchState();
+        if (newMatchState == null && newPlayerState == null) {
+            reset();
+        } else if (newPlayerState != playerState || newMatchState != matchState) {
+            playerState = newPlayerState;
+            matchState = newMatchState;
+            nextState();
+        }
     }
 
     /*

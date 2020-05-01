@@ -108,6 +108,7 @@ class ControllerTest {
         player.setPlayerState(PlayerState.ACTIVE);
         player.setMatchState(MatchState.GETTING_PLAYERS_NUM);
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
+        view.checkStatus();
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == SelectionNumberStatus.class);
@@ -146,12 +147,13 @@ class ControllerTest {
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == SelectionNumberStatus.class);
-        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
+        assertTrue(controller.getControlState().processingMessage(InsertCharacter.ENTER));
         
         //SELECTING_GOD_CARDS
         player.setPlayersNum(3);
         player.setPlayerState(PlayerState.ACTIVE);
         player.setMatchState(MatchState.SELECTING_GOD_CARDS);
+        gameBoard.setMatchCards(settingCards());
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
@@ -536,5 +538,19 @@ class ControllerTest {
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
         assertTrue(!controller.isMessageReady());
 
+    }
+
+    private Set<String> settingCards() {
+        Set<String> cards = new HashSet<>();
+        cards.add("Apollo");
+        cards.add("Artemis");
+        cards.add("Athena");
+        cards.add("Hepheastus");
+        cards.add("Demeter");
+        cards.add("Minotaur");
+        cards.add("Prometheus");
+        cards.add("Pan");
+        cards.add("Atlas");
+        return cards;
     }
 }

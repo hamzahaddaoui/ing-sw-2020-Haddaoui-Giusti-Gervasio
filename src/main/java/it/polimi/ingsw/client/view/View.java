@@ -54,6 +54,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
             numPlayer.add(2);
             numPlayer.add(3);
             player.setPlayersNum(numPlayer.get(0));
+            break;
         }
             case WAITING_FOR_PLAYERS: outputStream.println("WAIT YOUR TURN...");
             case SELECTING_GOD_CARDS:{
