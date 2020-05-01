@@ -2,9 +2,11 @@ package it.polimi.ingsw.client.controller;
 
 import it.polimi.ingsw.client.controller.state.ControlState;
 import it.polimi.ingsw.client.controller.state.StartingStatus;
+import it.polimi.ingsw.client.controller.state.WaitingStatus;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.server.model.Match;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
@@ -17,45 +19,23 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
     static ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private ControlState controlState;
-    private MatchState matchState;
-    private PlayerState playerState;
     private static MessageEvent message;
     private boolean messageReady = false;
     Player player = View.getPlayer();
 
     public Controller() {
         controlState = new StartingStatus();
-        playerState = null;
-        matchState = null;
         message = new MessageEvent();
     }
 
     @Override
-    public void update(Object viewObject){
+    public synchronized void update(Object viewObject){
         checkStatus();
         executor.submit(() -> execute(viewObject));
     }
 
     private synchronized void execute(Object viewObject) {
         messageReady = false;
-        /*Player player = View.getPlayer();
-        System.out.println("\n"+viewObject+"\n");
-        PlayerState newPlayerState = player.getPlayerState();
-        MatchState newMatchState = player.getMatchState();
-        System.out.print("\nview MATCHSTATE ->" + newMatchState);
-        System.out.print("  /  view PLAYERSTATE ->" + newPlayerState);
-        System.out.println(" /   ctrl ControlSTATE ->" + controlState + "  \n ");
-        if (newMatchState == null && newPlayerState == null) {
-            reset();
-        } else if (newPlayerState != playerState || newMatchState != matchState) {
-            playerState = newPlayerState;
-            matchState = newMatchState;
-            nextState();
-        }
-
-        System.out.print("\nctrl MATCHSTATE ->" + matchState);
-        System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
-        System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");*/
         messageReady = controlState.processingMessage(viewObject);
 
         if (messageReady) {
@@ -72,7 +52,22 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
     }
 
     public synchronized void nextState(){
-        controlState.nextState(this);
+        MatchState matchState = View.getPlayer().getMatchState();
+        PlayerState playerState = View.getPlayer().getPlayerState();
+        if(playerState == null && matchState == null) {
+            controlState = new StartingStatus();
+            return;
+        }
+        else if(matchState == null && playerState != null){
+            controlState = new WaitingStatus();
+            return;
+        }
+        switch (matchState){
+            case GETTING_PLAYERS_NUM: {
+                
+            }
+
+        }
     }
 
     public MatchState getMatchState() {

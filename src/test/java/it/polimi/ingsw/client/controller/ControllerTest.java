@@ -28,12 +28,29 @@ class ControllerTest {
     GameBoard gameBoard;
     String stringMessage;
     Set <Position> placingAvailablePosition ;
+    ArrayList<String> matchCards;
 
 
     void setCells() {
         for (int x = 0; x<5; x++)
             for (int y = 0; y<5; y++)
                 placingAvailablePosition.add(new Position(x,y));
+            gameBoard.setColoredPosition(placingAvailablePosition.stream().findAny().get());
+            System.out.println(gameBoard.getColoredPosition());
+    }
+
+    void setGodCards(){
+        matchCards = new ArrayList<>();
+        matchCards.add("APOLLO");
+        matchCards.add("ARTEMIS");
+        matchCards.add("PAN");
+        matchCards.add("HEPHAESTUS");
+        matchCards.add("ATHENA");
+        matchCards.add("PROMETHEUS");
+        matchCards.add("MINOTAUR");
+        matchCards.add("DEMETER");
+        matchCards.add("ATLAS");
+        gameBoard.setColoredGodCard(matchCards.get(0));
     }
 
     @BeforeEach
@@ -48,6 +65,7 @@ class ControllerTest {
         nums.add(3);
         player.setColoredPlayersNum(nums);
         player.setPlayersNum(player.getColoredPlayersNum().get(0));
+        setGodCards();
     }
 
     @Test
@@ -175,8 +193,6 @@ class ControllerTest {
         assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
         assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
-        player.setPlayerState(PlayerState.ACTIVE);
-        player.setMatchState(MatchState.SELECTING_GOD_CARDS);
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
@@ -225,6 +241,11 @@ class ControllerTest {
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
+
+        controller.update(InsertCharacter.ENTER);
+
+        assertTrue(controller.getControlState().getClass() == SelectingGodCardsStatus.class);
         assertTrue(controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
         //WAITING STATUS
@@ -234,47 +255,48 @@ class ControllerTest {
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.A));
 
         controller.update(InsertCharacter.S);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.S));
 
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
         controller.update(InsertCharacter.W);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.W));
 
         controller.update(InsertCharacter.D);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.D));
 
         controller.update(InsertCharacter.F);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.F));
 
         controller.update(InsertCharacter.E);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.E));
 
         controller.update(InsertCharacter.Q);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.Q));
 
         //SELECTING_SPECIAL_COMMANDS
 
         player.setPlayerState(PlayerState.ACTIVE);
         player.setMatchState(MatchState.SELECTING_SPECIAL_COMMAND);
+        gameBoard.setColoredGodCard(gameBoard.getMatchCards().get(0));
 
         assertTrue(player.getPlayersNum() != null);
         assertTrue(gameBoard.getSelectedGodCards() != null);
@@ -284,44 +306,46 @@ class ControllerTest {
         controller.update(InsertCharacter.S);
 
         assertTrue(controller.getControlState().getClass() == SelectingSpecialCommandStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.S));
 
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == SelectingSpecialCommandStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.A));
 
         controller.update(InsertCharacter.W);
 
         assertTrue(controller.getControlState().getClass() == SelectingSpecialCommandStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.W));
 
         controller.update(InsertCharacter.E);
 
         assertTrue(controller.getControlState().getClass() == SelectingSpecialCommandStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.E));
 
         controller.update(InsertCharacter.Q);
 
         assertTrue(controller.getControlState().getClass() == SelectingSpecialCommandStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.Q));
 
         controller.update(InsertCharacter.D);
 
         assertTrue(controller.getControlState().getClass() == SelectingSpecialCommandStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.D));
 
         controller.update(InsertCharacter.F);
 
         assertTrue(controller.getControlState().getClass() == SelectingSpecialCommandStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.F));
 
         String chosenCard = gameBoard.getColoredGodCard();
+        System.out.println(chosenCard);
 
         controller.update(InsertCharacter.ENTER);
 
-        assertTrue(controller.isMessageReady());
-        assertTrue(gameBoard.getColoredGodCard() == chosenCard);
+        System.out.println(gameBoard.getColoredGodCard());
+        assertTrue(controller.getControlState().processingMessage(InsertCharacter.ENTER));
+        assertTrue(gameBoard.getColoredGodCard().equals(chosenCard));
 
         //WAITING STATUS
 
@@ -330,45 +354,45 @@ class ControllerTest {
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.A));
 
         controller.update(InsertCharacter.S);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.S));
 
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
         controller.update(InsertCharacter.W);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.W));
 
         controller.update(InsertCharacter.D);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.D));
 
         controller.update(InsertCharacter.F);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.F));
 
         controller.update(InsertCharacter.E);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.E));
 
         controller.update(InsertCharacter.Q);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.Q));
         //PLACING_STATUS
 
-        player.setPlayerState(PlayerState.IDLE);
+        player.setPlayerState(PlayerState.ACTIVE);
         player.setMatchState(MatchState.PLACING_WORKERS);
         setCells();
         gameBoard.setColoredPosition(placingAvailablePosition.stream().findAny().get());
@@ -379,54 +403,55 @@ class ControllerTest {
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.A));
 
         controller.update(InsertCharacter.W);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.W));
 
-        Position position = gameBoard.getColoredPosition();
+        Position positionX = gameBoard.getColoredPosition();
+        System.out.println(positionX);
 
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue( gameBoard.getWorkersAvailableCells().keySet().contains(position));
+        gameBoard.getWorkersAvailableCells().keySet().stream().forEach(w->System.out.println(w));
+        assertTrue( gameBoard.getWorkersAvailableCells().keySet().contains(positionX));
         assertTrue(gameBoard.getWorkersAvailableCells().keySet().size() == 1);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
         controller.update(InsertCharacter.S);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.S));
 
         controller.update(InsertCharacter.D);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.D));
 
         controller.update(InsertCharacter.E);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.E));
 
         controller.update(InsertCharacter.Q);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.Q));
 
         controller.update(InsertCharacter.F);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.F));
 
-        position = gameBoard.getColoredPosition();
+        positionX = gameBoard.getColoredPosition();
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == PlacingWorkersStatus.class);
-        assertTrue( gameBoard.getWorkersAvailableCells().keySet().contains(position));
+        assertTrue( gameBoard.getWorkersAvailableCells().keySet().contains(positionX));
         assertTrue(gameBoard.getWorkersAvailableCells().keySet().size() == 2);
-        assertTrue(controller.isMessageReady());
 
         //WAITING STATUS
 
@@ -435,42 +460,42 @@ class ControllerTest {
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.A));
 
         controller.update(InsertCharacter.S);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.S));
 
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
         controller.update(InsertCharacter.W);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.W));
 
         controller.update(InsertCharacter.D);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.D));
 
         controller.update(InsertCharacter.F);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.F));
 
         controller.update(InsertCharacter.E);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.E));
 
         controller.update(InsertCharacter.Q);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.Q));
         //RUNNING
 
         player.setPlayerState(PlayerState.ACTIVE);
@@ -486,19 +511,17 @@ class ControllerTest {
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == RunningStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.A));
 
         controller.update(InsertCharacter.W);
 
         assertTrue(controller.getControlState().getClass() == RunningStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.W));
 
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == RunningStatus.class);
-        assertTrue(controller.isMessageReady());
-
-        //WAITING STATUS
+        assertTrue(controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
         //WAITING STATUS
 
@@ -507,42 +530,42 @@ class ControllerTest {
         controller.update(InsertCharacter.A);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.A));
 
         controller.update(InsertCharacter.S);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.S));
 
         controller.update(InsertCharacter.ENTER);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.ENTER));
 
         controller.update(InsertCharacter.W);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.W));
 
         controller.update(InsertCharacter.D);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.D));
 
         controller.update(InsertCharacter.F);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.F));
 
         controller.update(InsertCharacter.E);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.E));
 
         controller.update(InsertCharacter.Q);
 
         assertTrue(controller.getControlState().getClass() == WaitingStatus.class);
-        assertTrue(!controller.isMessageReady());
+        assertTrue(!controller.getControlState().processingMessage(InsertCharacter.Q));
 
     }
 

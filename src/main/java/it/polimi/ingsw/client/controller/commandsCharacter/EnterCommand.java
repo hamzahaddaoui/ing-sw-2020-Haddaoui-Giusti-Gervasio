@@ -71,7 +71,7 @@ public class EnterCommand implements CommandCharacter {
             if(workersPositions.size() == 1)
                 System.out.println("Place the other worker");
             View.doUpdate();
-            return true;
+            return false;
         }
         View.doUpdate();
         return false;
@@ -176,6 +176,7 @@ public class EnterCommand implements CommandCharacter {
             System.out.println(coloredGodCard + " has been insert");
             if(selectedGodCards.size() < playersNum){
                 gameBoard.setColoredGodCard(godCards.get(0));
+                System.out.println("Your cards are "+ selectedGodCards);
                 System.out.println("Select next card");
                 System.out.println("MatchCards "+godCards);
                 View.doUpdate();

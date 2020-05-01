@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.controller.commandsCharacter;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.server.model.GodCards;
 
 import java.util.ArrayList;
 
@@ -57,22 +58,21 @@ public class ECommand implements CommandCharacter {
         if(godCards == null){
             throw new IllegalArgumentException(" godCards empty ");
         }
-        if(selectedGodCards == null){
-            throw new IllegalArgumentException(" selectedGodCards empty ");
+        if(selectedGodCards.size() == 0){
+            System.out.println("Selected God Cards is empty");
+            return false;
         }
         if(coloredGodCard == null){
             throw new IllegalArgumentException(" None card selected ");
         }
-        if(!selectedGodCards.contains(coloredGodCard)){
-            throw new IllegalArgumentException(" This card is not in the SelectedCard Deck ");
-        }
 
 
-        if(selectedGodCards.contains(coloredGodCard)){
-            selectedGodCards.remove(selectedGodCards.indexOf(coloredGodCard));
-            godCards.add(coloredGodCard);
+        if(selectedGodCards.size() > 0){
+            String cardRemoved = selectedGodCards.get(selectedGodCards.size()-1);
+            selectedGodCards.remove(cardRemoved);
+            godCards.add(cardRemoved);
             gameBoard.setColoredGodCard(godCards.get(0));
-            System.out.println("\n"+coloredGodCard + " has been removed\n");
+            System.out.println("\n"+cardRemoved + " has been removed\n");
         }
         System.out.println("MatchCards "+godCards);
         View.doUpdate();
