@@ -18,7 +18,7 @@ public class MessageEvent {
     //user to controller
     private String                          nickname;
 
-    private int                         playersNum;
+    private int                             playersNum;
     private Set<String>                     godCards; //le Carte selezionate in fase di SelectingGodCards del controller
 
     private String                          godCard; //Carta Selezionata in fase di SelectionSpecialFunction del controller
@@ -47,9 +47,9 @@ public class MessageEvent {
     private Map<Position, Set<Position>>    workersAvailableCells;
 
     private boolean                         terminateTurnAvailable;
-    private Map<Position,Boolean>           specialFunctionAvailable;//worker+disponibilità special function -
+    private Map<Position,Boolean>           specialFunctionAvailable; //worker+disponibilità special function -
 
-    private Map<Integer, String>            matchPlayers;           //i giocatori del gioco -
+    private Map<Integer, String>            matchPlayers;             //i giocatori del gioco -
     private int                             currentPlayer;
     //private int                           activeMatches;
     //private int                           playersConnected;

@@ -10,6 +10,7 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.*;
 
+//MANCANO I CONTROLLI SULL'END MATCH
 
 public class EnterCommand implements CommandCharacter {
 
@@ -23,7 +24,7 @@ public class EnterCommand implements CommandCharacter {
         Player player = View.getPlayer();
         if(player.getPlayersNum() == null)
             throw new IllegalArgumentException("Players num is empty.");
-        Controller.getMessage().setPlayersNum(player.getPlayersNum());
+        Controller.getMessage().setPlayersNum(player.getPlayerNumber());
         System.out.println("Number selected: " + player.getPlayersNum());
         View.doUpdate();
         return true;
@@ -154,7 +155,7 @@ public class EnterCommand implements CommandCharacter {
     public boolean executeSelectingGodCardsStatus() {
         GameBoard gameBoard = View.getGameBoard();
         ArrayList<String> godCards = gameBoard.getMatchCards();
-        Integer playersNum = View.getPlayer().getPlayersNum();
+        Integer playersNum = View.getPlayer().getPlayerNumber();
         String coloredGodCard = gameBoard.getColoredGodCard();
         ArrayList<String> selectedGodCards = gameBoard.getSelectedGodCards();
 

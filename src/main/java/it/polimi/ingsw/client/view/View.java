@@ -17,6 +17,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
 
     static ExecutorService executorUpdate = Executors.newSingleThreadExecutor();
     static ExecutorService executorInput = Executors.newSingleThreadExecutor();
+    static ExecutorService executorData = Executors.newSingleThreadExecutor();
 
     private Scanner scanner;
     private DataInputStream dataInputStream;
@@ -33,27 +34,168 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         player = new Player();
         gameBoard = new GameBoard();
         scanner = new Scanner(System.in);
-
+        outputStream = new PrintStream(System.out);
     }
 
     @Override
     public void update(MessageEvent messageEvent) {
-        if(messageEvent.getError()!=null && messageEvent.getError()) init();
+        executorData.submit(()-> updateData(messageEvent) );
+    }
+
+    public void updateData(MessageEvent messageEvent){
+        if(messageEvent.getError()!=null && messageEvent.getError()){
+            init();
+        }
         else if(!active && (messageEvent.getError()==null || !messageEvent.getError())){
             active = true;
             fetching(messageEvent);
-            checkStatus();
             doUpdate();
             executorInput.submit(()-> inputListener());
         }
         else{
             fetching(messageEvent);
-            checkStatus();
             doUpdate();
         }
     }
 
-    public void checkStatus(){
+    public void fetching(MessageEvent messageEvent){
+        standardFetching(messageEvent);
+        if(player.getMatchState() == null) return;
+        switch(player.getMatchState()){
+            case GETTING_PLAYERS_NUM:{
+                if(player.getPlayersNum() == null)
+                    initGettingPlayersNum();
+                break;
+            }
+            case WAITING_FOR_PLAYERS:{
+                fetchingWaitingState(messageEvent);
+                break;
+            }
+            case SELECTING_GOD_CARDS:
+            case SELECTING_SPECIAL_COMMAND: {
+                fetchingAndInitCardsStates(messageEvent);
+                break;
+            }
+            case PLACING_WORKERS:{
+                fetchingPlacingState(messageEvent);
+                initPlacingState();
+                break;
+            }
+            case RUNNING: {
+                fetchingRunning(messageEvent);
+                initRunning();
+                break;
+            }
+            case FINISHED:
+                active = false;
+        }
+    }
+
+
+    //FETCHING
+
+    public void standardFetching(MessageEvent messageEvent){
+        if(messageEvent.getMatchState() != player.getMatchState() && messageEvent.getMatchState() != null){
+            player.setMatchState(messageEvent.getMatchState());
+        }
+        if(messageEvent.getPlayerState() != player.getPlayerState() && messageEvent.getPlayerState() != null){
+            player.setPlayerState(messageEvent.getPlayerState());
+        }
+        if(messageEvent.getTurnState() != player.getTurnState() && messageEvent.getTurnState() != null){
+            player.setTurnState(messageEvent.getTurnState());
+        }
+        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null){
+            player.setMatchPlayers(messageEvent.getMatchPlayers());
+        }
+        if(messageEvent.getCurrentPlayer() != player.getPlayer() && messageEvent.getCurrentPlayer() != 0){
+            player.setMatchPlayers(messageEvent.getMatchPlayers());
+        }
+    }
+
+    public void fetchingWaitingState(MessageEvent messageEvent){
+        if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
+            gameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
+        }
+    }
+
+    public void fetchingAndInitCardsStates(MessageEvent messageEvent){
+        if(messageEvent.getMatchCards() != gameBoard.getMatchCards() && messageEvent.getMatchCards() != null){
+            if(player.getMatchState() == MatchState.SELECTING_GOD_CARDS) {
+                gameBoard.setMatchCards(messageEvent.getMatchCards());
+                gameBoard.setColoredGodCard(gameBoard.getMatchCards().get(0));
+            }
+            else{
+                gameBoard.setSelectedGodCards(messageEvent.getMatchCards());
+                gameBoard.setColoredGodCard(gameBoard.getSelectedGodCards().get(0));
+            }
+        }
+    }
+
+    public void fetchingPlacingState(MessageEvent messageEvent){
+        if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
+            gameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
+        }
+        if(messageEvent.getAvailablePlacingCells() != gameBoard.getPlacingAvailableCells() && messageEvent.getAvailablePlacingCells() != null){
+            gameBoard.setPlacingAvailableCells(messageEvent.getAvailablePlacingCells());
+        }
+    }
+
+    public void fetchingRunning(MessageEvent messageEvent){
+        if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
+            gameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
+        }
+        if(messageEvent.getWorkersAvailableCells() != gameBoard.getWorkersAvailableCells() && messageEvent.getWorkersAvailableCells()!=  null){
+            gameBoard.setWorkersAvailableCells(messageEvent.getWorkersAvailableCells());
+        }
+        if(messageEvent.getTerminateTurnAvailable() != player.isTerminateTurnAvailable()){
+            player.setTerminateTurnAvailable(messageEvent.getTerminateTurnAvailable());
+        }
+        if(messageEvent.getSpecialFunctionAvailable() != player.getSpecialFunctionAvailable() && messageEvent.getSpecialFunctionAvailable() != null){
+            player.setSpecialFunctionAvailable(messageEvent.getSpecialFunctionAvailable());
+        }
+    }
+
+    //INIT
+
+    public void initGettingPlayersNum(){
+        ArrayList<Integer> numbers = new ArrayList<>(2);
+        numbers.add(2);
+        numbers.add(3);
+        player.setPlayersNum(numbers);
+        player.setPlayerNumber(player.getPlayersNum().get(0));
+    }
+
+    public void  initPlacingState(){
+        gameBoard.setColoredPosition(gameBoard.getPlacingAvailableCells().stream().findAny().get());
+    }
+
+    public void initRunning(){
+        if(player.getPlayerState() == PlayerState.ACTIVE){
+            if(player.getTurnState() == TurnState.IDLE) {
+                gameBoard.setStartingPosition(null);
+                if (gameBoard.getWorkersAvailableCells() != null && gameBoard.getWorkersPositions() != null) {
+                    gameBoard.setColoredPosition(gameBoard.getWorkersPositions().stream().findAny().get());
+                }
+            }
+            else {
+                if (gameBoard.getWorkersAvailableCells() != null &&
+                        gameBoard.getWorkersPositions() != null &&
+                        gameBoard.getStartingPosition()!=null) {
+                    if(gameBoard.getWorkersPositions().contains(gameBoard.getStartingPosition()))
+                    gameBoard.setColoredPosition(gameBoard
+                            .getWorkersAvailableCells(gameBoard.getStartingPosition())
+                            .stream()
+                            .findAny()
+                            .get());
+                }
+            }
+
+        }
+    }
+
+
+
+    /*public void fetching(MessageEvent messageEvent){
         switch(player.getMatchState()){
             case GETTING_PLAYERS_NUM:{
             player.setColoredPlayersNum(new ArrayList<>());
@@ -97,27 +239,9 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
             case FINISHED:
                 active = false;
         }
-    }
+    }*/
 
-    public void fetching(MessageEvent messageEvent){
-        if(messageEvent.getMatchID() != null && messageEvent.getMatchID() != player.getMatchID()){
-            player.setMatchID(messageEvent.getMatchID());
-        }
-        if(messageEvent.getMatchState() != player.getMatchState() && messageEvent.getMatchState() != null){
-            player.setMatchState(messageEvent.getMatchState());
-        }
-        if(messageEvent.getPlayerState() != player.getPlayerState() && messageEvent.getPlayerState() != null){
-            player.setPlayerState(messageEvent.getPlayerState());
-        }
-        if(messageEvent.getTurnState() != player.getTurnState() && messageEvent.getTurnState() != null){
-            player.setTurnState(messageEvent.getTurnState());
-        }
-        if(messageEvent.getMatchCards() != gameBoard.getMatchCards() && messageEvent.getMatchCards() != null){
-            gameBoard.setMatchCards(messageEvent.getMatchCards());
-        }
-        if(messageEvent.getAvailablePlacingCells() != gameBoard.getPlacingAvailableCells() && messageEvent.getAvailablePlacingCells() != null){
-            gameBoard.setPlacingAvailableCells(messageEvent.getAvailablePlacingCells());
-        }
+    /*public void fetching(MessageEvent messageEvent){
         if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
             gameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
         }
@@ -130,10 +254,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         if(messageEvent.getSpecialFunctionAvailable() != player.getSpecialFunctionAvailable() && messageEvent.getSpecialFunctionAvailable() != null){
             player.setSpecialFunctionAvailable(messageEvent.getSpecialFunctionAvailable());
         }
-        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers()!=null){
-            player.setMatchPlayers(messageEvent.getMatchPlayers());
-        }
-    }
+    }*/
 
     public static void doUpdate(){
         executorUpdate.submit(()-> view());
@@ -177,37 +298,22 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     private boolean commute(char inputCharacter){
         if (Set.of(InsertCharacter.values()).stream().anyMatch(insertCharacter1 -> insertCharacter1.getCode()==(int) inputCharacter)) {
             insertCharacter = Set.of(InsertCharacter.values()).stream().filter(insertCharacter1 -> insertCharacter1.getCode()==(int) inputCharacter).findAny().get();
-            return true; }
-        else return false;
-
-        /*InsertCharacter insertCharacters = Arrays.stream(InsertCharacter.values()).filter(insertCharacter1 -> insertCharacter1.equals(inputCharacter)).findFirst().get();
-        if(insertCharacters==null){
-            insertCharacter = insertCharacters;
             return true;
         }
-        else return false;*/
+        else return false;
     }
 
-    public void init(){   // -> insert IP
-        outputStream = new PrintStream(System.out);
-        outputStream.println( "Insert your nickname : ");
-        player.setNickname(scanner.nextLine());
+    public void init(){
+        if(player.getNickname() == null){
+            outputStream.println( "Insert your nickname: ");
+            player.setNickname(scanner.nextLine());
+            notify(player.getNickname());
+        }
+        else{
+            outputStream.println( "Your nickname is already used!\nInsert a new nickname:   ");
+            player.setNickname(scanner.nextLine());
+        }
         notify(player.getNickname());
-    }
-
-    public void insertNickName(){
-        outputStream.println( "Your nickname is already used! ");
-        outputStream.println( "Insert a new nickname : ");
-        player.setNickname(scanner.nextLine());
-        notify(player.getNickname());
-    }
-
-    public static GameBoard getGameBoard() {
-        return gameBoard;
-    }
-
-    public static Player getPlayer() {
-        return player;
     }
 
     public static View constructor(){
@@ -218,4 +324,14 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     }
 
     public boolean isActive() { return active;}
+
+    public static GameBoard getGameBoard() {
+        return gameBoard;
+    }
+
+    public static Player getPlayer() {
+        return player;
+    }
+
+
 }
