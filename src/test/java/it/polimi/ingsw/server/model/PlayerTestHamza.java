@@ -11,6 +11,8 @@ import org.junit.platform.engine.support.descriptor.FileSystemSource;
 import java.awt.*;
 import java.net.SocketOption;
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -106,7 +108,6 @@ class PlayerTestHamza {
         {
             //---------turno di athena------------------------------------------------------
             p = p1;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(0, 0);
             p.setCurrentWorker(worker);
@@ -127,7 +128,6 @@ class PlayerTestHamza {
 
             //---------turno di atlas------------------------------------------------------
             p = p2;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 3);
             p.setCurrentWorker(worker);
@@ -148,7 +148,6 @@ class PlayerTestHamza {
 
             //---------turno di efesto------------------------------------------------------
             p = p3;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(4, 4);
             p.setCurrentWorker(worker);
@@ -181,7 +180,6 @@ class PlayerTestHamza {
         {
             //---------turno di athena------------------------------------------------------
             p = p1;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(1, 1);
             p.setCurrentWorker(worker);
@@ -201,7 +199,6 @@ class PlayerTestHamza {
 
             //---------turno di atlas------------------------------------------------------
             p = p2;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 2);
             p.setCurrentWorker(worker);
@@ -221,7 +218,6 @@ class PlayerTestHamza {
 
             //---------turno di efesto------------------------------------------------------
             p = p3;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(3, 4);
             p.setCurrentWorker(worker);
@@ -248,7 +244,6 @@ class PlayerTestHamza {
         {
             //---------turno di athena------------------------------------------------------
             p = p1;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(0, 1);
             p.setCurrentWorker(worker);
@@ -268,7 +263,6 @@ class PlayerTestHamza {
 
             //---------turno di atlas------------------------------------------------------
             p = p2;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 4);
             p.setCurrentWorker(worker);
@@ -288,7 +282,6 @@ class PlayerTestHamza {
 
             //---------turno di efesto------------------------------------------------------
             p = p3;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 3);
             p.setCurrentWorker(worker);
@@ -321,7 +314,6 @@ class PlayerTestHamza {
         {
             //---------turno di athena------------------------------------------------------
             p = p1;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(0, 0);
             p.setCurrentWorker(worker);
@@ -341,7 +333,6 @@ class PlayerTestHamza {
 
             //---------turno di atlas------------------------------------------------------
             p = p2;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(1, 4);
             p.setCurrentWorker(worker);
@@ -361,7 +352,6 @@ class PlayerTestHamza {
 
             //---------turno di efesto------------------------------------------------------
             p = p3;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(1, 3);
             p.setCurrentWorker(worker);
@@ -389,7 +379,6 @@ class PlayerTestHamza {
         {
             //---------turno di athena------------------------------------------------------
             p = p1;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(1, 0);
             p.setCurrentWorker(worker);
@@ -409,7 +398,6 @@ class PlayerTestHamza {
 
             //---------turno di atlas------------------------------------------------------
             p = p2;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 4);
             p.setCurrentWorker(worker);
@@ -429,7 +417,6 @@ class PlayerTestHamza {
 
             //---------turno di efesto------------------------------------------------------
             p = p3;
-            System.out.println(getBillboardStat());
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 3);
             p.setCurrentWorker(worker);
@@ -447,51 +434,75 @@ class PlayerTestHamza {
 
 
 
-    String getBillboardStat(){
+    String getBillboardStat(Set<Position> cells){
+        StringBuilder outputA = new StringBuilder();
+        StringBuilder outputB = new StringBuilder();
+        StringBuilder outputC = new StringBuilder();
         StringBuilder output = new StringBuilder();
+
+
+        List<Integer> players =match.getPlayers().stream().map(player -> player.getID()).collect(Collectors.toList());
+
         match.getBillboard()
                 .getCells()
                 .keySet()
                 .stream()
                 .sorted()
-                .forEach(position -> output
+                .forEach(position -> outputA
                         .append(match.getBillboard().getPlayer(position)==0 ? "⬜️": "")
-                        .append(match.getBillboard().getPlayer(position)==11 ? "🟥":"" )
-                        .append(match.getBillboard().getPlayer(position)==22 ? "🟩":"" )
-                        .append(match.getBillboard().getPlayer(position)==33 ? "🟦":"" )
+                        .append(players.indexOf(match.getBillboard().getPlayer(position)) == 0 ? "🟥":"" )
+                        .append(players.indexOf(match.getBillboard().getPlayer(position)) == 1 ? "🟩":"" )
+                        .append(players.indexOf(match.getBillboard().getPlayer(position)) == 2 ? "🟦":"" )
                         .append((position.getY()==4) ? "\n" : " "));
 
-        output.append("\n");
+        outputA.append("\n");
 
         match.getBillboard()
                 .getCells()
                 .keySet()
                 .stream()
                 .sorted()
-                .forEach(position -> output
+                .forEach(position -> outputB
                         .append(match.getBillboard().getDome(position) ? "⏺" : "")
                         .append(!match.getBillboard().getDome(position) && match.getBillboard().getTowerHeight(position) == 0 ? "0️⃣": "")
                         .append(!match.getBillboard().getDome(position) && match.getBillboard().getTowerHeight(position) == 1 ? "1️⃣": "")
                         .append(!match.getBillboard().getDome(position) && match.getBillboard().getTowerHeight(position) == 2 ? "2️⃣": "")
                         .append(!match.getBillboard().getDome(position) && match.getBillboard().getTowerHeight(position) == 3 ? "3️⃣": "")
-
                         .append((position.getY()==4) ? "\n" : " "));
-        return output.toString();
-    }
 
-    String getBillboardStat(Set<Position> cells){
-        StringBuilder output = new StringBuilder();
         match.getBillboard()
                 .getCells()
                 .keySet()
                 .stream()
                 .sorted()
-                .forEach(position -> output
+                .forEach(position -> outputC
                         .append(cells.contains(position) ? "\u2B1B" : "")
                         .append(!(p.getCurrentWorker().getPosition().equals(position)) && !cells.contains(position) ? "\u2B1C" : "")
                         .append((p.getCurrentWorker().getPosition().equals(position)) ? "\uD83D\uDC77\uD83C\uDFFB" : "")
                         .append((position.getY()==4) ? "\n" : " "));
 
+
+        int q, w;
+        int j,k;
+        int c,v;
+        int i;
+
+
+        for(i=0,q=0,j=0, c=0, w=outputA.indexOf("\n",0), k =outputB.indexOf("\n",0), v = outputC.indexOf("\n",0);
+            i<5;
+            i++,w=outputA.indexOf("\n",q), k = outputB.indexOf("\n",j), v =outputC.indexOf("\n",c) ){
+
+            output.append(outputA,q,w);
+            output.append("\t");
+            output.append(outputB,j,k);
+            output.append("\t");
+            output.append(outputC,c,v);
+            output.append("\n");
+            q=++w;
+            j=++k;
+            c=++v;
+        }
         return output.toString();
     }
+
 }
