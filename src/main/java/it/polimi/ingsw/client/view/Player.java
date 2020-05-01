@@ -15,9 +15,9 @@ public class Player {
     private Integer matchID;
     private Integer playerID;
     private String nickname;
-    private PlayerState playerState;
-    private MatchState matchState;
-    private TurnState turnState;
+    private PlayerState playerState=null;
+    private MatchState matchState=null;
+    private TurnState turnState=null;
 
     private ArrayList<Integer> coloredPlayersNum = new ArrayList<>();
     private Integer playersNum = null;

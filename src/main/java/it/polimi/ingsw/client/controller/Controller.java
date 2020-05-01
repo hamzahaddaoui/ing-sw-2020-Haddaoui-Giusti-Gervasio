@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.controller;
 
 import it.polimi.ingsw.client.controller.state.ControlState;
 import it.polimi.ingsw.client.controller.state.StartingStatus;
+import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
@@ -13,7 +14,7 @@ import java.util.concurrent.Executors;
 
 public class Controller extends Observable<MessageEvent> implements Observer<Object> {
 
-    static ExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    static ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private ControlState controlState;
     private MatchState matchState;
@@ -26,51 +27,58 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
         playerState = null;
         matchState = null;
         message = new MessageEvent();
-
     }
 
     @Override
     public void update(Object viewObject){
-        executor.submit(() -> execute(viewObject));
+        synchronized (this){
+        Player player = View.getPlayer();
+        GameBoard gameBoard = View.getGameBoard();
+        synchronized (player){
+            synchronized (gameBoard) {
+                executor.submit(() -> execute(viewObject));
+            }
+        }
+        notifyAll();}
     }
 
     private synchronized void execute(Object viewObject) {
         messageReady = false;
-                PlayerState newPlayerState = View.getPlayer().getPlayerState();
-                MatchState newMatchState = View.getPlayer().getMatchState();
-                System.out.print("\nview MATCHSTATE ->"+newMatchState);
-                System.out.print("  /  view PLAYERSTATE ->"+newPlayerState);
-                System.out.println(" /   ctrl ControlSTATE ->"+controlState+"  \n ");
-                if(newMatchState == null && newPlayerState == null){
-                    reset();
-                }
-                else if(newPlayerState != playerState || newMatchState != matchState){
-                    playerState = newPlayerState;
-                    matchState = newMatchState;
-                    nextState();
-                }
+        Player player = View.getPlayer();
+        System.out.println("\n"+viewObject+"\n");
+        PlayerState newPlayerState = player.getPlayerState();
+        MatchState newMatchState = player.getMatchState();
+        System.out.print("\nview MATCHSTATE ->" + newMatchState);
+        System.out.print("  /  view PLAYERSTATE ->" + newPlayerState);
+        System.out.println(" /   ctrl ControlSTATE ->" + controlState + "  \n ");
+        if (newMatchState == null && newPlayerState == null) {
+            reset();
+        } else if (newPlayerState != playerState || newMatchState != matchState) {
+            playerState = newPlayerState;
+            matchState = newMatchState;
+            nextState();
+        }
 
-                System.out.print("\nctrl MATCHSTATE ->"+matchState);
-                System.out.print("/   ctrl PLAYERSTATE ->"+playerState);
-                System.out.println("  / ctrl ControlSTATE ->"+controlState+"  \n ");
-                messageReady = controlState.processingMessage(viewObject);
+        System.out.print("\nctrl MATCHSTATE ->" + matchState);
+        System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
+        System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");
+        messageReady = controlState.processingMessage(viewObject);
 
-                if (messageReady) {
-                    if (playerState != null)
-                        message.setPlayerID(View.getPlayer().getPlayerID());
-                    if (matchState != null)
-                        message.setMatchID(View.getPlayer().getMatchID());
-                    notify(message);
-                    reset();
-                }
-        System.out.print("\nctrl MATCHSTATE ->"+matchState);
-        System.out.print("/   ctrl PLAYERSTATE ->"+playerState);
-        System.out.println("  / ctrl ControlSTATE ->"+controlState+"  \n ");
-
+        if (messageReady) {
+            if (playerState != null)
+                message.setPlayerID(player.getPlayerID());
+            if (matchState != null)
+                message.setMatchID(player.getMatchID());
+            notify(message);
+            reset();
+        }
+        System.out.print("\nctrl MATCHSTATE ->" + matchState);
+        System.out.print("/   ctrl PLAYERSTATE ->" + playerState);
+        System.out.println("  / ctrl ControlSTATE ->" + controlState + "  \n ");
     }
 
-    public void nextState(){
-        this.controlState.nextState(this);
+    public synchronized void nextState(){
+        controlState.nextState(this);
     }
 
     public MatchState getMatchState() {
