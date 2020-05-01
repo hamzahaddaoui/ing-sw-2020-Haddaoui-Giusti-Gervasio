@@ -165,6 +165,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         player.setPlayerNumber(player.getPlayersNum().get(0));
     }
 
+    
     public void  initPlacingState(){
         gameBoard.setColoredPosition(gameBoard.getPlacingAvailableCells().stream().findAny().get());
     }
