@@ -47,19 +47,20 @@ class ControllerTest {
         controller.update(stringMessage);
 
         assertTrue(controller.getControlState().getClass() == StartingStatus.class);
-        //assertTrue(controller.getControlState().processingMessage(stringMessage));
+        assertTrue(controller.getControlState().processingMessage(stringMessage));
 
         //WAITING_FOR_PLAYERS
 
         player.setPlayerState(PlayerState.INITIALIZED);
         player.setMatchState(MatchState.WAITING_FOR_PLAYERS);
-
+        System.out.println();
         System.out.println(controller.getControlState());
-
+        System.out.println();
         controller.update(InsertCharacter.A);
-
+        System.out.println();
         System.out.println(controller.getControlState());
-        assertTrue(controller.getControlState().getClass().getSimpleName() == WaitingStatus.class.getSimpleName());
+        System.out.println();
+        assertTrue(controller.getControlState().getClass() == (WaitingStatus.class));
         assertTrue(!controller.getControlState().processingMessage(InsertCharacter.A));
 
         controller.update(InsertCharacter.W);

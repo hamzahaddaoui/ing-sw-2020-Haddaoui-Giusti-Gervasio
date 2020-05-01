@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class Controller extends Observable<MessageEvent> implements Observer<Object> {
 
-    static ExecutorService executor = Executors.newSingleThreadExecutor();
+    static ExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     private ControlState controlState;
     private MatchState matchState;
@@ -36,7 +36,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
 
     private synchronized void execute(Object viewObject) {
         messageReady = false;
-        synchronized (controlState){
                 PlayerState newPlayerState = View.getPlayer().getPlayerState();
                 MatchState newMatchState = View.getPlayer().getMatchState();
                 System.out.print("\nview MATCHSTATE ->"+newMatchState);
@@ -64,8 +63,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
                     notify(message);
                     reset();
                 }
-        }
-        notifyAll();
         System.out.print("\nctrl MATCHSTATE ->"+matchState);
         System.out.print("/   ctrl PLAYERSTATE ->"+playerState);
         System.out.println("  / ctrl ControlSTATE ->"+controlState+"  \n ");
