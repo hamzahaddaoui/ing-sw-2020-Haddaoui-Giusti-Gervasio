@@ -10,8 +10,6 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.*;
 
-//MANCANO I CONTROLLI SULL'END MATCH
-
 public class EnterCommand implements CommandCharacter {
 
     /**

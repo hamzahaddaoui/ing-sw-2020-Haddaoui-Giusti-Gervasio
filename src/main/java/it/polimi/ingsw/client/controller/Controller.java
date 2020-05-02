@@ -10,7 +10,7 @@ import it.polimi.ingsw.utilities.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Controller extends Observable<MessageEvent> implements Observer<Object> {
+public class Controller extends Observable<MessageEvent> implements Observer<Object>{
 
     static ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -43,8 +43,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
             notify(message);
             reset();
         }
-
-        //System.out.println("\nCtrl ControlSTATE ->" + controlState + "  \n ");
     }
 
     public synchronized void checkState(){

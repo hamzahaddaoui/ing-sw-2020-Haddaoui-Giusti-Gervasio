@@ -16,13 +16,21 @@ public class Player {
     private MatchState matchState=null;
     private TurnState turnState=null;
 
-    private ArrayList<Integer> playersNum = new ArrayList<>();
+    private ArrayList<Integer> playersNum ;
     private int playerNumber;
 
-    private Map<Integer, String> matchPlayers = new HashMap<>();
+    private Map<Integer, String> matchPlayers;
     private int currentPlayer;
-    private boolean terminateTurnAvailable = false;
-    private Map<Position, Boolean> specialFunctionAvailable = new HashMap<>();
+    private boolean terminateTurnAvailable;
+    private Map<Position, Boolean> specialFunctionAvailable;
+
+    public Player(){
+        playerState = null;
+        matchState = null;
+        playersNum = new ArrayList<>();
+        matchPlayers = new HashMap<>();
+        specialFunctionAvailable = new HashMap<>();
+    }
 
     public void setPlayerState(PlayerState newPlayerState) {
         playerState = newPlayerState;
@@ -107,4 +115,5 @@ public class Player {
     public void setPlayer(int player) {
         currentPlayer = player;
     }
+
 }

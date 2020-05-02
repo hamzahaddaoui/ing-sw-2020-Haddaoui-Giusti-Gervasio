@@ -8,7 +8,7 @@ import java.util.Set;
 public class MessageEvent {
     private transient ClientHandler clientHandler;
 
-    private String info;
+    private String info;  // contains "NickName" from server to user if there is an error on NickName
     //CONTROLLER_TO_CONTROLLER
     //CONTROLLER_TO_VIEW
 

@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RunningStatusTest {
 
-    View view = View.constructor();
+    View view = new View();
     Controller controller = new Controller();
     ControlState state;
     Set<Position> worker1 = new HashSet<>();

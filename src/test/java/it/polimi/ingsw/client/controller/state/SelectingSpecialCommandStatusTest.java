@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SelectingSpecialCommandStatusTest {
 
     Controller controller = new Controller();
-    View view = View.constructor();
+    View view = new View();
     Player player = View.getPlayer();
     GameBoard gameBoard = View.getGameBoard();
     ControlState state;

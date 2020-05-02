@@ -21,14 +21,14 @@ public class ACommand implements CommandCharacter {
     @Override
     public boolean executeNumberStatus() {
         Player player = View.getPlayer();
-        ArrayList<Integer> coloredPlayersNum = player.getColoredPlayersNum();
+        ArrayList<Integer> PlayersNum = player.getPlayersNum();
 
+        if(player.getPlayerNumber() == null)
+            throw new IllegalArgumentException(" Player Number is empty.");
         if(player.getPlayersNum() == null)
-            throw new IllegalArgumentException(" Players Num is empty.");
-        if(player.getColoredPlayersNum() == null)
-            throw new IllegalArgumentException(" Colored Players num is empty.");
+            throw new IllegalArgumentException(" Array of number of Players num is empty.");
 
-        player.setPlayersNum(coloredPlayersNum.get(abs(coloredPlayersNum.indexOf(player.getPlayersNum()) - 1) % coloredPlayersNum.size()));
+        player.setPlayerNumber(PlayersNum.get(abs(PlayersNum.indexOf(player.getPlayerNumber()) - 1) % PlayersNum.size()));
         View.doUpdate();
         return false;
     }

@@ -61,4 +61,5 @@ public enum InsertCharacter {
     abstract CommandCharacter apply();
 
     public int getCode() {return code;}
+
 }

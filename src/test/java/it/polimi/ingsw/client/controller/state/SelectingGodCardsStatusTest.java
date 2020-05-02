@@ -27,7 +27,7 @@ class SelectingGodCardsStatusTest {
     InsertCharacter inputEnter = InsertCharacter.ENTER;
     InsertCharacter commandCharacter;
 
-    View view = View.constructor();
+    View view = new View();
     Controller controller = new Controller();
     Player player = View.getPlayer();
     GameBoard gameBoard = View.getGameBoard();
@@ -50,7 +50,7 @@ class SelectingGodCardsStatusTest {
 
         gameBoard.setMatchCards(new HashSet<>(godCards));
         gameBoard.setColoredGodCard(gameBoard.getMatchCards().get(0));
-        player.setPlayersNum(2);
+        player.setPlayerNumber(2);
 
         System.out.println("\n"+gameBoard.getMatchCards()+"\n");
     }
@@ -178,30 +178,5 @@ class SelectingGodCardsStatusTest {
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
-    @Test
-    void nextState() {
-
-        controller.setPlayerState(PlayerState.ACTIVE);
-        controller.setMatchState(MatchState.SELECTING_SPECIAL_COMMAND);
-
-        ctrlStatus.nextState(controller);
-
-        assertEquals( controller.getControlState().getClass() , new SelectingSpecialCommandStatus().getClass() );
-
-        controller.setPlayerState(PlayerState.IDLE);
-        controller.setMatchState(MatchState.SELECTING_SPECIAL_COMMAND);
-        ctrlStatus.nextState(controller);
-
-        assertEquals( controller.getControlState().getClass(), new WaitingStatus().getClass() );
-
-        controller.setPlayerState(null);
-
-        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
-
-        controller.setPlayerState(PlayerState.ACTIVE);
-        controller.setMatchState(null);
-
-        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
-    }
 
 }

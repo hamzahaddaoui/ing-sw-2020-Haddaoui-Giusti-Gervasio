@@ -8,7 +8,7 @@ import it.polimi.ingsw.utilities.PlayerState;
 public class WaitingStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) {
+    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
         //forse faccio qualcosa nella view
         if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
