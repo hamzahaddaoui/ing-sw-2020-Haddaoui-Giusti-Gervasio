@@ -73,7 +73,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
 
     @Override
     public void update(MessageEvent message){
-        if (!message.getPlayerID().equals(this.playerID) || !active){
+        if (!(message.getPlayerID().equals(this.playerID)  && active)){
             return;
         }
         String json = new GsonBuilder()
@@ -101,7 +101,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
     public void heartbeatAgent() {
         MessageEvent message =  new MessageEvent();
         message.setInfo("Heartbeat Message");
-
+        message.setPlayerID(playerID);
         update(message);
         if (active)
             heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT/2, TimeUnit.MILLISECONDS);

@@ -31,7 +31,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     public NetworkHandler(String ip) throws IOException {
         active = true;
         server = new Socket(ip, SOCKET_PORT);
-        server.setSoTimeout(SOCKET_TIMEOUT);
+        //server.setSoTimeout(SOCKET_TIMEOUT);
         output = new ObjectOutputStream(server.getOutputStream());
         input = new ObjectInputStream(server.getInputStream());
     }
