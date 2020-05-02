@@ -63,8 +63,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
                 }
                 doUpdate();
             }
-            }
-
+        }
     }
 
     // UPDATE OF USER VIEW
@@ -229,7 +228,6 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
             new View();
             outputStream.println( "Insert your nickname: ");
             player.setNickname(scanner.nextLine());
-            notify(player.getNickname());
         }
         else{
             outputStream.println( "Your nickname is already used!\nInsert a new nickname:   ");
