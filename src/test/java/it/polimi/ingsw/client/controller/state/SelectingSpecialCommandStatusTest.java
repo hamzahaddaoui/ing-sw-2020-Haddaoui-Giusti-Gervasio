@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SelectingSpecialCommandStatusTest {
 
     Controller controller = new Controller();
-    View view = View.constructor();
+    View view = new View();
     Player player = View.getPlayer();
     GameBoard gameBoard = View.getGameBoard();
     ControlState state;
@@ -35,7 +35,7 @@ class SelectingSpecialCommandStatusTest {
 
         gameBoard.setSelectedGodCards(testingCards);
         gameBoard.setColoredGodCard("APOLLO");
-        player.setPlayersNum(2);
+        //player.setPlayersNum(2);
     }
 
     @AfterEach
@@ -69,7 +69,7 @@ class SelectingSpecialCommandStatusTest {
         assertEquals("APOLLO",Controller.getMessage().getGodCard());
     }
 
-    @Test
+    /*@Test
     void nexState_MatchPlacingWorkers_PlayerNotActive() {
         controller.setPlayerAndMatchState(PlayerState.IDLE, MatchState.PLACING_WORKERS);
         state.nextState(controller);
@@ -81,5 +81,5 @@ class SelectingSpecialCommandStatusTest {
         controller.setPlayerAndMatchState(PlayerState.ACTIVE, MatchState.PLACING_WORKERS);
         state.nextState(controller);
         assertEquals(PlacingWorkersStatus.class,controller.getControlState().getClass());
-    }
+    }*/
 }

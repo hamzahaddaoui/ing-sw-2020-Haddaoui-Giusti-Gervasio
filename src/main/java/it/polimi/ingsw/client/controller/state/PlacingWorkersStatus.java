@@ -10,7 +10,7 @@ import it.polimi.ingsw.utilities.Position;
 public class PlacingWorkersStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) {
+    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
 
         if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
@@ -31,16 +31,4 @@ public class PlacingWorkersStatus extends ControlState {
 
     }
 
-    @Override
-    public void nextState(Controller ctrl) {
-
-        if (ctrl.getPlayerState()== null)
-            throw new IllegalArgumentException(" PlayersState is null ");
-        if (ctrl.getMatchState()== null)
-            throw new IllegalArgumentException(" MatchState is null ");
-
-        if (ctrl.getMatchState() == MatchState.RUNNING && ctrl.getPlayerState() == PlayerState.ACTIVE)
-            ctrl.setState(new RunningStatus());
-        else ctrl.setState(new WaitingStatus());
-    }
 }

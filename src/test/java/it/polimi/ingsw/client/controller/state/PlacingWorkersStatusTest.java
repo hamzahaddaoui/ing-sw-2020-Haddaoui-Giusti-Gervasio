@@ -26,12 +26,12 @@ class PlacingWorkersStatusTest {
     InsertCharacter inputEnter = InsertCharacter.ENTER;
     InsertCharacter commandCharacter;
 
-    View view = View.constructor();
+    View view;
     Controller controller = new Controller();
     ControlState ctrlStatus = new PlacingWorkersStatus();
-    GameBoard gameBoard = view.getGameBoard();
-    Player player = view.getPlayer();
-    Set<Position> placingAvailableCells = new HashSet<>();
+    GameBoard gameBoard ;
+    Player player ;
+    Set<Position> placingAvailableCells ;
     Map<Position, Set<Position>> workersAvailableCells = new HashMap();
 
     Position position00=new Position(0,0);
@@ -62,6 +62,11 @@ class PlacingWorkersStatusTest {
 
     @BeforeEach
     void setUp(){
+        view = new View();
+        gameBoard = view.getGameBoard();
+        player = view.getPlayer();
+
+        placingAvailableCells = new HashSet<>();
         placingAvailableCells.add(position00);
         placingAvailableCells.add(position01);
         placingAvailableCells.add(position02);
@@ -98,8 +103,6 @@ class PlacingWorkersStatusTest {
     void processingMessageW() {
         gameBoard.setColoredPosition(null);
         commandCharacter = inputW;
-
-        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
 
         if(gameBoard.getColoredPosition() == null)
             gameBoard.setColoredPosition(position00);
@@ -142,8 +145,6 @@ class PlacingWorkersStatusTest {
     void processingMessageS() {
         gameBoard.setColoredPosition(null);
         commandCharacter = inputS;
-
-        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
 
         if(gameBoard.getColoredPosition() == null){
             gameBoard.setColoredPosition(position40);
@@ -189,8 +190,6 @@ class PlacingWorkersStatusTest {
         gameBoard.setColoredPosition(null);
         commandCharacter = inputA;
 
-        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
-
         if(gameBoard.getColoredPosition() == null){
             gameBoard.setColoredPosition(position00);
         }
@@ -234,8 +233,6 @@ class PlacingWorkersStatusTest {
     void processingMessageD() {
         gameBoard.setColoredPosition(null);
         commandCharacter = inputD;
-
-        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
 
         if(gameBoard.getColoredPosition() == null){
             gameBoard.setColoredPosition(position04);
@@ -328,7 +325,7 @@ class PlacingWorkersStatusTest {
     }
 
     @Test
-    void processingMessageF() {
+    void processingMessageFAndStuff() {
         gameBoard.setColoredPosition(null);
         commandCharacter = inputF;
 
@@ -338,30 +335,13 @@ class PlacingWorkersStatusTest {
 
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
-    }
+        gameBoard.setPlacingAvailableCells(null);
 
-    @Test
-    void nextState() {
-        controller.setPlayerState(PlayerState.ACTIVE);
-        controller.setMatchState(MatchState.RUNNING);
-        ctrlStatus.nextState(controller);
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(commandCharacter) );
 
-        assertEquals( controller.getControlState().getClass() , new RunningStatus().getClass() );
+        char character = 'x';
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(character));
 
-        controller.setPlayerState(PlayerState.IDLE);
-        controller.setMatchState(MatchState.RUNNING);
-        ctrlStatus.nextState(controller);
-
-        assertEquals( controller.getControlState().getClass(), new WaitingStatus().getClass() );
-
-        controller.setPlayerState(null);
-
-        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
-
-        controller.setPlayerState(PlayerState.ACTIVE);
-        controller.setMatchState(null);
-
-        assertThrows( IllegalArgumentException.class , () -> ctrlStatus.nextState(controller));
     }
 
 

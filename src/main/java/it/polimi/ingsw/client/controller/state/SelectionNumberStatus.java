@@ -9,7 +9,7 @@ import it.polimi.ingsw.utilities.PlayerState;
 public class SelectionNumberStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) {
+    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
 
         if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
@@ -17,22 +17,13 @@ public class SelectionNumberStatus extends ControlState {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
-        if(View.getPlayer().getColoredPlayersNum() == null)
-            throw new IllegalArgumentException(" ColoredPlayersNum is empty");
+        if(View.getPlayer().getPlayerNumber() == null)
+            throw new IllegalArgumentException(" Player Number is empty");
         if(View.getPlayer().getPlayersNum() == null)
-            throw new IllegalArgumentException(" PlayerNum is empty");
+            throw new IllegalArgumentException(" Array of PlayerNumber is empty");
 
         return commandCharacter.executeNumberStatus();
 
-    }
-
-    @Override
-    public void nextState(Controller ctrl) {
-        if(ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_GOD_CARDS) {
-            ctrl.setState(new SelectingGodCardsStatus());
-            View.getGameBoard().setColoredGodCard(View.getGameBoard().getMatchCards().get(0));
-        }
-        else ctrl.setState(new WaitingStatus());
     }
 
 }

@@ -11,32 +11,25 @@ import java.util.Map;
 
 public class Player {
 
-    private Integer matchID;
-    private Integer playerID;
     private String nickname;
     private PlayerState playerState=null;
     private MatchState matchState=null;
     private TurnState turnState=null;
 
-    private ArrayList<Integer> coloredPlayersNum = new ArrayList<>();
-    private Integer playersNum = null;
+    private ArrayList<Integer> playersNum ;
+    private int playerNumber;
 
-    private Map<Integer, String> matchPlayers = new HashMap<>();
-    private boolean terminateTurnAvailable = false;
-    private Map<Position, Boolean> specialFunctionAvailable = new HashMap<>();
+    private Map<Integer, String> matchPlayers;
+    private int currentPlayer;
+    private boolean terminateTurnAvailable;
+    private Map<Position, Boolean> specialFunctionAvailable;
 
-    private boolean error = false;
-
-    public void setError(boolean newError) {
-        error = newError;
-    }
-
-    public void setMatchID(Integer newMatchID) {
-        matchID = newMatchID;
-    }
-
-    public void setPlayerID(Integer newPlayerID) {
-        playerID = newPlayerID;
+    public Player(){
+        playerState = null;
+        matchState = null;
+        playersNum = new ArrayList<>();
+        matchPlayers = new HashMap<>();
+        specialFunctionAvailable = new HashMap<>();
     }
 
     public void setPlayerState(PlayerState newPlayerState) {
@@ -63,20 +56,12 @@ public class Player {
         terminateTurnAvailable = newTerminateTurnAvailable;
     }
 
-    public Integer getMatchID() {
-        return matchID;
+    public ArrayList<Integer> getPlayersNum() {
+        return playersNum;
     }
 
-    public Integer getPlayerID() {
-        return playerID;
-    }
-
-    public ArrayList<Integer> getColoredPlayersNum() {
-        return coloredPlayersNum;
-    }
-
-    public void setColoredPlayersNum(ArrayList<Integer> newColoredPlayersNum) {
-        coloredPlayersNum = newColoredPlayersNum;
+    public void setPlayersNum(ArrayList<Integer> newColoredPlayersNum) {
+        playersNum = newColoredPlayersNum;
     }
 
     public PlayerState getPlayerState() {
@@ -87,8 +72,8 @@ public class Player {
         return matchState;
     }
 
-    public Integer getPlayersNum() {
-        return playersNum;
+    public Integer getPlayerNumber() {
+        return playerNumber;
     }
 
     public boolean isTerminateTurnAvailable() {
@@ -103,8 +88,8 @@ public class Player {
         return specialFunctionAvailable;
     }
 
-    public void setPlayersNum (int selectedPlayersNum) {
-        playersNum = selectedPlayersNum;
+    public void setPlayerNumber (int selectedPlayersNum) {
+        playerNumber = selectedPlayersNum;
     }
 
     public void setSpecialFunctionAvailable(Map<Position,Boolean> modelMap) {
@@ -115,14 +100,6 @@ public class Player {
         nickname = newNickname;
     }
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String newIp) {
-        ip = newIp;
-    }
-
     public String getNickname() {
         return nickname;
     }
@@ -130,4 +107,13 @@ public class Player {
     public Map<Integer, String> getMatchPlayers() {
         return matchPlayers;
     }
+
+    public int getPlayer() {
+        return currentPlayer;
+    }
+
+    public void setPlayer(int player) {
+        currentPlayer = player;
+    }
+
 }

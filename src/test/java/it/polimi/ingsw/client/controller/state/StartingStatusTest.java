@@ -42,7 +42,7 @@ class StartingStatusTest {
         exception = assertThrows(IllegalArgumentException.class,() -> state.processingMessage(""));
     }
 
-    @Test
+    /*@Test
     void nexState_NullPlayerAndMatchState() {
         state.nextState(controller);
         assertEquals(WaitingStatus.class,controller.getControlState().getClass());
@@ -53,5 +53,5 @@ class StartingStatusTest {
         controller.setPlayerAndMatchState(PlayerState.ACTIVE, MatchState.GETTING_PLAYERS_NUM);
         state.nextState(controller);
         assertEquals(SelectionNumberStatus.class,controller.getControlState().getClass());
-    }
+    }*/
 }

@@ -9,7 +9,7 @@ import it.polimi.ingsw.utilities.PlayerState;
 public class SelectingGodCardsStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) {
+    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
 
         if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
@@ -24,19 +24,6 @@ public class SelectingGodCardsStatus extends ControlState {
             throw new IllegalArgumentException(" ViewObject is empty");
 
         return commandCharacter.executeSelectingGodCardsStatus();
-    }
-
-    @Override
-    public void nextState(Controller ctrl) {
-
-        if (ctrl.getPlayerState()== null)
-            throw new IllegalArgumentException(" PlayersState is null ");
-        if (ctrl.getMatchState()== null)
-            throw new IllegalArgumentException(" MatchState is null ");
-
-        if (ctrl.getPlayerState() == PlayerState.ACTIVE && ctrl.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND)
-            ctrl.setState(new SelectingSpecialCommandStatus());
-        else ctrl.setState(new WaitingStatus());
     }
 
 }

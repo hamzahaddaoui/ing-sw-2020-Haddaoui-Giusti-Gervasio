@@ -5,7 +5,6 @@ import it.polimi.ingsw.utilities.MessageEvent;
 
 public abstract class ControlState {
 
-    public void nextState(Controller ctrl) {}
     public boolean processingMessage(Object viewObject) {return false;}
 
 }
