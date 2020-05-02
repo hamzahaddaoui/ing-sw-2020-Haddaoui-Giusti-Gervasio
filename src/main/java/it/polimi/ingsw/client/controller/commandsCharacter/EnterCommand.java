@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
+import it.polimi.ingsw.utilities.TurnState;
 
 
 import java.util.*;
@@ -87,9 +88,11 @@ public class EnterCommand implements CommandCharacter {
     @Override
     public boolean executeRunningStatus() throws IllegalArgumentException{
         GameBoard gameBoard = View.getGameBoard();
+        Player player = View.getPlayer();
         Position startingPosition = gameBoard.getStartingPosition();
         Position coloredPosition = gameBoard.getColoredPosition();
         MessageEvent message = Controller.getMessage();
+
 
         if (coloredPosition == null)
             throw new IllegalArgumentException("position not set");
@@ -97,12 +100,12 @@ public class EnterCommand implements CommandCharacter {
         if (startingPosition==null) {
             gameBoard.setStartingPosition(coloredPosition);
             System.out.println("\nYou've chosen the worker in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ")\n");
+            player.setTurnState(TurnState.MOVE);
+            View.initRunning();
             View.doUpdate();
             return false;
         }
-        else if (gameBoard
-                        .getWorkersAvailableCells(startingPosition)
-                        .contains(coloredPosition)) {
+        else if (gameBoard.getWorkersAvailableCells(startingPosition).contains(coloredPosition)) {
             message.setStartPosition(startingPosition);
             message.setEndPosition(coloredPosition);
             gameBoard.setStartingPosition(null);

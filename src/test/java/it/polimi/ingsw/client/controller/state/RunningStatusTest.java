@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,7 +69,7 @@ class RunningStatusTest {
     }
 
 
-    @Test
+    /*@Test
     void simulateTurn() {
         gameBoard.setColoredPosition(posWorker1);
         gameBoard.setStartingPosition(null);
@@ -107,11 +108,294 @@ class RunningStatusTest {
         state.processingMessage(InsertCharacter.D);
         assertTrue(state.processingMessage(InsertCharacter.ENTER));
         assertEquals(new Position(4,4),msg.getEndPosition());
+    }*/
+
+    @Test
+    void simulateTurn_EnterCommand() {
+        MessageEvent message = Controller.getMessage();
+        player.setPlayerState(PlayerState.ACTIVE);
+        InsertCharacter viewObject = InsertCharacter.ENTER;
+        gameBoard.setColoredPosition(posWorker1);
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+        state.processingMessage(viewObject);
+        assertEquals(new Position(1,1),message.getStartPosition());
+        assertEquals(new Position(0,0),message.getEndPosition());
     }
 
     @Test
+    void simulateTurn_WorkerChose_ACommand() {
+        InsertCharacter viewObject = InsertCharacter.A;
+        gameBoard.setStartingPosition(posWorker1);
+        gameBoard.setColoredPosition(new Position(0,1));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(0,1));
+        worker1.remove(new Position(1,0));
+        worker1.remove(new Position(2,1));
+
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(1,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(2,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(0,0));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(2,0));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(1,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(1,2),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(2,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(2,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(1,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        worker1.add(new Position(2,0));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+    }
+
+    @Test
+    void simulateTurn_WorkerChose_DCommand() {
+        InsertCharacter viewObject = InsertCharacter.D;
+        gameBoard.setStartingPosition(posWorker1);
+        gameBoard.setColoredPosition(new Position(0,1));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(0,1));
+        worker1.remove(new Position(1,2));
+        worker1.remove(new Position(2,1));
+
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(1,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(2,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(0,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(2,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(1,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(1,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(2,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(2,0));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(1,0));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        worker1.add(new Position(1,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(1,2),gameBoard.getColoredPosition());
+
+    }
+
+    @Test
+    void simulateTurn_WorkerChose_WCommand() {
+        InsertCharacter viewObject = InsertCharacter.W;
+        gameBoard.setStartingPosition(posWorker1);
+        gameBoard.setColoredPosition(new Position(1,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(1,0));
+        worker1.remove(new Position(0,1));
+        worker1.remove(new Position(1,2));
+
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(2,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(2,1));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(2,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(0,0));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(2,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(0,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(2,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(2,1));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,1),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(2,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(2,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(2,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(2,1));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(2,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        worker1.add(new Position(1,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(2,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(1,2),gameBoard.getColoredPosition());
+
+    }
+
+    @Test
+    void simulateTurn_WorkerChose_SCommand() {
+        InsertCharacter viewObject = InsertCharacter.S;
+        gameBoard.setStartingPosition(posWorker1);
+        gameBoard.setColoredPosition(new Position(1,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(1,0));
+        worker1.remove(new Position(2,1));
+        worker1.remove(new Position(1,2));
+
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(0,1));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(0,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(2,0));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(2,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(2,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(0,1));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,1),gameBoard.getColoredPosition());
+
+        gameBoard.setColoredPosition(new Position(0,2));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,2),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(0,2));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        worker1.remove(new Position(0,1));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(0,0),gameBoard.getColoredPosition());
+
+        worker1.add(new Position(1,0));
+        gameBoard.getWorkersAvailableCells().replace(posWorker1,worker1);
+        gameBoard.setColoredPosition(new Position(0,0));
+        state.processingMessage(viewObject);
+        assertEquals(new Position(1,0),gameBoard.getColoredPosition());
+    }
+
+    /*@Test
     public void nextStateTest() {
         state.nextState(controller);
         assertEquals(WaitingStatus.class,controller.getControlState().getClass());
-    }
+    }*/
 }

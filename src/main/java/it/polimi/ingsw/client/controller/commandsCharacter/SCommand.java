@@ -6,6 +6,8 @@ import it.polimi.ingsw.utilities.CardinalDirection;
 import it.polimi.ingsw.utilities.Position;
 import javafx.geometry.Pos;
 
+import java.util.Set;
+
 public class SCommand implements CommandCharacter {
 
     @Override
@@ -71,25 +73,136 @@ public class SCommand implements CommandCharacter {
         Position coloredPosition = gameBoard.getColoredPosition();
         Position startingPosition = gameBoard.getStartingPosition();
 
-
-        if (startingPosition==null)
+        if (startingPosition == null)
             throw new IllegalArgumentException("command not available yet. Choose your worker first");
-        else{
-            CardinalDirection offset = startingPosition.checkMutualPosition(coloredPosition);
-            if (offset == CardinalDirection.WEST ||
-                    offset == CardinalDirection.NORTHWEST ||
-                    offset == CardinalDirection.EAST ||
-                    offset == CardinalDirection.NORTHEAST) {
-                gameBoard.setColoredPosition(coloredPosition.translateCardinalDirectionToPosition(CardinalDirection.SOUTH));
-                coloredPosition = gameBoard.getColoredPosition();
-                if (gameBoard.getWorkersAvailableCells(startingPosition).contains(coloredPosition))
-                    System.out.println("\nYou are now in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ") who's available for your worker");
-                else System.out.println("\nYou are now in position: (" + coloredPosition.getX() + "," + coloredPosition.getY() + ") who's not available for your worker " +
-                    "so you can't select this position!"); }
-            else throw new IllegalArgumentException("you are trying to exit from your neighboring cells. Nice try! :)");
+        else {
+            Set<Position> availableCells = gameBoard.getWorkersAvailableCells(startingPosition);
+
+            if (availableCells.size() == 1) {
+                View.doUpdate();
+                return false;
+            }
+
+            Position currentPosition;
+            if (availableCells.size() == 2) {
+                currentPosition = availableCells.stream().filter(position -> !position.equals(coloredPosition)).findAny().get();
+
+                if (currentPosition.getX() > coloredPosition.getX())
+                    gameBoard.setColoredPosition(currentPosition);
+            }
+            else {
+                CardinalDirection offset = startingPosition.checkMutualPosition(coloredPosition);
+                currentPosition = coloredPosition.translateCardinalDirectionToPosition(CardinalDirection.SOUTH);
+
+                if (offset == CardinalDirection.NORTH)
+                    currentPosition = currentPosition.translateCardinalDirectionToPosition(CardinalDirection.SOUTH);
+
+                if (!gameBoard.getWorkersAvailableCells(startingPosition).contains(currentPosition)) {
+                    int offY = coloredPosition.getX() - startingPosition.getX();
+
+                    if (offY == -1)
+                        currentPosition = checkPositionHigherX(availableCells, currentPosition, offset);
+                    else if (offY == 0)
+                        currentPosition = checkPositionSameX(availableCells, currentPosition, offset);
+                    else {
+                        View.doUpdate();
+                        return false;
+                    }
+                }
+                gameBoard.setColoredPosition(currentPosition);
+            }
         }
+        System.out.println("\nYou are now in position: (" + gameBoard.getColoredPosition().getX() + "," + gameBoard.getColoredPosition().getY() + ")\n");
         View.doUpdate();
         return false;
+    }
+
+    private Position checkPositionHigherX(Set<Position> positions, Position pos, CardinalDirection offset) {
+        Position current = null;
+        switch (offset) {
+            case NORTH:
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.NORTHWEST);
+                if (positions.contains(current))
+                    return current;
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.NORTHEAST);
+                if (positions.contains(current))
+                    return current;
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.WEST);
+                if (positions.contains(current))
+                    return current;
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.EAST);
+                if (positions.contains(current))
+                    return current;
+
+                current = (pos.translateCardinalDirectionToPosition(CardinalDirection.NORTH)).translateCardinalDirectionToPosition(CardinalDirection.NORTH);
+                break;
+
+            case NORTHWEST:
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.SOUTH);
+                if (positions.contains(current))
+                    return current;
+
+                current = (pos.translateCardinalDirectionToPosition(CardinalDirection.EAST)).translateCardinalDirectionToPosition(CardinalDirection.EAST);
+                if (positions.contains(current))
+                    return current;
+
+                current = checkPositionSameX(positions,pos.translateCardinalDirectionToPosition(CardinalDirection.SOUTH),CardinalDirection.WEST);
+                if (current.getX() == pos.getX() && current.getY() == current.getY())
+                    current = current.translateCardinalDirectionToPosition(CardinalDirection.NORTH);
+                break;
+
+            case NORTHEAST:
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.SOUTH);
+                if (positions.contains(current))
+                    return current;
+
+                current = (pos.translateCardinalDirectionToPosition(CardinalDirection.WEST)).translateCardinalDirectionToPosition(CardinalDirection.WEST);
+                if (positions.contains(current))
+                    return current;
+
+                current = checkPositionSameX(positions,pos.translateCardinalDirectionToPosition(CardinalDirection.SOUTH),CardinalDirection.EAST);
+                if (current.getX() == pos.getX() && current.getY() == current.getY())
+                    current = current.translateCardinalDirectionToPosition(CardinalDirection.NORTH);
+                break;
+        }
+        return current;
+    }
+
+    private Position checkPositionSameX(Set<Position> positions, Position pos, CardinalDirection offset) {
+        Position current = null;
+
+        switch (offset) {
+            case WEST:
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.EAST);
+                if (positions.contains(current))
+                    return current;
+
+                current = current.translateCardinalDirectionToPosition(CardinalDirection.EAST);
+                if (positions.contains(current))
+                    return current;
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.NORTH);
+                break;
+            case EAST:
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.WEST);
+                if (positions.contains(current))
+                    return current;
+
+                current = current.translateCardinalDirectionToPosition(CardinalDirection.WEST);
+                if (positions.contains(current))
+                    return current;
+
+                current = pos.translateCardinalDirectionToPosition(CardinalDirection.NORTH);
+                break;
+        }
+        return current;
     }
 
     @Override

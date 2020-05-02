@@ -24,25 +24,28 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     private final ScheduledExecutorService heartbeatService = Executors.newSingleThreadScheduledExecutor();
     private final ExecutorService messageReader = Executors.newSingleThreadExecutor();
 
+    private boolean active;
     private static ObjectOutputStream output;
     private static ObjectInputStream input;
 
     public NetworkHandler(String ip) throws IOException {
+        active = true;
         server = new Socket(ip, SOCKET_PORT);
         server.setSoTimeout(SOCKET_TIMEOUT);
         output = new ObjectOutputStream(server.getOutputStream());
         input = new ObjectInputStream(server.getInputStream());
-        heartbeatService.schedule(this::heartbeatRunnable, SOCKET_TIMEOUT / 2, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void run() {
         System.out.println("Connected to " + server.getInetAddress());
+        heartbeatService.schedule(this::heartbeatRunnable, SOCKET_TIMEOUT / 2, TimeUnit.MILLISECONDS);
         messageReader.submit(this::inputHandler);
     }
 
     public void stop() throws IOException{
-        executor.shutdown();
+        heartbeatService.shutdownNow();
+        active = false;
         server.close();
     }
 
@@ -59,8 +62,8 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
             } catch (SocketException e) {
                 try {
                     System.out.println("server connection closed");
-                    server.close();
-                    heartbeatService.shutdownNow(); }
+                    stop();
+                }
                 catch (IOException ex) {
                     ex.getMessage();
                 }
@@ -85,9 +88,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        String inputObject;
        MessageEvent messageEvent;
        try {
-           while (true) {
+           while (active) {
                inputObject = (String) input.readObject();
                messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
+               System.out.println(messageEvent);
                if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
                    notify(messageEvent);
                }
@@ -98,8 +102,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            System.out.println("invalid stream from server");
        }finally {
            try {
-               server.close();
-               heartbeatService.shutdownNow();
+               MessageEvent message = new MessageEvent();
+               message.setExit(true);
+               update(message);
+               stop();
            } catch (IOException e) {
                e.printStackTrace();
            }

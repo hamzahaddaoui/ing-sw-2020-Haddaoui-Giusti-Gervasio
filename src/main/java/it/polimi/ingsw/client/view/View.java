@@ -248,7 +248,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         gameBoard.setColoredPosition(gameBoard.getPlacingAvailableCells().stream().findAny().get());
     }
 
-    public void initRunning(){
+    public static void initRunning(){
         if(player.getPlayerState() == PlayerState.ACTIVE &&
                 gameBoard.getWorkersAvailableCells() != null &&
                 gameBoard.getWorkersPositions() != null){
