@@ -9,11 +9,8 @@ public class WaitingStatus extends ControlState {
 
     @Override
     public boolean processingMessage(String viewObject) throws IllegalArgumentException{
-        //forse faccio qualcosa nella view
-        /*if (!(viewObject instanceof InsertCharacter))
-            throw new IllegalArgumentException("Comando non riconosciuto!");*/
 
-        System.out.println("\nASPETTA IL TUO TURN!\n");
+        System.out.println("Aspetta il tuo turno!");
 
         return false;
     }
