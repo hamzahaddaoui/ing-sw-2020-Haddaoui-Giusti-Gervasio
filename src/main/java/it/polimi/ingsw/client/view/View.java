@@ -117,6 +117,8 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
             }
             case RUNNING: {
                 fetchingRunning(messageEvent);
+                if(player.getTurnState() == TurnState.IDLE)
+                    System.out.println("\nCHOOSE YOUR STARTING WORKER\nINSERT 'XY' COORDINATES\n");
                 initRunning();
                 break;
             }
@@ -197,15 +199,12 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     public static void initRunning(){
-        System.out.println("");
-        if(player.getTurnState() == TurnState.IDLE)
-            System.out.println("\nCHOOSE YOUR STARTING WORKER\nINSERT 'XY' COORDINATES\n");
-        else if(player.getTurnState() == TurnState.MOVE)
+        if (player.getPlayerState() != PlayerState.ACTIVE)
+            gameBoard.setStartingPosition(null);
+        if(player.getTurnState() == TurnState.MOVE)
             System.out.println("\nWHERE YOU WANT TO MOVE?\nINSERT 'XY' COORDINATES\n");
         else if(player.getTurnState() == TurnState.BUILD)
             System.out.println("\nWHERE YOU WANT TO BUILD IN?\nINSERT 'XY' COORDINATES\n");
-        if (player.getPlayerState() != PlayerState.ACTIVE)
-            gameBoard.setStartingPosition(null);
         if (gameBoard.getStartingPosition() != null) {
             if (player.getSpecialFunctionAvailable().get(gameBoard.getStartingPosition()))
                 System.out.println("ENTER F TO USE SPECIAL FUNCTION\n");

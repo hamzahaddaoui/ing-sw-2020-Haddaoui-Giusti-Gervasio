@@ -5,13 +5,13 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
-
-import javax.security.auth.callback.CallbackHandler;
+import it.polimi.ingsw.utilities.TurnState;
 
 public class RunningStatus extends ControlState {
 
     MessageEvent message = Controller.getMessage();
     GameBoard gameBoard = View.getGameBoard();
+    Player player = View.getPlayer();
     Position startingPosition = gameBoard.getStartingPosition();
 
     @Override
@@ -28,19 +28,16 @@ public class RunningStatus extends ControlState {
 
                 if (x <= 4 && x >= 0 && y <= 4 && y >= 0)
                     return processingPosition(x, y);
-                else System.out.println("posizione non valida!");
+                else System.out.println("POSITION INCORRECT!");
 
-            } else System.out.println("input non corretto");
+            } else System.out.println("INPUT INCORRECT!");
         }
         return false;
     }
 
     private boolean processingChar(char viewObject) {
-
         int num = Character.getNumericValue(viewObject);
-
         if (num == 15) {
-
             Player player = View.getPlayer();
 
             if (startingPosition != null) {
@@ -48,8 +45,8 @@ public class RunningStatus extends ControlState {
                     message.setStartPosition(startingPosition);
                     message.setSpecialFunction(true);
                     return true;
-                } else System.out.println("funzione speciale non disponibile per questo worker!");
-            } else System.out.println("devi prima selezionare il worker!");
+                } else System.out.println("SPECIAL FUNCTION IS NOT AVAILABLE FOR THIS WORKER!");
+            } else System.out.println("YOU MUST SELECT YOUR WORKER!");
         }
         else if (num == 14) {
 
@@ -58,27 +55,33 @@ public class RunningStatus extends ControlState {
             if (player.isTerminateTurnAvailable()) {
                 message.setTerminateTurnAvailable(true);
                 return true;
-            } else System.out.println("non puoi ancora terminare il turno!");
+            } else System.out.println("YOU CAN'T TERMINATE THE TURN!");
         }
-        else System.out.println("input incorretto!");
+        else System.out.println("INPUT INCORRECT!");
         return false;
     }
 
     private boolean processingPosition(int x, int y) {
-
         Position position = new Position(x,y);
 
         if (startingPosition == null) {
-            if (gameBoard.isWorkerPresent(position))
+            if (gameBoard.isWorkerPresent(position)){
                 gameBoard.setStartingPosition(position);
-            else System.out.println("worker non esistente!");
+                player.setTurnState(TurnState.MOVE);
+                View.initRunning();
+                View.doUpdate();
+            }
+            else System.out.println("WORKER IS NOT AVAILABLE!");
         }
         else if (gameBoard.getWorkersAvailableCells(startingPosition).contains(position)) {
-                message.setStartPosition(startingPosition);
-                message.setEndPosition(position);
-                return true;
+            message.setStartPosition(startingPosition);
+            message.setEndPosition(position);
+            if(TurnState.MOVE == player.getTurnState())
+                gameBoard.setStartingPosition(position);
+            View.doUpdate();
+            return true;
         }
-        else System.out.println("posizione non disponibile!");
+        else System.out.println("POSITION IS NOT AVAILABLE!");
         return false;
     }
 }
