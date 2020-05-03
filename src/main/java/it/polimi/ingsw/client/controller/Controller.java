@@ -16,7 +16,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
     private ControlState controlState;
     private static MessageEvent message;
     private boolean messageReady;
-    Player player = View.getPlayer();
+    Player player;
 
     public Controller() {
         controlState = new StartingStatus();
@@ -25,6 +25,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
 
     @Override
     public void update(String viewObject) {
+        player = View.getPlayer();
         checkStatus();
         executor.submit(() -> execute(viewObject));
     }

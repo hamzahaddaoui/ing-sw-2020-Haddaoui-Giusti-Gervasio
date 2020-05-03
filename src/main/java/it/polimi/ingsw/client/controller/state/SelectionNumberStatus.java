@@ -1,10 +1,5 @@
 package it.polimi.ingsw.client.controller.state;
-
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.utilities.MatchState;
-import it.polimi.ingsw.utilities.PlayerState;
 
 public class SelectionNumberStatus extends ControlState {
 
