@@ -17,7 +17,7 @@ public class Player{
     private TurnState turnState;
 
     private int playerNumber;
-    private String GodCard;
+    private String godCard;
 
     private Map<Integer, String> matchPlayers;
     private int currentPlayer;
@@ -28,6 +28,8 @@ public class Player{
         playerState = null;
         matchState = null;
         turnState = null;
+        godCard = null;
+        playerNumber = 0;
         matchPlayers = new HashMap<>();
         specialFunctionAvailable = new HashMap<>();
     }

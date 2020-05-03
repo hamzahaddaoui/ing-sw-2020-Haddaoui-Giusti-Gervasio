@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
@@ -13,6 +12,7 @@ public class SelectionNumberStatus extends ControlState {
 
         if (checkMessage(viewObject)) {
             int playersNum = Character.getNumericValue(viewObject.charAt(0));
+            System.out.println("insertvalue"+playersNum);
 
             if (playersNum == 2 || playersNum == 3) {
                 Controller.getMessage().setPlayersNum(playersNum);
@@ -26,7 +26,8 @@ public class SelectionNumberStatus extends ControlState {
     @Override
     public boolean checkMessage(String viewObject) {
         if (super.checkMessage(viewObject)) {
-            if (viewObject.length()!=1) {
+            System.out.println("V");
+            if (viewObject.length()>=1) {
                 System.out.println("input incorretto");
                 return false;
             }

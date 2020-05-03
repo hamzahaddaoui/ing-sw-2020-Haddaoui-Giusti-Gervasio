@@ -49,7 +49,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 active = true;
                 executorInput.submit(this::inputListener);
             } else {
-                if (messageEvent.getError())
+                if (messageEvent.getError() && messageEvent.getInfo() == null)
                     outputStream.println("Last Input was illegal.");
             }
         }
@@ -93,11 +93,16 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 break;
             }
             case GETTING_PLAYERS_NUM:{
-                outputStream.println("\nINSERT PLAYER:\n");
+                if(player.getPlayerNumber() == 0) {
+                    outputStream.println("\nWANT TO PLAY A MATCH OF 2 OR 3 PLAYERS:\n");
+                }
+                else{
+                    outputStream.println("\nWAITING FOR PLAYERS...\n");
+                }
                 break;
             }
             case WAITING_FOR_PLAYERS:{
-                outputStream.println("\nWAIT FOR PLAYERS...\n");
+                outputStream.println("\nWAITING FOR PLAYERS...\n");
                 break;
             }
             case SELECTING_GOD_CARDS:{

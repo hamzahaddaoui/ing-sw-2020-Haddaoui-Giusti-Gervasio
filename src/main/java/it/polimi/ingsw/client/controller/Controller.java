@@ -32,7 +32,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
     private void execute(String viewObject) {
         messageReady = false;
         messageReady = controlState.processingMessage(viewObject);
-
+        //System.out.println("******"+messageReady);
         if (messageReady) {
             notify(message);
             reset();
