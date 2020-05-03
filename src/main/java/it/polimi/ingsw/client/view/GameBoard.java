@@ -29,7 +29,6 @@ public class GameBoard {
     }
 
     public void setMatchCards(Set<String> godCards) {
-        matchCards = null;
         matchCards = new ArrayList<>(godCards);
     }
 
@@ -102,7 +101,6 @@ public class GameBoard {
     }
 
     public void setSelectedGodCards (Set<String> godCards) {
-        selectedGodCards = null;
         selectedGodCards = new ArrayList<String>(godCards);
     }
 

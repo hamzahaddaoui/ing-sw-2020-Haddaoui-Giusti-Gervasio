@@ -12,9 +12,9 @@ import java.util.Map;
 public class Player{
 
     private String nickname;
-    private PlayerState playerState=null;
-    private MatchState matchState=null;
-    private TurnState turnState=null;
+    private PlayerState playerState;
+    private MatchState matchState;
+    private TurnState turnState;
 
     private ArrayList<Integer> playersNum ;
     private int playerNumber;
@@ -27,6 +27,7 @@ public class Player{
     public Player(){
         playerState = null;
         matchState = null;
+        turnState = null;
         playersNum = new ArrayList<>();
         matchPlayers = new HashMap<>();
         specialFunctionAvailable = new HashMap<>();

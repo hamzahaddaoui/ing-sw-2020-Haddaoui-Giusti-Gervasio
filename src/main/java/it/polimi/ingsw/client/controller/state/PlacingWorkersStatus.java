@@ -45,7 +45,7 @@ public class PlacingWorkersStatus extends ControlState {
         /*InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
-        if(View.getGameBoard().getPlacingAvailableCells() == null)
+        if(View.getGameBoard().getPlacingAvailableCells() == null || View.getGameBoard().getPlacingAvailableCells().size() == 0)
             throw new IllegalArgumentException(" PlacingAvailableCell is empty ");
 
         if(View.getGameBoard().getColoredPosition() == null)

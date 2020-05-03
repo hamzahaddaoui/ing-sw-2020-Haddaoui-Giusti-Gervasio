@@ -6,14 +6,15 @@ import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
+import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class SelectionNumberStatusTest {
@@ -179,6 +180,24 @@ class SelectionNumberStatusTest {
 
         assertEquals(player.getPlayerNumber(),3);
         assertTrue(ctrlStatus.processingMessage(commandCharacter));
+
+    }
+
+    @Test
+    void processingClass(){
+        player.setPlayerNumber(0);
+        commandCharacter = inputEnter;
+
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(commandCharacter) );
+
+        player.setPlayerNumber(2);
+        player.setPlayersNum(null);
+
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(commandCharacter) );
+
+        char character = 'x';
+
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(character));
     }
 
 }

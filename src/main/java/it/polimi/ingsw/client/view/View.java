@@ -37,7 +37,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         outputStream = new PrintStream(System.out);
     }
 
-    //UPDATE FROM NETWORKHANDLER
+    //UPDATE FROM NETWORK HANDLER
 
     @Override
     public void update(MessageEvent messageEvent) {
@@ -45,25 +45,20 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     }
 
     public void updateData(MessageEvent messageEvent){
-        if(messageEvent.getInfo() != null){
-            if(messageEvent.getInfo().equals("Nickname not available.")){
-                init();
-            }
-            else if(messageEvent.getInfo().equals("Match data update") || messageEvent.getInfo().equals("Wait for a match to start...")){
-                if(messageEvent.getInfo().equals("Wait for a match to start..."))
-                    outputStream.println(messageEvent.getInfo());
-                fetching(messageEvent);
-                if (!active && (!messageEvent.getError())) {
-                    active = true;
-                    executorInput.submit(() -> inputListener());
-                } else {
-                    if (messageEvent.getError()) {
-                        outputStream.println("Last Input was illegal.");
-                    }
-                }
-                doUpdate();
+        if(messageEvent.getInfo() != null && messageEvent.getInfo().equals("Nickname not available.")){
+            init();
+        }
+        else{
+            fetching(messageEvent);
+            if (!active && !messageEvent.getError()) {
+                active = true;
+                executorInput.submit(() -> inputListener());
+            } else {
+                if (messageEvent.getError())
+                    outputStream.println("Last Input was illegal.");
             }
         }
+        doUpdate();
     }
 
     // UPDATE OF USER VIEW
@@ -119,23 +114,23 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
 
     public void fetching(MessageEvent messageEvent){
         standardFetching(messageEvent);
-        if(player.getMatchState() == null){
-            outputStream.println("WAIT FOR YOUR TURN");
-            return;
-        }
         if(player.getPlayerState() == PlayerState.WIN || player.getPlayerState() == PlayerState.LOST){
             active = false;
             outputStream.println("\nYou "+ player.getPlayerState()+"!\n");
             Client.close();
         }
         switch(player.getMatchState()){
+            case NONE:{
+                outputStream.println("WAIT FOR YOUR TURN...");
+                break;
+            }
             case GETTING_PLAYERS_NUM:{
-                if(player.getPlayersNum() == null)
+                if(player.getPlayersNum().size() == 0)
                     initGettingPlayersNum();
                 break;
             }
             case WAITING_FOR_PLAYERS:{
-                fetchingWaitingState(messageEvent);
+                outputStream.println("WAIT FOR PLAYERS...");
                 break;
             }
             case SELECTING_GOD_CARDS:
@@ -157,6 +152,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
                 active = false;
                 outputStream.println("\nGame Over\n");
                 Client.close();
+                break;
         }
     }
 
@@ -173,19 +169,13 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null){
             player.setMatchPlayers(messageEvent.getMatchPlayers());
         }
-        if(messageEvent.getCurrentPlayer() != player.getPlayer() && messageEvent.getCurrentPlayer() != 0){
-            player.setMatchPlayers(messageEvent.getMatchPlayers());
-        }
-    }
-
-    public void fetchingWaitingState(MessageEvent messageEvent){
-        if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
-            gameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
+        if(messageEvent.getCurrentPlayer() != player.getPlayer()){
+            player.setPlayer(messageEvent.getCurrentPlayer());
         }
     }
 
     public void fetchingAndInitCardsStates(MessageEvent messageEvent){
-        if(messageEvent.getMatchCards() != gameBoard.getMatchCards() && messageEvent.getMatchCards() != null){
+        if( messageEvent.getMatchCards() != null){
             if(player.getMatchState() == MatchState.SELECTING_GOD_CARDS) {
                 gameBoard.setMatchCards(messageEvent.getMatchCards());
                 gameBoard.setColoredGodCard(gameBoard.getMatchCards().get(0));
@@ -237,7 +227,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     }
 
     public void initGettingPlayersNum(){
-        ArrayList<Integer> numbers = new ArrayList<>(2);
+        ArrayList<Integer> numbers = new ArrayList<>();
         numbers.add(2);
         numbers.add(3);
         player.setPlayersNum(numbers);
@@ -245,7 +235,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     }
 
     public void  initPlacingState(){
-        gameBoard.setColoredPosition(gameBoard.getPlacingAvailableCells().stream().findAny().get());
+        gameBoard.setColoredPosition(gameBoard.getPlacingAvailableCells().stream().findFirst().get());
     }
 
     public static void initRunning(){
@@ -278,7 +268,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
 
     // GETTER
 
-    public boolean isActive() { return active;}
+    public static boolean isActive() { return active;}
 
     public static GameBoard getGameBoard() {
         return gameBoard;
@@ -286,6 +276,10 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
 
     public static Player getPlayer() {
         return player;
+    }
+
+    public static void setActive(boolean value){
+        active = value;
     }
 
 }
