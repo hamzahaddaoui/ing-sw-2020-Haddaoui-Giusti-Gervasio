@@ -4,5 +4,4 @@ open module it.polimi.ingsw.PSP6{
     requires javafx.graphics;
     requires gson;
     requires java.sql;
-    requires java.desktop;
 }
