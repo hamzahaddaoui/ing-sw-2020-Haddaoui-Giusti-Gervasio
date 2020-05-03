@@ -232,6 +232,10 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         numbers.add(3);
         player.setPlayersNum(numbers);
         player.setPlayerNumber(player.getPlayersNum().get(0));
+        if(player.getPlayerState() == PlayerState.ACTIVE){
+            outputStream.println("Actual Number of player is :"+player.getPlayerNumber());
+            outputStream.println("INSERT NUMBER :");
+        }
     }
 
     public void  initPlacingState(){
