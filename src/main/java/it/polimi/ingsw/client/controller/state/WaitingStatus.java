@@ -13,7 +13,7 @@ public class WaitingStatus extends ControlState {
         /*if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");*/
 
-        System.out.println("\nAspetta il tuo turno!");
+        System.out.println("\nASPETTA IL TUO TURN!\n");
 
         return false;
     }

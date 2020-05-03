@@ -16,8 +16,8 @@ public class Player{
     private MatchState matchState;
     private TurnState turnState;
 
-    private ArrayList<Integer> playersNum ;
     private int playerNumber;
+    private String GodCard;
 
     private Map<Integer, String> matchPlayers;
     private int currentPlayer;
@@ -28,7 +28,6 @@ public class Player{
         playerState = null;
         matchState = null;
         turnState = null;
-        playersNum = new ArrayList<>();
         matchPlayers = new HashMap<>();
         specialFunctionAvailable = new HashMap<>();
     }
@@ -55,14 +54,6 @@ public class Player{
 
     public void setTerminateTurnAvailable(boolean newTerminateTurnAvailable) {
         terminateTurnAvailable = newTerminateTurnAvailable;
-    }
-
-    public ArrayList<Integer> getPlayersNum() {
-        return playersNum;
-    }
-
-    public void setPlayersNum(ArrayList<Integer> newColoredPlayersNum) {
-        playersNum = newColoredPlayersNum;
     }
 
     public PlayerState getPlayerState() {

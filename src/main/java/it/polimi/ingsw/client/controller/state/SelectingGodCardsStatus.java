@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
@@ -27,7 +26,7 @@ public class SelectingGodCardsStatus extends ControlState {
         if (gameBoard.getMatchCards().contains(viewObject)) {
             selectedCards.add(viewObject);
 
-            if (selectedCards.size()==player.getPlayerNumber()) {
+            if (selectedCards.size() == player.getPlayerNumber()) {
                 Controller.getMessage().setGodCards(selectedCards);
                 return true;
             } else return false;

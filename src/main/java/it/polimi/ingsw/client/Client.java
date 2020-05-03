@@ -25,16 +25,16 @@ public class Client {
         //TODO COME GESTIRE LA CHIUSURA DEL SOCKET A FINE PARTITA
 
         try {
-            System.out.println("Inserisci indirizzo ip: ");
+            System.out.println("INSERT IP ADDRESS: ");
             scanner = new Scanner(System.in);
             String ip = scanner.next();
             networkHandler = new NetworkHandler(ip);
             //scanner.close();
         } catch (IOException e) {
-            System.out.println("server unreachable");
+            System.out.println("SERVER UNREACHABLE");
             return;
         }
-        System.out.println("Connected");
+        System.out.println("CONNECTED");
 
         networkHandler.addObserver(view);       //view osserva il networkHandler
         view.addObserver(controller);           //controller osserva la view

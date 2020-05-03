@@ -9,14 +9,12 @@ public class GameBoard {
 
     private ArrayList<String> selectedGodCards ;    // usate per la Selection Special Command
     private ArrayList<String> matchCards;           //date dal Server, usate per la Selecting God Card
-    private String coloredGodCard;
 
     private Map<Position, Cell> billboardStatus ;
     private Map<Position, Set<Position>> workersAvailableCells;
     private Set<Position> placingAvailableCells;
 
     private Position startingPosition;
-    private Position coloredPosition;
 
     public GameBoard(){
         selectedGodCards = new ArrayList<>();
@@ -25,7 +23,6 @@ public class GameBoard {
         workersAvailableCells = new HashMap<>();
         placingAvailableCells = new HashSet<>();
         startingPosition = null;
-        coloredPosition = null;
     }
 
     public void setMatchCards(Set<String> godCards) {
@@ -52,20 +49,8 @@ public class GameBoard {
         return placingAvailableCells;
     }
 
-    public String getColoredGodCard() {
-        return coloredGodCard;
-    }
-
     public Position getStartingPosition() {
         return startingPosition;
-    }
-
-    public Position getColoredPosition() {
-        return coloredPosition;
-    }
-
-    public void setColoredPosition(Position position) {
-        coloredPosition = position;
     }
 
     public ArrayList<String> getSelectedGodCards() {
@@ -74,10 +59,6 @@ public class GameBoard {
 
     public void setBillboardStatus(Map<Position, Cell> newBillboardStatus) {
         billboardStatus = newBillboardStatus;
-    }
-
-    public void setColoredGodCard(String GodCard) {
-        coloredGodCard = GodCard;
     }
 
     public void setStartingPosition(Position position) {

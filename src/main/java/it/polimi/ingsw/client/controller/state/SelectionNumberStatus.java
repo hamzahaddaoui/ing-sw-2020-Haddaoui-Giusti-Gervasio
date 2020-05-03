@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
@@ -13,7 +12,7 @@ public class SelectionNumberStatus extends ControlState {
 
         super.checkMessage(viewObject);
 
-        if (viewObject.length()!=1)
+        if (viewObject.length() != 1)
             throw new IllegalArgumentException("\ninput errato!");
 
         int playersNum = Character.getNumericValue(viewObject.charAt(0));

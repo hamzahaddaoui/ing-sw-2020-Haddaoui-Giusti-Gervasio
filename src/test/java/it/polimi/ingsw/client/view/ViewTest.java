@@ -1,38 +1,21 @@
 package it.polimi.ingsw.client.view;
 
-import it.polimi.ingsw.client.controller.state.InsertCharacter;
+import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.NetworkHandler;
 import it.polimi.ingsw.utilities.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.DataInputStream;
-import java.io.PrintStream;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ViewTest {
-
-    /*
-    TODO WAITING STATUS TEST
-    TODO WIN OR LOST PLAYER STATE TEST
-    TODO TEST ON COMMUTE
-    TODO FINISHED MATCH STATE TEST
-     */
-
-
-
     View view ;
     Player player ;
     GameBoard gameBoard;
-    boolean active;
 
-    private Scanner scanner;
-    private DataInputStream dataInputStream;
-    private PrintStream outputStream;
-    private char inputCharacter;
-    private InsertCharacter insertCharacter;
     MessageEvent messageEvent;
     Map<Integer, String> newMatchPlayers;
     Set<String> godCards;
@@ -41,10 +24,10 @@ class ViewTest {
     Map<Position, Cell> billboardStatus ;
     Map<Position, Set<Position>> workersAvailableCells;
     Map<Position, Boolean> specialFunctionAvailable;
-    boolean terminateTurnAvailable;
 
     @BeforeEach
-    void setUp() {
+    void setUp(){
+        String ip = "127.0.0.1";
         view = new View();
         player = View.getPlayer();
         gameBoard = View.getGameBoard();
@@ -126,7 +109,30 @@ class ViewTest {
     }
 
     @Test
-    void fetchingWaitingState() {
+    void fetchingFinishedState() {
+        View.setActive(true);
+        setMessageConfigDataUpdate(messageEvent, PlayerState.ACTIVE,MatchState.FINISHED);
+        messageEvent.setTurnState(TurnState.IDLE);
+
+        assertTrue(null == player.getPlayerState());
+        assertTrue(null ==  player.getMatchState());
+        assertTrue(null ==  player.getTurnState());
+
+        assertThrows(NullPointerException.class,()->view.updateData(messageEvent));
+
+    }
+
+    @Test
+    void fetchingWINoRLOSTState() {
+        View.setActive(true);
+        setMessageConfigDataUpdate(messageEvent, PlayerState.WIN,MatchState.RUNNING);
+        messageEvent.setTurnState(TurnState.IDLE);
+
+        assertTrue(null == player.getPlayerState());
+        assertTrue(null ==  player.getMatchState());
+        assertTrue(null ==  player.getTurnState());
+
+        assertThrows(NullPointerException.class,()->view.updateData(messageEvent));
     }
 
     @Test
@@ -140,7 +146,6 @@ class ViewTest {
         assertTrue(null ==  player.getMatchState());
         assertTrue(null ==  player.getTurnState());
         assertTrue(gameBoard.getMatchCards().size() == 0);
-        assertTrue(gameBoard.getColoredGodCard() == null);
 
         view.updateData(messageEvent);
 
@@ -148,7 +153,6 @@ class ViewTest {
         assertEquals(MatchState.SELECTING_GOD_CARDS,player.getMatchState());
         assertEquals(TurnState.IDLE,player.getTurnState());
         assertTrue(gameBoard.getMatchCards().size() == 9);
-        assertTrue(gameBoard.getMatchCards().contains(gameBoard.getColoredGodCard()));
     }
 
     @Test
@@ -162,7 +166,6 @@ class ViewTest {
         assertTrue(null ==  player.getMatchState());
         assertTrue(null ==  player.getTurnState());
         assertTrue(gameBoard.getMatchCards().size() == 0);
-        assertTrue(gameBoard.getColoredGodCard() == null);
 
         view.updateData(messageEvent);
 
@@ -170,7 +173,6 @@ class ViewTest {
         assertEquals(MatchState.SELECTING_SPECIAL_COMMAND,player.getMatchState());
         assertEquals(TurnState.IDLE,player.getTurnState());
         assertTrue(gameBoard.getSelectedGodCards().size() == 3);
-        assertTrue(gameBoard.getSelectedGodCards().contains(gameBoard.getColoredGodCard()));
     }
 
     private void setCells() {
@@ -244,7 +246,6 @@ class ViewTest {
         assertTrue(null ==  player.getTurnState());
         assertTrue(gameBoard.getPlacingAvailableCells().size() == 0);
         assertTrue(gameBoard.getBillboardStatus().size() == 0);
-        assertTrue(gameBoard.getColoredPosition() == null);
 
         view.updateData(messageEvent);
 
@@ -253,7 +254,6 @@ class ViewTest {
         assertEquals(TurnState.IDLE,player.getTurnState());
         assertTrue(gameBoard.getPlacingAvailableCells().size() != 0);
         assertTrue(gameBoard.getBillboardStatus().size() != 0);
-        assertTrue(gameBoard.getPlacingAvailableCells().contains(gameBoard.getColoredPosition()));
 
     }
 
@@ -276,7 +276,6 @@ class ViewTest {
         assertEquals(0, gameBoard.getWorkersAvailableCells().size());
         assertEquals(0, gameBoard.getWorkersPositions().size());
         assertEquals(0, gameBoard.getBillboardStatus().size());
-        assertNull(gameBoard.getColoredPosition());
         assertEquals(0, player.getSpecialFunctionAvailable().size());
         assertFalse(player.isTerminateTurnAvailable());
 
@@ -289,7 +288,6 @@ class ViewTest {
         assertEquals(2, gameBoard.getWorkersAvailableCells().size());
         assertEquals(2, gameBoard.getWorkersPositions().size());
         assertTrue(0 != gameBoard.getBillboardStatus().size());
-        assertTrue(gameBoard.getWorkersAvailableCells().keySet().contains(gameBoard.getColoredPosition()));
         assertEquals(2, player.getSpecialFunctionAvailable().size());
         assertTrue(player.isTerminateTurnAvailable());
 
@@ -306,10 +304,6 @@ class ViewTest {
         assertEquals(2, gameBoard.getWorkersAvailableCells().size());
         assertEquals(2, gameBoard.getWorkersPositions().size());
         assertTrue(0 != gameBoard.getBillboardStatus().size());
-        assertTrue(gameBoard
-                .getWorkersAvailableCells()
-                .get(gameBoard.getStartingPosition())
-                .contains(gameBoard.getColoredPosition()));
     }
 
     @Test
@@ -321,7 +315,6 @@ class ViewTest {
         assertTrue(null == player.getPlayerState());
         assertTrue(null ==  player.getMatchState());
         assertTrue(null ==  player.getTurnState());
-        assertTrue(player.getPlayersNum().size() == 0);
         assertTrue(player.getPlayerNumber() == 0);
 
         view.updateData(messageEvent);
@@ -329,8 +322,6 @@ class ViewTest {
         assertEquals(PlayerState.ACTIVE,player.getPlayerState());
         assertEquals(MatchState.GETTING_PLAYERS_NUM,player.getMatchState());
         assertEquals(TurnState.IDLE,player.getTurnState());
-        assertTrue(player.getPlayersNum().size() != 0);
-        assertTrue(player.getPlayerNumber() == 2);
         assertEquals(true, View.isActive());
     }
 

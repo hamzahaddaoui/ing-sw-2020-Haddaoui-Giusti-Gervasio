@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.view;
 
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.controller.state.InsertCharacter;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.PlayerState;
@@ -11,19 +10,15 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
-public class View extends Observable<Object> implements Observer<MessageEvent> {
+public class View extends Observable<String> implements Observer<MessageEvent> {
 
     static ExecutorService executorUpdate = Executors.newSingleThreadExecutor();
     static ExecutorService executorInput = Executors.newSingleThreadExecutor();
     static ExecutorService executorData = Executors.newSingleThreadExecutor();
 
     private Scanner scanner;
-    private DataInputStream dataInputStream;
     private PrintStream outputStream;
-    private char inputCharacter;
-    private InsertCharacter insertCharacter;
     private static boolean active = false;
 
     private static GameBoard gameBoard;
@@ -52,7 +47,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
             fetching(messageEvent);
             if (!active && !messageEvent.getError()) {
                 active = true;
-                executorInput.submit(() -> inputListener());
+                executorInput.submit(this::inputListener);
             } else {
                 if (messageEvent.getError())
                     outputStream.println("Last Input was illegal.");
@@ -74,40 +69,13 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     //INPUT CHARACTER
 
     public void inputListener(){
-        try{
-            dataInputStream = new DataInputStream(System.in);
-            //scanner.close();
+            String input;
             while(active){
-                inputCharacter = dataInputStream.readChar();
-                if(commute(inputCharacter))
-                    notify(insertCharacter);
-                else outputStream.println("Inserimento errato...");
+                input = scanner.nextLine();
+                notify(input);
             }
-            dataInputStream.close();
-        }
-        catch(EOFException ex){
-            ex.printStackTrace();
-        }
-        catch(IOException ex){
-            ex.printStackTrace();
-        }
-        finally {
-            try {
-                System.out.println("This match is finished. ");
-                view();
-                Client.close();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private boolean commute(char inputCharacter){
-        if (Set.of(InsertCharacter.values()).stream().anyMatch(insertCharacter1 -> insertCharacter1.getCode()==(int) inputCharacter)) {
-            insertCharacter = Set.of(InsertCharacter.values()).stream().filter(insertCharacter1 -> insertCharacter1.getCode()==(int) inputCharacter).findAny().get();
-            return true;
-        }
-        else return false;
+            scanner.close();
+            outputStream.println("\nTHE MATCH IS FINISHED.\n");
     }
 
     //FETCHING
@@ -116,31 +84,35 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         standardFetching(messageEvent);
         if(player.getPlayerState() == PlayerState.WIN || player.getPlayerState() == PlayerState.LOST){
             active = false;
-            outputStream.println("\nYou "+ player.getPlayerState()+"!\n");
+            outputStream.println("\nYOU "+ player.getPlayerState()+"!\n");
             Client.close();
         }
         switch(player.getMatchState()){
             case NONE:{
-                outputStream.println("WAIT FOR YOUR TURN...");
+                outputStream.println("\nWAIT FOR YOUR TURN...\n");
                 break;
             }
             case GETTING_PLAYERS_NUM:{
-                if(player.getPlayersNum().size() == 0)
-                    initGettingPlayersNum();
+                outputStream.println("\nINSERT PLAYER:\n");
                 break;
             }
             case WAITING_FOR_PLAYERS:{
-                outputStream.println("WAIT FOR PLAYERS...");
+                outputStream.println("\nWAIT FOR PLAYERS...\n");
                 break;
             }
-            case SELECTING_GOD_CARDS:
+            case SELECTING_GOD_CARDS:{
+                fetchingAndInitCardsStates(messageEvent);
+                outputStream.println("\nSELECT GOD CARDS FOR THE MATCH\n");
+                break;
+            }
             case SELECTING_SPECIAL_COMMAND: {
+                outputStream.println("\nSELECT YOUR GOD CARD\n");
                 fetchingAndInitCardsStates(messageEvent);
                 break;
             }
             case PLACING_WORKERS:{
                 fetchingPlacingState(messageEvent);
-                initPlacingState();
+                outputStream.println("\nPLACE YOUR TWO WORKERS \n");
                 break;
             }
             case RUNNING: {
@@ -150,7 +122,7 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
             }
             case FINISHED:
                 active = false;
-                outputStream.println("\nGame Over\n");
+                outputStream.println("\nGAME OVER\n");
                 Client.close();
                 break;
         }
@@ -178,11 +150,9 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
         if( messageEvent.getMatchCards() != null){
             if(player.getMatchState() == MatchState.SELECTING_GOD_CARDS) {
                 gameBoard.setMatchCards(messageEvent.getMatchCards());
-                gameBoard.setColoredGodCard(gameBoard.getMatchCards().get(0));
             }
             else{
                 gameBoard.setSelectedGodCards(messageEvent.getMatchCards());
-                gameBoard.setColoredGodCard(gameBoard.getSelectedGodCards().get(0));
             }
         }
     }
@@ -216,59 +186,34 @@ public class View extends Observable<Object> implements Observer<MessageEvent> {
     public void init(){
         if(player.getNickname() == null){
             new View();
-            outputStream.println( "Insert your nickname: ");
+            outputStream.println( "INSERT YOUR NICKNAME:\n ");
             player.setNickname(scanner.nextLine());
         }
         else{
-            outputStream.println( "Your nickname is already used!\nInsert a new nickname:   ");
+            outputStream.println( "YOUR NICKNAME IS NOT AVAILABLE!\nINSERT A NEW NICKNAME:\n   ");
             player.setNickname(scanner.nextLine());
         }
         notify(player.getNickname());
     }
 
-    public void initGettingPlayersNum(){
-        ArrayList<Integer> numbers = new ArrayList<>();
-        numbers.add(2);
-        numbers.add(3);
-        player.setPlayersNum(numbers);
-        player.setPlayerNumber(player.getPlayersNum().get(0));
-        if(player.getPlayerState() == PlayerState.ACTIVE){
-            outputStream.println("Actual Number of player is :"+player.getPlayerNumber());
-            outputStream.println("INSERT NUMBER :");
-        }
-    }
-
-    public void  initPlacingState(){
-        gameBoard.setColoredPosition(gameBoard.getPlacingAvailableCells().stream().findFirst().get());
-    }
-
     public static void initRunning(){
-        if(player.getPlayerState() == PlayerState.ACTIVE &&
-                gameBoard.getWorkersAvailableCells() != null &&
-                gameBoard.getWorkersPositions() != null){
-            if(player.getTurnState() == TurnState.IDLE) {
-                gameBoard.setStartingPosition(null);
-                gameBoard
-                        .setColoredPosition(gameBoard
-                                .getWorkersPositions()
-                                .stream()
-                                .findAny()
-                                .get());
-            }
-            else {
-                if ( gameBoard.getStartingPosition() != null &&
-                        gameBoard.getWorkersPositions().contains(gameBoard.getStartingPosition()))
-                    gameBoard
-                            .setColoredPosition(gameBoard
-                                    .getWorkersAvailableCells(gameBoard
-                                    .getStartingPosition())
-                                    .stream()
-                                    .findAny()
-                                    .get());
-                }
-            }
-
+        System.out.println("");
+        if(player.getTurnState() == TurnState.IDLE)
+            System.out.println("\nCHOOSE YOUR STARTING WORKER\nINSERT 'XY' COORDINATES\n");
+        else if(player.getTurnState() == TurnState.MOVE)
+            System.out.println("\nWHERE YOU WANT TO MOVE?\nINSERT 'XY' COORDINATES\n");
+        else if(player.getTurnState() == TurnState.BUILD)
+            System.out.println("\nWHERE YOU WANT TO BUILD IN?\nINSERT 'XY' COORDINATES\n");
+        if (player.getPlayerState() != PlayerState.ACTIVE)
+            gameBoard.setStartingPosition(null);
+        if (gameBoard.getStartingPosition() != null) {
+            if (player.getSpecialFunctionAvailable().get(gameBoard.getStartingPosition()))
+                System.out.println("ENTER F TO USE SPECIAL FUNCTION\n");
         }
+        if(player.isTerminateTurnAvailable()){
+            System.out.println("ENTER E TO USE TERMINATE TURN\n");
+        }
+    }
 
     // GETTER
 
