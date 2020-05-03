@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
+import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
@@ -9,9 +10,19 @@ import it.polimi.ingsw.utilities.PlayerState;
 public class SelectingSpecialCommandStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
+    public boolean processingMessage(String viewObject) throws IllegalArgumentException{
 
-        if (!(viewObject instanceof InsertCharacter))
+        super.checkMessage(viewObject);
+
+        GameBoard gameBoard = View.getGameBoard();
+
+        if (gameBoard.getSelectedGodCards().contains(viewObject)) {
+            Controller.getMessage().setGodCard(viewObject);
+            return true;
+        } else throw new IllegalArgumentException("\ncarta non disponibile");
+
+
+        /*if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
 
             InsertCharacter characterView = (InsertCharacter) viewObject;
@@ -22,7 +33,6 @@ public class SelectingSpecialCommandStatus extends ControlState {
            } catch (IllegalArgumentException e) {
                e.getMessage();
                return false;
-           }
+           }*/
     }
-
 }

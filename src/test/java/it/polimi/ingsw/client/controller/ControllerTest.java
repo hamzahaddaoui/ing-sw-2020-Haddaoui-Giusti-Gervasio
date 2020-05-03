@@ -22,50 +22,82 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
 
-    Controller controller;
-    View view;
+    View view = new View();
+    Controller controller = new Controller();
     Player player;
     GameBoard gameBoard;
     String stringMessage;
-    Set <Position> placingAvailablePosition ;
-    ArrayList<String> matchCards;
+    Set<Position> placingAvailablePosition;
 
 
     void setCells() {
-        for (int x = 0; x<5; x++)
-            for (int y = 0; y<5; y++)
-                placingAvailablePosition.add(new Position(x,y));
-            gameBoard.setColoredPosition(placingAvailablePosition.stream().findAny().get());
-            System.out.println(gameBoard.getColoredPosition());
+        for (int x = 0; x < 5; x++)
+            for (int y = 0; y < 5; y++)
+                placingAvailablePosition.add(new Position(x, y));
+        gameBoard.setColoredPosition(placingAvailablePosition.stream().findAny().get());
+        //System.out.println(gameBoard.getColoredPosition());
     }
 
-    void setGodCards(){
-        matchCards = new ArrayList<>();
-        matchCards.add("APOLLO");
-        matchCards.add("ARTEMIS");
-        matchCards.add("PAN");
-        matchCards.add("HEPHAESTUS");
-        matchCards.add("ATHENA");
-        matchCards.add("PROMETHEUS");
-        matchCards.add("MINOTAUR");
-        matchCards.add("DEMETER");
-        matchCards.add("ATLAS");
-        gameBoard.setColoredGodCard(matchCards.get(0));
+    private Set<String> settingCards() {
+        Set<String> cards = new HashSet<>();
+        cards.add("Apollo");
+        cards.add("Artemis");
+        cards.add("Athena");
+        cards.add("Hepheastus");
+        cards.add("Demeter");
+        cards.add("Minotaur");
+        cards.add("Prometheus");
+        cards.add("Pan");
+        cards.add("Atlas");
+        return cards;
     }
 
     @BeforeEach
-    void add(){
-        controller = new Controller();
-        player = view.getPlayer();
-        gameBoard = view.getGameBoard();
+    void setUp() {
+        player = View.getPlayer();
+        gameBoard = View.getGameBoard();
         placingAvailablePosition = gameBoard.getPlacingAvailableCells();
-        ArrayList <Integer> nums = new ArrayList<>();
-        nums.add(2);
-        nums.add(3);
-        setGodCards();
+        setCells();
+        gameBoard.setMatchCards(settingCards());
     }
 
     @Test
+    void update() {
+
+        controller.update("Vasio");
+
+        assertEquals(StartingStatus.class,controller.getControlState().getClass());
+
+        player.setPlayerState(PlayerState.INITIALIZED);
+        player.setMatchState(MatchState.NONE);
+
+        controller.update(InsertCharacter.A);
+
+        assertEquals(WaitingStatus.class,controller.getControlState().getClass());
+
+        player.setPlayerState(PlayerState.INITIALIZED);
+        player.setMatchState(MatchState.GETTING_PLAYERS_NUM);
+
+        controller.update(InsertCharacter.A);
+
+        assertEquals(WaitingStatus.class,controller.getControlState().getClass());
+
+        player.setPlayerState(PlayerState.ACTIVE);
+        player.setMatchState(MatchState.GETTING_PLAYERS_NUM);
+        view.initGettingPlayersNum();
+
+        assertEquals(2,player.getPlayerNumber());
+
+        controller.update(InsertCharacter.D);
+        controller.update(InsertCharacter.ENTER);
+
+        assertEquals(SelectionNumberStatus.class,controller.getControlState().getClass());
+
+    }
+
+}
+
+    /*@Test
     void update() {
         stringMessage = "LEO";
 
@@ -577,4 +609,4 @@ class ControllerTest {
         cards.add("Atlas");
         return cards;
     }
-}
+*/

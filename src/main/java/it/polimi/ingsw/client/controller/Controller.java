@@ -9,7 +9,7 @@ import it.polimi.ingsw.utilities.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Controller extends Observable<MessageEvent> implements Observer<Object> {
+public class Controller extends Observable<MessageEvent> implements Observer<String> {
 
     static ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -24,12 +24,12 @@ public class Controller extends Observable<MessageEvent> implements Observer<Obj
     }
 
     @Override
-    public void update(Object viewObject){
+    public void update(String viewObject) {
         checkStatus();
         executor.submit(() -> execute(viewObject));
     }
 
-    private void execute(Object viewObject) {
+    private void execute(String viewObject) {
         messageReady = false;
         messageReady = controlState.processingMessage(viewObject);
 
