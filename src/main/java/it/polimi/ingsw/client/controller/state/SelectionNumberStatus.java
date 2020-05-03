@@ -17,7 +17,7 @@ public class SelectionNumberStatus extends ControlState {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
-        if(View.getPlayer().getPlayerNumber() == null)
+        if(View.getPlayer().getPlayerNumber() == 0)
             throw new IllegalArgumentException(" Player Number is empty");
         if(View.getPlayer().getPlayersNum() == null)
             throw new IllegalArgumentException(" Array of PlayerNumber is empty");

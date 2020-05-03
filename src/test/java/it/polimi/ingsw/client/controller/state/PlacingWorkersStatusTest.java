@@ -325,7 +325,7 @@ class PlacingWorkersStatusTest {
     }
 
     @Test
-    void processingMessageFAndStuff() {
+    void processingMessageF() {
         gameBoard.setColoredPosition(null);
         commandCharacter = inputF;
 
@@ -335,13 +335,27 @@ class PlacingWorkersStatusTest {
 
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
 
-        gameBoard.setPlacingAvailableCells(null);
+
+
+    }
+
+    @Test
+    void processingClass(){
+        gameBoard.setColoredPosition(null);
+        commandCharacter = inputF;
+        Position positionError = new Position(5,5);
+        char character = 'x';
+
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(character));
+
+        gameBoard.setColoredPosition(positionError);
 
         assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(commandCharacter) );
 
-        char character = 'x';
-        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(character));
+        gameBoard.setColoredPosition(null);
+        gameBoard.setPlacingAvailableCells(null);
 
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(commandCharacter) );
     }
 
 

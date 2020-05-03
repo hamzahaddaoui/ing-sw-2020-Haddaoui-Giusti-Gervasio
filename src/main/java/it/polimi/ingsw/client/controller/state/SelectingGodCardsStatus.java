@@ -17,11 +17,8 @@ public class SelectingGodCardsStatus extends ControlState {
         InsertCharacter characterView = (InsertCharacter) viewObject;
         CommandCharacter commandCharacter = characterView.apply();
 
-        if(View.getGameBoard().getMatchCards() == null)
+        if(View.getGameBoard().getMatchCards() == null || View.getGameBoard().getMatchCards().size() == 0)
             throw new IllegalArgumentException(" MatchCards is empty");
-
-        if(viewObject == null)
-            throw new IllegalArgumentException(" ViewObject is empty");
 
         return commandCharacter.executeSelectingGodCardsStatus();
     }

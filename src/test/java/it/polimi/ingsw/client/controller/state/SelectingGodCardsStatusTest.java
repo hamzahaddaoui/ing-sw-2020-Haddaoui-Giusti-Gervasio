@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -103,10 +104,8 @@ class SelectingGodCardsStatusTest {
         assertTrue( gameBoard.getColoredGodCard() != null);
         assertTrue( gameBoard.getMatchCards() != null);
         assertTrue( gameBoard.getColoredGodCard() != null);
-        //System.out.println(view.getGodCards().size());
 
         ctrlStatus.processingMessage(commandCharacter);
-        //System.out.println(view.getGodCards().size());
 
         assertTrue(gameBoard.getSelectedGodCards().size() == 1);
         assertTrue( gameBoard.getMatchCards().size() == 8);
@@ -178,5 +177,21 @@ class SelectingGodCardsStatusTest {
         assertTrue( !ctrlStatus.processingMessage(commandCharacter));
     }
 
+    @Test
+    void processingClass(){
+        char character = 'x';
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(character));
 
+        assertTrue( gameBoard.getColoredGodCard() != null);
+        assertTrue( gameBoard.getMatchCards() != null);
+        assertTrue( gameBoard.getColoredGodCard() != null);
+
+        Set<String> cards = new HashSet<>();
+        gameBoard.setMatchCards(cards);
+
+        commandCharacter = InsertCharacter.ENTER;
+
+        assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(commandCharacter));
+
+    }
 }

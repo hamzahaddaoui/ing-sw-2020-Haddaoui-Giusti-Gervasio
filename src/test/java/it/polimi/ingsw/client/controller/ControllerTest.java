@@ -36,7 +36,7 @@ class ControllerTest {
             for (int y = 0; y<5; y++)
                 placingAvailablePosition.add(new Position(x,y));
             gameBoard.setColoredPosition(placingAvailablePosition.stream().findAny().get());
-            System.out.println(gameBoard.getColoredPosition());
+            //System.out.println(gameBoard.getColoredPosition());
     }
 
     void setGodCards(){
