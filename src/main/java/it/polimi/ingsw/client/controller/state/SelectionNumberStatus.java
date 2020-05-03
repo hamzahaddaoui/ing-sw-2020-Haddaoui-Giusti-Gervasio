@@ -9,9 +9,24 @@ import it.polimi.ingsw.utilities.PlayerState;
 public class SelectionNumberStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
+    public boolean processingMessage(String viewObject) throws IllegalArgumentException{
 
-        if (!(viewObject instanceof InsertCharacter))
+        super.checkMessage(viewObject);
+
+        if (viewObject.length()!=1)
+            throw new IllegalArgumentException("\ninput errato!");
+
+        int playersNum = Character.getNumericValue(viewObject.charAt(0));
+
+        if (playersNum == 2 || playersNum == 3) {
+            Controller.getMessage().setPlayersNum(playersNum);
+            return true;
+        }
+        else throw new IllegalArgumentException("\nvalore non lecito!");
+
+
+
+        /*if (!(viewObject instanceof InsertCharacter))
             throw new IllegalArgumentException("Comando non riconosciuto!");
 
         InsertCharacter characterView = (InsertCharacter) viewObject;
@@ -22,8 +37,7 @@ public class SelectionNumberStatus extends ControlState {
         if(View.getPlayer().getPlayersNum() == null)
             throw new IllegalArgumentException(" Array of PlayerNumber is empty");
 
-        return commandCharacter.executeNumberStatus();
-
+        return commandCharacter.executeNumberStatus();*/
     }
 
 }

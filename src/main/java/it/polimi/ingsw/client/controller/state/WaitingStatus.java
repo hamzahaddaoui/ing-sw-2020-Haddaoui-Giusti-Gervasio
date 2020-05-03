@@ -8,12 +8,12 @@ import it.polimi.ingsw.utilities.PlayerState;
 public class WaitingStatus extends ControlState {
 
     @Override
-    public boolean processingMessage(Object viewObject) throws IllegalArgumentException{
+    public boolean processingMessage(String viewObject) throws IllegalArgumentException{
         //forse faccio qualcosa nella view
-        if (!(viewObject instanceof InsertCharacter))
-            throw new IllegalArgumentException("Comando non riconosciuto!");
+        /*if (!(viewObject instanceof InsertCharacter))
+            throw new IllegalArgumentException("Comando non riconosciuto!");*/
 
-        System.out.println("\nWait for your turn!!\n");
+        System.out.println("\nAspetta il tuo turno!");
 
         return false;
     }
