@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.controller.commandsCharacter.CommandCharacter;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
@@ -17,7 +18,7 @@ public class SelectingGodCardsStatus extends ControlState {
     @Override
     public boolean processingMessage(String viewObject) throws IllegalArgumentException{
 
-        super.checkMessage(viewObject);
+        if (super.checkMessage(viewObject)) {
 
         GameBoard gameBoard = View.getGameBoard();
         Player player = View.getPlayer();
@@ -25,26 +26,13 @@ public class SelectingGodCardsStatus extends ControlState {
 
         if (gameBoard.getMatchCards().contains(viewObject)) {
             selectedCards.add(viewObject);
-
-            if (selectedCards.size() == player.getPlayerNumber()) {
+            if (selectedCards.size()==player.getPlayerNumber()) {
                 Controller.getMessage().setGodCards(selectedCards);
                 return true;
-            } else return false;
-        } else throw new IllegalArgumentException("\ncarta inesistente");
-
-        /*if (!(viewObject instanceof InsertCharacter))
-            throw new IllegalArgumentException("Comando non riconosciuto!");
-
-        InsertCharacter characterView = (InsertCharacter) viewObject;
-        CommandCharacter commandCharacter = characterView.apply();
-
-        if(View.getGameBoard().getMatchCards() == null)
-            throw new IllegalArgumentException(" MatchCards is empty");
-
-        if(viewObject == null)
-            throw new IllegalArgumentException(" ViewObject is empty");
-
-        return commandCharacter.executeSelectingGodCardsStatus();*/
+            }
+        } else System.out.println("carta inesistente");
+        }
+        return false;
     }
 
 }

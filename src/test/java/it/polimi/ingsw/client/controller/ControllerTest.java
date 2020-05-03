@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.server.controller.state.GettingPlayersNum;
+import it.polimi.ingsw.server.controller.state.SelectingGodCards;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
@@ -24,6 +25,7 @@ class ControllerTest {
 
     View view = new View();
     Controller controller = new Controller();
+    ControlState state;
     Player player;
     GameBoard gameBoard;
     String stringMessage;
@@ -34,7 +36,6 @@ class ControllerTest {
         for (int x = 0; x < 5; x++)
             for (int y = 0; y < 5; y++)
                 placingAvailablePosition.add(new Position(x, y));
-        gameBoard.setColoredPosition(placingAvailablePosition.stream().findAny().get());
         //System.out.println(gameBoard.getColoredPosition());
     }
 
@@ -66,32 +67,44 @@ class ControllerTest {
 
         controller.update("Vasio");
 
-        assertEquals(StartingStatus.class,controller.getControlState().getClass());
+        state = controller.getControlState();
+        assertEquals(StartingStatus.class,state.getClass());
 
         player.setPlayerState(PlayerState.INITIALIZED);
         player.setMatchState(MatchState.NONE);
 
-        controller.update(InsertCharacter.A);
-
-        assertEquals(WaitingStatus.class,controller.getControlState().getClass());
+        controller.update("");
+        state = controller.getControlState();
+        assertEquals(WaitingStatus.class,state.getClass());
 
         player.setPlayerState(PlayerState.INITIALIZED);
         player.setMatchState(MatchState.GETTING_PLAYERS_NUM);
 
-        controller.update(InsertCharacter.A);
-
-        assertEquals(WaitingStatus.class,controller.getControlState().getClass());
+        controller.update("2");
+        state = controller.getControlState();
+        assertEquals(WaitingStatus.class,state.getClass());
 
         player.setPlayerState(PlayerState.ACTIVE);
         player.setMatchState(MatchState.GETTING_PLAYERS_NUM);
-        view.initGettingPlayersNum();
 
-        assertEquals(2,player.getPlayerNumber());
+        controller.update("2");
+        state = controller.getControlState();
+        assertEquals(SelectionNumberStatus.class,state.getClass());
 
-        controller.update(InsertCharacter.D);
-        controller.update(InsertCharacter.ENTER);
+        controller.update("1");
+        state = controller.getControlState();
+        assertEquals(SelectionNumberStatus.class,state.getClass());
 
-        assertEquals(SelectionNumberStatus.class,controller.getControlState().getClass());
+        player.setPlayerState(PlayerState.ACTIVE);
+        player.setMatchState(MatchState.SELECTING_GOD_CARDS);
+
+        controller.update("2");
+        state = controller.getControlState();
+        assertEquals(SelectingGodCardsStatus.class,state.getClass());
+
+        controller.update("Apollo");
+        state = controller.getControlState();
+        assertEquals(SelectingGodCardsStatus.class,state.getClass());
 
     }
 

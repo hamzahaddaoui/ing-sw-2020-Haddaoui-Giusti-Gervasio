@@ -10,80 +10,75 @@ import javax.security.auth.callback.CallbackHandler;
 
 public class RunningStatus extends ControlState {
 
+    MessageEvent message = Controller.getMessage();
+    GameBoard gameBoard = View.getGameBoard();
+    Position startingPosition = gameBoard.getStartingPosition();
+
     @Override
     public boolean processingMessage(String viewObject) throws IllegalArgumentException {
 
-        super.checkMessage(viewObject);
+        if (super.checkMessage(viewObject)) {
 
-        MessageEvent message = Controller.getMessage();
-        GameBoard gameBoard = View.getGameBoard();
+            if (viewObject.length() == 1)
+                return processingChar(viewObject.charAt(0));
+            else if (viewObject.length() == 2) {
 
-        int x = Character.getNumericValue(viewObject.charAt(0));
+                int x = Character.getNumericValue(viewObject.charAt(0)) - 1;
+                int y = Character.getNumericValue(viewObject.charAt(1)) - 1;
 
-        if (viewObject.length() == 1)
-            return processingChar(x, gameBoard, message);
-        else if (viewObject.length() == 2 && x <= 4 && x >= 0) {
-            int y = Character.getNumericValue(viewObject.charAt(1));
-            if (y <= 4 && y >= 0)
-                return processingPosition(x, y, gameBoard, message);
-            else throw new IllegalArgumentException("\nposizione non valida!");
+                if (x <= 4 && x >= 0 && y <= 4 && y >= 0)
+                    return processingPosition(x, y);
+                else System.out.println("posizione non valida!");
+
+            } else System.out.println("input non corretto");
         }
-        else throw new IllegalArgumentException("\ninput non corretto");
-
-        /*if (!(viewObject instanceof InsertCharacter))
-            throw new IllegalArgumentException("Comando non riconosciuto!");
-
-        InsertCharacter characterView = (InsertCharacter) viewObject;
-        CommandCharacter commandCharacter = characterView.apply();
-        try {
-            return commandCharacter.executeRunningStatus();
-        }
-        catch (IllegalArgumentException e) {
-            e.getMessage();
-            return false;
-        }
-    }*/
-
+        return false;
     }
 
-    private boolean processingChar(int num, GameBoard gameBoard, MessageEvent message) {
+    private boolean processingChar(char viewObject) {
+
+        int num = Character.getNumericValue(viewObject);
+
         if (num == 15) {
+
             Player player = View.getPlayer();
-            Position startingPosition = gameBoard.getStartingPosition();
+
             if (startingPosition != null) {
                 if (player.getSpecialFunctionAvailable().get(startingPosition)) {
                     message.setStartPosition(startingPosition);
                     message.setSpecialFunction(true);
                     return true;
-                } else throw new IllegalArgumentException("\nfunzione speciale non disponibile per questo worker!");
-            } else throw new IllegalArgumentException("\ndevi prima selezionare il worker!");
+                } else System.out.println("funzione speciale non disponibile per questo worker!");
+            } else System.out.println("devi prima selezionare il worker!");
         }
         else if (num == 14) {
+
             Player player = View.getPlayer();
+
             if (player.isTerminateTurnAvailable()) {
                 message.setTerminateTurnAvailable(true);
                 return true;
-            } else throw new IllegalArgumentException("\nnon puoi ancora terminare il turno!");
+            } else System.out.println("non puoi ancora terminare il turno!");
         }
-        else throw new IllegalArgumentException("\ninput incorretto!");
+        else System.out.println("input incorretto!");
+        return false;
     }
 
-    private boolean processingPosition(int x, int y, GameBoard gameBoard, MessageEvent message) {
+    private boolean processingPosition(int x, int y) {
 
-        Position startingPosition = gameBoard.getStartingPosition();
         Position position = new Position(x,y);
 
         if (startingPosition == null) {
-            if (gameBoard.isWorkerPresent(position)) {
+            if (gameBoard.isWorkerPresent(position))
                 gameBoard.setStartingPosition(position);
-                return false;
-            } else throw new IllegalArgumentException("\nworker non esistente!");
+            else System.out.println("worker non esistente!");
         }
         else if (gameBoard.getWorkersAvailableCells(startingPosition).contains(position)) {
                 message.setStartPosition(startingPosition);
                 message.setEndPosition(position);
                 return true;
         }
-        else throw new IllegalArgumentException("\nposizione non disponibile!");
+        else System.out.println("posizione non disponibile!");
+        return false;
     }
 }

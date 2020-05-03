@@ -6,54 +6,54 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
 
+import java.security.Policy;
 import java.util.HashSet;
 import java.util.Set;
 
 public class PlacingWorkersStatus extends ControlState {
 
+    Set<Position> initializedPositions = new HashSet<>();
+    Position position;
+
     @Override
     public boolean processingMessage(String viewObject) throws IllegalArgumentException {
 
-        super.checkMessage(viewObject);
+        if (checkMessage(viewObject)) {
 
-        /*if (!(viewObject instanceof InsertCharacter))
-            throw new IllegalArgumentException("Comando non riconosciuto!");*/
-        if (viewObject.length() != 4)
-            throw new IllegalArgumentException();
+                int x = Character.getNumericValue(viewObject.charAt(0))-1;
+                int y = Character.getNumericValue(viewObject.charAt(1))-1;
 
-        Set<Position> initializedPositions = new HashSet<>();
-        Position position;
+                if (x <= 4 && x >= 0 && y <= 4 && y >= 0)
+                    position = new Position(x, y);
+                else {
+                    System.out.println("posizione non valida!");
+                    return false;
+                }
 
-        for (int i=0;i<2;i++) {
-            int x = Character.getNumericValue(viewObject.charAt(i * 2));
-            int y = Character.getNumericValue(viewObject.charAt(i * 2 + 1));
+                if (View.getGameBoard().getPlacingAvailableCells().contains(position))
+                    initializedPositions.add(position);
+                else {
+                    System.out.println("posizzione non disponibile");
+                    return false;
+                }
 
-            if (x<=4 && x>=0 && y<=4 && y>=0)
-                position = new Position(x, y);
-            else throw new IllegalArgumentException("\nposizione " + (i + 1) + " non valida");
-
-            if (View.getGameBoard().getPlacingAvailableCells().contains(position))
-                initializedPositions.add(position);
-            else throw new IllegalArgumentException("\nposizzione " + (i + 1) + " non disponibile");
+                if (initializedPositions.size()==View.getPlayer().getPlayerNumber()) {
+                    Controller.getMessage().setInitializedPositions(initializedPositions);
+                    return true;
+                }
         }
+        return false;
+    }
 
-        Controller.getMessage().setInitializedPositions(initializedPositions);
-        return true;
-
-
-        /*InsertCharacter characterView = (InsertCharacter) viewObject;
-        CommandCharacter commandCharacter = characterView.apply();
-
-        if(View.getGameBoard().getPlacingAvailableCells() == null || View.getGameBoard().getPlacingAvailableCells().size() == 0)
-            throw new IllegalArgumentException(" PlacingAvailableCell is empty ");
-
-        if(View.getGameBoard().getColoredPosition() == null)
-            View.getGameBoard().setColoredPosition( View.getGameBoard().getPlacingAvailableCells().stream().findAny().get());
-
-        if(!View.getGameBoard().getPlacingAvailableCells().contains(View.getGameBoard().getColoredPosition()))
-            throw new IllegalArgumentException(" Colored Position is not in Placing Available Cells ");
-
-        return commandCharacter.executePlacingWorkerStatus();*/
+    @Override
+    public boolean checkMessage(String viewObject) {
+        if (super.checkMessage(viewObject)) {
+            if (viewObject.length() != 2) {
+                System.out.println("input errato");
+                return false;
+            } else return true;
+        }
+        return false;
     }
 
 }
