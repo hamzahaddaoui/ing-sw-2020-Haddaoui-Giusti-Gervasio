@@ -10,7 +10,7 @@ public class WaitingStatus extends ControlState {
     @Override
     public boolean processingMessage(String viewObject) throws IllegalArgumentException{
 
-        System.out.println("Aspetta il tuo turno!");
+        System.out.println("WAIT FOR YOUR TURN!");
 
         return false;
     }

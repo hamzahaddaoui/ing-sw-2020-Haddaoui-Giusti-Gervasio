@@ -9,10 +9,10 @@ public abstract class ControlState {
 
     public boolean checkMessage(String viewObject) {
         if (viewObject == null) {
-            System.out.println("Null message!");
+            System.out.println("NULL MESSAGE");
             return false; }
         else if (viewObject.equals("")) {
-            System.out.println("La stringa è vuota!");
+            System.out.println("MESSAGE IS EMPTY");
             return false;
         }
         return true;

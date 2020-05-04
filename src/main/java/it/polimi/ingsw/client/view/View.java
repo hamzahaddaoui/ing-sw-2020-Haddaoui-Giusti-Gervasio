@@ -40,7 +40,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     public void updateData(MessageEvent messageEvent){
-        
+
         if(messageEvent.getInfo() != null && messageEvent.getInfo().equals("Nickname not available.")){
             init();
         }

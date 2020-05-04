@@ -25,12 +25,15 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
 
     @Override
     public void update(String viewObject) {
-        player = View.getPlayer();
-        checkStatus();
         executor.submit(() -> execute(viewObject));
     }
 
-    private void execute(String viewObject) {
+    private synchronized void execute(String viewObject) {
+
+        checkStatus();
+
+        //System.out.println(viewObject + " -> " + controlState);
+
         messageReady = false;
         messageReady = controlState.processingMessage(viewObject);
 
@@ -48,7 +51,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
         return message;
     }
 
-    public ControlState getControlState() {return this.controlState;}
+    public ControlState getControlState() {return controlState;}
 
     public void reset (){
         message.setMatchID(null);
@@ -64,7 +67,9 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
         message.setSpecialFunction(null);
     }
 
-    private void checkStatus() {
+    private synchronized void checkStatus() {
+        player = View.getPlayer();
+
         if (player.getPlayerState()==null && player.getMatchState()==null)
             return;
         else if (player.getPlayerState()==PlayerState.ACTIVE) {
@@ -73,12 +78,16 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
                     controlState = new SelectionNumberStatus();
                     break;
                 case SELECTING_GOD_CARDS:
+                    if (controlState.getClass() == SelectingGodCardsStatus.class)
+                        return;
                     controlState = new SelectingGodCardsStatus();
                     break;
                 case SELECTING_SPECIAL_COMMAND:
                     controlState = new SelectingSpecialCommandStatus();
                     break;
                 case PLACING_WORKERS:
+                    if (controlState.getClass() == PlacingWorkersStatus.class)
+                        return;
                     controlState = new PlacingWorkersStatus();
                     break;
                 case RUNNING:

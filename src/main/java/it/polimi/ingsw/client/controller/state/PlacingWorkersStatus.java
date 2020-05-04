@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.Position;
 
@@ -30,9 +31,10 @@ public class PlacingWorkersStatus extends ControlState {
                 return false;
             }
 
-            if (View.getGameBoard().getPlacingAvailableCells().contains(position)){
+            GameBoard gameBoard = View.getGameBoard();
+            if (gameBoard.getPlacingAvailableCells().contains(position)){
                 initializedPositions.add(position);
-                View.getGameBoard().getPlacingAvailableCells().remove(position);
+                gameBoard.getPlacingAvailableCells().remove(position);
                 View.doUpdate();
                 if(initializedPositions.size() == 1){
                     System.out.println("INSERT THE NEXT POSITION");
@@ -60,5 +62,4 @@ public class PlacingWorkersStatus extends ControlState {
         }
         return false;
     }
-
 }

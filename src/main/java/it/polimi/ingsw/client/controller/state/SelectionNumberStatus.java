@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.View;
 
 public class SelectionNumberStatus extends ControlState {
 
@@ -10,10 +11,11 @@ public class SelectionNumberStatus extends ControlState {
             int playersNum = Character.getNumericValue(viewObject.charAt(0));
 
             if (playersNum == 2 || playersNum == 3) {
+                View.getPlayer().setPlayerNumber(playersNum);
                 Controller.getMessage().setPlayersNum(playersNum);
                 return true;
             }
-            else System.out.println("valore non lecito");
+            else System.out.println("NOT LEGAL VALUE");
         }
         return false;
     }
@@ -22,7 +24,7 @@ public class SelectionNumberStatus extends ControlState {
     public boolean checkMessage(String viewObject) {
         if (super.checkMessage(viewObject)) {
             if (viewObject.length()!=1) {
-                System.out.println("input incorretto");
+                System.out.println("INCORRECT INPUT");
                 return false;
             }
             else return true;

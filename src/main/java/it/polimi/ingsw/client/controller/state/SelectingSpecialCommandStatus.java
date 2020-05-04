@@ -16,7 +16,7 @@ public class SelectingSpecialCommandStatus extends ControlState {
             if (gameBoard.getSelectedGodCards().contains(viewObject)) {
                 Controller.getMessage().setGodCard(viewObject);
                 return true;
-            } else System.out.println("carta non disponibile");
+            } else System.out.println("CARD NOT AVAILABLE");
         }
         return false;
     }

@@ -12,7 +12,6 @@ import java.util.concurrent.Executors;
 
 public class Client {
     static ExecutorService executor = Executors.newCachedThreadPool();
-    static Socket server;
     static NetworkHandler networkHandler;
     static View view;
     static Controller controller;
