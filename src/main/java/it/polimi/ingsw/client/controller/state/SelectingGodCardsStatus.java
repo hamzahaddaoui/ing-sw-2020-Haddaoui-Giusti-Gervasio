@@ -29,7 +29,7 @@ public class SelectingGodCardsStatus extends ControlState {
             if (selectedCards.size()<player.getPlayerNumber()) {
             selectedCards.add(viewObject);
             if (selectedCards.size()==player.getPlayerNumber()) {
-                Controller.getMessage().setGodCards(selectedCards);
+                Controller.getMessage().setMatchCards(selectedCards);
                 return true; }
             } else System.out.println("LIMIT NUMBER OF CARDS REACHED");
         } else System.out.println("NOT-EXISTING CARD");
