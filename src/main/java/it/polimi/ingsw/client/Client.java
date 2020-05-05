@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.View;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,7 +44,7 @@ public class Client {
     }
 
     public static void close() {
-        if (!view.isActive()) {
+        if (!View.isActive()) {
             try {
                 networkHandler.stop();
             } catch (IOException e) {
@@ -54,18 +53,6 @@ public class Client {
         }
     }
 
-
-        /*while(view.isAlive()){
-
-        }*/
-
-        //per chiudere la connessione
-
-        /*try {
-            networkHandler.stop();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
 }
 

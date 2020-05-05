@@ -51,7 +51,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 executorInput.submit(this::inputListener);
             } else {
                 if (messageEvent.getError())
-                    outputStream.println("Last Input was illegal.");
+                    outputStream.println("Last Input was illegal!");
             }
         }
         doUpdate();
@@ -60,7 +60,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     // UPDATE OF USER VIEW
 
     public static void doUpdate(){
-        executorUpdate.submit(()-> view());
+        executorUpdate.submit(View::view);
     }
 
     public static void view(){
