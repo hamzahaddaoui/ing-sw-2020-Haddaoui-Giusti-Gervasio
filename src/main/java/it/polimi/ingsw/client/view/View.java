@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.view;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.PlayerState;
@@ -42,8 +43,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     @Override //FROM CLIENT HANDLER
     public synchronized void update(MessageEvent messageEvent){
-        standardFetching(messageEvent);
-        player.updateCurrentState();
+        executorData.submit(()->{
+            Controller.updateStandardData(messageEvent);
+            Controller.updateControllerState();
+        });
         if(messageEvent.getError()){
             executorData.submit(()-> player.getControlState().error());
         }
@@ -53,21 +56,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         notifyAll();
     }
 
-    public void standardFetching(MessageEvent messageEvent){
-        if(messageEvent.getMatchState() != player.getMatchState() && messageEvent.getMatchState() != null){
-            player.setMatchState(messageEvent.getMatchState());
-        }
-        if(messageEvent.getPlayerState() != player.getPlayerState() && messageEvent.getPlayerState() != null){
-            player.setPlayerState(messageEvent.getPlayerState());
-        }
-        if(messageEvent.getTurnState() != player.getTurnState() && messageEvent.getTurnState() != null){
-            player.setTurnState(messageEvent.getTurnState());
-        }
-        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
-            player.setMatchPlayers(messageEvent.getMatchPlayers());
-        if(messageEvent.getCurrentPlayer() != player.getPlayer())
-            player.setPlayer(messageEvent.getCurrentPlayer());
-    }
 
     public static void print(){
         if(refresh){

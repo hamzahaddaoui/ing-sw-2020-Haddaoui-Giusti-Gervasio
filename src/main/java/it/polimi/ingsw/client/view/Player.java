@@ -37,34 +37,6 @@ public class Player{
         specialFunctionAvailable = new HashMap<>();
     }
 
-    public void updateCurrentState(){
-        if (getNickname() == null && controlState.getClass() != NotInitialized.class){
-            setControlState(new NotInitialized());
-        }
-        switch (getMatchState()){
-            case GETTING_PLAYERS_NUM:
-                if (controlState.getClass() != GettingPlayersNum.class)
-                    setControlState( new GettingPlayersNum());
-            case WAITING_FOR_PLAYERS:
-                if (controlState.getClass() != WaitingForPlayers.class)
-                    setControlState( new WaitingForPlayers());
-            case SELECTING_GOD_CARDS:
-                if (controlState.getClass() != SelectingGodCards.class)
-                    setControlState( new SelectingGodCards());
-            case SELECTING_SPECIAL_COMMAND:
-                if (controlState.getClass() != SelectingSpecialCommand.class)
-                    setControlState( new SelectingSpecialCommand());
-            case PLACING_WORKERS:
-                if (controlState.getClass() != PlacingWorkers.class)
-                    setControlState( new PlacingWorkers());
-            case RUNNING:
-                if (controlState.getClass() != Running.class)
-                    setControlState( new Running());
-            default:
-                setControlState( new WaitingList());
-        }
-    }
-
     public void setPlayerState(PlayerState newPlayerState) {
         playerState = newPlayerState;
     }

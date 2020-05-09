@@ -47,6 +47,54 @@ public class Controller extends Observable<MessageEvent> implements Runnable {
         }
     }
 
+    public static void updateStandardData(MessageEvent messageEvent){
+        Player player = View.getPlayer();
+        if(messageEvent.getMatchState() != player.getMatchState() && messageEvent.getMatchState() != null){
+            player.setMatchState(messageEvent.getMatchState());
+        }
+        if(messageEvent.getPlayerState() != player.getPlayerState() && messageEvent.getPlayerState() != null){
+            player.setPlayerState(messageEvent.getPlayerState());
+        }
+        if(messageEvent.getTurnState() != player.getTurnState() && messageEvent.getTurnState() != null){
+            player.setTurnState(messageEvent.getTurnState());
+        }
+        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
+            player.setMatchPlayers(messageEvent.getMatchPlayers());
+        if(messageEvent.getCurrentPlayer() != player.getPlayer())
+            player.setPlayer(messageEvent.getCurrentPlayer());
+    }
+
+    public static void updateControllerState(){
+        Player player = View.getPlayer();
+        ControlState controlState = player.getControlState();
+        if (player.getNickname() == null && controlState.getClass() != NotInitialized.class){
+            player.setControlState(new NotInitialized());
+        }
+        switch (player.getMatchState()){
+            case GETTING_PLAYERS_NUM:
+                if (controlState.getClass() != GettingPlayersNum.class)
+                    player.setControlState( new GettingPlayersNum());
+            case WAITING_FOR_PLAYERS:
+                if (controlState.getClass() != WaitingForPlayers.class)
+                    player.setControlState( new WaitingForPlayers());
+            case SELECTING_GOD_CARDS:
+                if (controlState.getClass() != SelectingGodCards.class)
+                    player.setControlState( new SelectingGodCards());
+            case SELECTING_SPECIAL_COMMAND:
+                if (controlState.getClass() != SelectingSpecialCommand.class)
+                    player.setControlState( new SelectingSpecialCommand());
+            case PLACING_WORKERS:
+                if (controlState.getClass() != PlacingWorkers.class)
+                    player.setControlState( new PlacingWorkers());
+            case RUNNING:
+                if (controlState.getClass() != Running.class)
+                    player.setControlState( new Running());
+            default:
+                player.setControlState( new WaitingList());
+        }
+    }
+
+
     /*private ControlState controlState;
     private static MessageEvent message;
     private boolean messageReady;
