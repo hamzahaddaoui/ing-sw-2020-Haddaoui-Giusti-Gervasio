@@ -38,7 +38,7 @@ public class Controller extends Observable<MessageEvent> implements Runnable {
                        messageReady = false;
                    }
                 });
-            }
+            } else scanner.nextLine();
         }
     }
 

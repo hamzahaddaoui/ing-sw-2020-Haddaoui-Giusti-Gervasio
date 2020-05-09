@@ -13,8 +13,6 @@ import java.util.concurrent.Executors;
 
 public class NotInitialized extends ControlState{
 
-    static ExecutorService executor = Executors.newSingleThreadExecutor();
-
     Player player = View.getPlayer();
 
     @Override
@@ -28,7 +26,6 @@ public class NotInitialized extends ControlState{
 
     @Override
     public void updateData(MessageEvent message) {
-
 
         player.setMatchState( message.getMatchState() );
         player.setPlayerState( message.getPlayerState() );
@@ -47,12 +44,12 @@ public class NotInitialized extends ControlState{
                 player.setControlState(new WaitingForPlayers());
             else {
                 GameBoard gameBoard = View.getGameBoard();
-                player.setControlState(new SelectingSpecialCommand());
+                player.setControlState(new SelectingGodCards());
                 gameBoard.setMatchCards(message.getMatchCards());
             }
         }
         View.setRefresh();
-        executor.submit(()->View.print());
+        View.print();
         //new Thread(View::print).start();
     }
 
@@ -66,5 +63,6 @@ public class NotInitialized extends ControlState{
         System.out.println("Nickname already taken!");
         player.setNickname(null);
         Controller.setActiveInput(true);
+        computeView();
     }
 }
