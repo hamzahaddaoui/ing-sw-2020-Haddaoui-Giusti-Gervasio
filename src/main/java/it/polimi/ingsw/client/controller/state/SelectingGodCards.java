@@ -22,7 +22,6 @@ public class SelectingGodCards extends ControlState {
     Player player = View.getPlayer();
 
     MessageEvent messageEvent;
-    //static ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     public MessageEvent computeInput(String input) {
@@ -60,24 +59,9 @@ public class SelectingGodCards extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        // aggiornare i dati base
-        player.setMatchState(messageEvent.getMatchState());
-        player.setPlayerState(messageEvent.getPlayerState());
-        player.setTurnState(messageEvent.getTurnState());
-        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
-            player.setMatchPlayers(messageEvent.getMatchPlayers());
-        if(messageEvent.getCurrentPlayer() != player.getPlayer())
-            player.setPlayer(messageEvent.getCurrentPlayer());
-
         //caso SELECTING_GOD_CARDS
         if(player.getMatchState() == MatchState.SELECTING_GOD_CARDS){
             gameBoard.setMatchCards(messageEvent.getMatchCards());
-        }
-
-        //caso SELECTING_SPECIAL_COMMAND
-        if(player.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND){
-            gameBoard.setSelectedGodCards(messageEvent.getMatchCards());
-            player.setControlState(new SelectingSpecialCommand());
         }
 
         //caso ACTIVE
@@ -92,13 +76,20 @@ public class SelectingGodCards extends ControlState {
     @Override
     public String computeView() {
         int number = player.getPlayerNumber() - gameBoard.getSelectedGodCards().size();
+        StringBuilder string = new StringBuilder();
+        if(PlayerState.ACTIVE == player.getPlayerState()){
         if(View.getError()){
-            return  "Select other "+ number +" God Cards from "+ gameBoard.getMatchCards().toString();
+            string.append("Select other "+ number +" God Cards from ");
+            gameBoard.getMatchCards().stream().forEach(card -> string.append(card +" ,"));
         }
         else if(View.getRefresh()){
-            return  "Select "+ number +" God Cards from "+ gameBoard.getMatchCards().toString();
+            string.append("Select "+ number +" God Cards from ");
+            gameBoard.getMatchCards().stream().forEach(card -> string.append(card +" ,"));
         }
-        else return "MANCATO INSERIMENTO DI REFRESH O ERROR";
+        return string.toString();}
+        else{
+            return player.getPlayer() + " is selecting the cards for the match ";
+        }
     }
 
     @Override
@@ -106,7 +97,7 @@ public class SelectingGodCards extends ControlState {
         System.out.println("Input wrong\n");
         gameBoard.setSelectedGodCards(new HashSet<>());
         Controller.setActiveInput(true);
-        System.out.println("Select "+ player.getPlayerNumber() +" God Cards:");
+        computeView();
     }
 
 }

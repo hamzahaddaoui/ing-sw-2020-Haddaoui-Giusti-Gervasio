@@ -51,29 +51,9 @@ public class SelectingSpecialCommand extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        // aggiornare i dati base
-        player.setMatchState(messageEvent.getMatchState());
-        player.setPlayerState(messageEvent.getPlayerState());
-        player.setTurnState(messageEvent.getTurnState());
-        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
-            player.setMatchPlayers(messageEvent.getMatchPlayers());
-        if(messageEvent.getCurrentPlayer() != player.getPlayer())
-            player.setPlayer(messageEvent.getCurrentPlayer());
-
         //caso SELECTING_SPECIAL_COMMAND
         if(player.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND && messageEvent.getMatchCards() != null){
             gameBoard.setSelectedGodCards(messageEvent.getMatchCards());
-        }
-
-        //caso PLACING_WORKERS
-        if(player.getMatchState() == MatchState.PLACING_WORKERS){
-            player.setControlState(new PlacingWorkers());
-            if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
-                gameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
-            }
-            if(messageEvent.getAvailablePlacingCells() != gameBoard.getPlacingAvailableCells() && messageEvent.getAvailablePlacingCells() != null){
-                gameBoard.setPlacingAvailableCells(messageEvent.getAvailablePlacingCells());
-            }
         }
 
         //caso ACTIVE
@@ -87,7 +67,20 @@ public class SelectingSpecialCommand extends ControlState {
 
     @Override
     public String computeView() {
-            return  "Select a God Card from "+ gameBoard.getSelectedGodCards().toString();
+        StringBuilder string = new StringBuilder();
+        if(PlayerState.ACTIVE == player.getPlayerState()){
+            if(View.getError()){
+                string.append("Please select your card from ");
+                gameBoard.getSelectedGodCards().stream().forEach(card -> string.append(card +" "));
+            }
+            else if(View.getRefresh()){
+                string.append("Select your God Card from ");
+                gameBoard.getSelectedGodCards().stream().forEach(card -> string.append(card +" "));
+            }
+            return string.toString();}
+        else{
+            return player.getPlayer() + " is selecting the cards for the match ";
+        }
     }
 
     @Override
@@ -95,7 +88,7 @@ public class SelectingSpecialCommand extends ControlState {
         System.out.println("Input wrong\n");
         player.setGodCard(null);
         Controller.setActiveInput(true);
-        System.out.println("Select GodCard from "+ gameBoard.getSelectedGodCards() +" : ");
+        computeView();
     }
 }
 

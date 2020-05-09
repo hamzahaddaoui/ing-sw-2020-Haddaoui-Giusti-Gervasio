@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.view;
 
-import it.polimi.ingsw.client.controller.state.ControlState;
-import it.polimi.ingsw.client.controller.state.NotInitialized;
+import it.polimi.ingsw.client.controller.state.*;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
@@ -36,6 +35,34 @@ public class Player{
         playerNumber = 0;
         matchPlayers = new HashMap<>();
         specialFunctionAvailable = new HashMap<>();
+    }
+
+    public void updateCurrentState(){
+        if (getNickname() == null && controlState.getClass() != NotInitialized.class){
+            setControlState(new NotInitialized());
+        }
+        switch (getMatchState()){
+            case GETTING_PLAYERS_NUM:
+                if (controlState.getClass() != GettingPlayersNum.class)
+                    setControlState( new GettingPlayersNum());
+            case WAITING_FOR_PLAYERS:
+                if (controlState.getClass() != WaitingForPlayers.class)
+                    setControlState( new WaitingForPlayers());
+            case SELECTING_GOD_CARDS:
+                if (controlState.getClass() != SelectingGodCards.class)
+                    setControlState( new SelectingGodCards());
+            case SELECTING_SPECIAL_COMMAND:
+                if (controlState.getClass() != SelectingSpecialCommand.class)
+                    setControlState( new SelectingSpecialCommand());
+            case PLACING_WORKERS:
+                if (controlState.getClass() != PlacingWorkers.class)
+                    setControlState( new PlacingWorkers());
+            case RUNNING:
+                if (controlState.getClass() != Running.class)
+                    setControlState( new Running());
+            default:
+                setControlState( new WaitingList());
+        }
     }
 
     public void setPlayerState(PlayerState newPlayerState) {

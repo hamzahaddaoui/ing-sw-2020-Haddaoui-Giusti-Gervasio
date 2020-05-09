@@ -32,8 +32,8 @@ public class WaitingList extends ControlState {
             gameBoard.setMatchCards(message.getMatchCards());
         }
 
-        View.setRefresh();
-        View.print;
+        View.setRefresh(true);
+        View.print();
     }
 
     @Override

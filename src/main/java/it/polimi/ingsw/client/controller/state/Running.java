@@ -22,8 +22,9 @@ public class Running extends ControlState {
             int x = Character.getNumericValue(input.charAt(0)) - 1;
             int y = Character.getNumericValue(input.charAt(1)) - 1;
 
-            if (x <= 4 && x >= 0 && y <= 4 && y >= 0 && processingPosition(x, y,message))
-                return message;
+            if (x <= 4 && x >= 0 && y <= 4 && y >= 0 && processingPosition(x, y, message)){
+                //View.doUpdate();
+                return message;}
         }
         View.setError(true);
         View.print();
@@ -150,7 +151,7 @@ public class Running extends ControlState {
             if (gameBoard.isWorkerPresent(position)){
                 gameBoard.setStartingPosition(position);
                 //player.setTurnState(TurnState.MOVE);
-                View.setRefresh();
+                View.setRefresh(true);
                 View.print();
                 Controller.setActiveInput(true);
                 return true;

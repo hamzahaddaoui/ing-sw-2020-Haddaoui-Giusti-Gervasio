@@ -66,15 +66,6 @@ public class PlacingWorkers extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        // aggiornare i dati base
-        player.setMatchState(messageEvent.getMatchState());
-        player.setPlayerState(messageEvent.getPlayerState());
-        player.setTurnState(messageEvent.getTurnState());
-        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
-            player.setMatchPlayers(messageEvent.getMatchPlayers());
-        if(messageEvent.getCurrentPlayer() != player.getPlayer())
-            player.setPlayer(messageEvent.getCurrentPlayer());
-
         //caso PLACING_WORKERS
         if(player.getMatchState() == MatchState.PLACING_WORKERS){
             if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
@@ -85,40 +76,26 @@ public class PlacingWorkers extends ControlState {
             }
         }
 
-        //caso RUNNING
-        if(player.getMatchState() == MatchState.RUNNING ){
-            player.setControlState(new Running());
-            if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
-                gameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
-            }
-            if(messageEvent.getWorkersAvailableCells() != gameBoard.getWorkersAvailableCells() && messageEvent.getWorkersAvailableCells()!=  null){
-                gameBoard.setWorkersAvailableCells(messageEvent.getWorkersAvailableCells());
-            }
-            if(messageEvent.getTerminateTurnAvailable() != player.isTerminateTurnAvailable()){
-                player.setTerminateTurnAvailable(messageEvent.getTerminateTurnAvailable());
-            }
-            if(messageEvent.getSpecialFunctionAvailable() != player.getSpecialFunctionAvailable() && messageEvent.getSpecialFunctionAvailable() != null){
-                player.setSpecialFunctionAvailable(messageEvent.getSpecialFunctionAvailable());
-            }
-        }
-
         //caso ACTIVE
         if(player.getPlayerState() == PlayerState.ACTIVE){
             Controller.setActiveInput(true);
             View.setRefresh(true);
             View.print();
         }
+
         View.doUpdate();
     }
 
     @Override
     public String computeView() {
         int number = 2 - gameBoard.getWorkersPositions().size();
-        if (View.getError()) {
-            return "Insert " + number + " worker: \n";
-        } else if (View.getRefresh()) {
-            return "Insert " + number + " workers: \n ";
-        } else return "MANCATO INSERIMENTO DI REFRESH O ERROR";
+        if(number == 1){
+            return "Insert " + number + " worker: \n ";
+        }
+        else if(number == 2){
+            return "Insert " + number + " workers: \n";
+        }
+        else return "INSERIMENTO COMPLETATO";
     }
 
     @Override
