@@ -31,13 +31,18 @@ public class Controller extends Observable<MessageEvent> implements Runnable {
             if (activeInput) {
                 activeInput = false;
                 String input = scanner.nextLine();
-                executor.submit(()-> {
-                   MessageEvent message = View.getPlayer().getControlState().computeInput(input);
-                   if (messageReady) {
-                       notify(message);
-                       messageReady = false;
-                   }
-                });
+                synchronized (View.class){
+                    executor.submit(()-> {
+                       MessageEvent message = View.getPlayer().getControlState().computeInput(input);
+                       if (messageReady) {
+                           notify(message);
+                           messageReady = false;
+                       }
+                });}
+                notifyAll();
+            }
+            else{
+                scanner.nextLine();
             }
         }
     }

@@ -18,7 +18,7 @@ public class GettingPlayersNum extends ControlState {
             return message;
         }
         else {
-            View.setError();
+            View.setError(true);
             return null;
         }
     }

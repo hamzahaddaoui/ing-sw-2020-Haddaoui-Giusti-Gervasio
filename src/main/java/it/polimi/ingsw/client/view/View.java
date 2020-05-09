@@ -17,103 +17,103 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     static ExecutorService executorInput = Executors.newSingleThreadExecutor();
     static ExecutorService executorData = Executors.newSingleThreadExecutor();
 
-    private Scanner scanner;
-    private PrintStream outputStream;
-    private static boolean active = false;
+    private static boolean refresh = true;
+    private static boolean error;
+    private static boolean active;
 
     private static GameBoard gameBoard;
     private static Player player;
 
     public View(){
-        active = false;
+        refresh = true;
+        error = false;
         player = new Player();
         gameBoard = new GameBoard();
-        scanner = new Scanner(System.in);
-        outputStream = new PrintStream(System.out);
+    }
+
+    public static boolean isActive() {
+        return active;
+    }
+
+    public static void setActive(boolean active) {
+        View.active = active;
     }
 
     //UPDATE FROM NETWORK HANDLER
 
     @Override
-    public void update(MessageEvent messageEvent) {
-        executorData.submit(()-> updateData(messageEvent) );
+    public synchronized void update(MessageEvent messageEvent) {
+        if(messageEvent.getError()){
+            executorData.submit(()-> player.getControlState().error());
+        }
+        else {
+            executorData.submit(()-> player.getControlState().updateData(messageEvent));
+        }
     }
 
-    public void updateData(MessageEvent messageEvent){
+    public static void print(){
+        if(refresh){
+            System.out.println(player.getControlState().computeView());
+            refresh = false;
+        }
+        if(error){
+            System.out.println("Wrong output");
+            System.out.println(player.getControlState().computeView());
+            error = false;
+        }
+    }
 
-        if(messageEvent.getInfo() != null && messageEvent.getInfo().equals("Nickname not available.")){
-            init();
-        }
-        else{
-            fetching(messageEvent);
-            if (!active && !messageEvent.getError()) {
-                active = true;
-                executorInput.submit(this::inputListener);
-            } else {
-                if (messageEvent.getError())
-                    outputStream.println("Last Input was illegal!");
-            }
-        }
+    public static GameBoard getGameBoard() {
+        return gameBoard;
+    }
+
+    public static Player getPlayer() {
+        return player;
+    }
+
+    public static synchronized void doUpdate(){
+    }
+
+    public static void setRefresh(boolean value){
+        refresh = value;
+    }
+
+    public static boolean getRefresh(){
+        return refresh;
+    }
+
+    public static void setError(boolean value){
+        error = value;
+    }
+
+    public static boolean getError(){
+        return error;
+    }
+
+    /*public void updateData(MessageEvent messageEvent){
+        init();
+        fetching(messageEvent);
         doUpdate();
-    }
+    }*/
 
     // UPDATE OF USER VIEW
 
-    public static void doUpdate(){
-        executorUpdate.submit(View::view);
-    }
-
-    public static void view(){
-        // mostra la visione a schermo a seconda del differente stato del Match o del player
-    }
-
-    //INPUT CHARACTER
-
-    public void inputListener(){
-            String input;
-            while(active){
-                input = scanner.nextLine();
-                notify(input);
-            }
-            scanner.close();
-            outputStream.println("\nTHE MATCH IS FINISHED.\n");
-    }
-
     //FETCHING
 
-    public void fetching(MessageEvent messageEvent){
+    /*public void fetching(MessageEvent messageEvent){
         standardFetching(messageEvent);
         if(player.getPlayerState() == PlayerState.WIN || player.getPlayerState() == PlayerState.LOST){
-            active = false;
-            outputStream.println("\nYOU "+ player.getPlayerState()+"!\n");
             Client.close();
         }
         switch(player.getMatchState()){
-            case NONE:{
-                outputStream.println("\nWAIT FOR YOUR TURN...\n");
-                break;
-            }
-            case GETTING_PLAYERS_NUM:{
-                outputStream.println("\nINSERT PLAYER:\n");
-                break;
-            }
-            case WAITING_FOR_PLAYERS:{
-                outputStream.println("\nWAIT FOR PLAYERS...\n");
-                break;
-            }
             case SELECTING_GOD_CARDS:{
-                fetchingAndInitCardsStates(messageEvent);
-                outputStream.println("\nSELECT GOD CARDS FOR THE MATCH\n");
-                break;
-            }
+                fetchingAndInitCardsStates(messageEvent);}
             case SELECTING_SPECIAL_COMMAND: {
-                outputStream.println("\nSELECT YOUR GOD CARD\n");
                 fetchingAndInitCardsStates(messageEvent);
                 break;
             }
             case PLACING_WORKERS:{
                 fetchingPlacingState(messageEvent);
-                outputStream.println("\nPLACE YOUR TWO WORKERS \n");
                 break;
             }
             case RUNNING: {
@@ -124,13 +124,12 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 break;
             }
             case FINISHED:
-                active = false;
-                outputStream.println("\nGAME OVER\n");
+                //active = false;
                 Client.close();
                 break;
         }
-    }
-
+    }*/
+/*
     public void standardFetching(MessageEvent messageEvent){
         if(messageEvent.getMatchState() != player.getMatchState() && messageEvent.getMatchState() != null){
             player.setMatchState(messageEvent.getMatchState());
@@ -184,21 +183,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         }
     }
 
-    //INIT
-
-    public void init(){
-        if(player.getNickname() == null){
-            new View();
-            outputStream.println( "INSERT YOUR NICKNAME:\n ");
-            player.setNickname(scanner.nextLine());
-        }
-        else{
-            outputStream.println( "YOUR NICKNAME IS NOT AVAILABLE!\nINSERT A NEW NICKNAME:\n   ");
-            player.setNickname(scanner.nextLine());
-        }
-        notify(player.getNickname());
-    }
-
     public static void initRunning(){
         if (player.getPlayerState() != PlayerState.ACTIVE)
             gameBoard.setStartingPosition(null);
@@ -213,22 +197,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         if(player.isTerminateTurnAvailable()){
             System.out.println("ENTER E TO USE TERMINATE TURN\n");
         }
-    }
+    }*/
 
-    // GETTER
-
-    public static boolean isActive() { return active;}
-
-    public static GameBoard getGameBoard() {
-        return gameBoard;
-    }
-
-    public static Player getPlayer() {
-        return player;
-    }
-
-    public static void setActive(boolean value){
-        active = value;
-    }
 
 }

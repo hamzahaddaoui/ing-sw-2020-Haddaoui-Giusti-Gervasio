@@ -70,7 +70,7 @@ public class Player{
         return matchState;
     }
 
-    public Integer getPlayerNumber() {
+    public int getPlayerNumber() {
         return playerNumber;
     }
 
@@ -120,4 +120,11 @@ public class Player{
 
     public void setCurrentPlayer(int player) {currentPlayer = player;}
 
+    public String getGodCard() {
+        return godCard;
+    }
+
+    public void setGodCard(String godCard) {
+        this.godCard = godCard;
+    }
 }
