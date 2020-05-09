@@ -6,14 +6,43 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
 
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Controller extends Observable<MessageEvent> implements Observer<String> {
+public class Controller extends Observable<MessageEvent> implements Runnable {
 
-    static ExecutorService executor = Executors.newSingleThreadExecutor();
+    static ExecutorService executor = Executors.newCachedThreadPool();
+    private static boolean activeInput = true;
+    private static boolean messageReady;
 
-    private ControlState controlState;
+    public static void setActiveInput(boolean activeInput) {
+        Controller.activeInput = activeInput;
+    }
+
+    public static void setMessageReady(boolean messageReady) {
+        Controller.messageReady = messageReady;
+    }
+
+    @Override
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            if (activeInput) {
+                activeInput = false;
+                String input = scanner.nextLine();
+                executor.submit(()-> {
+                   MessageEvent message = View.getPlayer().getControlState().computeInput(input);
+                   if (messageReady) {
+                       notify(message);
+                       messageReady = false;
+                   }
+                });
+            }
+        }
+    }
+
+    /*private ControlState controlState;
     private static MessageEvent message;
     private boolean messageReady;
     Player player;
@@ -99,11 +128,9 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
         } else controlState = new WaitingStatus();
     }
 
-    /*
-    ------------------- UTILE PER I TEST ------------------
-     */
-
     public boolean isMessageReady(){
         return messageReady;
     }
+    */
+
 }

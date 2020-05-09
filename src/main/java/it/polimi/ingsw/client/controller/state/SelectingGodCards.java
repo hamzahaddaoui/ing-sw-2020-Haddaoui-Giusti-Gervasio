@@ -4,13 +4,35 @@ import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.utilities.MessageEvent;
+
 import java.util.HashSet;
 import java.util.Set;
 
 
-public class SelectingGodCardsStatus extends ControlState {
+public class SelectingGodCards extends ControlState {
 
-    Set<String> selectedCards = new HashSet<>();
+    @Override
+    public MessageEvent computeInput(String input) {
+        return null;
+    }
+
+    @Override
+    public void updateData(MessageEvent message) {
+
+    }
+
+    @Override
+    public String computeView() {
+        return null;
+    }
+
+    @Override
+    public void error() {
+
+    }
+}
+   /* Set<String> selectedCards = new HashSet<>();
 
     @Override
     public boolean processingMessage(String viewObject) throws IllegalArgumentException{
@@ -38,3 +60,4 @@ public class SelectingGodCardsStatus extends ControlState {
     }
 
 }
+*/
