@@ -46,7 +46,7 @@ public class NotInitialized extends ControlState{
                 player.setControlState(new WaitingForPlayers());
             else {
                 GameBoard gameBoard = View.getGameBoard();
-                player.setControlState(new SelectingSpecialCommand());
+                player.setControlState(new SelectingGodCards());
                 gameBoard.setMatchCards(message.getMatchCards());
             }
         }

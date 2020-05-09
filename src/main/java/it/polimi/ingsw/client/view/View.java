@@ -200,4 +200,54 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }*/
 
 
+    static void getBillboardStat(MessageEvent messageEvent){
+        Map<Position, Cell> billboardCells = messageEvent.getBillboardStatus();
+
+        System.out.println(billboardCells);
+        StringBuilder output = new StringBuilder();
+        billboardCells
+                .keySet()
+                .stream()
+                .sorted()
+                .forEach(position -> output
+                        .append(billboardCells
+                                .get(position)
+                                .getPlayerID() == null ?
+                                "[ ]"
+                                :
+                                messageEvent
+                                        .getMatchPlayers()
+                                        .get(billboardCells
+                                                .get(position)
+                                                .getPlayerID()))
+                        .append((position.getY()==4) ? "\n" : " "));
+
+        output.append("\n");
+
+        billboardCells
+                .keySet()
+                .stream()
+                .sorted()
+                .forEach(position -> output
+                        .append(billboardCells.get(position).isDome() ? "[D]" : "["+billboardCells.get(position).getTowerHeight()+"]")
+                        .append((position.getY()==4) ? "\n" : " "));
+        System.out.println(output.toString());
+    }
+
+    static String getBillboardStat(MessageEvent messageEvent, Set<Position> cells, Position p){
+        Map<Position, Cell> billboardCells = (Map<Position,Cell>) messageEvent.getBillboardStatus();
+        StringBuilder output = new StringBuilder();
+        billboardCells
+                .keySet()
+                .stream()
+                .sorted()
+                .forEach(position -> output
+                        .append(cells.contains(position) ? "\u2B1B" : "")
+                        .append(!(p.equals(position)) && !cells.contains(position) ? "\u2B1C" : "")
+                        .append((p.equals(position)) ? "\u2705" : "")
+                        .append((position.getY()==4) ? "\n" : " "));
+        return output.toString();
+    }
+
+
 }

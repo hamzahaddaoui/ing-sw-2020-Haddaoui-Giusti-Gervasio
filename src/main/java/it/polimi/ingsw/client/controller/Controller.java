@@ -70,7 +70,7 @@ public class Controller extends Observable<MessageEvent> implements Runnable {
 
         messageReady = false;
         messageReady = controlState.processingMessage(viewObject);
-        //System.out.println("******"+messageReady);
+
         if (messageReady) {
             notify(message);
             reset();

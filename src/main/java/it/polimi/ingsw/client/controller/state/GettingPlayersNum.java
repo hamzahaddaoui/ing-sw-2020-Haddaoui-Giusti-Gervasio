@@ -13,12 +13,14 @@ public class GettingPlayersNum extends ControlState {
         int playersNum = Character.getNumericValue(input.charAt(0));
 
         if (playersNum == 2 || playersNum == 3) {
+            View.getPlayer().setPlayerNumber(playersNum);
             message.setPlayersNum(playersNum);
             Controller.setMessageReady(true);
             return message;
         }
         else {
             View.setError(true);
+            View.print();
             return null;
         }
     }
@@ -29,9 +31,12 @@ public class GettingPlayersNum extends ControlState {
 
         player.setMatchState( message.getMatchState() );
         player.setPlayerState( message.getPlayerState() );
-        player.setPlayerNumber(message.getPlayersNum());
+        //player.setPlayerNumber(message.getPlayersNum());
         player.setControlState(new SelectingGodCards());
         Controller.setActiveInput(true);
+
+        View.setRefresh(true);
+        View.print();
     }
 
     @Override
