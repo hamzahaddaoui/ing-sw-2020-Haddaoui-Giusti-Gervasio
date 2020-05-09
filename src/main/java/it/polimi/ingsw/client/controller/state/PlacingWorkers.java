@@ -1,15 +1,37 @@
 package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class PlacingWorkersStatus extends ControlState {
+public class PlacingWorkers extends ControlState {
 
-    Set<Position> initializedPositions = new HashSet<>();
+    @Override
+    public MessageEvent computeInput(String input) {
+        return null;
+    }
+
+    @Override
+    public void updateData(MessageEvent message) {
+
+    }
+
+    @Override
+    public String computeView() {
+        return null;
+    }
+
+    @Override
+    public void error() {
+
+    }
+}
+   /* Set<Position> initializedPositions = new HashSet<>();
     Position position;
 
     @Override
@@ -30,9 +52,10 @@ public class PlacingWorkersStatus extends ControlState {
                 return false;
             }
 
-            if (View.getGameBoard().getPlacingAvailableCells().contains(position)){
+            GameBoard gameBoard = View.getGameBoard();
+            if (gameBoard.getPlacingAvailableCells().contains(position)){
                 initializedPositions.add(position);
-                View.getGameBoard().getPlacingAvailableCells().remove(position);
+                gameBoard.getPlacingAvailableCells().remove(position);
                 View.doUpdate();
                 if(initializedPositions.size() == 1){
                     System.out.println("INSERT THE NEXT POSITION");
@@ -60,5 +83,4 @@ public class PlacingWorkersStatus extends ControlState {
         }
         return false;
     }
-
-}
+}*/

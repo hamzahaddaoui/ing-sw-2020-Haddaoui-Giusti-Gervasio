@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client.view;
 
+import it.polimi.ingsw.client.controller.state.ControlState;
+import it.polimi.ingsw.client.controller.state.NotInitialized;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Player{
+
+    private ControlState controlState = new NotInitialized();
 
     private String nickname;
     private PlayerState playerState;
@@ -109,5 +113,11 @@ public class Player{
     public void setPlayer(int player) {
         currentPlayer = player;
     }
+
+    public ControlState getControlState() {return controlState;}
+
+    public void setControlState(ControlState state) {controlState = state;}
+
+    public void setCurrentPlayer(int player) {currentPlayer = player;}
 
 }

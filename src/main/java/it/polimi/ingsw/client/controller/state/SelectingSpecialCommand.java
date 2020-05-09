@@ -3,10 +3,32 @@ package it.polimi.ingsw.client.controller.state;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
+import it.polimi.ingsw.utilities.MessageEvent;
 
-public class SelectingSpecialCommandStatus extends ControlState {
+public class SelectingSpecialCommand extends ControlState {
 
     @Override
+    public MessageEvent computeInput(String input) {
+        return null;
+    }
+
+    @Override
+    public void updateData(MessageEvent message) {
+
+    }
+
+    @Override
+    public String computeView() {
+        return null;
+    }
+
+    @Override
+    public void error() {
+
+    }
+}
+
+/*    @Override
     public boolean processingMessage(String viewObject) throws IllegalArgumentException{
 
         if (super.checkMessage(viewObject)) {
@@ -16,8 +38,9 @@ public class SelectingSpecialCommandStatus extends ControlState {
             if (gameBoard.getSelectedGodCards().contains(viewObject)) {
                 Controller.getMessage().setGodCard(viewObject);
                 return true;
-            } else System.out.println("carta non disponibile");
+            } else System.out.println("CARD NOT AVAILABLE");
         }
         return false;
     }
 }
+*/

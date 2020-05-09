@@ -31,7 +31,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     public NetworkHandler(String ip) throws IOException {
         active = true;
         server = new Socket(ip, SOCKET_PORT);
-        //server.setSoTimeout(SOCKET_TIMEOUT);
+        server.setSoTimeout(SOCKET_TIMEOUT);
         output = new ObjectOutputStream(server.getOutputStream());
         input = new ObjectInputStream(server.getInputStream());
     }
@@ -44,7 +44,6 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     }
 
     public void stop() throws IOException{
-        heartbeatService.shutdownNow();
         active = false;
         server.close();
     }
@@ -77,11 +76,17 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
 
     public void heartbeatRunnable() {
         MessageEvent msgEvent = new MessageEvent();
-        msgEvent.setInfo("Heartbeat Message");
-
-        update(msgEvent);
-
-        heartbeatService.schedule(this::heartbeatRunnable,SOCKET_TIMEOUT/2,TimeUnit.MILLISECONDS);
+        if (active) {
+            msgEvent.setInfo("Heartbeat Message");
+            update(msgEvent);
+            heartbeatService.schedule(this::heartbeatRunnable, SOCKET_TIMEOUT / 2, TimeUnit.MILLISECONDS);
+        }
+        else {
+            MessageEvent message = new MessageEvent();
+            message.setExit(true);
+            update(message);
+            heartbeatService.shutdownNow();
+        }
     }
 
    private void inputHandler() {
@@ -91,7 +96,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            while (active) {
                inputObject = (String) input.readObject();
                messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
-               //System.out.println(messageEvent);
+
                if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
                    notify(messageEvent);
                }
@@ -102,9 +107,6 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            System.out.println("invalid stream from server");
        }finally {
            try {
-               MessageEvent message = new MessageEvent();
-               message.setExit(true);
-               update(message);
                stop();
            } catch (IOException e) {
                e.printStackTrace();

@@ -40,6 +40,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     public void updateData(MessageEvent messageEvent){
+
         if(messageEvent.getInfo() != null && messageEvent.getInfo().equals("Nickname not available.")){
             init();
         }
@@ -49,8 +50,8 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 active = true;
                 executorInput.submit(this::inputListener);
             } else {
-                if (messageEvent.getError() && messageEvent.getInfo() == null)
-                    outputStream.println("Last Input was illegal.");
+                if (messageEvent.getError())
+                    outputStream.println("Last Input was illegal!");
             }
         }
         doUpdate();
@@ -59,7 +60,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     // UPDATE OF USER VIEW
 
     public static void doUpdate(){
-        executorUpdate.submit(()-> view());
+        executorUpdate.submit(View::view);
     }
 
     public static void view(){
@@ -93,16 +94,11 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 break;
             }
             case GETTING_PLAYERS_NUM:{
-                if(player.getPlayerNumber() == 0) {
-                    outputStream.println("\nWANT TO PLAY A MATCH OF 2 OR 3 PLAYERS:\n");
-                }
-                else{
-                    outputStream.println("\nWAITING FOR PLAYERS...\n");
-                }
+                outputStream.println("\nINSERT PLAYER:\n");
                 break;
             }
             case WAITING_FOR_PLAYERS:{
-                outputStream.println("\nWAITING FOR PLAYERS...\n");
+                outputStream.println("\nWAIT FOR PLAYERS...\n");
                 break;
             }
             case SELECTING_GOD_CARDS:{

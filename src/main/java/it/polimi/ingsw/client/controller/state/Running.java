@@ -7,9 +7,28 @@ import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 
-public class RunningStatus extends ControlState {
+public class Running extends ControlState {
+    @Override
+    public MessageEvent computeInput(String input) {
+        return null;
+    }
 
-    MessageEvent message = Controller.getMessage();
+    @Override
+    public void updateData(MessageEvent message) {
+
+    }
+
+    @Override
+    public String computeView() {
+        return null;
+    }
+
+    @Override
+    public void error() {
+
+    }
+}
+   /* MessageEvent message = Controller.getMessage();
     GameBoard gameBoard = View.getGameBoard();
     Player player = View.getPlayer();
     Position startingPosition = gameBoard.getStartingPosition();
@@ -84,4 +103,4 @@ public class RunningStatus extends ControlState {
         else System.out.println("POSITION IS NOT AVAILABLE!");
         return false;
     }
-}
+}*/
