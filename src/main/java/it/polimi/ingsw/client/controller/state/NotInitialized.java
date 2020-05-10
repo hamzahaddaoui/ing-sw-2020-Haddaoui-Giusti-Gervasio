@@ -8,16 +8,11 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class NotInitialized extends ControlState{
-
-    Player player = View.getPlayer();
-
 
     @Override
     public MessageEvent computeInput(String input) {
+        Player player = View.getPlayer();
         MessageEvent message = new MessageEvent();
 
         player.setNickname(input);
@@ -29,7 +24,8 @@ public class NotInitialized extends ControlState{
 
     @Override
     public void updateData(MessageEvent message) {
-        player.setMatchState( message.getMatchState() );
+        Controller.updateStandardData(message);
+        /*player.setMatchState( message.getMatchState() );
         player.setPlayerState( message.getPlayerState() );
 
         if(message.getPlayerState() == PlayerState.ACTIVE){    //HO CREATO UN MATCH
@@ -52,16 +48,22 @@ public class NotInitialized extends ControlState{
         }
 
         View.setRefresh(true);
-        View.print();
+        View.print();*/
     }
 
     @Override
     public String computeView() {
-        return "Insert your nickname: ";
+        Player player = View.getPlayer();
+        if (player.getPlayerState() != null && player.getPlayerState()==PlayerState.WIN)
+            return "Congratulations! You are the winner!";
+        else if (player.getPlayerState() != null && player.getPlayerState() == PlayerState.LOST)
+            return "Unlucky! You lost!";
+        else return "Insert your nickname: ";
     }
 
     @Override
     public void error() {
+        Player player = View.getPlayer();
         System.out.println("Nickname already taken!\n");
         player.setNickname(null);
         Controller.setActiveInput(true);

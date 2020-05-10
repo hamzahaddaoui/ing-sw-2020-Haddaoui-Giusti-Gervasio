@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 
+import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
@@ -15,20 +16,21 @@ public class WaitingForPlayers extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        Player player = View.getPlayer();
+        /*Player player = View.getPlayer();
         MatchState matchState = message.getMatchState();
 
         player.setMatchState(matchState);
         player.setPlayerState( message.getPlayerState() );
 
-        if (matchState != MatchState.WAITING_FOR_PLAYERS) {                 //PLAYERSNUM VIENE RAGGIUNTO
+        /*if (matchState != MatchState.WAITING_FOR_PLAYERS) {                 //PLAYERSNUM VIENE RAGGIUNTO
             GameBoard gameBoard = View.getGameBoard();
             player.setControlState(new SelectingGodCards());
             gameBoard.setMatchCards(message.getMatchCards());
-        }
+        }*/
 
+        Controller.updateStandardData(message);
         View.setRefresh(true);
-        new Thread(View::print).start();
+        View.print();
     }
 
     @Override

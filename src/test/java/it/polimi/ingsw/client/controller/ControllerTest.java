@@ -73,7 +73,7 @@ class ControllerTest {
     synchronized void notifyController(PlayerState playerState, MatchState matchState, String viewObject) {
         player.setPlayerState(playerState);
         player.setMatchState(matchState);
-        controller.update(viewObject);
+        //controller.update(viewObject);
     }
 
 }

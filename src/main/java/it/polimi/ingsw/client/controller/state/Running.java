@@ -36,23 +36,25 @@ public class Running extends ControlState {
         Player player = View.getPlayer();
         GameBoard gameBoard = View.getGameBoard();
 
-        if (message.getMatchState() == MatchState.FINISHED) {
+        /*if (message.getMatchState() == MatchState.FINISHED) {
             if (message.getPlayerState()==PlayerState.WIN)
                 System.out.println("Congratulations! You are the winner!");
             else System.out.println("Unlucky! You lost!");
             player.setControlState(new NotInitialized());
         }
-        else if (message.getPlayerState()==PlayerState.LOST) {
+        else*/
+        if (message.getPlayerState()==PlayerState.LOST) {
             System.out.println("Unlucky! You lost!");
             player.setControlState(new NotInitialized());
         }
         else {
-
-            player.setMatchState(message.getMatchState());
+            /*player.setMatchState(message.getMatchState());
             player.setPlayerState(message.getPlayerState());
             player.setTurnState(message.getTurnState());
             player.setMatchPlayers(message.getMatchPlayers());
-            player.setCurrentPlayer(message.getCurrentPlayer());
+            player.setCurrentPlayer(message.getCurrentPlayer());*/
+
+            Controller.updateStandardData(message);
 
             gameBoard.setBillboardStatus(message.getBillboardStatus());
 
@@ -62,6 +64,8 @@ public class Running extends ControlState {
                 player.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
                 Controller.setActiveInput(true);
             }
+            else if (gameBoard.getStartingPosition()!=null)
+                gameBoard.setStartingPosition(null);
 
             View.doUpdate();
 
@@ -76,11 +80,9 @@ public class Running extends ControlState {
         Player player = View.getPlayer();
         Position startingPosition = gameBoard.getStartingPosition();
 
-        if (player.getPlayerState()!= PlayerState.ACTIVE) {
-            if (gameBoard.getStartingPosition()!=null)
-                gameBoard.setStartingPosition(null);
+        if (player.getPlayerState()!= PlayerState.ACTIVE)
             return "You're not the current player.";
-        }
+
         if (startingPosition==null)
             return "Choose your starting worker, insert its coordinates: ";
         else if (player.getSpecialFunctionAvailable()!=null && player.getSpecialFunctionAvailable().get(startingPosition) && player.isTerminateTurnAvailable()) {

@@ -27,12 +27,13 @@ public class GettingPlayersNum extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        Player player = View.getPlayer();
+        Controller.updateStandardData(message);
+        //Player player = View.getPlayer();
 
-        player.setMatchState( message.getMatchState() );
-        player.setPlayerState( message.getPlayerState() );
+        //player.setMatchState( message.getMatchState() );
+        //player.setPlayerState( message.getPlayerState() );
         //player.setPlayerNumber(message.getPlayersNum());
-        player.setControlState(new SelectingGodCards());
+        //player.setControlState(new SelectingGodCards());
         Controller.setActiveInput(true);
 
         View.setRefresh(true);

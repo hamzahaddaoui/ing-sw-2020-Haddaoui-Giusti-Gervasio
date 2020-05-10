@@ -18,20 +18,21 @@ public class WaitingList extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        Player player = View.getPlayer();
+        /*Player player = View.getPlayer();
         MatchState matchState = message.getMatchState();
 
         player.setMatchState(matchState);
         player.setPlayerState( message.getPlayerState() );
 
-        if (matchState == MatchState.WAITING_FOR_PLAYERS)                   //ENTRO NEL MATCH MA MANCA IL TERZO GIOCATORE
+        /*if (matchState == MatchState.WAITING_FOR_PLAYERS)                   //ENTRO NEL MATCH MA MANCA IL TERZO GIOCATORE
             player.setControlState(new WaitingForPlayers());
         else {
             GameBoard gameBoard = View.getGameBoard();
             player.setControlState(new SelectingGodCards());                //ENTRO E IMMEDIATAMENTE IL NUMERO DI GIOCATORI VIENE RAGGIUNTO
             gameBoard.setMatchCards(message.getMatchCards());
-        }
+        }*/
 
+        Controller.updateStandardData(message);
         View.setRefresh(true);
         View.print();
     }

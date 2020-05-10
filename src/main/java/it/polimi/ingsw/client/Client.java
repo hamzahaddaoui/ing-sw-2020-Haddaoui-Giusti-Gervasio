@@ -10,11 +10,13 @@ import java.util.concurrent.Executors;
 
 
 public class Client {
-    static ExecutorService executor = Executors.newCachedThreadPool();
+    static ExecutorService inputListener = Executors.newSingleThreadExecutor();
+    static ExecutorService networkListener = Executors.newSingleThreadExecutor();
+    //static ExecutorService viewManager = Executors.newSingleThreadExecutor();
     static NetworkHandler networkHandler;
     static View view;
     static Controller controller;
-    static Scanner scanner;
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         view = new View();
@@ -23,9 +25,10 @@ public class Client {
         //TODO COME GESTIRE LA CHIUSURA DEL SOCKET A FINE PARTITA
 
         try {
-            System.out.println("INSERT IP ADDRESS: ");
-            scanner = new Scanner(System.in);
+            System.out.println("Insert ip address: ('d' or 'default' for the default ip) ");
             String ip = scanner.next();
+            if (ip.equals("d") || ip.equals("default"))
+                ip = "127.0.0.1";
             networkHandler = new NetworkHandler(ip);
             //scanner.close();
         } catch (IOException e) {
@@ -37,9 +40,9 @@ public class Client {
         networkHandler.addObserver(view);       //view osserva il networkHandler
         controller.addObserver(networkHandler); //networkHandler osserva il controller
 
-        executor.submit(networkHandler);        //si mette in ascolto di messaggi
-        //view.init();
-
+        networkListener.submit(networkHandler);
+        new Thread(View::print).start();
+        inputListener.submit(controller);
     }
 
     public static void close() {

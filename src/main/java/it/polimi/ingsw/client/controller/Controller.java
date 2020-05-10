@@ -64,7 +64,7 @@ public class Controller extends Observable<MessageEvent> implements Runnable {
             player.setPlayer(messageEvent.getCurrentPlayer());
     }
 
-    public static void updateControllerState(){
+    public static void updateControllerState() {
         Player player = View.getPlayer();
         ControlState controlState = player.getControlState();
         if (player.getNickname() == null && controlState.getClass() != NotInitialized.class){
@@ -74,21 +74,30 @@ public class Controller extends Observable<MessageEvent> implements Runnable {
             case GETTING_PLAYERS_NUM:
                 if (controlState.getClass() != GettingPlayersNum.class)
                     player.setControlState( new GettingPlayersNum());
+                break;
             case WAITING_FOR_PLAYERS:
                 if (controlState.getClass() != WaitingForPlayers.class)
                     player.setControlState( new WaitingForPlayers());
+                break;
             case SELECTING_GOD_CARDS:
                 if (controlState.getClass() != SelectingGodCards.class)
                     player.setControlState( new SelectingGodCards());
+                break;
             case SELECTING_SPECIAL_COMMAND:
                 if (controlState.getClass() != SelectingSpecialCommand.class)
                     player.setControlState( new SelectingSpecialCommand());
+                break;
             case PLACING_WORKERS:
                 if (controlState.getClass() != PlacingWorkers.class)
                     player.setControlState( new PlacingWorkers());
+                break;
             case RUNNING:
                 if (controlState.getClass() != Running.class)
                     player.setControlState( new Running());
+                break;
+            case FINISHED:
+                player.setControlState(new NotInitialized());
+                break;
             default:
                 player.setControlState( new WaitingList());
         }
