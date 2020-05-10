@@ -5,11 +5,10 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 
 public class GettingPlayersNum extends ControlState {
+    MessageEvent message = new MessageEvent();
 
     @Override
     public MessageEvent computeInput(String input) {
-
-        MessageEvent message = new MessageEvent();
         int playersNum = Character.getNumericValue(input.charAt(0));
 
         if (playersNum == 2 || playersNum == 3) {
@@ -27,7 +26,7 @@ public class GettingPlayersNum extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        Controller.updateStandardData(message);
+        //Controller.updateStandardData(message);
         //Player player = View.getPlayer();
 
         //player.setMatchState( message.getMatchState() );

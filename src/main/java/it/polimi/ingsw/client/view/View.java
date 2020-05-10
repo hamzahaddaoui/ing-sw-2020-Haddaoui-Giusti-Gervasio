@@ -42,7 +42,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     //UPDATE FROM NETWORK HANDLER
 
     @Override //FROM CLIENT HANDLER
-    public synchronized void update(MessageEvent messageEvent){
+    public void update(MessageEvent messageEvent){
         executorData.submit(()->{
             Controller.updateStandardData(messageEvent);
             Controller.updateControllerState();
@@ -53,7 +53,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         else {
             executorData.submit(()-> player.getControlState().updateData(messageEvent));
         }
-        notifyAll();
+
     }
 
 

@@ -28,7 +28,7 @@ public class WaitingForPlayers extends ControlState {
             gameBoard.setMatchCards(message.getMatchCards());
         }*/
 
-        Controller.updateStandardData(message);
+        //Controller.updateStandardData(message);
         View.setRefresh(true);
         View.print();
     }

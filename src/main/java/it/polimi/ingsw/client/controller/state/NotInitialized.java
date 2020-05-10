@@ -24,7 +24,7 @@ public class NotInitialized extends ControlState{
 
     @Override
     public void updateData(MessageEvent message) {
-        Controller.updateStandardData(message);
+        //Controller.updateStandardData(message);
         /*player.setMatchState( message.getMatchState() );
         player.setPlayerState( message.getPlayerState() );
 
@@ -49,6 +49,7 @@ public class NotInitialized extends ControlState{
 
         View.setRefresh(true);
         View.print();*/
+        Controller.setActiveInput(true);
     }
 
     @Override

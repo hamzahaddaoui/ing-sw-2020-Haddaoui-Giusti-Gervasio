@@ -6,15 +6,20 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
 
+import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Controller extends Observable<MessageEvent> implements Runnable {
 
-    static ExecutorService executor = Executors.newCachedThreadPool();
+    static ExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private static boolean activeInput = true;
     private static boolean messageReady;
+    Scanner scanner;
+    String input;
+    MessageEvent messageEvent;
 
     public static void setActiveInput(boolean activeInput) {
         Controller.activeInput = activeInput;
@@ -26,26 +31,41 @@ public class Controller extends Observable<MessageEvent> implements Runnable {
 
     @Override
     public void run() {
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                     doRun();
+                } catch (IllegalThreadStateException e) {
+                    e.printStackTrace();
+                }
+                catch (IllegalMonitorStateException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+    }
+
+    private void doRun(){
         while (true) {
             if (activeInput) {
                 activeInput = false;
-                String input = scanner.nextLine();
-                synchronized (View.class){
-                    executor.submit(()-> {
-                       MessageEvent message = View.getPlayer().getControlState().computeInput(input);
-                       if (messageReady) {
-                           notify(message);
-                           messageReady = false;
-                       }
-                });}
-                notifyAll();
-            }
-            else{
-                scanner.nextLine();
+                if (scanner.hasNextLine()) {
+                    input = scanner.nextLine();
+                    synchronized (View.class) {
+                    messageEvent = View.getPlayer().getControlState().computeInput(input);
+                    if (messageReady) {
+                            notify(messageEvent);
+                            messageReady = false;
+                        }
+                    }
+                }
             }
         }
     }
+
 
     public static void updateStandardData(MessageEvent messageEvent){
         Player player = View.getPlayer();

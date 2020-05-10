@@ -54,7 +54,7 @@ public class Running extends ControlState {
             player.setMatchPlayers(message.getMatchPlayers());
             player.setCurrentPlayer(message.getCurrentPlayer());*/
 
-            Controller.updateStandardData(message);
+            //Controller.updateStandardData(message);
 
             gameBoard.setBillboardStatus(message.getBillboardStatus());
 
