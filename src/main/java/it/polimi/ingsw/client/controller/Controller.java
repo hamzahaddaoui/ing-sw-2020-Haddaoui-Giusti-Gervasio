@@ -6,14 +6,105 @@ import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
 
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Controller extends Observable<MessageEvent> implements Observer<String> {
+public class Controller extends Observable<MessageEvent> implements Observer<String>  {
 
     static ExecutorService executor = Executors.newSingleThreadExecutor();
+            //newCachedThreadPool();
+    private static boolean activeInput = true;
+    private static boolean messageReady;
 
-    private ControlState controlState;
+    public static void setActiveInput(boolean activeInput) {
+        Controller.activeInput = activeInput;
+    }
+
+    public static void setMessageReady(boolean messageReady) {
+        Controller.messageReady = messageReady;
+    }
+
+    public void update(String input) {
+        if(activeInput) {
+            activeInput = false;
+            if(View.getPlayer().getPlayerState() == PlayerState.ACTIVE || View.getPlayer().getPlayerState() == null){
+            executor.submit(()-> {
+                MessageEvent message = View.getPlayer().getControlState().computeInput(input);
+                if (messageReady){
+                    messageReady = false;
+                    notify(message);
+                }
+            });}
+            else{
+                System.out.print("\nPlease wait\n");
+                activeInput = true;
+            }
+        }
+        else{
+            System.out.print("\nPlease wait\n");
+            activeInput = true;
+        }
+    }
+
+    public static void updateStandardData(MessageEvent messageEvent){
+        Player player = View.getPlayer();
+        if(messageEvent.getMatchState() != player.getMatchState() && messageEvent.getMatchState() != null){
+            player.setMatchState(messageEvent.getMatchState());
+        }
+        if(messageEvent.getPlayerState() != player.getPlayerState() && messageEvent.getPlayerState() != null){
+            player.setPlayerState(messageEvent.getPlayerState());
+        }
+        if(messageEvent.getTurnState() != player.getTurnState() && messageEvent.getTurnState() != null){
+            player.setTurnState(messageEvent.getTurnState());
+        }
+        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
+            player.setMatchPlayers(messageEvent.getMatchPlayers());
+        if(messageEvent.getCurrentPlayer() != player.getPlayer())
+            player.setPlayer(messageEvent.getCurrentPlayer());
+    }
+
+    public static void updateControllerState() {
+        Player player = View.getPlayer();
+        ControlState controlState = player.getControlState();
+        if (player.getNickname() == null && controlState.getClass() != NotInitialized.class){
+            player.setControlState(new NotInitialized());
+        }
+        switch (player.getMatchState()){
+            case GETTING_PLAYERS_NUM:
+                if (controlState.getClass() != GettingPlayersNum.class)
+                    player.setControlState( new GettingPlayersNum());
+                break;
+            case WAITING_FOR_PLAYERS:
+                if (controlState.getClass() != WaitingForPlayers.class)
+                    player.setControlState( new WaitingForPlayers());
+                break;
+            case SELECTING_GOD_CARDS:
+                if (controlState.getClass() != SelectingGodCards.class)
+                    player.setControlState( new SelectingGodCards());
+                break;
+            case SELECTING_SPECIAL_COMMAND:
+                if (controlState.getClass() != SelectingSpecialCommand.class)
+                    player.setControlState( new SelectingSpecialCommand());
+                break;
+            case PLACING_WORKERS:
+                if (controlState.getClass() != PlacingWorkers.class)
+                    player.setControlState( new PlacingWorkers());
+                break;
+            case RUNNING:
+                if (controlState.getClass() != Running.class)
+                    player.setControlState( new Running());
+                break;
+            case FINISHED:
+                player.setControlState(new NotInitialized());
+                break;
+            default:
+                player.setControlState( new WaitingList());
+        }
+    }
+
+
+    /*private ControlState controlState;
     private static MessageEvent message;
     private boolean messageReady;
     Player player;
@@ -99,11 +190,9 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
         } else controlState = new WaitingStatus();
     }
 
-    /*
-    ------------------- UTILE PER I TEST ------------------
-     */
-
     public boolean isMessageReady(){
         return messageReady;
     }
+    */
+
 }

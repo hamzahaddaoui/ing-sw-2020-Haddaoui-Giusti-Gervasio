@@ -7,7 +7,7 @@ import java.util.*;
 
 public class GameBoard {
 
-    private ArrayList<String> selectedGodCards ;    // usate per la Selection Special Command
+    private HashSet<String> selectedGodCards ;    // usate per la Selection Special Command
     private ArrayList<String> matchCards;           //date dal Server, usate per la Selecting God Card
 
     private Map<Position, Cell> billboardStatus ;
@@ -17,7 +17,7 @@ public class GameBoard {
     private Position startingPosition;
 
     public GameBoard(){
-        selectedGodCards = new ArrayList<>();
+        selectedGodCards = new HashSet<>();
         matchCards = new ArrayList<>();
         billboardStatus = new HashMap<>();
         workersAvailableCells = new HashMap<>();
@@ -53,7 +53,7 @@ public class GameBoard {
         return startingPosition;
     }
 
-    public ArrayList<String> getSelectedGodCards() {
+    public HashSet<String> getSelectedGodCards() {
         return selectedGodCards;
     }
 
@@ -82,7 +82,7 @@ public class GameBoard {
     }
 
     public void setSelectedGodCards (Set<String> godCards) {
-        selectedGodCards = new ArrayList<String>(godCards);
+        selectedGodCards = new HashSet<>(godCards);
     }
 
 }

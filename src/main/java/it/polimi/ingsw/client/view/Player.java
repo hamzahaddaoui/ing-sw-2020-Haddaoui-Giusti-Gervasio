@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.view;
 
+import it.polimi.ingsw.client.controller.state.*;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
@@ -11,13 +12,15 @@ import java.util.Map;
 
 public class Player{
 
+    private ControlState controlState = new NotInitialized();
+
     private String nickname;
     private PlayerState playerState;
     private MatchState matchState;
     private TurnState turnState;
 
     private int playerNumber;
-    private String GodCard;
+    private String godCard;
 
     private Map<Integer, String> matchPlayers;
     private int currentPlayer;
@@ -28,6 +31,8 @@ public class Player{
         playerState = null;
         matchState = null;
         turnState = null;
+        godCard = null;
+        playerNumber = 0;
         matchPlayers = new HashMap<>();
         specialFunctionAvailable = new HashMap<>();
     }
@@ -64,7 +69,7 @@ public class Player{
         return matchState;
     }
 
-    public Integer getPlayerNumber() {
+    public int getPlayerNumber() {
         return playerNumber;
     }
 
@@ -108,4 +113,17 @@ public class Player{
         currentPlayer = player;
     }
 
+    public ControlState getControlState() {return controlState;}
+
+    public void setControlState(ControlState state) {controlState = state;}
+
+    public void setCurrentPlayer(int player) {currentPlayer = player;}
+
+    public String getGodCard() {
+        return godCard;
+    }
+
+    public void setGodCard(String godCard) {
+        this.godCard = godCard;
+    }
 }

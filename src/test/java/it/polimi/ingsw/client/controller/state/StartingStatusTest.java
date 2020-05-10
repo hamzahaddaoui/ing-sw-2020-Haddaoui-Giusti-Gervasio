@@ -16,7 +16,7 @@ class StartingStatusTest {
 
     @BeforeEach
     void setUp() {
-        controller.setState(new StartingStatus());
+        //controller.setState(new StartingStatus());
         state = controller.getControlState();
     }
 
