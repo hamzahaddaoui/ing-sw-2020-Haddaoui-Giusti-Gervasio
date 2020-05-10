@@ -61,7 +61,7 @@ public class SelectingGodCards extends ControlState {
     public void updateData(MessageEvent message) {
         //caso SELECTING_GOD_CARDS
         if(player.getMatchState() == MatchState.SELECTING_GOD_CARDS){
-            gameBoard.setMatchCards(messageEvent.getMatchCards());
+            gameBoard.setMatchCards(message.getMatchCards());
         }
 
         //caso ACTIVE
