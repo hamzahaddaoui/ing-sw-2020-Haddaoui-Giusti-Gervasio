@@ -197,7 +197,15 @@ public class Match {
     public void nextState() throws IllegalStateException{
         if (currentState.equals(MatchState.FINISHED))
             throw new IllegalStateException("Match is finished");
-        currentState = currentState.next();
+
+        else if (currentState.equals(MatchState.PLACING_WORKERS)) {
+            currentState = currentState.next();
+            currentPlayer.setPlayerState();
+        }
+
+        else
+            currentState = currentState.next();
+
     }
 
     public void start(){
