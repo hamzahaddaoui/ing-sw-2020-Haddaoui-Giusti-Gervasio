@@ -100,7 +100,7 @@ class PlayerTestHamza {
     void testMatch(){
         Position worker, build;
         testPlacing();
-        p1.setPlayerState();
+        //p1.setPlayerState();
 
         System.out.println("\n-----------------------------------------------------------------------------" +
                            "\n-----------------------------first ROUND------------------------------------" +
@@ -439,6 +439,7 @@ class PlayerTestHamza {
         StringBuilder outputB = new StringBuilder();
         StringBuilder outputC = new StringBuilder();
         StringBuilder output = new StringBuilder();
+        StringBuilder playerslist = new StringBuilder();
 
 
         List<Integer> players =match.getPlayers().stream().map(player -> player.getID()).collect(Collectors.toList());
