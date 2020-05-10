@@ -10,9 +10,10 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Controller extends Observable<MessageEvent> implements Runnable {
+public class Controller extends Observable<MessageEvent> implements Observer<String>  {
 
-    static ExecutorService executor = Executors.newCachedThreadPool();
+    static ExecutorService executor = Executors.newSingleThreadExecutor();
+            //newCachedThreadPool();
     private static boolean activeInput = true;
     private static boolean messageReady;
 
@@ -24,26 +25,13 @@ public class Controller extends Observable<MessageEvent> implements Runnable {
         Controller.messageReady = messageReady;
     }
 
-    @Override
-    public void run() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            if (activeInput) {
-                activeInput = false;
-                String input = scanner.nextLine();
-                synchronized (View.class){
-                    executor.submit(()-> {
-                       MessageEvent message = View.getPlayer().getControlState().computeInput(input);
-                       if (messageReady) {
-                           notify(message);
-                           messageReady = false;
-                       }
-                });}
-                notifyAll();
-            }
-            else{
-                scanner.nextLine();
-            }
+    public void update(String input) {
+        if(activeInput) {
+            executor.submit(()-> {
+                MessageEvent message = View.getPlayer().getControlState().computeInput(input);
+                if (messageReady)
+                    notify(message);
+            });
         }
     }
 

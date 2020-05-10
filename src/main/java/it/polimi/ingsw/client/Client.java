@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.controller.InputHandler;
 import it.polimi.ingsw.client.view.View;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ public class Client {
     static ExecutorService inputListener = Executors.newSingleThreadExecutor();
     static ExecutorService networkListener = Executors.newSingleThreadExecutor();
     //static ExecutorService viewManager = Executors.newSingleThreadExecutor();
+    static InputHandler inputHandler;
     static NetworkHandler networkHandler;
     static View view;
     static Controller controller;
@@ -21,6 +23,7 @@ public class Client {
     public static void main(String[] args) {
         view = new View();
         controller = new Controller();
+        inputHandler = new InputHandler();
 
         //TODO COME GESTIRE LA CHIUSURA DEL SOCKET A FINE PARTITA
 
@@ -38,11 +41,12 @@ public class Client {
         System.out.println("CONNECTED");
 
         networkHandler.addObserver(view);       //view osserva il networkHandler
+        inputHandler.addObserver(controller);
         controller.addObserver(networkHandler); //networkHandler osserva il controller
 
         networkListener.submit(networkHandler);
         new Thread(View::print).start();
-        inputListener.submit(controller);
+        inputHandler.inputListener();
     }
 
     public static void close() {

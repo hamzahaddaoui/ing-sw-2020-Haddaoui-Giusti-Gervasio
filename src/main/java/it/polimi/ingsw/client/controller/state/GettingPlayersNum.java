@@ -27,7 +27,7 @@ public class GettingPlayersNum extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        Controller.updateStandardData(message);
+        //Controller.updateStandardData(message);
         //Player player = View.getPlayer();
 
         //player.setMatchState( message.getMatchState() );
