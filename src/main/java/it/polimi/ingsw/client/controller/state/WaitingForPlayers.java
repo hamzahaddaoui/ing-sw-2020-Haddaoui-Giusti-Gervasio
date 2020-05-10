@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.PlayerState;
 
 public class WaitingForPlayers extends ControlState {
 
@@ -29,6 +30,7 @@ public class WaitingForPlayers extends ControlState {
         }*/
 
         //Controller.updateStandardData(message);
+
         View.setRefresh(true);
         View.print();
     }

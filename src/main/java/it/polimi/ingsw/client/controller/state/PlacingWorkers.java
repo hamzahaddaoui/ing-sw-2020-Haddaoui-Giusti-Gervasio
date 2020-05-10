@@ -18,14 +18,15 @@ public class PlacingWorkers extends ControlState {
 
     GameBoard gameBoard = View.getGameBoard();
     Player player = View.getPlayer();
-    MessageEvent messageEvent;
+    MessageEvent messageEvent = new MessageEvent();
     Position position;
+    Set <Position> initializedPosition = new HashSet<>();
 
     @Override
     public MessageEvent computeInput(String input) {
         if(checkMessage(input)){
             //corretto di lunghezza due
-            Set<Position> placingPosition= View.getGameBoard().getPlacingAvailableCells();
+            Set<Position> placingPosition= gameBoard.getPlacingAvailableCells();
             if(placingPosition.size() == 0){
                 throw new IllegalArgumentException("PLACING POSITION IS EMPTY!");
             }
@@ -35,30 +36,26 @@ public class PlacingWorkers extends ControlState {
 
             if (x <= 4 && x >= 0 && y <= 4 && y >= 0 ){
                 position = new Position(x, y);
-                if (gameBoard.getPlacingAvailableCells().contains(position)){
-                    gameBoard.getWorkersAvailableCells().put(position, new HashSet<>());
-                    gameBoard.getPlacingAvailableCells().remove(position);
-                    View.doUpdate();
-                    if(gameBoard.getWorkersAvailableCells().size() == 1){
-                        View.setError(true);
-                        computeView();
-                        View.setError(false);
+                if (placingPosition.contains(position)){
+                    initializedPosition.add(position);
+                    placingPosition.remove(position);
+                    if(initializedPosition.size() == 1){
+                        System.out.println(computeView());
                         Controller.setMessageReady(false);
                         Controller.setActiveInput(true);
                         return null;
                     }
-                    if (gameBoard.getWorkersAvailableCells().size() == 2) {
-                        messageEvent.setInitializedPositions(gameBoard.getWorkersPositions());
+                    if (initializedPosition.size() == 2) {
+                        messageEvent.setInitializedPositions(initializedPosition);
+                        System.out.println(computeView());
                         Controller.setMessageReady(true);
+                        player.setPlayerState(PlayerState.IDLE);
                         return messageEvent;
                     }
                 }
             }
-            System.out.println("POSITION INCORRECT!");
         }
-        View.setError(true);
-        computeView();
-        View.setError(false);
+        error();
         Controller.setMessageReady(false);
         Controller.setActiveInput(true);
         return null;
@@ -68,42 +65,51 @@ public class PlacingWorkers extends ControlState {
     public void updateData(MessageEvent message) {
         //caso PLACING_WORKERS
         if(player.getMatchState() == MatchState.PLACING_WORKERS){
-            if(messageEvent.getBillboardStatus() != gameBoard.getBillboardStatus() && messageEvent.getBillboardStatus() != null){
-                gameBoard.setBillboardStatus(messageEvent.getBillboardStatus());
+            if(message.getBillboardStatus() != gameBoard.getBillboardStatus() && message.getBillboardStatus() != null){
+                gameBoard.setBillboardStatus(message.getBillboardStatus());
             }
-            if(messageEvent.getAvailablePlacingCells() != gameBoard.getPlacingAvailableCells() && messageEvent.getAvailablePlacingCells() != null){
-                gameBoard.setPlacingAvailableCells(messageEvent.getAvailablePlacingCells());
+            if(message.getAvailablePlacingCells() != gameBoard.getPlacingAvailableCells() && message.getAvailablePlacingCells() != null){
+                gameBoard.setPlacingAvailableCells(message.getAvailablePlacingCells());
             }
         }
 
+        View.doUpdate();
         //caso ACTIVE
         if(player.getPlayerState() == PlayerState.ACTIVE){
             Controller.setActiveInput(true);
             View.setRefresh(true);
             View.print();
         }
+        else{
+            System.out.println(computeView());
+        }
 
-        View.doUpdate();
     }
 
     @Override
     public String computeView() {
-        int number = 2 - gameBoard.getWorkersPositions().size();
-        if(number == 1){
-            return "Insert " + number + " worker: \n ";
+        if(player.getPlayerState()==PlayerState.ACTIVE ){
+            int number = 2 - initializedPosition.size();
+            if(number == 0)
+                return "Addition done";
+            else if(number == 1){
+                return "Insert " + number + " worker.\nInsert position XY: \n ";
+            }
+            else if(number == 2){
+                return "Insert " + number + " workers.\nInsert position XY:\n";
+            }
+            else return "INSERIMENTO COMPLETATO";
         }
-        else if(number == 2){
-            return "Insert " + number + " workers: \n";
+        else{
+            return player.getMatchPlayers().get(player.getPlayer()) +" is placing his workers";
         }
-        else return "INSERIMENTO COMPLETATO";
     }
 
     @Override
     public void error() {
-        System.out.println("Input wrong\n");
-        gameBoard.setSelectedGodCards(new HashSet<>());
+        System.out.println("Position is not available or incorrect\n");
         Controller.setActiveInput(true);
-        System.out.println("Select " + player.getPlayerNumber() + " God Cards:");
+        System.out.println(computeView());
     }
 
     private boolean checkMessage(String viewObject) {

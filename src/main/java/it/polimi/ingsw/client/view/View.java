@@ -56,7 +56,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     }
 
-
     public static void print(){
         if(refresh){
             System.out.println(player.getControlState().computeView());
@@ -79,6 +78,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     //VIEW
     public static void doUpdate(){
+        executorView.submit(View::visualization);
+    }
+
+    public static void visualization(){
         if(player.getMatchState() == MatchState.PLACING_WORKERS ){
             getBillboardStat();
         }
@@ -86,7 +89,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
             getBillboardStat(gameBoard.getWorkersAvailableCells(gameBoard.getStartingPosition()),gameBoard.getStartingPosition());
         }
         else {
-            getBillboardStat(gameBoard.getWorkersAvailableCells(gameBoard.getStartingPosition()));
+            getBillboardStat(gameBoard.getWorkersPositions());
         }
     }
 

@@ -27,11 +27,23 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
 
     public void update(String input) {
         if(activeInput) {
+            activeInput = false;
+            if(View.getPlayer().getPlayerState() == PlayerState.ACTIVE || View.getPlayer().getPlayerState() == null){
             executor.submit(()-> {
                 MessageEvent message = View.getPlayer().getControlState().computeInput(input);
-                if (messageReady)
+                if (messageReady){
+                    messageReady = false;
                     notify(message);
-            });
+                }
+            });}
+            else{
+                System.out.print("\nPlease wait\n");
+                activeInput = true;
+            }
+        }
+        else{
+            System.out.print("\nPlease wait\n");
+            activeInput = true;
         }
     }
 

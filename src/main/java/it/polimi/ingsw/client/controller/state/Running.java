@@ -9,20 +9,24 @@ public class Running extends ControlState {
 
     //TODO CHIUSURA CLIENT NEL CASO DI PARTITA FINITA
 
+
+    GameBoard gameBoard = View.getGameBoard();
+    Player player = View.getPlayer();
+    MessageEvent message = new MessageEvent() ;
+
     @Override
     public MessageEvent computeInput(String input) {
 
-        MessageEvent message = new MessageEvent();
-
-        if (input.length() == 1 && processingChar(input.charAt(0), message)) {
+        if (input.length() == 1 && processingChar(input.charAt(0))) {
             Controller.setMessageReady(true);
+            player.setPlayerState(PlayerState.IDLE);
             return message;
         }
         else if (input.length() == 2) {
             int x = Character.getNumericValue(input.charAt(0)) - 1;
             int y = Character.getNumericValue(input.charAt(1)) - 1;
 
-            if (x <= 4 && x >= 0 && y <= 4 && y >= 0 && processingPosition(x, y, message)){
+            if (x <= 4 && x >= 0 && y <= 4 && y >= 0 && processingPosition(x, y)){
                 //View.doUpdate();
                 return message;}
         }
@@ -33,8 +37,7 @@ public class Running extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
-        Player player = View.getPlayer();
-        GameBoard gameBoard = View.getGameBoard();
+        View.doUpdate();
 
         /*if (message.getMatchState() == MatchState.FINISHED) {
             if (message.getPlayerState()==PlayerState.WIN)
@@ -67,7 +70,6 @@ public class Running extends ControlState {
             else if (gameBoard.getStartingPosition()!=null)
                 gameBoard.setStartingPosition(null);
 
-            View.doUpdate();
 
             View.setRefresh(true);
             View.print();
@@ -76,12 +78,10 @@ public class Running extends ControlState {
 
     @Override
     public String computeView() {
-        GameBoard gameBoard = View.getGameBoard();
-        Player player = View.getPlayer();
         Position startingPosition = gameBoard.getStartingPosition();
 
         if (player.getPlayerState()!= PlayerState.ACTIVE)
-            return "You're not the current player.";
+            return player.getMatchPlayers().get(player.getPlayer())+" is doing his turn";
 
         if (startingPosition==null)
             return "Choose your starting worker, insert its coordinates: ";
@@ -113,26 +113,24 @@ public class Running extends ControlState {
         Controller.setActiveInput(true);
     }
 
-    private boolean processingChar(char input, MessageEvent message) {
-
+    private boolean processingChar(char input) {
+        message = new MessageEvent();
         int num = Character.getNumericValue(input);
 
         if (num == 15) {
-            Player player = View.getPlayer();
-            Position startingPosition = View.getGameBoard().getStartingPosition();
+            Position startingPosition = gameBoard.getStartingPosition();
 
             if (startingPosition != null) {
                 if (player.getSpecialFunctionAvailable().get(startingPosition)) {
                     message.setStartPosition(startingPosition);
                     message.setSpecialFunction(true);
                     View.doUpdate();
+
                     return true;
                 } else System.out.println("SPECIAL FUNCTION IS NOT AVAILABLE FOR THIS WORKER!");
             } else System.out.println("YOU MUST SELECT YOUR WORKER!");
         }
         else if (num == 14) {
-
-            Player player = View.getPlayer();
 
             if (player.isTerminateTurnAvailable()) {
                 message.setTerminateTurnAvailable(true);
@@ -143,18 +141,17 @@ public class Running extends ControlState {
         return false;
     }
 
-    private boolean processingPosition(int x, int y, MessageEvent message) {
-        Player player = View.getPlayer();
-        GameBoard gameBoard = View.getGameBoard();
+    private boolean processingPosition(int x, int y) {
         Position startingPosition = gameBoard.getStartingPosition();
         Position position = new Position(x,y);
+        message = new MessageEvent();
 
         if (startingPosition == null) {
             if (gameBoard.isWorkerPresent(position)){
                 gameBoard.setStartingPosition(position);
-                //player.setTurnState(TurnState.MOVE);
-                View.setRefresh(true);
-                View.print();
+                player.setTurnState(TurnState.MOVE);
+                View.doUpdate();
+                System.out.println(computeView());
                 Controller.setActiveInput(true);
                 return true;
             }
@@ -164,6 +161,7 @@ public class Running extends ControlState {
             message.setStartPosition(startingPosition);
             message.setEndPosition(position);
             Controller.setMessageReady(true);
+            player.setPlayerState(PlayerState.IDLE);
             return true;
         }
         else System.out.println("POSITION IS NOT AVAILABLE!");

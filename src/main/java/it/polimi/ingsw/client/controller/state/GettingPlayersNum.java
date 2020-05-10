@@ -3,9 +3,11 @@ import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.PlayerState;
 
 public class GettingPlayersNum extends ControlState {
     MessageEvent message = new MessageEvent();
+    Player player = View.getPlayer();
 
     @Override
     public MessageEvent computeInput(String input) {
@@ -15,6 +17,7 @@ public class GettingPlayersNum extends ControlState {
             View.getPlayer().setPlayerNumber(playersNum);
             message.setPlayersNum(playersNum);
             Controller.setMessageReady(true);
+            player.setPlayerState(PlayerState.IDLE);
             return message;
         }
         else {
@@ -41,6 +44,7 @@ public class GettingPlayersNum extends ControlState {
 
     @Override
     public String computeView() {
+        Controller.setActiveInput(true);
         return "Insert the number of players (2 or 3): ";
     }
 
