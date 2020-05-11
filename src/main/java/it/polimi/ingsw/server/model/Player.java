@@ -144,8 +144,7 @@ public class Player{
     public void setPlayerState(){
         this.playerState = PlayerState.ACTIVE;
         if (match.getCurrentState() == MatchState.RUNNING) {
-            commands.nextState(this);
-            setAvailableCells();
+            playerAction(null);
         }
     }
 
