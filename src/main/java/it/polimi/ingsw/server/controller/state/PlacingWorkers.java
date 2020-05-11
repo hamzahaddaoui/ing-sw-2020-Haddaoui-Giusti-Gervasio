@@ -36,8 +36,8 @@ public class PlacingWorkers extends State {
 
     @Override
     public void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID){
-        MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
         getMatchPlayers(matchID).keySet().forEach(player -> {
+                    MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
                     if (getPlayerState(matchID,player) == PlayerState.ACTIVE)
                         message.setAvailablePlacingCells(getPlacingAvailableCells(matchID));
                     notify(observers, basicPlayerConfig(message, player));

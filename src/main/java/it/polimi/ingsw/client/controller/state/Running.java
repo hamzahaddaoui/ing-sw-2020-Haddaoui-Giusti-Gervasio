@@ -32,6 +32,7 @@ public class Running extends ControlState {
         }
         View.setError(true);
         View.print();
+        Controller.setActiveInput(true);
         return null;
     }
 
@@ -124,7 +125,7 @@ public class Running extends ControlState {
                 if (player.getSpecialFunctionAvailable().get(startingPosition)) {
                     message.setStartPosition(startingPosition);
                     message.setSpecialFunction(true);
-                    View.doUpdate();
+                    //View.doUpdate();
 
                     return true;
                 } else System.out.println("SPECIAL FUNCTION IS NOT AVAILABLE FOR THIS WORKER!");
@@ -161,6 +162,8 @@ public class Running extends ControlState {
             message.setStartPosition(startingPosition);
             message.setEndPosition(position);
             Controller.setMessageReady(true);
+            if (player.getTurnState()==TurnState.MOVE)
+                gameBoard.setStartingPosition(position);
             player.setPlayerState(PlayerState.IDLE);
             return true;
         }

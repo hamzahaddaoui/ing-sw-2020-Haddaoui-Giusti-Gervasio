@@ -42,10 +42,11 @@ public class Running extends State{
 
     @Override
     public void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID){
-        MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
+
         getMatchPlayers(matchID)
                 .keySet()
                 .forEach(player -> {
+                    MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
                     basicPlayerConfig(message, player);
                     if (getPlayerState(matchID,player) == PlayerState.ACTIVE){
                         message.setWorkersAvailableCells(getWorkersAvailableCells(matchID));
