@@ -121,10 +121,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 .stream()
                 .sorted()
                 .forEach(position -> outputA
-                        .append(billboardCells.get(position).getPlayerID() == 0 ? "⬜️" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? "🟥" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? "🟩" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? "🟦" : "")
+                        .append(billboardCells.get(position).getPlayerID() == 0 ? "⬜ " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? "🟥 " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? "🟩 " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? "🟦 " : "")
                         .append((position.getY() == 4) ? "\n" : " "));
 
         outputA.append("\n");
@@ -147,10 +147,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 .stream()
                 .sorted()
                 .forEach(position -> outputA
-                        .append(billboardCells.get(position).getPlayerID() == 0 ? "⬜️" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? "🟥" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? "🟩" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? "🟦" : "")
+                        .append(billboardCells.get(position).getPlayerID() == 0 ? "⬜ " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? "🟥 " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? "🟩 " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? "🟦 " : "")
                         .append((position.getY() == 4) ? "\n" : " "));
 
         outputA.append("\n");
@@ -218,10 +218,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 .stream()
                 .sorted()
                 .forEach(position -> outputA
-                        .append(billboardCells.get(position).getPlayerID() == 0 ? "⬜️" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? "🟥" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? "🟩" : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? "🟦" : "")
+                        .append(billboardCells.get(position).getPlayerID() == 0 ? "⬜ " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? "🟥 " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? "🟩 " : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? "🟦 " : "")
                         .append((position.getY() == 4) ? "\n" : " "));
 
         outputA.append("\n");
