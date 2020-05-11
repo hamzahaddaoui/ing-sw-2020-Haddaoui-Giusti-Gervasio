@@ -3,6 +3,9 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
+import static it.polimi.ingsw.utilities.TurnState.BUILD;
+import static it.polimi.ingsw.utilities.TurnState.MOVE;
+
 public class AthenaDecorator extends CommandsDecorator {
     /**
      * decorate the object Command with Athena's special power
@@ -11,6 +14,21 @@ public class AthenaDecorator extends CommandsDecorator {
      */
     public AthenaDecorator(Commands commands){
         this.commands=commands;
+    }
+
+    @Override
+    public void nextState(Player player){
+        switch(player.getTurnState()){
+            case IDLE:
+                player.getMatch().setMoveUpActive(true);
+                player.setTurnState(MOVE);
+                break;
+            case MOVE:
+                player.setTurnState(BUILD);
+                break;
+            case BUILD:
+                player.setHasFinished();
+        }
     }
 
     /**
