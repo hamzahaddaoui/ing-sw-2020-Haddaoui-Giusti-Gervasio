@@ -2,9 +2,11 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
+import javafx.geometry.Pos;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import static it.polimi.ingsw.utilities.TurnState.*;
 
@@ -26,9 +28,10 @@ public class AtlasDecorator extends CommandsDecorator {
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
-                /*player.setUnsetSpecialFunctionAvailable(new HashMap<Position, Boolean>() = Collections.unmodifiableMap(new HashMap<Position, Boolean>(){
-                            put(player.getCurrentWorker().getPosition(), true);
-                        }));*/
+                player.setUnsetSpecialFunctionAvailable(Collections.unmodifiableMap(new HashMap<Position, Boolean>(){{
+                    player.getWorkers().forEach(worker -> put(worker.getPosition(), true));
+                }
+                }));
                 player.setTurnState(BUILD);
                 break;
             case BUILD:

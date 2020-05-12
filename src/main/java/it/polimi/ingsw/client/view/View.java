@@ -43,10 +43,14 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     @Override //FROM CLIENT HANDLER
     public void update(MessageEvent messageEvent){
+        System.out.println(messageEvent);
         executorData.submit(()->{
             Controller.updateStandardData(messageEvent);
             Controller.updateControllerState();
         });
+        /*if(player.getPlayerState() == PlayerState.WIN || player.getPlayerState() == PlayerState.LOST){
+
+        }*/
         if(messageEvent.getError()){
             executorData.submit(()-> player.getControlState().error());
         }
@@ -74,6 +78,14 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     public static Player getPlayer() {
         return player;
+    }
+
+    public static void setGameBoard(GameBoard newGameBoard){
+        gameBoard = newGameBoard;
+    }
+
+    public static void setPlayer(Player newPlayer){
+        player = newPlayer;
     }
 
     //VIEW
