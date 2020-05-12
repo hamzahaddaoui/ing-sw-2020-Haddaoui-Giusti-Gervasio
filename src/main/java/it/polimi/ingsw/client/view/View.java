@@ -43,7 +43,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     @Override //FROM CLIENT HANDLER
     public void update(MessageEvent messageEvent){
-        System.out.println(messageEvent);
+        //System.out.println(messageEvent);
         executorData.submit(()->{
             Controller.updateStandardData(messageEvent);
             Controller.updateControllerState();
