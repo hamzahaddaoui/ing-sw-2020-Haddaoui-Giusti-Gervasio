@@ -85,6 +85,8 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
                     return new PlacingWorkers();
                 case RUNNING:
                     return new Running();
+                case FINISHED:
+                    return new Running();
                 default:
                     return new None();
             }
