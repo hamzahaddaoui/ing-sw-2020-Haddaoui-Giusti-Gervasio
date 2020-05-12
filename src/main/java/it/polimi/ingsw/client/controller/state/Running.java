@@ -148,7 +148,7 @@ public class Running extends ControlState {
         message = new MessageEvent();
 
         if (startingPosition == null) {
-            if (gameBoard.isWorkerPresent(position)){
+            if (gameBoard.isWorkerPresent(position) && gameBoard.getWorkersAvailableCells(position).size() > 0 ){
                 gameBoard.setStartingPosition(position);
                 player.setTurnState(TurnState.MOVE);
                 View.doUpdate();

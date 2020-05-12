@@ -43,6 +43,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     @Override //FROM CLIENT HANDLER
     public void update(MessageEvent messageEvent){
+        System.out.println(messageEvent);
         executorData.submit(()->{
             Controller.updateStandardData(messageEvent);
             Controller.updateControllerState();
@@ -77,11 +78,11 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     //VIEW
-    public static void doUpdate(){
+    /*public static void doUpdate(){
         executorView.submit(View::visualization);
-    }
+    }*/
 
-    public static void visualization(){
+    public static void doUpdate(){
         if(player.getMatchState() == MatchState.PLACING_WORKERS ){
             getBillboardStat();
         }
