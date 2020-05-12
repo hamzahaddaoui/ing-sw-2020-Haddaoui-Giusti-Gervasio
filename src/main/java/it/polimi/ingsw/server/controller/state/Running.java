@@ -29,7 +29,7 @@ public class Running extends State{
 
         else if (startPosition != null && endPosition != null && checkPosition(startPosition) && checkPosition(endPosition)
                  && getWorkersAvailableCells(matchID).containsKey(startPosition) && getWorkersAvailableCells(matchID).get(startPosition).contains(endPosition)
-                && isSpecialFunctionAvailable(matchID).get(startPosition)
+                && !(isSpecialFunctionAvailable(matchID) !=null && !isSpecialFunctionAvailable(matchID).get(startPosition))
         ){
 
             playerTurn(matchID, startPosition, endPosition);

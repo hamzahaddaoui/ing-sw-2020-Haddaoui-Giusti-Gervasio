@@ -8,10 +8,7 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -35,23 +32,23 @@ public class Controller implements Initializable{
     @FXML
     private TextField address;
     @FXML
-    private CheckBox Apollo;
+    private ToggleButton Apollo;
     @FXML
-    private CheckBox Artemis;
+    private ToggleButton Artemis;
     @FXML
-    private CheckBox Athena;
+    private ToggleButton Athena;
     @FXML
-    private CheckBox Atlas;
+    private ToggleButton Atlas;
     @FXML
-    private CheckBox Demeter;
+    private ToggleButton Demeter;
     @FXML
-    private CheckBox Hephaestus;
+    private ToggleButton Hephaestus;
     @FXML
-    private CheckBox Minotaur;
+    private ToggleButton Minotaur;
     @FXML
-    private CheckBox Pan;
+    private ToggleButton Pan;
     @FXML
-    private CheckBox Prometheus;
+    private ToggleButton Prometheus;
 
     Stage stage;
 

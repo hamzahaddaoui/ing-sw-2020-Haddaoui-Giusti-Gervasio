@@ -32,7 +32,6 @@
             <Pane prefHeight="497.0" prefWidth="569.0" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fitHeight="454.0" fitWidth="522.0" layoutX="15.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
-                  <CheckBox layoutX="455.0" layoutY="134.0" mnemonicParsing="false" text="CheckBox" />
                </children></Pane>
          </left>
          <center>
@@ -48,78 +47,78 @@
          <bottom>
             <HBox prefHeight="180.0" prefWidth="1066.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
-                  <CheckBox fx:id="Apollo" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Apollo">
+                  <ToggleButton fx:id="Apollo" mnemonicParsing="false" onMouseClicked="#Apollo" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Apollo">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
-                  <CheckBox fx:id="Artemis" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Artemis">
+                  </ToggleButton>
+                  <ToggleButton fx:id="Artemis" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Artemis">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
-                  <CheckBox fx:id="Athena" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Athena">
+                  </ToggleButton>
+                  <ToggleButton fx:id="Athena" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Athena">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
-                  <CheckBox fx:id="Atlas" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Atlas">
+                  </ToggleButton>
+                  <ToggleButton fx:id="Atlas" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Atlas">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
-                  <CheckBox fx:id="Demeter" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Demeter">
+                  </ToggleButton>
+                  <ToggleButton fx:id="Demeter" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Demeter">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
-                  <CheckBox fx:id="Hephaestus" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Hephaestus">
+                  </ToggleButton>
+                  <ToggleButton fx:id="Hephaestus" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Hephaestus">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
-                  <CheckBox fx:id="Minotaur" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Minotaur">
+                  </ToggleButton>
+                  <ToggleButton fx:id="Minotaur" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Minotaur">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
-                  <CheckBox fx:id="Pan" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Pan">
+                  </ToggleButton>
+                  <ToggleButton fx:id="Pan" mnemonicParsing="false" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Pan">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
-                  <CheckBox fx:id="Prometheus" mnemonicParsing="false" onMouseClicked="#god" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Prometheus">
+                  </ToggleButton>
+                  <ToggleButton fx:id="Prometheus" mnemonicParsing="false" onMouseClicked="#god" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Prometheus">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                  </CheckBox>
+                  </ToggleButton>
                </children>
                <padding>
                   <Insets bottom="30.0" left="10.0" right="10.0" />
