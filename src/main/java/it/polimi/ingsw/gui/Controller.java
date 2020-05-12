@@ -8,6 +8,8 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -28,14 +30,28 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable{
     @FXML
     private ImageView santorini ;
-
     @FXML
     private TextField nickname;
-
     @FXML
     private TextField address;
-
-
+    @FXML
+    private CheckBox Apollo;
+    @FXML
+    private CheckBox Artemis;
+    @FXML
+    private CheckBox Athena;
+    @FXML
+    private CheckBox Atlas;
+    @FXML
+    private CheckBox Demeter;
+    @FXML
+    private CheckBox Hephaestus;
+    @FXML
+    private CheckBox Minotaur;
+    @FXML
+    private CheckBox Pan;
+    @FXML
+    private CheckBox Prometheus;
 
     Stage stage;
 
@@ -85,5 +101,16 @@ public class Controller implements Initializable{
         stage.show();
         //return page;
     }
+
+
+    public void god(MouseEvent mouseEvent) throws Exception{
+        Apollo.fire();
+        String IP = address.getCharacters().toString();
+        String nick =  nickname.getCharacters().toString();
+        System.out.println("Connection to: "+ IP +  " - Nickname: "+nick );
+        gotoSelectPlayersNum();
+    }
+
+
 
 }
