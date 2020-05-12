@@ -75,78 +75,18 @@
 }
 
 
-
-
-
-.Apollo:hover {
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
-
-.Artemis:hover {
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
-
-.Athena:hover {
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
-
-.Atlas:hover {
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
-
-
-.Demeter:hover {
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
-.Hephaestus:hover {
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
-.Minotaur:hover {
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
-.Pan:hover {
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
-
-.Prometheus:hover {
+.toggle-button:hover{
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
     -fx-scale-z: 1.02;
 }
 
-.Prometheus:selected {
+.toggle-button:selected{
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-scale-z: 1.1;
     -fx-border-color: yellow;
     -fx-border-width: 450%;
 }
+
+
