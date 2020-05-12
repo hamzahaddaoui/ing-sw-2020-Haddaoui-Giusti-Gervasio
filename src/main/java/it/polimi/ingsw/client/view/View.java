@@ -48,6 +48,9 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
             Controller.updateStandardData(messageEvent);
             Controller.updateControllerState();
         });
+        /*if(player.getPlayerState() == PlayerState.WIN || player.getPlayerState() == PlayerState.LOST){
+
+        }*/
         if(messageEvent.getError()){
             executorData.submit(()-> player.getControlState().error());
         }
@@ -77,12 +80,20 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         return player;
     }
 
-    //VIEW
-    /*public static void doUpdate(){
-        executorView.submit(View::visualization);
-    }*/
+    public static void setGameBoard(GameBoard newGameBoard){
+        gameBoard = newGameBoard;
+    }
 
+    public static void setPlayer(Player newPlayer){
+        player = newPlayer;
+    }
+
+    //VIEW
     public static void doUpdate(){
+        executorView.submit(View::visualization);
+    }
+
+    public static void visualization(){
         if(player.getMatchState() == MatchState.PLACING_WORKERS ){
             getBillboardStat();
         }

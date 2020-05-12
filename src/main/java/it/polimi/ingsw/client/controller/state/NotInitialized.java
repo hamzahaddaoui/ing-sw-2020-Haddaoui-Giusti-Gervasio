@@ -24,6 +24,14 @@ public class NotInitialized extends ControlState{
 
     @Override
     public void updateData(MessageEvent message) {
+        Player player = View.getPlayer();
+        if (player.getPlayerState()==PlayerState.WIN || player.getPlayerState()==PlayerState.LOST){
+            System.out.println(computeView());
+            Player player1 = new Player();
+            GameBoard gameBoard1 = new GameBoard();
+            View.setPlayer(player1);
+            View.setGameBoard(gameBoard1);
+            }
         //Controller.updateStandardData(message);
         /*player.setMatchState( message.getMatchState() );
         player.setPlayerState( message.getPlayerState() );
@@ -56,9 +64,9 @@ public class NotInitialized extends ControlState{
     public String computeView() {
         Player player = View.getPlayer();
         if (player.getPlayerState() != null && player.getPlayerState()==PlayerState.WIN)
-            return "Congratulations! You are the winner!";
+            return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname: ";
         else if (player.getPlayerState() != null && player.getPlayerState() == PlayerState.LOST)
-            return "Unlucky! You lost!";
+            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname: ";
         else return "Insert your nickname: ";
     }
 

@@ -47,7 +47,7 @@ public class Running extends ControlState {
             player.setControlState(new NotInitialized());
         }
         else*/
-        if (message.getPlayerState()==PlayerState.LOST) {
+        if (message.getPlayerState() == PlayerState.LOST) {
             System.out.println("Unlucky! You lost!");
             player.setControlState(new NotInitialized());
         }
