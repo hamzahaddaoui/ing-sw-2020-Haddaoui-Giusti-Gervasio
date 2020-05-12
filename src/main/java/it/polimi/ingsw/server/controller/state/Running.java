@@ -27,7 +27,7 @@ public class Running extends State{
             return true;
         }
 
-        else if (startPosition != null && endPosition != null &&checkPosition(startPosition) && checkPosition(endPosition)
+        else if (startPosition != null && endPosition != null && checkPosition(startPosition) && checkPosition(endPosition)
                  && getWorkersAvailableCells(matchID).containsKey(startPosition) && getWorkersAvailableCells(matchID).get(startPosition).contains(endPosition)
                 && isSpecialFunctionAvailable(matchID).get(startPosition)
         ){

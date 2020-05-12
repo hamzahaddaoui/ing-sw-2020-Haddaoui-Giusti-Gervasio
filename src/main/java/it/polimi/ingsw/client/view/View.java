@@ -48,9 +48,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
             Controller.updateStandardData(messageEvent);
             Controller.updateControllerState();
         });
-        /*if(player.getPlayerState() == PlayerState.WIN || player.getPlayerState() == PlayerState.LOST){
-
-        }*/
         if(messageEvent.getError()){
             executorData.submit(()-> player.getControlState().error());
         }
