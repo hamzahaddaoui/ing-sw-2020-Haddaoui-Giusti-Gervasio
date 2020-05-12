@@ -130,7 +130,6 @@ public class Match {
         else if(currentPlayer == player)    //if the deleted player was the current player
             nextTurn();
 
-
         //delete player workers from the billboard
         billboard
                 .getCells()
@@ -150,7 +149,6 @@ public class Match {
                 .filter(player -> player.getPlayerState() == PlayerState.WIN)
                 .findAny();
 
-
         if (winPlayer.isPresent()){
             List<Player> lost = new ArrayList<>(players);
             if (playersCurrentCount != 1)
@@ -164,7 +162,9 @@ public class Match {
         }
 
         else if (winner == null && currentPlayer.hasFinished()){
+
             nextTurn();
+
         }
         return false;
     }

@@ -18,8 +18,8 @@ public class Running extends State{
         Position endPosition = messageEvent.getEndPosition();
 
         if (messageEvent.getEndTurn() && isTerminateTurnAvailable(matchID)) {
-                setHasFinished(matchID);
-                return true;
+            setHasFinished(matchID);
+            return true;
         }
 
         else if (messageEvent.getSpecialFunction() && (isSpecialFunctionAvailable(matchID).keySet().size() == 2 || isSpecialFunctionAvailable(matchID).get(messageEvent.getStartPosition()))){
@@ -28,15 +28,15 @@ public class Running extends State{
         }
 
         else if (startPosition != null && endPosition != null &&checkPosition(startPosition) && checkPosition(endPosition)
-                && getWorkersAvailableCells(matchID).containsKey(startPosition) && getWorkersAvailableCells(matchID).get(startPosition).contains(endPosition)){
+                 && getWorkersAvailableCells(matchID).containsKey(startPosition) && getWorkersAvailableCells(matchID).get(startPosition).contains(endPosition)){
 
-                playerTurn(matchID, startPosition, endPosition);
-                return true;
+            playerTurn(matchID, startPosition, endPosition);
+            return true;
         }
 
         else{
-                notify(List.of(messageEvent.getClientHandler()), basicErrorConfig((basicPlayerConfig(basicMatchConfig(new MessageEvent(), matchID), playerID))));
-                return false;
+            notify(List.of(messageEvent.getClientHandler()), basicErrorConfig((basicPlayerConfig(basicMatchConfig(new MessageEvent(), matchID), playerID))));
+            return false;
         }
     }
 
