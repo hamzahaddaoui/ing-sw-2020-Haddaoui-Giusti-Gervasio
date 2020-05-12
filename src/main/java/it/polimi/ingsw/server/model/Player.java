@@ -197,7 +197,7 @@ public class Player{
             return;
         }
 
-        if (currentWorker !=null && commands.winningCondition(this))
+        if (hasSelectedWorker() && commands.winningCondition(this))
             playerState = PlayerState.WIN;
         else if (commands.losingCondition(this))
             playerState = PlayerState.LOST;
