@@ -12,6 +12,13 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/*
+    TODO gestire la possibilità di disconnessione (enter or esc button)
+    TODO gestione finestre o schermate della visualizzazione
+    TODO gestire "Wait for other players to join!" exhange
+
+ */
+
 public class View extends Observable<String> implements Observer<MessageEvent> {
 
     static ExecutorService executorView = Executors.newSingleThreadExecutor();
@@ -43,7 +50,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     @Override //FROM CLIENT HANDLER
     public void update(MessageEvent messageEvent){
-        System.out.println(messageEvent);
+        //System.out.println(messageEvent);
         executorData.submit(()->{
             Controller.updateStandardData(messageEvent);
             Controller.updateControllerState();
@@ -91,13 +98,13 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     public static void visualization(){
-        if(player.getMatchState() == MatchState.PLACING_WORKERS ){
+        if(player.getMatchState() == MatchState.PLACING_WORKERS ){//visualizzazione placing workers
             getBillboardStat();
         }
-        else if(player.getMatchState() == MatchState.RUNNING && gameBoard.getStartingPosition() != null){
+        else if(player.getMatchState() == MatchState.RUNNING && gameBoard.getStartingPosition() != null && player.getPlayerState() == PlayerState.ACTIVE){ // visualizzaione delle 3 tabelle
             getBillboardStat(gameBoard.getWorkersAvailableCells(gameBoard.getStartingPosition()),gameBoard.getStartingPosition());
         }
-        else {
+        else {// visualizzazione delle 2 tabelle HIGH and Workers
             getBillboardStat(gameBoard.getWorkersPositions());
         }
     }
@@ -200,9 +207,9 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
              i++, w = outputA.indexOf("\n", q), k = outputB.indexOf("\n", j), v = outputC.indexOf("\n", c)) {
 
             output.append(outputA, q, w);
-            output.append("\t");
+            output.append("\t\t\t");
             output.append(outputB, j, k);
-            output.append("\t");
+            output.append("\t\t\t");
             output.append(outputC, c, v);
             output.append("\n");
             q = ++ w;
@@ -250,7 +257,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         outputB.append("\n");
 
 
-        billboardCells
+        /*billboardCells
                 .keySet()
                 .stream()
                 .sorted()
@@ -259,25 +266,25 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                         .append(! cells.contains(position) ? "\u2B1C" : "")
                         .append((position.getY() == 4) ? "\n" : " "));
 
-        outputC.append("\n");
+        outputC.append("\n");*/
 
         int q, w;
         int j, k;
-        int c, v;
+        //int c, v;
         int i;
-        for (i = 0, q = 0, j = 0, c = 0, w = outputA.indexOf("\n", 0), k = outputB.indexOf("\n", 0), v = outputC.indexOf("\n", 0);
+        for (i = 0, q = 0, j = 0,  w = outputA.indexOf("\n", 0), k = outputB.indexOf("\n", 0);/* v = outputC.indexOf("\n", 0);*/
              i < 5;
-             i++, w = outputA.indexOf("\n", q), k = outputB.indexOf("\n", j), v = outputC.indexOf("\n", c)) {
+             i++, w = outputA.indexOf("\n", q), k = outputB.indexOf("\n", j))/* v = outputC.indexOf("\n", c))*/ {
 
             output.append(outputA, q, w);
-            output.append("\t");
+            output.append("\t\t\t");
             output.append(outputB, j, k);
-            output.append("\t");
-            output.append(outputC, c, v);
+            //output.append("\t");
+            //output.append(outputC, c, v);
             output.append("\n");
             q = ++ w;
             j = ++ k;
-            c = ++ v;
+            //c = ++ v;
         }
         System.out.println(output.toString());
     }
