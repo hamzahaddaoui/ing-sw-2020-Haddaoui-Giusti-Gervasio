@@ -19,7 +19,11 @@ public class NotInitialized extends ControlState{
             Client.close();
             return null;
         }
-
+        if(input.equals("")){
+            Controller.setActiveInput(true);
+            System.out.println("\nInsert something different\n");
+            return null;
+        }
         MessageEvent message = new MessageEvent();
 
         player.setNickname(input);
@@ -71,12 +75,12 @@ public class NotInitialized extends ControlState{
     public String computeView() {
         Player player = View.getPlayer();
         if (player.getPlayerState() != null && player.getPlayerState()==PlayerState.WIN)
-            return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
+            return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname\nPress 'q' to disconnect: ";
         else if (player.getPlayerState() != null && player.getPlayerState() == PlayerState.LOST)
-            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
+            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname.\nPress 'q' to disconnect: ";
         else if (player.getMatchState()!= null)
-            return "A user has disconnected from the match so the match is over. If you want to play again insert your nickname, else press 'q' to disconnect: ";
-        else return "\nTup Enter if you want to quit from SANTORINI.\nTo start a game insert your nickname: ";
+            return "A user has disconnected from the match so the match is over.\n If you want to play again insert your nickname\nPress 'q' to disconnect: ";
+        else return "\nPress 'q' if you want to quit from SANTORINI.\nTo start a game insert your nickname: ";
     }
 
     @Override

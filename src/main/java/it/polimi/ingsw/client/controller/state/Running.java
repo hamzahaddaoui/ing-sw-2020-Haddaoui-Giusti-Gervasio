@@ -6,7 +6,9 @@ import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.utilities.*;
 
 import java.util.Optional;
-
+/*
+    TODO -> MOSTRA POTERI CHE VENGONO PRESI DAGLI USER
+ */
 public class Running extends ControlState {
 
     //TODO CHIUSURA CLIENT NEL CASO DI PARTITA FINITA

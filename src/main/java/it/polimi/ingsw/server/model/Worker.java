@@ -32,7 +32,7 @@ public class Worker{
     }
 
     public boolean canDoSomething(TurnState turnState) {
-        return !(availableCells.get(turnState)!=null && availableCells.get(turnState).isEmpty());
+        return !(availableCells.get(turnState) != null && availableCells.get(turnState).isEmpty());
     }
 
     public Set<Position> getAvailableCells(TurnState state){

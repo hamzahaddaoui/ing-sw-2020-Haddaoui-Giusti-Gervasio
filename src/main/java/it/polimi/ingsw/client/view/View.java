@@ -14,9 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /*
-    TODO gestire la possibilità di disconnessione (enter or esc button)
-    TODO gestire "Wait for other players to join!" exhange
-
+            TODO ARTEMIDE POWER
  */
 
 public class View extends Observable<String> implements Observer<MessageEvent> {
@@ -42,7 +40,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     @Override //FROM CLIENT HANDLER
     public void update(MessageEvent messageEvent){
-        //System.out.println(messageEvent);
+        System.out.println(messageEvent);
         executorData.submit(()->{
             Controller.updateStandardData(messageEvent);
             Controller.updateControllerState();

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 
@@ -50,9 +51,11 @@ public class ArtemisDecorator extends CommandsDecorator {
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
+                player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
                 player.setTurnState(BUILD);
                 break;
             case BUILD:
+                //player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
                 startingPosition = null;
                 secondMoveDone = false;
                 player.setHasFinished();
@@ -85,7 +88,17 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        if(startingPosition != null)
+        if(startingPosition == null){
+            startingPosition = position;
+        }
+        else{
+            secondMoveDone = true;
+        }
+        super.moveWorker( position , player );
+        if(!secondMoveDone){
+            player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
+        }
+        /*if(startingPosition != null)
             secondMoveDone = true;
         if(!secondMoveDone){
             startingPosition = player.getCurrentWorker().getPosition();
@@ -93,7 +106,7 @@ public class ArtemisDecorator extends CommandsDecorator {
         super.moveWorker( position , player );
         if(!secondMoveDone){
             player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
-        }
+        }*/
     }
 
     /**
@@ -107,7 +120,7 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-        if(this.startingPosition == null && !secondMoveDone){
+        if(startingPosition == null && !secondMoveDone){
             return super.computeAvailableMovements(player, worker);
         }
         else{
@@ -126,6 +139,7 @@ public class ArtemisDecorator extends CommandsDecorator {
      * @return  true can move for the second time, else false
      */
     private Map<Position, Boolean> canDoSecondMove(Player player){
+        player.getCurrentWorker().setAvailableCells(MOVE,computeAvailableMovements(player,player.getCurrentWorker()));
 
         return player
                 .getWorkers()
@@ -133,7 +147,6 @@ public class ArtemisDecorator extends CommandsDecorator {
                 .filter(worker -> worker.getPosition().getY() == player.getCurrentWorker().getPosition().getY() &&
                          worker.getPosition().getX() == player.getCurrentWorker().getPosition().getX())
                 .collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(MOVE)));
-
     }
 
 }
