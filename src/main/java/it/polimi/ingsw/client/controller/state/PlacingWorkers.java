@@ -63,6 +63,17 @@ public class PlacingWorkers extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
+
+        //CASO DISCONNESSIONE UTENTE
+        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            player.setControlState(new NotInitialized());
+            player.setPlayerState(null);
+            Controller.setActiveInput(true);
+            View.setRefresh(true);
+            View.print();
+            return;
+        }
+
         //caso PLACING_WORKERS
         if(player.getMatchState() == MatchState.PLACING_WORKERS){
             if(message.getBillboardStatus() != gameBoard.getBillboardStatus() && message.getBillboardStatus() != null){

@@ -9,9 +9,7 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -71,6 +69,17 @@ public class SelectingGodCards extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
+
+        //CASO DISCONNESSIONE UTENTE
+        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            player.setControlState(new NotInitialized());
+            player.setPlayerState(null);
+            Controller.setActiveInput(true);
+            View.setRefresh(true);
+            View.print();
+            return;
+        }
+
         //caso SELECTING_GOD_CARDS
         if(player.getMatchState() == MatchState.SELECTING_GOD_CARDS && player.getPlayerState() == PlayerState.ACTIVE){
             gameBoard.setMatchCards(message.getMatchCards());
@@ -88,6 +97,17 @@ public class SelectingGodCards extends ControlState {
     public String computeView() {
         int number = player.getPlayerNumber() - gameBoard.getSelectedGodCards().size();
         StringBuilder string = new StringBuilder();
+        List<String> players = new ArrayList<>(player.getMatchPlayers().values());
+
+        if (players.size()==2 && gameBoard.getSelectedGodCards().isEmpty() && !View.getError()) {
+            players.remove(player.getNickname());
+            string.append("Your opponent is (" + players.get(0) + ")\n");
+        }
+        else if (players.size()==3 && gameBoard.getSelectedGodCards().isEmpty() && !View.getError()) {
+            players.remove(player.getNickname());
+            string.append("Your opponents are (" + players.get(0) + ", " + players.get(1) + ")\n");
+        }
+
         if(PlayerState.ACTIVE == player.getPlayerState()){
             if(View.getError()){
                 string.append("Select other "+ number +" God Cards from [ ");
@@ -101,10 +121,12 @@ public class SelectingGodCards extends ControlState {
                 string.deleteCharAt(string.length()-1);
                 string.append("]");
             }
-            return string.toString();}
-        else{
-            return player.getMatchPlayers().get(player.getPlayer()) + " is selecting the cards for the match ";
+            //return string.toString();
         }
+        else{
+            string.append(player.getMatchPlayers().get(player.getPlayer()) + " is selecting the cards for the match ");
+        }
+        return string.toString();
     }
 
     @Override

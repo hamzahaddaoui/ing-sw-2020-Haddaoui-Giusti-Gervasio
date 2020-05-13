@@ -62,7 +62,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
             player.setMatchPlayers(messageEvent.getMatchPlayers());
         if(messageEvent.getCurrentPlayer() != player.getPlayer())
             player.setPlayer(messageEvent.getCurrentPlayer());
-        System.out.println("updateStandardData");
+        //System.out.println("updateStandardData");
     }
 
     public static void updateControllerState() {

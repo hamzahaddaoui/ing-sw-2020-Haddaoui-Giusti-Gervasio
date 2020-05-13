@@ -8,10 +8,6 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
-import java.util.HashSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class SelectingSpecialCommand extends ControlState {
 
     GameBoard gameBoard = View.getGameBoard();
@@ -52,6 +48,17 @@ public class SelectingSpecialCommand extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
+
+        //CASO DISCONNESSIONE UTENTE
+        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            player.setControlState(new NotInitialized());
+            player.setPlayerState(null);
+            Controller.setActiveInput(true);
+            View.setRefresh(true);
+            View.print();
+            return;
+        }
+
         //caso SELECTING_SPECIAL_COMMAND
         if(player.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND && message.getMatchCards() != null){
             gameBoard.setSelectedGodCards(message.getMatchCards());

@@ -8,7 +8,12 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WaitingForPlayers extends ControlState {
+
+    Player player = View.getPlayer();
 
     @Override
     public MessageEvent computeInput(String input) {
@@ -17,6 +22,17 @@ public class WaitingForPlayers extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
+
+        //CASO DISCONNESSIONE UTENTE
+        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            player.setControlState(new NotInitialized());
+            player.setPlayerState(null);
+            Controller.setActiveInput(true);
+            View.setRefresh(true);
+            View.print();
+            return;
+        }
+
         /*Player player = View.getPlayer();
         MatchState matchState = message.getMatchState();
 
@@ -30,14 +46,17 @@ public class WaitingForPlayers extends ControlState {
         }*/
 
         //Controller.updateStandardData(message);
-
         View.setRefresh(true);
         View.print();
     }
 
     @Override
     public String computeView() {
-        return "Wait for other players to join!";
+        List<String> players = new ArrayList<>(player.getMatchPlayers().values());
+        String lastPlayer = players.get(players.size()-1);
+        if (!lastPlayer.equals(player.getNickname()))
+            return lastPlayer + " has joined the match!";
+        else return "Wait for other players to join!";
     }
 
     @Override

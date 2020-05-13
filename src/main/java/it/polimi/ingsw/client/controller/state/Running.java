@@ -14,7 +14,7 @@ public class Running extends ControlState {
 
     GameBoard gameBoard = View.getGameBoard();
     Player player = View.getPlayer();
-    MessageEvent message = new MessageEvent() ;
+    MessageEvent message = new MessageEvent();
 
     @Override
     public MessageEvent computeInput(String input) {
@@ -40,6 +40,16 @@ public class Running extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
+
+        //CASO DISCONNESSIONE UTENTE
+        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            player.setControlState(new NotInitialized());
+            player.setPlayerState(null);
+            Controller.setActiveInput(true);
+            View.setRefresh(true);
+            View.print();
+            return;
+        }
 
         if (message.getMatchState() == MatchState.FINISHED) {
             /*if (message.getPlayerState()==PlayerState.WIN)
