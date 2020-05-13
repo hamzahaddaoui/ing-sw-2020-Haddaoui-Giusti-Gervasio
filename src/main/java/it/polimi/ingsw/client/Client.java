@@ -50,7 +50,7 @@ public class Client {
     }
 
     public static void close() {
-        if (!View.isActive()) {
+         {
             try {
                 networkHandler.stop();
             } catch (IOException e) {

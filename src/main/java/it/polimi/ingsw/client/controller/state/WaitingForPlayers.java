@@ -8,7 +8,8 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WaitingForPlayers extends ControlState {
 
@@ -21,6 +22,17 @@ public class WaitingForPlayers extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
+
+        //CASO DISCONNESSIONE UTENTE
+        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            player.setControlState(new NotInitialized());
+            player.setPlayerState(null);
+            Controller.setActiveInput(true);
+            View.setRefresh(true);
+            View.print();
+            return;
+        }
+
         /*Player player = View.getPlayer();
         MatchState matchState = message.getMatchState();
 
@@ -34,18 +46,17 @@ public class WaitingForPlayers extends ControlState {
         }*/
 
         //Controller.updateStandardData(message);
-
         View.setRefresh(true);
         View.print();
     }
 
     @Override
     public String computeView() {
-        if ((player.getPlayerState() == PlayerState.ACTIVE && player.getMatchPlayers().size() > 1)){
-            Optional <Map.Entry<Integer,String>> value =  player.getMatchPlayers().entrySet().stream().max(Comparator.comparing(Map.Entry::getValue));
-            return value.get().getValue() + " joins to the match";
-        }
-        return "Wait for other players to join!";
+        List<String> players = new ArrayList<>(player.getMatchPlayers().values());
+        String lastPlayer = players.get(players.size()-1);
+        if (!lastPlayer.equals(player.getNickname()))
+            return lastPlayer + " has joined the match!";
+        else return "Wait for other players to join!";
     }
 
     @Override

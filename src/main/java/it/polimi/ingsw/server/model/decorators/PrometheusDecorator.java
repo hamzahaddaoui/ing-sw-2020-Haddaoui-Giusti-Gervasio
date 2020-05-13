@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -106,14 +107,21 @@ public class PrometheusDecorator extends CommandsDecorator {
     public void notifySpecialFunction(Player player){
         Billboard billboard = player.getMatch().getBillboard();
         Position avoidPosition;
+        ArrayList<Worker> workers = new ArrayList<>(player.getWorkers());
+        Worker worker;
 
         if (player.hasSpecialFunction()){
             player.setUnsetSpecialFunctionAvailable(null);
-            if (checkCells(player,player.getCurrentWorker())) {
-                avoidPosition = player.getCurrentWorker().getAvailableCells(MOVE).stream()
-                        .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(player.getCurrentWorker().getPosition()))
-                        .findAny().get();
-                player.getCurrentWorker().getAvailableCells(BUILD).remove(avoidPosition); }
+            for (int i=0;i<2;i++) {
+                worker = workers.get(i);
+                if (checkCells(player, worker)) {
+                    Position workerPosition = worker.getPosition();
+                    avoidPosition = worker.getAvailableCells(MOVE).stream()
+                            .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(workerPosition))
+                            .findAny().get();
+                    worker.getAvailableCells(BUILD).remove(avoidPosition);
+                }
+            }
             player.setTurnState(BUILD);
         }
     }
