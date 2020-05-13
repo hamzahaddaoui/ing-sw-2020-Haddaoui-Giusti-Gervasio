@@ -2,14 +2,12 @@ package it.polimi.ingsw.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 
 public class View extends Application {
     private Stage stage;
@@ -21,7 +19,7 @@ public class View extends Application {
     @Override
     public void start(Stage stage) throws IOException{
         this.stage = stage;
-        URL location = getClass().getClassLoader().getResource("startScreen.fxml");
+        URL location = getClass().getClassLoader().getResource("fxml_files/startScreen.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
 
@@ -32,6 +30,7 @@ public class View extends Application {
         stage.setResizable(false);
         Controller mainController = fxmlLoader.getController();
         mainController.setStage(stage);
+
 
         stage.show();
     }

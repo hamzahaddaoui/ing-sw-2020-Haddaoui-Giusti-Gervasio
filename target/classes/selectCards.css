@@ -1,10 +1,10 @@
 .root {
-    -fx-background-image: url("images/background_blurred2.jpg");
+    -fx-background-image: url("images/background_blurred.jpg");
     -fx-background-size: 1200;
     -fx-background-repeat: no-repeat;
 }
 
-.Apollo {
+#Apollo {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Apollo.png");
     -fx-background-size: 137;
@@ -12,7 +12,7 @@
     -fx-background-position: center;
 }
 
-.Artemis {
+#Artemis {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Artemis.png");
     -fx-background-size: 137;
@@ -20,7 +20,7 @@
     -fx-background-position: center;
 }
 
-.Athena {
+#Athena {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Athena.png");
     -fx-background-size: 137;
@@ -28,7 +28,7 @@
     -fx-background-position: center;
 }
 
-.Atlas {
+#Atlas {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Atlas.png");
     -fx-background-size: 137;
@@ -37,28 +37,28 @@
 }
 
 
-.Demeter {
+#Demeter {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Demeter.png");
     -fx-background-size: 137;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
-.Hephaestus {
+#Hephaestus {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Hephaestus.png");
     -fx-background-size: 137;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
-.Minotaur {
+#Minotaur {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Minotaur.png");
     -fx-background-size: 137;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
-.Pan {
+#Pan {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Pan.png");
     -fx-background-size: 137;
@@ -66,7 +66,7 @@
     -fx-background-position: center;
 }
 
-.Prometheus {
+#Prometheus {
     -fx-background-color: transparent;
     -fx-background-image: url("images/gods/Prometheus.png");
     -fx-background-size: 137;
@@ -74,19 +74,34 @@
     -fx-background-position: center;
 }
 
-
 .toggle-button:hover{
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-scale-z: 1.02;
+    -fx-scale-x: 1.07;
+    -fx-scale-y: 1.07;
+    -fx-scale-z: 1.07;
 }
 
 .toggle-button:selected{
-    -fx-scale-x: 1.1;
-    -fx-scale-y: 1.1;
-    -fx-scale-z: 1.1;
+    -fx-scale-x: 1.07;
+    -fx-scale-y: 1.07;
+    -fx-scale-z: 1.07;
     -fx-border-color: yellow;
     -fx-border-width: 450%;
 }
 
+#ok_button{
+    -fx-pref-height: 300;
+    -fx-pref-width: 300;
+    -fx-background-color: transparent;
+    -fx-background-image: url("images/ok.png");
+    -fx-background-size: 300;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+}
 
+#ok_button:hover{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+    -fx-cursor: hand;
+}

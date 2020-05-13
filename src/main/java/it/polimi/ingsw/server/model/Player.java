@@ -191,16 +191,18 @@ public class Player{
                 commands.build(position, this);
                 break;
         }
-        setAvailableCells();
         commands.nextState(this);
         if(hasFinished()){
+            match.checkPlayers();
             return;
         }
-
+        setAvailableCells();
         if (currentWorker!= null && commands.winningCondition(this))
             playerState = PlayerState.WIN;
         else if (commands.losingCondition(this))
             playerState = PlayerState.LOST;
+        match.checkPlayers();
+
     }
 
     public Set<Position> getPlacingAvailableCells(){
