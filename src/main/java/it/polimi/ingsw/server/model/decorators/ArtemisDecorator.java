@@ -51,11 +51,11 @@ public class ArtemisDecorator extends CommandsDecorator {
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
-                player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
+                if(!secondMoveDone)
+                    player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
                 player.setTurnState(BUILD);
                 break;
             case BUILD:
-                //player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
                 startingPosition = null;
                 secondMoveDone = false;
                 player.setHasFinished();
@@ -88,17 +88,7 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public void moveWorker(Position position, Player player) {
-        if(startingPosition == null){
-            startingPosition = position;
-        }
-        else{
-            secondMoveDone = true;
-        }
-        super.moveWorker( position , player );
-        if(!secondMoveDone){
-            player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
-        }
-        /*if(startingPosition != null)
+        if(startingPosition != null)
             secondMoveDone = true;
         if(!secondMoveDone){
             startingPosition = player.getCurrentWorker().getPosition();
@@ -106,7 +96,7 @@ public class ArtemisDecorator extends CommandsDecorator {
         super.moveWorker( position , player );
         if(!secondMoveDone){
             player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
-        }*/
+        }
     }
 
     /**
@@ -120,7 +110,7 @@ public class ArtemisDecorator extends CommandsDecorator {
      */
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-        if(startingPosition == null && !secondMoveDone){
+        if(this.startingPosition == null){
             return super.computeAvailableMovements(player, worker);
         }
         else{
@@ -145,7 +135,7 @@ public class ArtemisDecorator extends CommandsDecorator {
                 .getWorkers()
                 .stream()
                 .filter(worker -> worker.getPosition().getY() == player.getCurrentWorker().getPosition().getY() &&
-                         worker.getPosition().getX() == player.getCurrentWorker().getPosition().getX())
+                        worker.getPosition().getX() == player.getCurrentWorker().getPosition().getX())
                 .collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(MOVE)));
     }
 
