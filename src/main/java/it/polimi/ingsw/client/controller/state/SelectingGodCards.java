@@ -111,13 +111,13 @@ public class SelectingGodCards extends ControlState {
         if(PlayerState.ACTIVE == player.getPlayerState()){
             if(View.getError()){
                 string.append("Select other "+ number +" God Cards from [ ");
-                gameBoard.getMatchCards().stream().forEach(card -> string.append(card +" ,"));
-                string.deleteCharAt(string.length()-1);
+                gameBoard.getMatchCards().stream().forEach(card -> string.append(card +", "));
+                string.deleteCharAt(string.length()-2);
                 string.append("]");
             } else if (View.getRefresh()) {
                 string.append("Select " + number + " God Cards from [ ");
-                gameBoard.getMatchCards().stream().forEach(card -> string.append(card + " ,"));
-                string.deleteCharAt(string.length() - 1);
+                gameBoard.getMatchCards().stream().forEach(card -> string.append(card + ", "));
+                string.deleteCharAt(string.length() - 2);
                 string.append("]");
             }
             //return string.toString();

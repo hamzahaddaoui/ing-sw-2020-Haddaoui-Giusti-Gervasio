@@ -39,6 +39,7 @@ public class PrometheusDecorator extends CommandsDecorator {
                 break;
             case MOVE:
                 player.setTurnState(BUILD);
+                player.setUnsetSpecialFunctionAvailable(null);
                 break;
             case BUILD:
                 if (player.hasSpecialFunction() && hasBuiltBeforeMoving)
