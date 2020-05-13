@@ -105,7 +105,18 @@ public class Running extends ControlState {
             return "Choose your starting worker OR type 'f' to use your special function: ";
         else if (startingPosition==null)
             return "Choose your starting worker, insert its coordinates: ";
-        else if (checkSpecialFunctionAvailable() && player.isTerminateTurnAvailable()) {
+        StringBuilder string = new StringBuilder();
+        if (player.getTurnState()==TurnState.MOVE)
+            string.append("Insert the position you want to move to");
+        else if (player.getTurnState()==TurnState.BUILD)
+            string.append("Insert the position you want to build in");
+        if (checkSpecialFunctionAvailable())
+            string.append(" OR type 'f' to use your special function");
+        if (player.isTerminateTurnAvailable())
+            string.append(" OR type 'e' to terminate your turn");
+        string.append(": ");
+        return string.toString();
+        /*else if (checkSpecialFunctionAvailable() && player.isTerminateTurnAvailable()) {
             if (player.getTurnState() == TurnState.MOVE)
                 return "Insert the position you want to move to OR type 'f' to use your special function OR type 'e' to terminate your turn: ";
             else //if (player.getTurnState() == TurnState.BUILD)
@@ -125,7 +136,7 @@ public class Running extends ControlState {
                 return "Insert the position you want to move to: ";
             else //if (player.getTurnState() == TurnState.BUILD)
                 return "Insert the position you want to build in: ";
-        }
+        }*/
     }
 
     @Override

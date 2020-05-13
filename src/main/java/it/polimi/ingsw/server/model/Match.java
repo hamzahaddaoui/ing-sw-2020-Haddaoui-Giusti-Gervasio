@@ -26,6 +26,7 @@ public class Match {
     private boolean started;
     private boolean moveUpActive = true;
 
+    private int index = 0;
     private Player winner;
 
     public Match(int matchID, Player matchMaster) {
@@ -116,34 +117,44 @@ public class Match {
         if (!players.contains(player)) {
             throw new NoSuchElementException("Player not found");
         }
+        billboard
+                .getCells()
+                .keySet()
+                .stream()
+                .filter(position -> billboard.getPlayer(position) == player.getID())
+                .forEach(billboard::resetPlayer);
 
         player.lost();
         players.remove(player);
         playersCurrentCount--;
         losers.add(player);
 
+
+
         if (playersCurrentCount == 1){
             currentPlayer = players.get(0); //the remaining player is the winner
             currentPlayer.win();
             return;
         }
-        else if(currentPlayer == player)    //if the deleted player was the current player
+        else if(currentPlayer == player) {    //if the deleted player was the current player
+            index--;
             nextTurn();
-
+        }
         //delete player workers from the billboard
-        billboard
-                .getCells()
-                .keySet()
-                .stream()
-                .filter(position -> billboard.getPlayer(position) != 0 && billboard.getPlayer(position) == player.getID())
-                .forEach(billboard::resetPlayer);
+
+
     }
 
     public boolean checkPlayers(){
-        players.stream()
+        boolean retVal = false;
+        Optional<Player> lostPlayer = players.stream()
                 .filter(player -> player.getPlayerState() == PlayerState.LOST)
-                .findAny()
-                .ifPresent(this::removePlayer);
+                .findAny();
+
+        if(lostPlayer.isPresent()){
+            removePlayer(lostPlayer.get());
+            retVal = true;
+        }
 
         Optional<Player> winPlayer = players.stream()
                 .filter(player -> player.getPlayerState() == PlayerState.WIN)
@@ -158,15 +169,14 @@ public class Match {
 
             winner = winPlayer.get();
             currentState = MatchState.FINISHED;
-            return true;
+            retVal = true;
         }
 
         else if (winner == null && currentPlayer.hasFinished()){
-
             nextTurn();
-
         }
-        return false;
+
+        return retVal;
     }
 
     public void nextTurn() throws UnsupportedOperationException{
@@ -176,7 +186,8 @@ public class Match {
         if (currentPlayer.getPlayerState() == PlayerState.ACTIVE){
             currentPlayer.resetPlayerState();
         }
-        currentPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size());
+        index = (index + 1) % playersCurrentCount;
+        currentPlayer = players.get(index);
         currentPlayer.setPlayerState();
     }
 

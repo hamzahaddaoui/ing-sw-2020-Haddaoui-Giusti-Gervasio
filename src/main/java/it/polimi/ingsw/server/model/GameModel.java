@@ -281,7 +281,7 @@ public class GameModel extends Observable<MessageEvent> {
             player.setCurrentWorker(startPosition);
         player.playerAction(endPosition);
 
-        match.checkPlayers();
+        //match.checkPlayers();
     }
 
     /*

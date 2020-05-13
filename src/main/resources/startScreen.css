@@ -1,7 +1,7 @@
 .root {
     -fx-background-image: url("images/background_blurred.jpg");
     -fx-background-size: 1200;
-    -fx-background-repeat: no-repeat;
+    -fx-background-repeat: stretch;
 }
 
 .button_play {
