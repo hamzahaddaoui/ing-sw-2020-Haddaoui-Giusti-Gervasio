@@ -8,7 +8,11 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
+import java.util.*;
+
 public class WaitingForPlayers extends ControlState {
+
+    Player player = View.getPlayer();
 
     @Override
     public MessageEvent computeInput(String input) {
@@ -37,6 +41,10 @@ public class WaitingForPlayers extends ControlState {
 
     @Override
     public String computeView() {
+        if ((player.getPlayerState() == PlayerState.ACTIVE && player.getMatchPlayers().size() > 1)){
+            Optional <Map.Entry<Integer,String>> value =  player.getMatchPlayers().entrySet().stream().max(Comparator.comparing(Map.Entry::getValue));
+            return value.get().getValue() + " joins to the match";
+        }
         return "Wait for other players to join!";
     }
 

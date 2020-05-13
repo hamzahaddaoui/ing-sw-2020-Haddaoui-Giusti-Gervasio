@@ -12,6 +12,10 @@ public class NotInitialized extends ControlState{
 
     @Override
     public MessageEvent computeInput(String input) {
+        if(input.equals("")){
+            System.out.println("\nUser disconnect from SANTORINI \n");
+            View.disconnect();
+        }
         Player player = View.getPlayer();
         MessageEvent message = new MessageEvent();
 
@@ -64,10 +68,10 @@ public class NotInitialized extends ControlState{
     public String computeView() {
         Player player = View.getPlayer();
         if (player.getPlayerState() != null && player.getPlayerState()==PlayerState.WIN)
-            return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname: ";
+            return "Congratulations! You are the winner!\nTup Enter if you want to quit from SANTORINI.\nIf you want to play again insert your nickname: ";
         else if (player.getPlayerState() != null && player.getPlayerState() == PlayerState.LOST)
-            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname: ";
-        else return "Insert your nickname: ";
+            return "Unlucky! You lost!\n\nTup Enter if you want to quit from SANTORINI.\nIf you want to play again insert your nickname: ";
+        else return "\nTup Enter if you want to quit from SANTORINI.\nTo start a game insert your nickname: ";
     }
 
     @Override

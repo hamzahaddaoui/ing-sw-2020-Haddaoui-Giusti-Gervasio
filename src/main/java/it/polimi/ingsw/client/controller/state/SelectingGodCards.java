@@ -9,11 +9,10 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 
 public class SelectingGodCards extends ControlState {
@@ -88,23 +87,29 @@ public class SelectingGodCards extends ControlState {
     public String computeView() {
         int number = player.getPlayerNumber() - gameBoard.getSelectedGodCards().size();
         StringBuilder string = new StringBuilder();
-        if(PlayerState.ACTIVE == player.getPlayerState()){
-            if(View.getError()){
-                string.append("Select other "+ number +" God Cards from [ ");
-                gameBoard.getMatchCards().stream().forEach(card -> string.append(card +" ,"));
-                string.deleteCharAt(string.length()-1);
+        /*Optional<Map.Entry<Integer, String>> value = player.getMatchPlayers().entrySet().stream().max(Comparator.comparing(Map.Entry::getKey));
+        if (PlayerState.IDLE == player.getPlayerState() && value.get().getKey() != player.getPlayer()){
+            string.append(value.get().getValue() + " joins to the match.\n");
+        }*/
+        if (PlayerState.ACTIVE == player.getPlayerState()) {
+            /*if ((player.getPlayerState() == PlayerState.ACTIVE && player.getMatchPlayers().size() == 3)) {
+                string.append(value.get().getValue() + " joins to the match.\n");
+            }*/
+            if (View.getError()) {
+                string.append("Select other " + number + " God Cards from [ ");
+                gameBoard.getMatchCards().stream().forEach(card -> string.append(card + " ,"));
+                string.deleteCharAt(string.length() - 1);
                 string.append("]");
-            }
-            else if(View.getRefresh()){
-                string.append("Select "+ number +" God Cards from [ ");
-                gameBoard.getMatchCards().stream().forEach(card -> string.append(card +" ,"));
-                string.deleteCharAt(string.length()-1);
+            } else if (View.getRefresh()) {
+                string.append("Select " + number + " God Cards from [ ");
+                gameBoard.getMatchCards().stream().forEach(card -> string.append(card + " ,"));
+                string.deleteCharAt(string.length() - 1);
                 string.append("]");
+            } else {
+                string.append(player.getMatchPlayers().get(player.getPlayer()) + " is selecting the cards for the match ");
             }
-            return string.toString();}
-        else{
-            return player.getMatchPlayers().get(player.getPlayer()) + " is selecting the cards for the match ";
         }
+        return string.toString();
     }
 
     @Override
