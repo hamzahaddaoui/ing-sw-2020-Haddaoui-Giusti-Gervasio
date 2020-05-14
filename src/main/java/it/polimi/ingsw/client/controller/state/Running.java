@@ -53,6 +53,10 @@ public class Running extends ControlState {
             return;
         }
 
+        if(!message.getInfo().equals("Match data update")){
+            System.out.println(message.getInfo());
+        }
+
         if (message.getMatchState() == MatchState.FINISHED) {
             /*if (message.getPlayerState()==PlayerState.WIN)
                 System.out.println("Congratulations! You are the winner!");

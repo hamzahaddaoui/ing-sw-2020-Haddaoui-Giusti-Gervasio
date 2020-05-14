@@ -13,7 +13,6 @@ import java.util.concurrent.Executors;
 public class Controller extends Observable<MessageEvent> implements Observer<String>  {
 
     static ExecutorService executor = Executors.newSingleThreadExecutor();
-            //newCachedThreadPool();
     private static boolean activeInput = true;
     private static boolean messageReady;
 
@@ -60,7 +59,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
         }
         if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
             player.setMatchPlayers(messageEvent.getMatchPlayers());
-        if(messageEvent.getCurrentPlayer() != player.getPlayer())
+        if((MatchState.SELECTING_SPECIAL_COMMAND != player.getMatchState() || player.getPlayer()==0) )
             player.setPlayer(messageEvent.getCurrentPlayer());
         //System.out.println("updateStandardData");
     }

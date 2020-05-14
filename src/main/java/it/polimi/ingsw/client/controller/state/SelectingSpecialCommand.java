@@ -48,6 +48,19 @@ public class SelectingSpecialCommand extends ControlState {
 
     @Override
     public void updateData(MessageEvent message) {
+        if(message.getMatchCards().size() == message.getMatchPlayers().size() && player.getPlayerState() != PlayerState.ACTIVE
+                && !message.getMatchPlayers().get(message.getMatchPlayers().keySet()
+                .stream()
+                .min((Integer i1,Integer i2 ) -> i1.compareTo(i2))
+                .get()).equals(player.getNickname())){
+            System.out.println("For this match the Gods are "+ message.getMatchCards());
+        }
+
+        if(!message.getInfo().equals("Match data update") && player.getPlayer() != message.getCurrentPlayer() ){
+            System.out.println(message.getInfo());
+        }
+
+        player.setPlayer(message.getCurrentPlayer());
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
@@ -59,8 +72,9 @@ public class SelectingSpecialCommand extends ControlState {
             return;
         }
 
+
         //caso SELECTING_SPECIAL_COMMAND
-        if(player.getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND && message.getMatchCards() != null){
+        if( message.getMatchCards() != null){
             gameBoard.setSelectedGodCards(message.getMatchCards());
         }
 
@@ -82,19 +96,26 @@ public class SelectingSpecialCommand extends ControlState {
         if(PlayerState.ACTIVE == player.getPlayerState()){
             if(View.getError()){
                 string.append("Please select your card from [ ");
-                gameBoard.getSelectedGodCards().stream().forEach(card -> string.append(card +" ,"));
+                gameBoard.getSelectedGodCards().forEach(card -> string.append(card).append(" ,"));
                 string.deleteCharAt(string.length()-1);
-                string.append("]");
+                string.append(" ]");
             }
             else if(View.getRefresh()){
-                string.append("Select your God Card from [ ");
-                gameBoard.getSelectedGodCards().stream().forEach(card -> string.append(card +" ,"));
-                string.deleteCharAt(string.length()-1);
-                string.append("]");
+                if(gameBoard.getSelectedGodCards().size()==1){
+                    string.append("The last God is [ ");
+                    gameBoard.getSelectedGodCards().forEach(string::append);
+                    string.append(" ] . Please select it.");
+                }
+                else {
+                    string.append("Select your God Card from [ ");
+                    gameBoard.getSelectedGodCards().forEach(card -> string.append(card).append(" ,"));
+                    string.deleteCharAt(string.length()-1);
+                    string.append(" ]");
+                }
             }
             return string.toString();}
         else{
-            return player.getMatchPlayers().get(player.getPlayer())  + " is selecting the cards for the match ";
+            return player.getMatchPlayers().get(player.getPlayer())  + " is selecting his God for the match ";
         }
     }
 

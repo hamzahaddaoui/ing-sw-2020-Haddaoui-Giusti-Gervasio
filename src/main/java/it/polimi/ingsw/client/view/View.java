@@ -14,7 +14,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /*
-            TODO ARTEMIDE POWER
+            TODO -> special function used for god ability
+
  */
 
 public class View extends Observable<String> implements Observer<MessageEvent> {
