@@ -13,11 +13,13 @@ public class WaitingList extends ControlState {
 
     @Override
     public MessageEvent computeInput(String input) {
+        Controller.setActiveInput(true);
         return null;
     }
 
     @Override
     public void updateData(MessageEvent message) {
+        Controller.setActiveInput(true);
         /*Player player = View.getPlayer();
         MatchState matchState = message.getMatchState();
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller;
 
 import it.polimi.ingsw.client.controller.state.*;
+import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.PlayerState;
@@ -24,21 +25,19 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
         Controller.messageReady = messageReady;
     }
 
-    public void update(String input) {
-        if(activeInput) {
+    public synchronized void update(String input) {
+        DataBase dataBase = View.getDataBase();
+        if(activeInput && ( dataBase.getPlayerState() == PlayerState.ACTIVE || dataBase.getPlayerState() == null)) {
             activeInput = false;
-            if(View.getPlayer().getPlayerState() == PlayerState.ACTIVE || View.getPlayer().getPlayerState() == null){
             executor.submit(()-> {
-                MessageEvent message = View.getPlayer().getControlState().computeInput(input);
-                if (messageReady){
-                    messageReady = false;
-                    notify(message);
+                synchronized (dataBase){
+                    MessageEvent message = dataBase.getControlState().computeInput(input);
+                    if (messageReady){
+                        messageReady = false;
+                        notify(message);}
+                    notifyAll();
                 }
-            });}
-            else{
-                System.out.print("\nPlease wait\n");
-                activeInput = true;
-            }
+            });
         }
         else{
             System.out.print("\nPlease wait\n");
@@ -47,59 +46,57 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
     }
 
     public static void updateStandardData(MessageEvent messageEvent){
-        Player player = View.getPlayer();
-        if(messageEvent.getMatchState() != player.getMatchState() && messageEvent.getMatchState() != null){
-            player.setMatchState(messageEvent.getMatchState());
+        DataBase dataBase = View.getDataBase();
+        if(messageEvent.getMatchState() != dataBase.getMatchState() && messageEvent.getMatchState() != null){
+            dataBase.setMatchState(messageEvent.getMatchState());
         }
-        if(messageEvent.getPlayerState() != player.getPlayerState() && messageEvent.getPlayerState() != null){
-            player.setPlayerState(messageEvent.getPlayerState());
+        if(messageEvent.getPlayerState() != dataBase.getPlayerState() && messageEvent.getPlayerState() != null){
+            dataBase.setPlayerState(messageEvent.getPlayerState());
         }
-        if(messageEvent.getTurnState() != player.getTurnState() && messageEvent.getTurnState() != null){
-            player.setTurnState(messageEvent.getTurnState());
+        if(messageEvent.getTurnState() != dataBase.getTurnState() && messageEvent.getTurnState() != null){
+            dataBase.setTurnState(messageEvent.getTurnState());
         }
-        if(messageEvent.getMatchPlayers() != player.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
-            player.setMatchPlayers(messageEvent.getMatchPlayers());
-        if((MatchState.SELECTING_SPECIAL_COMMAND != player.getMatchState() || player.getPlayer()==0) )
-            player.setPlayer(messageEvent.getCurrentPlayer());
-        //System.out.println("updateStandardData");
+        if(messageEvent.getMatchPlayers() != dataBase.getMatchPlayers() && messageEvent.getMatchPlayers() != null)
+            dataBase.setMatchPlayers(messageEvent.getMatchPlayers());
+        if((MatchState.SELECTING_SPECIAL_COMMAND != dataBase.getMatchState() || dataBase.getPlayer()==0) )
+            dataBase.setPlayer(messageEvent.getCurrentPlayer());
     }
 
     public static void updateControllerState() {
-        Player player = View.getPlayer();
-        ControlState controlState = player.getControlState();
-        if (player.getNickname() == null && controlState.getClass() != NotInitialized.class){
-            player.setControlState(new NotInitialized());
+        DataBase dataBase = View.getDataBase();
+        if (dataBase.getNickname() == null && dataBase.getControlState().getClass() != NotInitialized.class){
+            dataBase.setControlState(new NotInitialized());
         }
-        switch (player.getMatchState()){
+        switch (dataBase.getMatchState()){
             case GETTING_PLAYERS_NUM:
-                if (controlState.getClass() != GettingPlayersNum.class)
-                    player.setControlState( new GettingPlayersNum());
+                if (dataBase.getControlState().getClass() != GettingPlayersNum.class)
+                    dataBase.setControlState( new GettingPlayersNum());
                 break;
             case WAITING_FOR_PLAYERS:
-                if (controlState.getClass() != WaitingForPlayers.class)
-                    player.setControlState( new WaitingForPlayers());
+                if (dataBase.getControlState().getClass() != WaitingForPlayers.class)
+                    dataBase.setControlState( new WaitingForPlayers());
                 break;
             case SELECTING_GOD_CARDS:
-                if (controlState.getClass() != SelectingGodCards.class)
-                    player.setControlState( new SelectingGodCards());
+                if (dataBase.getControlState().getClass() != SelectingGodCards.class)
+                    dataBase.setControlState( new SelectingGodCards());
                 break;
             case SELECTING_SPECIAL_COMMAND:
-                if (controlState.getClass() != SelectingSpecialCommand.class)
-                    player.setControlState( new SelectingSpecialCommand());
+                if (dataBase.getControlState().getClass() != SelectingSpecialCommand.class)
+                    dataBase.setControlState( new SelectingSpecialCommand());
                 break;
             case PLACING_WORKERS:
-                if (controlState.getClass() != PlacingWorkers.class)
-                    player.setControlState( new PlacingWorkers());
+                if (dataBase.getControlState().getClass() != PlacingWorkers.class)
+                    dataBase.setControlState( new PlacingWorkers());
                 break;
             case RUNNING:
-                if (controlState.getClass() != Running.class)
-                    player.setControlState( new Running());
+                if (dataBase.getControlState().getClass() != Running.class)
+                    dataBase.setControlState( new Running());
                 break;
             case FINISHED:
-                player.setControlState(new NotInitialized());
+                dataBase.setControlState(new NotInitialized());
                 break;
             default:
-                player.setControlState( new WaitingList());
+                dataBase.setControlState( new WaitingList());
         }
     }
 

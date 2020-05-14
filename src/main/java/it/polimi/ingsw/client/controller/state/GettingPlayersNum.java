@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
@@ -7,24 +8,28 @@ import it.polimi.ingsw.utilities.PlayerState;
 
 public class GettingPlayersNum extends ControlState {
     MessageEvent message = new MessageEvent();
-    Player player = View.getPlayer();
+    DataBase dataBase = View.getDataBase();
 
     @Override
     public MessageEvent computeInput(String input) {
-        int playersNum = Character.getNumericValue(input.charAt(0));
-
+        int playersNum = 0;
+        //System.out.println(input.length());
+        if(input.length() == 1){
+            playersNum = Character.getNumericValue(input.charAt(0));
+        }
         if (playersNum == 2 || playersNum == 3) {
-            View.getPlayer().setPlayerNumber(playersNum);
+            dataBase.setPlayerNumber(playersNum);
             message.setPlayersNum(playersNum);
             Controller.setMessageReady(true);
-            player.setPlayerState(PlayerState.IDLE);
+            dataBase.setPlayerState(PlayerState.IDLE);
             return message;
         }
         else {
-            View.setError(true);
-            View.print();
+            error();
+            Controller.setActiveInput(true);
             return null;
         }
+
     }
 
     @Override

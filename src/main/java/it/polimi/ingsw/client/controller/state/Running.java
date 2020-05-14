@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.client.view.Player;
@@ -14,8 +15,8 @@ public class Running extends ControlState {
     //TODO CHIUSURA CLIENT NEL CASO DI PARTITA FINITA
 
 
-    GameBoard gameBoard = View.getGameBoard();
-    Player player = View.getPlayer();
+    DataBase dataBase = View.getDataBase();
+
     MessageEvent message = new MessageEvent();
 
     @Override
@@ -23,7 +24,7 @@ public class Running extends ControlState {
 
         if (input.length() == 1 && processingChar(input.charAt(0))) {
             Controller.setMessageReady(true);
-            player.setPlayerState(PlayerState.IDLE);
+            dataBase.setPlayerState(PlayerState.IDLE);
             return message;
         }
         else if (input.length() == 2) {
@@ -31,7 +32,6 @@ public class Running extends ControlState {
             int y = Character.getNumericValue(input.charAt(1)) - 1;
 
             if (x <= 4 && x >= 0 && y <= 4 && y >= 0 && processingPosition(x, y)){
-                //View.doUpdate();
                 return message;}
         }
         View.setError(true);
@@ -45,8 +45,8 @@ public class Running extends ControlState {
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            player.setControlState(new NotInitialized());
-            player.setPlayerState(null);
+            dataBase.setControlState(new NotInitialized());
+            dataBase.setPlayerState(null);
             Controller.setActiveInput(true);
             View.setRefresh(true);
             View.print();
@@ -61,13 +61,15 @@ public class Running extends ControlState {
             /*if (message.getPlayerState()==PlayerState.WIN)
                 System.out.println("Congratulations! You are the winner!");
             else System.out.println("Unlucky! You lost!");*/
-            player.setControlState(new NotInitialized());
+            Controller.setActiveInput(true);
+            dataBase.setControlState(new NotInitialized());
             View.setRefresh(true);
             View.print();
         }
         else if (message.getPlayerState() == PlayerState.LOST) {
             //System.out.println("Unlucky! You lost!");
-            player.setControlState(new NotInitialized());
+            Controller.setActiveInput(true);
+            dataBase.setControlState(new NotInitialized());
             View.setRefresh(true);
             View.print();
         }
@@ -81,16 +83,16 @@ public class Running extends ControlState {
 
             //Controller.updateStandardData(message);
 
-            gameBoard.setBillboardStatus(message.getBillboardStatus());
+            dataBase.setBillboardStatus(message.getBillboardStatus());
 
             if (message.getPlayerState() == PlayerState.ACTIVE) {
-                gameBoard.setWorkersAvailableCells(message.getWorkersAvailableCells());
-                player.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
-                player.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
+                dataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
+                dataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
+                dataBase.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
                 Controller.setActiveInput(true);
             }
-            else if (gameBoard.getStartingPosition()!=null)
-                gameBoard.setStartingPosition(null);
+            else if (dataBase.getStartingPosition()!=null)
+                dataBase.setStartingPosition(null);
 
 
             View.setRefresh(true);
@@ -100,23 +102,23 @@ public class Running extends ControlState {
 
     @Override
     public String computeView() {
-        Position startingPosition = gameBoard.getStartingPosition();
+        Position startingPosition = dataBase.getStartingPosition();
 
-        if (player.getPlayerState()!= PlayerState.ACTIVE)
-            return player.getMatchPlayers().get(player.getPlayer())+" is doing his turn";
+        if (dataBase.getPlayerState()!= PlayerState.ACTIVE)
+            return dataBase.getMatchPlayers().get(dataBase.getPlayer())+" is doing his turn";
 
         if (startingPosition==null && checkSpecialFunctionAvailable())
             return "Choose your starting worker OR type 'f' to use your special function: ";
         else if (startingPosition==null)
             return "Choose your starting worker, insert its coordinates: ";
         StringBuilder string = new StringBuilder();
-        if (player.getTurnState()==TurnState.MOVE)
+        if (dataBase.getTurnState()==TurnState.MOVE)
             string.append("Insert the position you want to move to");
-        else if (player.getTurnState()==TurnState.BUILD)
+        else if (dataBase.getTurnState()==TurnState.BUILD)
             string.append("Insert the position you want to build in");
         if (checkSpecialFunctionAvailable())
             string.append(" OR type 'f' to use your special function");
-        if (player.isTerminateTurnAvailable())
+        if (dataBase.isTerminateTurnAvailable())
             string.append(" OR type 'e' to terminate your turn");
         string.append(": ");
         return string.toString();
@@ -160,7 +162,7 @@ public class Running extends ControlState {
         }
         else if (num == 14) {
 
-            if (player.isTerminateTurnAvailable()) {
+            if (dataBase.isTerminateTurnAvailable()) {
                 message.setEndTurn(true);
                 return true;
             } else System.out.println("YOU CAN'T TERMINATE THE TURN!");
@@ -170,15 +172,15 @@ public class Running extends ControlState {
     }
 
     private boolean processingPosition(int x, int y) {
-        Position startingPosition = gameBoard.getStartingPosition();
+        Position startingPosition = dataBase.getStartingPosition();
         Position position = new Position(x,y);
         message = new MessageEvent();
 
         if (startingPosition == null) {
-            if (gameBoard.isWorkerPresent(position) && gameBoard.getWorkersAvailableCells(position).size() > 0 ){
-                gameBoard.setStartingPosition(position);
-                if (player.getTurnState()==TurnState.IDLE)
-                    player.setTurnState(TurnState.MOVE);
+            if (dataBase.isWorkerPresent(position) && dataBase.getWorkersAvailableCells(position).size() > 0 ){
+                dataBase.setStartingPosition(position);
+                if (dataBase.getTurnState()==TurnState.IDLE)
+                    dataBase.setTurnState(TurnState.MOVE);
                 View.doUpdate();
                 System.out.println(computeView());
                 Controller.setActiveInput(true);
@@ -186,13 +188,13 @@ public class Running extends ControlState {
             }
             else System.out.println("WORKER IS NOT AVAILABLE!");
         }
-        else if (gameBoard.getWorkersAvailableCells(startingPosition).contains(position)) {
+        else if (dataBase.getWorkersAvailableCells(startingPosition).contains(position)) {
             message.setStartPosition(startingPosition);
             message.setEndPosition(position);
             Controller.setMessageReady(true);
-            if (player.getTurnState()==TurnState.MOVE)
-                gameBoard.setStartingPosition(position);
-            player.setPlayerState(PlayerState.IDLE);
+            if (dataBase.getTurnState()==TurnState.MOVE)
+                dataBase.setStartingPosition(position);
+            dataBase.setPlayerState(PlayerState.IDLE);
             return true;
         }
         else System.out.println("POSITION IS NOT AVAILABLE!");
@@ -200,8 +202,8 @@ public class Running extends ControlState {
     }
 
     boolean checkSpecialFunctionAvailable() {
-        if (player.getSpecialFunctionAvailable()!=null) {
-            Optional<Boolean> isTrue = player.getSpecialFunctionAvailable().values().stream().filter(bool -> bool != null && bool).findAny();
+        if (dataBase.getSpecialFunctionAvailable()!=null) {
+            Optional<Boolean> isTrue = dataBase.getSpecialFunctionAvailable().values().stream().filter(bool -> bool != null && bool).findAny();
             return isTrue.isPresent();
         }
         return false;

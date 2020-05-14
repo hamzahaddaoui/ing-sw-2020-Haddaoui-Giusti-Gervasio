@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
@@ -16,8 +17,8 @@ import java.util.concurrent.Executors;
 
 public class PlacingWorkers extends ControlState {
 
-    GameBoard gameBoard = View.getGameBoard();
-    Player player = View.getPlayer();
+    DataBase dataBase = View.getDataBase();
+
     MessageEvent messageEvent = new MessageEvent();
     Position position;
     Set <Position> initializedPosition = new HashSet<>();
@@ -26,7 +27,7 @@ public class PlacingWorkers extends ControlState {
     public MessageEvent computeInput(String input) {
         if(checkMessage(input)){
             //corretto di lunghezza due
-            Set<Position> placingPosition= gameBoard.getPlacingAvailableCells();
+            Set<Position> placingPosition= dataBase.getPlacingAvailableCells();
             if(placingPosition.size() == 0){
                 throw new IllegalArgumentException("PLACING POSITION IS EMPTY!");
             }
@@ -49,7 +50,7 @@ public class PlacingWorkers extends ControlState {
                         messageEvent.setInitializedPositions(initializedPosition);
                         System.out.println(computeView());
                         Controller.setMessageReady(true);
-                        player.setPlayerState(PlayerState.IDLE);
+                        dataBase.setPlayerState(PlayerState.IDLE);
                         return messageEvent;
                     }
                 }
@@ -66,8 +67,8 @@ public class PlacingWorkers extends ControlState {
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            player.setControlState(new NotInitialized());
-            player.setPlayerState(null);
+            dataBase.setControlState(new NotInitialized());
+            dataBase.setPlayerState(null);
             Controller.setActiveInput(true);
             View.setRefresh(true);
             View.print();
@@ -75,18 +76,18 @@ public class PlacingWorkers extends ControlState {
         }
 
         //caso PLACING_WORKERS
-        if(player.getMatchState() == MatchState.PLACING_WORKERS){
-            if(message.getBillboardStatus() != gameBoard.getBillboardStatus() && message.getBillboardStatus() != null){
-                gameBoard.setBillboardStatus(message.getBillboardStatus());
+        if(dataBase.getMatchState() == MatchState.PLACING_WORKERS){
+            if(message.getBillboardStatus() != dataBase.getBillboardStatus() && message.getBillboardStatus() != null){
+                dataBase.setBillboardStatus(message.getBillboardStatus());
             }
-            if(message.getAvailablePlacingCells() != gameBoard.getPlacingAvailableCells() && message.getAvailablePlacingCells() != null){
-                gameBoard.setPlacingAvailableCells(message.getAvailablePlacingCells());
+            if(message.getAvailablePlacingCells() != dataBase.getPlacingAvailableCells() && message.getAvailablePlacingCells() != null){
+                dataBase.setPlacingAvailableCells(message.getAvailablePlacingCells());
             }
         }
 
         View.doUpdate();
         //caso ACTIVE
-        if(player.getPlayerState() == PlayerState.ACTIVE){
+        if(dataBase.getPlayerState() == PlayerState.ACTIVE){
             Controller.setActiveInput(true);
             View.setRefresh(true);
             View.print();
@@ -99,7 +100,7 @@ public class PlacingWorkers extends ControlState {
 
     @Override
     public String computeView() {
-        if(player.getPlayerState()==PlayerState.ACTIVE ){
+        if(dataBase.getPlayerState() == PlayerState.ACTIVE ){
             int number = 2 - initializedPosition.size();
             if(number == 0)
                 return "Addition done";
@@ -112,7 +113,7 @@ public class PlacingWorkers extends ControlState {
             else return "INSERIMENTO COMPLETATO";
         }
         else{
-            return player.getMatchPlayers().get(player.getPlayer()) +" is placing his workers";
+            return dataBase.getMatchPlayers().get(dataBase.getPlayer()) +" is placing his workers";
         }
     }
 
