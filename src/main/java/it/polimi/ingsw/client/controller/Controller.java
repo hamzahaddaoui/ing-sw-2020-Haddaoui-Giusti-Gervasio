@@ -27,7 +27,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
 
     public synchronized void update(String input) {
         DataBase dataBase = View.getDataBase();
-        if(activeInput && ( dataBase.getPlayerState() == PlayerState.ACTIVE || dataBase.getPlayerState() == null)) {
+        if(activeInput && ( dataBase.getPlayerState() == PlayerState.ACTIVE || dataBase.getNickname() == null)) {
             activeInput = false;
             executor.submit(()-> {
                 synchronized (dataBase){
@@ -43,6 +43,7 @@ public class Controller extends Observable<MessageEvent> implements Observer<Str
             System.out.print("\nPlease wait\n");
             activeInput = true;
         }
+        notifyAll();
     }
 
     public static void updateStandardData(MessageEvent messageEvent){
