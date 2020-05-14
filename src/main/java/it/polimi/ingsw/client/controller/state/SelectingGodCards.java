@@ -2,8 +2,6 @@ package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.DataBase;
-import it.polimi.ingsw.client.view.GameBoard;
-import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.server.model.GodCards;
 import it.polimi.ingsw.utilities.MatchState;
@@ -17,38 +15,38 @@ import java.util.concurrent.Executors;
 
 public class SelectingGodCards extends ControlState {
 
-    DataBase dataBase = View.getDataBase();
+    //DataBase dataBase = View.getDataBase();
 
     MessageEvent messageEvent = new MessageEvent();
 
     @Override
     public MessageEvent computeInput(String input) {
-        if(dataBase.getSelectedGodCards().size() == 0){
+        if(DataBase.getSelectedGodCards().size() == 0){
             messageEvent = new MessageEvent();
         }
 
-        if(dataBase.getSelectedGodCards().size() >= dataBase.getPlayerNumber())
+        if(DataBase.getSelectedGodCards().size() >= DataBase.getPlayerNumber())
             throw new IllegalArgumentException("Errore di scambio tra stati");
 
         //corretto
-        if(dataBase.getMatchCards().stream().anyMatch(string -> (string.toUpperCase()).equals(input.toUpperCase()))
-                && !dataBase.getSelectedGodCards().contains(input.toUpperCase())){
-                dataBase.getSelectedGodCards().add(dataBase
+        if(DataBase.getMatchCards().stream().anyMatch(string -> (string.toUpperCase()).equals(input.toUpperCase()))
+                && !DataBase.getSelectedGodCards().contains(input.toUpperCase())){
+                DataBase.getSelectedGodCards().add(DataBase
                         .getMatchCards()
                         .stream()
                         .filter(w-> w.toUpperCase().equals(input.toUpperCase()))
                         .findFirst()
                         .get());
-                dataBase.getMatchCards().remove(dataBase
+                DataBase.getMatchCards().remove(DataBase
                         .getMatchCards()
                         .stream()
                         .filter(w-> w.toUpperCase().equals(input.toUpperCase()))
                         .findFirst()
                         .get());
-                if(dataBase.getSelectedGodCards().size() == dataBase.getPlayerNumber()){
-                    messageEvent.setMatchCards(dataBase.getSelectedGodCards());
-                    Controller.setMessageReady(true);
-                    dataBase.setPlayerState(PlayerState.IDLE);
+                if(DataBase.getSelectedGodCards().size() == DataBase.getPlayerNumber()){
+                    messageEvent.setMatchCards(DataBase.getSelectedGodCards());
+                    DataBase.setMessageReady(true);
+                    DataBase.setPlayerState(PlayerState.IDLE);
                     return messageEvent;
                 }
                 else{
@@ -62,8 +60,8 @@ public class SelectingGodCards extends ControlState {
             View.setError(true);
             View.print();
         }
-        Controller.setMessageReady(false);
-        Controller.setActiveInput(true);
+        DataBase.setMessageReady(false);
+        DataBase.setActiveInput(true);
         return null;
     }
 
@@ -72,18 +70,18 @@ public class SelectingGodCards extends ControlState {
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            dataBase.setControlState(new NotInitialized());
-            dataBase.setPlayerState(null);
-            Controller.setActiveInput(true);
+            DataBase.setControlState(new NotInitialized());
+            DataBase.setPlayerState(null);
+            DataBase.setActiveInput(true);
             View.setRefresh(true);
             View.print();
             return;
         }
 
         //caso SELECTING_GOD_CARDS
-        if(dataBase.getMatchState() == MatchState.SELECTING_GOD_CARDS && dataBase.getPlayerState() == PlayerState.ACTIVE){
-            dataBase.setMatchCards(message.getMatchCards());
-            Controller.setActiveInput(true);
+        if(DataBase.getMatchState() == MatchState.SELECTING_GOD_CARDS && DataBase.getPlayerState() == PlayerState.ACTIVE){
+            DataBase.setMatchCards(message.getMatchCards());
+            DataBase.setActiveInput(true);
             View.setRefresh(true);
             View.print();
         }
@@ -95,34 +93,34 @@ public class SelectingGodCards extends ControlState {
 
     @Override
     public String computeView() {
-        int number = dataBase.getPlayerNumber() - dataBase.getSelectedGodCards().size();
+        int number = DataBase.getPlayerNumber() - DataBase.getSelectedGodCards().size();
         StringBuilder string = new StringBuilder();
-        List<String> players = new ArrayList<>(dataBase.getMatchPlayers().values());
+        List<String> players = new ArrayList<>(DataBase.getMatchPlayers().values());
 
-        if (players.size()==2 && dataBase.getSelectedGodCards().isEmpty() && !View.getError()) {
-            players.remove(dataBase.getNickname());
+        if (players.size()==2 && DataBase.getSelectedGodCards().isEmpty() && !View.getError()) {
+            players.remove(DataBase.getNickname());
             string.append("Your opponent is (" + players.get(0) + ")\n");
         }
-        else if (players.size()==3 && dataBase.getSelectedGodCards().isEmpty() && !View.getError()) {
-            players.remove(dataBase.getNickname());
+        else if (players.size()==3 && DataBase.getSelectedGodCards().isEmpty() && !View.getError()) {
+            players.remove(DataBase.getNickname());
             string.append("Your opponents are (" + players.get(0) + ", " + players.get(1) + ")\n");
         }
 
-        if(PlayerState.ACTIVE == dataBase.getPlayerState()){
+        if(PlayerState.ACTIVE == DataBase.getPlayerState()){
             if(View.getError()){
                 string.append("Select other "+ number +" God Cards from [ ");
-                dataBase.getMatchCards().stream().forEach(card -> string.append(card +", "));
+                DataBase.getMatchCards().stream().forEach(card -> string.append(card +", "));
                 string.deleteCharAt(string.length()-2);
                 string.append("]");
             } else if (View.getRefresh()) {
                 string.append("Select " + number + " God Cards from [ ");
-                dataBase.getMatchCards().stream().forEach(card -> string.append(card + ", "));
+                DataBase.getMatchCards().stream().forEach(card -> string.append(card + ", "));
                 string.deleteCharAt(string.length() - 2);
                 string.append("]");
             }
         }
         else{
-            string.append(dataBase.getMatchPlayers().get(dataBase.getPlayer()) + " is selecting the cards for the match ");
+            string.append(DataBase.getMatchPlayers().get(DataBase.getPlayer()) + " is selecting the cards for the match ");
         }
         return string.toString();
     }
@@ -130,8 +128,8 @@ public class SelectingGodCards extends ControlState {
     @Override
     public void error() {
         System.out.println("Input wrong\n");
-        dataBase.setSelectedGodCards(new HashSet<>());
-        Controller.setActiveInput(true);
+        DataBase.setSelectedGodCards(new HashSet<>());
+        DataBase.setActiveInput(true);
         System.out.println(computeView());
     }
 

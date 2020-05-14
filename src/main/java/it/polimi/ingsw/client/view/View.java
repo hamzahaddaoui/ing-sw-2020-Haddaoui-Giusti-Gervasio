@@ -25,12 +25,12 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     //private static GameBoard gameBoard;
     //private static Player player;
-    private static DataBase dataBase;
+    //private static DataBase dataBase;
 
     public View(){
         refresh = true;
         error = false;
-        dataBase = new DataBase();
+        //dataBase = new DataBase();
         //player = new Player();
         //gameBoard = new GameBoard();
     }
@@ -42,14 +42,14 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         //System.out.println(messageEvent);
         executorData.submit(()->{
             synchronized (DataBase.class){
-                Controller.updateStandardData(messageEvent);
-                Controller.updateControllerState();
+                DataBase.updateStandardData(messageEvent);
+                DataBase.updateControllerState();
                 notifyAll();}
         });
         if(messageEvent.getError()){
             executorData.submit(()->{
                 synchronized (DataBase.class){
-                    dataBase.getControlState().error();
+                    DataBase.getControlState().error();
                     notifyAll();
                     }
             });
@@ -57,7 +57,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         else {
             executorData.submit(()->{
                 synchronized (DataBase.class){
-                    dataBase.getControlState().updateData(messageEvent);
+                    DataBase.getControlState().updateData(messageEvent);
                     notifyAll();
                 }
             });
@@ -70,13 +70,13 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     public static void visualization(){
-        if(dataBase.getMatchState() == MatchState.PLACING_WORKERS ){
+        if(DataBase.getMatchState() == MatchState.PLACING_WORKERS ){
             System.out.println(getBillboardStat());
         }
-        else if(dataBase.getMatchState() == MatchState.RUNNING && dataBase.getStartingPosition() != null && dataBase.getPlayerState() == PlayerState.ACTIVE){ // visualizzaione delle 3 tabelle
+        else if(DataBase.getMatchState() == MatchState.RUNNING && DataBase.getStartingPosition() != null && DataBase.getPlayerState() == PlayerState.ACTIVE){ // visualizzaione delle 3 tabelle
             gameBoardVisualizationActive();
         }
-        else if(dataBase.getMatchState() == MatchState.RUNNING && dataBase.getStartingPosition() == null && dataBase.getPlayerState() == PlayerState.ACTIVE){
+        else if(DataBase.getMatchState() == MatchState.RUNNING && DataBase.getStartingPosition() == null && DataBase.getPlayerState() == PlayerState.ACTIVE){
             gameBoardVisualizationChooseCurrentWorker();
         }
         else {
@@ -92,7 +92,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         StringBuilder output = new StringBuilder();
         String coloredGameBoard = getBillboardStat();
         String heightStateGameBoard = getBillboardHeightStat();
-        String availableMovements = getBillBoardEvidence(dataBase.getWorkersPositions());
+        String availableMovements = getBillBoardEvidence(DataBase.getWorkersPositions());
         int q, w;
         int j, k;
         int c, v;
@@ -122,7 +122,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         StringBuilder output = new StringBuilder();
         String coloredGameBoard = getBillboardStat();
         String heightStateGameBoard = getBillboardHeightStat();
-        String availableMovements = getBillboardStat(dataBase.getWorkersAvailableCells(dataBase.getStartingPosition()),dataBase.getStartingPosition());
+        String availableMovements = getBillboardStat(DataBase.getWorkersAvailableCells(DataBase.getStartingPosition()),DataBase.getStartingPosition());
 
         int q, w;
         int j, k;
@@ -178,8 +178,8 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     static String getBillboardStat(){
         StringBuilder outputA = new StringBuilder();
 
-        Map<Position, Cell> billboardCells = dataBase.getBillboardStatus();
-        List<Integer> players = new ArrayList<>(dataBase.getMatchPlayers().keySet());
+        Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
+        List<Integer> players = new ArrayList<>(DataBase.getMatchPlayers().keySet());
 
 
         billboardCells
@@ -205,7 +205,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     static String getBillboardHeightStat() {
         StringBuilder outputB = new StringBuilder();
 
-        Map<Position, Cell> billboardCells = dataBase.getBillboardStatus();
+        Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
 
         billboardCells
                 .keySet()
@@ -233,7 +233,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     static String getBillboardStat( Set<Position> cells, Position p){
         StringBuilder outputC = new StringBuilder();
 
-        Map<Position, Cell> billboardCells = dataBase.getBillboardStatus();
+        Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
 
         billboardCells
                 .keySet()
@@ -258,7 +258,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     static String getBillBoardEvidence( Set<Position> cells){
         StringBuilder outputD = new StringBuilder();
 
-        Map<Position, Cell> billboardCells = dataBase.getBillboardStatus();
+        Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
 
         billboardCells
                 .keySet()
@@ -275,12 +275,12 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
     public static void print(){
         if(refresh){
-            System.out.println(dataBase.getControlState().computeView());
+            System.out.println(DataBase.getControlState().computeView());
             refresh = false;
         }
         if(error){
-            System.out.println("Wrong output");
-            System.out.println(dataBase.getControlState().computeView());
+            System.out.println("Wrong input");
+            System.out.println(DataBase.getControlState().computeView());
             error = false;
         }
     }
@@ -299,13 +299,13 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         return error;
     }
 
-    public static void setDataBase(DataBase newDataBase){
+    /*public static void setDataBase(DataBase newDataBase){
         dataBase = newDataBase;
-    }
+    }*/
 
-    public static DataBase getDataBase() {
+    /*public static DataBase getDataBase() {
         return dataBase;
-    }
+    }*/
 
     /*public static Player getPlayer() {
         return player;
