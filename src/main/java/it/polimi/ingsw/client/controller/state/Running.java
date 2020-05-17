@@ -1,9 +1,7 @@
 package it.polimi.ingsw.client.controller.state;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.DataBase;
-import it.polimi.ingsw.client.view.GameBoard;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.utilities.*;
 
 import java.util.Optional;
@@ -12,10 +10,7 @@ import java.util.Optional;
  */
 public class Running extends ControlState {
 
-    //TODO CHIUSURA CLIENT NEL CASO DI PARTITA FINITA
-
-
-    DataBase dataBase = View.getDataBase();
+    //DataBase dataBase = View.getDataBase();
 
     MessageEvent message = new MessageEvent();
 
@@ -23,8 +18,8 @@ public class Running extends ControlState {
     public MessageEvent computeInput(String input) {
 
         if (input.length() == 1 && processingChar(input.charAt(0))) {
-            Controller.setMessageReady(true);
-            dataBase.setPlayerState(PlayerState.IDLE);
+            DataBase.setMessageReady(true);
+            DataBase.setPlayerState(PlayerState.IDLE);
             return message;
         }
         else if (input.length() == 2) {
@@ -36,7 +31,7 @@ public class Running extends ControlState {
         }
         View.setError(true);
         View.print();
-        Controller.setActiveInput(true);
+        DataBase.setActiveInput(true);
         return null;
     }
 
@@ -45,9 +40,9 @@ public class Running extends ControlState {
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            dataBase.setControlState(new NotInitialized());
-            dataBase.setPlayerState(null);
-            Controller.setActiveInput(true);
+            DataBase.setControlState(new NotInitialized());
+            DataBase.setPlayerState(null);
+            DataBase.setActiveInput(true);
             View.setRefresh(true);
             View.print();
             return;
@@ -56,44 +51,32 @@ public class Running extends ControlState {
         if(!message.getInfo().equals("Match data update")){
             System.out.println(message.getInfo());
         }
-
-        if (message.getMatchState() == MatchState.FINISHED) {
+        /*if (message.getMatchState() == MatchState.FINISHED) {
             /*if (message.getPlayerState()==PlayerState.WIN)
                 System.out.println("Congratulations! You are the winner!");
-            else System.out.println("Unlucky! You lost!");*/
-            Controller.setActiveInput(true);
-            dataBase.setControlState(new NotInitialized());
+            else System.out.println("Unlucky! You lost!");
+            player.setControlState(new NotInitialized());
             View.setRefresh(true);
             View.print();
         }
-        else if (message.getPlayerState() == PlayerState.LOST) {
-            //System.out.println("Unlucky! You lost!");
-            Controller.setActiveInput(true);
-            dataBase.setControlState(new NotInitialized());
-            View.setRefresh(true);
-            View.print();
+        else*/
+        if (message.getPlayerState() == PlayerState.LOST) {
+            DataBase.setControlState(new NotInitialized());
+            DataBase.getControlState().updateData(message);
         }
         else {
             View.doUpdate();
-            /*player.setMatchState(message.getMatchState());
-            player.setPlayerState(message.getPlayerState());
-            player.setTurnState(message.getTurnState());
-            player.setMatchPlayers(message.getMatchPlayers());
-            player.setCurrentPlayer(message.getCurrentPlayer());*/
 
-            //Controller.updateStandardData(message);
-
-            dataBase.setBillboardStatus(message.getBillboardStatus());
+            DataBase.setBillboardStatus(message.getBillboardStatus());
 
             if (message.getPlayerState() == PlayerState.ACTIVE) {
-                dataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
-                dataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
-                dataBase.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
-                Controller.setActiveInput(true);
+                DataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
+                DataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
+                DataBase.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
+                DataBase.setActiveInput(true);
             }
-            else if (dataBase.getStartingPosition()!=null)
-                dataBase.setStartingPosition(null);
-
+            else if (DataBase.getStartingPosition()!=null)
+                DataBase.setStartingPosition(null);
 
             View.setRefresh(true);
             View.print();
@@ -102,23 +85,23 @@ public class Running extends ControlState {
 
     @Override
     public String computeView() {
-        Position startingPosition = dataBase.getStartingPosition();
+        Position startingPosition = DataBase.getStartingPosition();
 
-        if (dataBase.getPlayerState()!= PlayerState.ACTIVE)
-            return dataBase.getMatchPlayers().get(dataBase.getPlayer())+" is doing his turn";
+        if (DataBase.getPlayerState()!= PlayerState.ACTIVE)
+            return DataBase.getMatchPlayers().get(DataBase.getPlayer())+" is doing his turn";
 
         if (startingPosition==null && checkSpecialFunctionAvailable())
             return "Choose your starting worker OR type 'f' to use your special function: ";
         else if (startingPosition==null)
             return "Choose your starting worker, insert its coordinates: ";
         StringBuilder string = new StringBuilder();
-        if (dataBase.getTurnState()==TurnState.MOVE)
+        if (DataBase.getTurnState()==TurnState.MOVE)
             string.append("Insert the position you want to move to");
-        else if (dataBase.getTurnState()==TurnState.BUILD)
+        else if (DataBase.getTurnState()==TurnState.BUILD)
             string.append("Insert the position you want to build in");
         if (checkSpecialFunctionAvailable())
             string.append(" OR type 'f' to use your special function");
-        if (dataBase.isTerminateTurnAvailable())
+        if (DataBase.isTerminateTurnAvailable())
             string.append(" OR type 'e' to terminate your turn");
         string.append(": ");
         return string.toString();
@@ -147,7 +130,7 @@ public class Running extends ControlState {
 
     @Override
     public void error() {
-        Controller.setActiveInput(true);
+        DataBase.setActiveInput(true);
     }
 
     private boolean processingChar(char input) {
@@ -162,7 +145,7 @@ public class Running extends ControlState {
         }
         else if (num == 14) {
 
-            if (dataBase.isTerminateTurnAvailable()) {
+            if (DataBase.isTerminateTurnAvailable()) {
                 message.setEndTurn(true);
                 return true;
             } else System.out.println("YOU CAN'T TERMINATE THE TURN!");
@@ -172,29 +155,29 @@ public class Running extends ControlState {
     }
 
     private boolean processingPosition(int x, int y) {
-        Position startingPosition = dataBase.getStartingPosition();
+        Position startingPosition = DataBase.getStartingPosition();
         Position position = new Position(x,y);
         message = new MessageEvent();
 
         if (startingPosition == null) {
-            if (dataBase.isWorkerPresent(position) && dataBase.getWorkersAvailableCells(position).size() > 0 ){
-                dataBase.setStartingPosition(position);
-                if (dataBase.getTurnState()==TurnState.IDLE)
-                    dataBase.setTurnState(TurnState.MOVE);
+            if (DataBase.isWorkerPresent(position) && DataBase.getWorkersAvailableCells(position).size() > 0 ){
+                DataBase.setStartingPosition(position);
+                if (DataBase.getTurnState()==TurnState.IDLE)
+                    DataBase.setTurnState(TurnState.MOVE);
                 View.doUpdate();
                 System.out.println(computeView());
-                Controller.setActiveInput(true);
+                DataBase.setActiveInput(true);
                 return true;
             }
             else System.out.println("WORKER IS NOT AVAILABLE!");
         }
-        else if (dataBase.getWorkersAvailableCells(startingPosition).contains(position)) {
+        else if (DataBase.getWorkersAvailableCells(startingPosition).contains(position)) {
             message.setStartPosition(startingPosition);
             message.setEndPosition(position);
-            Controller.setMessageReady(true);
-            if (dataBase.getTurnState()==TurnState.MOVE)
-                dataBase.setStartingPosition(position);
-            dataBase.setPlayerState(PlayerState.IDLE);
+            DataBase.setMessageReady(true);
+            if (DataBase.getTurnState()==TurnState.MOVE)
+                DataBase.setStartingPosition(position);
+            DataBase.setPlayerState(PlayerState.IDLE);
             return true;
         }
         else System.out.println("POSITION IS NOT AVAILABLE!");
@@ -202,8 +185,8 @@ public class Running extends ControlState {
     }
 
     boolean checkSpecialFunctionAvailable() {
-        if (dataBase.getSpecialFunctionAvailable()!=null) {
-            Optional<Boolean> isTrue = dataBase.getSpecialFunctionAvailable().values().stream().filter(bool -> bool != null && bool).findAny();
+        if (DataBase.getSpecialFunctionAvailable()!=null) {
+            Optional<Boolean> isTrue = DataBase.getSpecialFunctionAvailable().values().stream().filter(bool -> bool != null && bool).findAny();
             return isTrue.isPresent();
         }
         return false;

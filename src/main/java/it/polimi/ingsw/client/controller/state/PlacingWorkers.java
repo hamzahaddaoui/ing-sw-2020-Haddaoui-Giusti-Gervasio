@@ -1,9 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.DataBase;
-import it.polimi.ingsw.client.view.GameBoard;
-import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
@@ -12,12 +9,10 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class PlacingWorkers extends ControlState {
 
-    DataBase dataBase = View.getDataBase();
+    //DataBase dataBase = View.getDataBase();
 
     MessageEvent messageEvent = new MessageEvent();
     Position position;
@@ -27,7 +22,7 @@ public class PlacingWorkers extends ControlState {
     public MessageEvent computeInput(String input) {
         if(checkMessage(input)){
             //corretto di lunghezza due
-            Set<Position> placingPosition= dataBase.getPlacingAvailableCells();
+            Set<Position> placingPosition= DataBase.getPlacingAvailableCells();
             if(placingPosition.size() == 0){
                 throw new IllegalArgumentException("PLACING POSITION IS EMPTY!");
             }
@@ -42,23 +37,23 @@ public class PlacingWorkers extends ControlState {
                     placingPosition.remove(position);
                     if(initializedPosition.size() == 1){
                         System.out.println(computeView());
-                        Controller.setMessageReady(false);
-                        Controller.setActiveInput(true);
+                        DataBase.setMessageReady(false);
+                        DataBase.setActiveInput(true);
                         return null;
                     }
                     if (initializedPosition.size() == 2) {
                         messageEvent.setInitializedPositions(initializedPosition);
                         System.out.println(computeView());
-                        Controller.setMessageReady(true);
-                        dataBase.setPlayerState(PlayerState.IDLE);
+                        DataBase.setMessageReady(true);
+                        DataBase.setPlayerState(PlayerState.IDLE);
                         return messageEvent;
                     }
                 }
             }
         }
         error();
-        Controller.setMessageReady(false);
-        Controller.setActiveInput(true);
+        DataBase.setMessageReady(false);
+        DataBase.setActiveInput(true);
         return null;
     }
 
@@ -67,28 +62,28 @@ public class PlacingWorkers extends ControlState {
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            dataBase.setControlState(new NotInitialized());
-            dataBase.setPlayerState(null);
-            Controller.setActiveInput(true);
+            DataBase.setControlState(new NotInitialized());
+            DataBase.setPlayerState(null);
+            DataBase.setActiveInput(true);
             View.setRefresh(true);
             View.print();
             return;
         }
 
         //caso PLACING_WORKERS
-        if(dataBase.getMatchState() == MatchState.PLACING_WORKERS){
-            if(message.getBillboardStatus() != dataBase.getBillboardStatus() && message.getBillboardStatus() != null){
-                dataBase.setBillboardStatus(message.getBillboardStatus());
+        if(DataBase.getMatchState() == MatchState.PLACING_WORKERS){
+            if(message.getBillboardStatus() != DataBase.getBillboardStatus() && message.getBillboardStatus() != null){
+                DataBase.setBillboardStatus(message.getBillboardStatus());
             }
-            if(message.getAvailablePlacingCells() != dataBase.getPlacingAvailableCells() && message.getAvailablePlacingCells() != null){
-                dataBase.setPlacingAvailableCells(message.getAvailablePlacingCells());
+            if(message.getAvailablePlacingCells() != DataBase.getPlacingAvailableCells() && message.getAvailablePlacingCells() != null){
+                DataBase.setPlacingAvailableCells(message.getAvailablePlacingCells());
             }
         }
 
         View.doUpdate();
         //caso ACTIVE
-        if(dataBase.getPlayerState() == PlayerState.ACTIVE){
-            Controller.setActiveInput(true);
+        if(DataBase.getPlayerState() == PlayerState.ACTIVE){
+            DataBase.setActiveInput(true);
             View.setRefresh(true);
             View.print();
         }
@@ -100,7 +95,7 @@ public class PlacingWorkers extends ControlState {
 
     @Override
     public String computeView() {
-        if(dataBase.getPlayerState() == PlayerState.ACTIVE ){
+        if(DataBase.getPlayerState() == PlayerState.ACTIVE ){
             int number = 2 - initializedPosition.size();
             if(number == 0)
                 return "Addition done";
@@ -113,14 +108,14 @@ public class PlacingWorkers extends ControlState {
             else return "INSERIMENTO COMPLETATO";
         }
         else{
-            return dataBase.getMatchPlayers().get(dataBase.getPlayer()) +" is placing his workers";
+            return DataBase.getMatchPlayers().get(DataBase.getPlayer()) +" is placing his workers";
         }
     }
 
     @Override
     public void error() {
         System.out.println("Position is not available or incorrect\n");
-        Controller.setActiveInput(true);
+        DataBase.setActiveInput(true);
         System.out.println(computeView());
     }
 

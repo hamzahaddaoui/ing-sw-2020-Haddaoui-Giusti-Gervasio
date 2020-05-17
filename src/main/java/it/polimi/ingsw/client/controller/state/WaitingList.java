@@ -1,25 +1,20 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.client.view.GameBoard;
-import it.polimi.ingsw.client.view.Player;
+import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.server.controller.state.GettingPlayersNum;
-import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
-import it.polimi.ingsw.utilities.PlayerState;
 
 public class WaitingList extends ControlState {
 
     @Override
     public MessageEvent computeInput(String input) {
-        Controller.setActiveInput(true);
+        DataBase.setActiveInput(true);
         return null;
     }
 
     @Override
     public void updateData(MessageEvent message) {
-        Controller.setActiveInput(true);
+        DataBase.setActiveInput(true);
         /*Player player = View.getPlayer();
         MatchState matchState = message.getMatchState();
 

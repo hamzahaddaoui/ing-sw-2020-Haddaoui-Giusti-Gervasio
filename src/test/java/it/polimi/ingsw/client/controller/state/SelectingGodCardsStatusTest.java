@@ -1,11 +1,7 @@
-package it.polimi.ingsw.client.controller.state;
+/*package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.client.view.GameBoard;
-import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.utilities.MatchState;
-import it.polimi.ingsw.utilities.PlayerState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -194,4 +190,4 @@ class SelectingGodCardsStatusTest {
         assertThrows(IllegalArgumentException.class,()->ctrlStatus.processingMessage(commandCharacter));
 
     }
-}
+}*/

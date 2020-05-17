@@ -1,25 +1,14 @@
-package it.polimi.ingsw.client.controller;
+/*package it.polimi.ingsw.client.controller;
 
 import it.polimi.ingsw.client.controller.state.*;
-import it.polimi.ingsw.client.view.GameBoard;
-import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.server.controller.state.GettingPlayersNum;
-import it.polimi.ingsw.server.controller.state.SelectingGodCards;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
-import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-
-import java.util.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
 
@@ -76,4 +65,4 @@ class ControllerTest {
         //controller.update(viewObject);
     }
 
-}
+}*/

@@ -1,38 +1,41 @@
 package it.polimi.ingsw.client.view;
 
-import it.polimi.ingsw.client.controller.state.ControlState;
-import it.polimi.ingsw.client.controller.state.NotInitialized;
+import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.client.controller.state.*;
 import it.polimi.ingsw.utilities.*;
 
 import java.util.*;
 
 public class DataBase {
 
-    private ControlState controlState = new NotInitialized();
+    static private ControlState controlState = new NotInitialized();
+    static private boolean activeInput = true;
+    static private boolean messageReady;
 
-    private String nickname;
-    private PlayerState playerState;
-    private MatchState matchState;
-    private TurnState turnState;
 
-    private int playerNumber;
-    private String godCard;
+    static private String nickname;
+    static private PlayerState playerState;
+    static private MatchState matchState;
+    static private TurnState turnState;
 
-    private Map<Integer, String> matchPlayers;
-    private int currentPlayer;
-    private boolean terminateTurnAvailable;
-    private Map<Position, Boolean> specialFunctionAvailable;
+    static private int playerNumber;
+    static private String godCard;
 
-    private HashSet<String> selectedGodCards ;    // usate per la Selection Special Command
-    private ArrayList<String> matchCards;           //date dal Server, usate per la Selecting God Card
+    static private Map<Integer, String> matchPlayers;
+    static private int currentPlayer;
+    static private boolean terminateTurnAvailable;
+    static private Map<Position, Boolean> specialFunctionAvailable;
 
-    private Map<Position, Cell> billboardStatus ;
-    private Map<Position, Set<Position>> workersAvailableCells;
-    private Set<Position> placingAvailableCells;
+    static private HashSet<String> selectedGodCards = new HashSet<>();    // usate per la Selection Special Command
+    static private ArrayList<String> matchCards;           //date dal Server, usate per la Selecting God Card
 
-    private Position startingPosition;
+    static private Map<Position, Cell> billboardStatus;
+    static private Map<Position, Set<Position>> workersAvailableCells;
+    static private Set<Position> placingAvailableCells;
 
-    public DataBase(){
+    static private Position startingPosition;
+
+    static public void resetDataBase() {
         selectedGodCards = new HashSet<>();
         matchCards = new ArrayList<>();
         billboardStatus = new HashMap<>();
@@ -46,156 +49,224 @@ public class DataBase {
         playerNumber = 0;
         matchPlayers = new HashMap<>();
         specialFunctionAvailable = new HashMap<>();
+        activeInput = true;
     }
 
-    public void setPlayerState(PlayerState newPlayerState) {
+    public static void setActiveInput(boolean actIn) {
+        activeInput = actIn;
+    }
+
+    public static void setMessageReady(boolean msgR) {
+        messageReady = msgR;
+    }
+
+    public static boolean isActiveInput() {return activeInput;}
+
+    public static boolean isMessageReady() {return messageReady;}
+
+    static public void setPlayerState(PlayerState newPlayerState) {
         playerState = newPlayerState;
     }
 
-    public void setMatchState(MatchState newMatchState) {
+    static public void setMatchState(MatchState newMatchState) {
         matchState = newMatchState;
     }
 
-    public TurnState getTurnState() {
+    static public TurnState getTurnState() {
         return turnState;
     }
 
-    public void setTurnState(TurnState newTurnState) {
+    static public void setTurnState(TurnState newTurnState) {
         turnState = newTurnState;
     }
 
-    public void setMatchPlayers(Map<Integer, String> newMatchPlayers) {
+    static public void setMatchPlayers(Map<Integer, String> newMatchPlayers) {
         matchPlayers = newMatchPlayers;
     }
 
-    public void setTerminateTurnAvailable(boolean newTerminateTurnAvailable) {
+    static public void setTerminateTurnAvailable(boolean newTerminateTurnAvailable) {
         terminateTurnAvailable = newTerminateTurnAvailable;
     }
 
-    public PlayerState getPlayerState() {
+    static public PlayerState getPlayerState() {
         return playerState;
     }
 
-    public MatchState getMatchState() {
+    static public MatchState getMatchState() {
         return matchState;
     }
 
-    public int getPlayerNumber() {
+    static public int getPlayerNumber() {
         return playerNumber;
     }
 
-    public boolean isTerminateTurnAvailable() {
+    static public boolean isTerminateTurnAvailable() {
         return terminateTurnAvailable;
     }
 
-    public boolean isSpecialFunctionAvailable(Position position) {
+    static public boolean isSpecialFunctionAvailable(Position position) {
         return specialFunctionAvailable.get(position);
     }
 
-    public Map<Position, Boolean> getSpecialFunctionAvailable(){
+    static public Map<Position, Boolean> getSpecialFunctionAvailable() {
         return specialFunctionAvailable;
     }
 
-    public void setPlayerNumber (int selectedPlayersNum) {
+    static public void setPlayerNumber(int selectedPlayersNum) {
         playerNumber = selectedPlayersNum;
     }
 
-    public void setSpecialFunctionAvailable(Map<Position,Boolean> modelMap) {
+    static public void setSpecialFunctionAvailable(Map<Position, Boolean> modelMap) {
         specialFunctionAvailable = modelMap;
     }
 
-    public void setNickname(String newNickname) {
+    static public void setNickname(String newNickname) {
         nickname = newNickname;
     }
 
-    public String getNickname() {
+    static public String getNickname() {
         return nickname;
     }
 
-    public Map<Integer, String> getMatchPlayers() {
+    static public Map<Integer, String> getMatchPlayers() {
         return matchPlayers;
     }
 
-    public int getPlayer() {
+    static public int getPlayer() {
         return currentPlayer;
     }
 
-    public void setPlayer(int player) {
+    static public void setPlayer(int player) {
         currentPlayer = player;
     }
 
-    public ControlState getControlState() {return controlState;}
+    static public ControlState getControlState() {
+        return controlState;
+    }
 
-    public void setControlState(ControlState state) {controlState = state;}
+    static public void setControlState(ControlState state) {
+        controlState = state;
+    }
 
-    public void setCurrentPlayer(int player) {currentPlayer = player;}
+    static public void setCurrentPlayer(int player) {
+        currentPlayer = player;
+    }
 
-    public String getGodCard() {
+    static public String getGodCard() {
         return godCard;
     }
 
-    public void setGodCard(String godCard) {
-        this.godCard = godCard;
+    static public void setGodCard(String card) {
+        godCard = card;
     }
 
-    public void setMatchCards(Set<String> godCards) {
+    static public void setMatchCards(Set<String> godCards) {
         matchCards = new ArrayList<>(godCards);
     }
 
-    public void setPlacingAvailableCells(Set<Position> newPlacingAvailableCells) {
+    static public void setPlacingAvailableCells(Set<Position> newPlacingAvailableCells) {
         placingAvailableCells = newPlacingAvailableCells;
     }
 
-    public Map<Position, Set<Position>> getWorkersAvailableCells() {
+    static public Map<Position, Set<Position>> getWorkersAvailableCells() {
         return workersAvailableCells;
     }
 
-    public void setWorkersAvailableCells(Map<Position, Set<Position>> newWorkersAvailableCells) {
+    static public void setWorkersAvailableCells(Map<Position, Set<Position>> newWorkersAvailableCells) {
         workersAvailableCells = newWorkersAvailableCells;
     }
 
-    public ArrayList<String> getMatchCards() {
+    static public ArrayList<String> getMatchCards() {
         return matchCards;
     }
 
-    public Set<Position> getPlacingAvailableCells() {
+    static public Set<Position> getPlacingAvailableCells() {
         return placingAvailableCells;
     }
 
-    public Position getStartingPosition() {
+    static public Position getStartingPosition() {
         return startingPosition;
     }
 
-    public HashSet<String> getSelectedGodCards() {
+    static public HashSet<String> getSelectedGodCards() {
         return selectedGodCards;
     }
 
-    public void setBillboardStatus(Map<Position, Cell> newBillboardStatus) {
+    static public void setBillboardStatus(Map<Position, Cell> newBillboardStatus) {
         billboardStatus = newBillboardStatus;
     }
 
-    public void setStartingPosition(Position position) {
+    static public void setStartingPosition(Position position) {
         startingPosition = position;
     }
 
-    public Map<Position, Cell> getBillboardStatus() {
+    static public Map<Position, Cell> getBillboardStatus() {
         return billboardStatus;
     }
 
-    public Set<Position> getWorkersAvailableCells(Position position) {
+    static public Set<Position> getWorkersAvailableCells(Position position) {
         return workersAvailableCells.get(position);
     }
 
-    public Set<Position> getWorkersPositions() {
+    static public Set<Position> getWorkersPositions() {
         return workersAvailableCells.keySet();
     }
 
-    public boolean isWorkerPresent(Position position) {
+    static public boolean isWorkerPresent(Position position) {
         return workersAvailableCells.containsKey(position);
     }
 
-    public void setSelectedGodCards (Set<String> godCards) {
+    static public void setSelectedGodCards(Set<String> godCards) {
         selectedGodCards = new HashSet<>(godCards);
     }
 
+    static public void updateStandardData(MessageEvent messageEvent) {
+        if (messageEvent.getMatchState() != matchState && messageEvent.getMatchState() != null)
+            matchState = messageEvent.getMatchState();
+        if (messageEvent.getPlayerState() != playerState && messageEvent.getPlayerState() != null)
+            playerState = messageEvent.getPlayerState();
+        if (messageEvent.getTurnState() != turnState && messageEvent.getTurnState() != null)
+            turnState = messageEvent.getTurnState();
+        if (messageEvent.getMatchPlayers() != matchPlayers && messageEvent.getMatchPlayers() != null)
+            matchPlayers = messageEvent.getMatchPlayers();
+        if ((MatchState.SELECTING_SPECIAL_COMMAND != matchState || currentPlayer == 0))
+            currentPlayer = messageEvent.getCurrentPlayer();
+    }
+
+    static public void updateControllerState() {
+        if (nickname == null && controlState.getClass() != NotInitialized.class) {
+            controlState = new NotInitialized();
+        }
+        switch (matchState) {
+            case GETTING_PLAYERS_NUM:
+                if (controlState.getClass() != GettingPlayersNum.class)
+                    controlState = new GettingPlayersNum();
+                break;
+            case WAITING_FOR_PLAYERS:
+                if (controlState.getClass() != WaitingForPlayers.class)
+                    controlState = new WaitingForPlayers();
+                break;
+            case SELECTING_GOD_CARDS:
+                if (controlState.getClass() != SelectingGodCards.class)
+                    controlState = new SelectingGodCards();
+                break;
+            case SELECTING_SPECIAL_COMMAND:
+                if (controlState.getClass() != SelectingSpecialCommand.class)
+                    controlState = new SelectingSpecialCommand();
+                break;
+            case PLACING_WORKERS:
+                if (controlState.getClass() != PlacingWorkers.class)
+                    controlState = new PlacingWorkers();
+                break;
+            case RUNNING:
+                if (controlState.getClass() != Running.class)
+                    controlState = new Running();
+                break;
+            case FINISHED:
+                controlState = new NotInitialized();
+                break;
+            default:
+                controlState = new WaitingList();
+        }
+    }
 }

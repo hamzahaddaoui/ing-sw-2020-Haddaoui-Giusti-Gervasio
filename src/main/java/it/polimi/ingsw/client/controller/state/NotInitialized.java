@@ -3,10 +3,6 @@ package it.polimi.ingsw.client.controller.state;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.DataBase;
-import it.polimi.ingsw.client.view.GameBoard;
-import it.polimi.ingsw.client.view.Player;
-import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
@@ -14,33 +10,34 @@ public class NotInitialized extends ControlState{
 
     @Override
     public MessageEvent computeInput(String input) {
-        DataBase dataBase = View.getDataBase();
+        //DataBase dataBase = View.getDataBase();
 
         if(input.equals("q")||input.equals("Q")) {
             Client.close();
             return null;
         }
         if(input.equals("")){
-            Controller.setActiveInput(true);
+            DataBase.setActiveInput(true);
             System.out.println("\nInsert something different\n");
             return null;
         }
         MessageEvent message = new MessageEvent();
 
-        dataBase.setNickname(input);
+        DataBase.setNickname(input);
         message.setNickname(input);
-        Controller.setMessageReady(true);
+        DataBase.setMessageReady(true);
 
         return message;
     }
 
     @Override
     public void updateData(MessageEvent message) {
-        DataBase dataBase = View.getDataBase();
-        if (dataBase.getPlayerState()==PlayerState.WIN || dataBase.getPlayerState()==PlayerState.LOST){
+        //DataBase dataBase = View.getDataBase();
+        if (DataBase.getPlayerState()==PlayerState.WIN || DataBase.getPlayerState()==PlayerState.LOST){
             System.out.println(computeView());
-            DataBase dataBase1 = new DataBase();
-            View.setDataBase(dataBase1);
+            DataBase.resetDataBase();
+            /*DataBase dataBase1 = new DataBase();
+            View.setDataBase(dataBase1);*/
             }
         //Controller.updateStandardData(message);
         /*player.setMatchState( message.getMatchState() );
@@ -67,27 +64,27 @@ public class NotInitialized extends ControlState{
 
         View.setRefresh(true);
         View.print();*/
-        Controller.setActiveInput(true);
+        DataBase.setActiveInput(true);
     }
 
     @Override
     public String computeView() {
-        DataBase dataBase = View.getDataBase();
-        if (dataBase.getPlayerState() != null && dataBase.getPlayerState()==PlayerState.WIN)
-            return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname\nPress 'q' to disconnect: ";
-        else if (dataBase.getPlayerState() != null && dataBase.getPlayerState() == PlayerState.LOST)
-            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname.\nPress 'q' to disconnect: ";
-        else if (dataBase.getMatchState()!= null)
-            return "A user has disconnected from the match so the match is over.\n If you want to play again insert your nickname\nPress 'q' to disconnect: ";
+        //DataBase dataBase = View.getDataBase();
+        if (DataBase.getPlayerState() != null && DataBase.getPlayerState()==PlayerState.WIN)
+            return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
+        else if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.LOST)
+            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
+        else if (DataBase.getMatchState()!= null)
+            return "A user has disconnected from the match so the match is over.\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
         else return "\nPress 'q' if you want to quit from SANTORINI.\nTo start a game insert your nickname: ";
     }
 
     @Override
     public void error() {
-        DataBase dataBase = View.getDataBase();
+        //DataBase dataBase = View.getDataBase();
         System.out.println("Nickname already taken!\n");
-        dataBase.setNickname(null);
-        Controller.setActiveInput(true);
+        DataBase.setNickname(null);
+        DataBase.setActiveInput(true);
         System.out.println(computeView());
     }
 }

@@ -1,11 +1,6 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.controller.Controller;
-import it.polimi.ingsw.client.view.GameBoard;
-import it.polimi.ingsw.client.view.Player;
-import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
-import it.polimi.ingsw.utilities.PlayerState;
 
 public abstract class ControlState {
 

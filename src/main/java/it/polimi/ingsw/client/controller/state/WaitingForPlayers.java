@@ -1,24 +1,19 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.DataBase;
-import it.polimi.ingsw.client.view.GameBoard;
-import it.polimi.ingsw.client.view.Player;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
-import it.polimi.ingsw.utilities.PlayerState;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WaitingForPlayers extends ControlState {
 
-    DataBase dataBase = View.getDataBase();
+    //DataBase dataBase = View.getDataBase();
 
     @Override
     public MessageEvent computeInput(String input) {
-        Controller.setActiveInput(true);
+        DataBase.setActiveInput(true);
         error();
         return null;
     }
@@ -28,9 +23,9 @@ public class WaitingForPlayers extends ControlState {
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            dataBase.setControlState(new NotInitialized());
-            dataBase.setPlayerState(null);
-            Controller.setActiveInput(true);
+            DataBase.setControlState(new NotInitialized());
+            DataBase.setPlayerState(null);
+            DataBase.setActiveInput(true);
             View.setRefresh(true);
             View.print();
             return;
@@ -49,16 +44,16 @@ public class WaitingForPlayers extends ControlState {
         }*/
 
         //Controller.updateStandardData(message);
-        Controller.setActiveInput(true);
+        DataBase.setActiveInput(true);
         View.setRefresh(true);
         View.print();
     }
 
     @Override
     public String computeView() {
-        List<String> players = new ArrayList<>(dataBase.getMatchPlayers().values());
+        List<String> players = new ArrayList<>(DataBase.getMatchPlayers().values());
         String lastPlayer = players.get(players.size()-1);
-        if (!lastPlayer.equals(dataBase.getNickname()))
+        if (!lastPlayer.equals(DataBase.getNickname()))
             return lastPlayer + " has joined the match!";
         else return "Wait for other players to join!";
     }
