@@ -1,6 +1,6 @@
 .root {
     -fx-background-image: url("images/background_blurred.jpg");
-    -fx-background-size: 1200;
+    -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
 }
 

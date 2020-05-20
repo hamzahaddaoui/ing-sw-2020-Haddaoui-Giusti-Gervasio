@@ -71,11 +71,6 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         System.out.println("Connected to " + client.getInetAddress());
         heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT / 2, TimeUnit.MILLISECONDS);
         inputHandler.submit(this::inputHandler);
-        while(active){
-        }
-        heartbeatService.shutdown();
-        inputHandler.shutdown();
-        System.out.println("Connection to " + client.getInetAddress()+" closed");
     }
 
     /**
@@ -90,9 +85,10 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
      */
     @Override
     public void update(MessageEvent message){
-        if (!(message.getPlayerID().equals(this.playerID)  && active)){
+
+        if (! active || ! message.getPlayerID().equals(this.playerID))
             return;
-        }
+
         String json = new GsonBuilder()
                 .serializeNulls()
                 .enableComplexMapKeySerialization()
@@ -129,8 +125,6 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         update(message);
         if (active)
             heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT/2, TimeUnit.MILLISECONDS);
-        else
-            heartbeatService.shutdownNow();
     }
 
     /**
@@ -161,19 +155,22 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         } catch(SocketTimeoutException exception){
             System.out.println("Connection timeout");
         } catch(IOException exception){
-            System.out.println("Connection error. Unexpected client connection close");
+            System.out.println("Connection error - Unexpected client disconnection.");
         }
 
         finally {
             try {
+                System.out.println("Unsubscribing client...");
                 messageEvent = new MessageEvent();
                 messageEvent.setExit(true);
                 messageEvent.setClientHandler(this);
-                messageEvent.setExit(true);
-                if(matchID !=0)
-                    notify(messageEvent);
+                notify(messageEvent);
                 active = false;
                 client.close();
+                heartbeatService.shutdownNow();
+                System.out.println("Done!");
+                System.out.println("Connection to " + client.getInetAddress()+" closed");
+                inputHandler.shutdown();
             } catch (IOException e) {
                 e.printStackTrace();
             }

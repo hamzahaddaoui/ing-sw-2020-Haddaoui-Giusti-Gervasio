@@ -29,6 +29,15 @@ public class GameModel extends Observable<MessageEvent> {
         return playersWaitingList.size();
     }
 
+    public static void removePlayerWaitingList(int ID){
+        Optional<Player> player = playersWaitingList.stream().filter(p -> p.getID()== ID).findAny();
+        if (player.isPresent()) {
+            playersWaitingList.remove(player.get());
+        }
+
+        System.out.println(playersWaitingList);
+    }
+
     public static int getNotInitMatchesListSize(){
             return (int) activeMatches
                     .keySet()
@@ -77,10 +86,12 @@ public class GameModel extends Observable<MessageEvent> {
      */
     public synchronized static int createMatch(Integer playerID){
         try{
+            Player player = initializedPlayers.remove(playerID);
+            player.setColor("Blue");
             progressiveMatchID++;
             activeMatches.put(progressiveMatchID,
-                    new Match(progressiveMatchID, initializedPlayers.remove(playerID)));
-                    return progressiveMatchID;
+                    new Match(progressiveMatchID, player));
+            return progressiveMatchID;
         }
         catch (NullPointerException e){
             progressiveMatchID--;
@@ -94,7 +105,16 @@ public class GameModel extends Observable<MessageEvent> {
      * @param playerID the ID of the player associated with that nickname and the waiting to start match
      */
     public static void addPlayerToMatch(Integer matchID, Integer playerID){
-        translateMatchID(matchID).addPlayer(initializedPlayers.remove(playerID));
+        Match match = translateMatchID(matchID);
+        Player player = translatePlayerID(match, playerID);
+
+
+        match.addPlayer(initializedPlayers.remove(playerID));
+        if(match.getPlayers().size() == 2)
+            player.setColor("Orange");
+        else
+            player.setColor("Purple");
+
     }
 
     public static void addPlayerToWaitingList(Integer playerID){
@@ -296,8 +316,13 @@ public class GameModel extends Observable<MessageEvent> {
     }
 
     public static Map<Integer, String> getMatchPlayers(Integer matchID){
-        return translateMatchID(matchID).getAllPlayers().stream()
+        return translateMatchID(matchID).getPlayers().stream()
                 .collect(Collectors.toMap(Player::getID, Player::toString));
+    }
+
+    public static Map<Integer, String> getMatchColors(Integer matchID){
+        return translateMatchID(matchID).getPlayers().stream()
+                .collect(Collectors.toMap(Player::getID, Player::getColor));
     }
 
     public static Map<Position, Cell> getBillboardStatus (Integer matchID){

@@ -25,6 +25,7 @@ public abstract class State extends Controller{
         messageEvent.setMatchState(getMatchState(matchID));
         messageEvent.setCurrentPlayer(getCurrentPlayer(matchID));
         messageEvent.setMatchPlayers(Collections.unmodifiableMap(getMatchPlayers(matchID)));
+        messageEvent.setMatchColors(Collections.unmodifiableMap(getMatchColors(matchID)));
         messageEvent.setWinner(getMatchWinner(matchID));
         messageEvent.setFinished(getMatchState(matchID) == MatchState.FINISHED);
         if(getMatchState(matchID) == MatchState.RUNNING || getMatchState(matchID) == MatchState.PLACING_WORKERS)
@@ -49,10 +50,13 @@ public abstract class State extends Controller{
 
 
     public void exit(List<Observer<MessageEvent>> observers, int matchID, int playerID){
-        MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
-        message.setFinished(true);
-        message.setInfo("A user has disconnected from the match. Closing...");
-        if (matchID!=0) {
+        if (matchID==0){
+            removePlayerWaitingList(playerID);
+        }
+        else if (matchID!=0) {
+            MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
+            message.setFinished(true);
+            message.setInfo("A user has disconnected from the match. Closing...");
             getMatchPlayers(matchID)
                     .keySet()
                     .stream()

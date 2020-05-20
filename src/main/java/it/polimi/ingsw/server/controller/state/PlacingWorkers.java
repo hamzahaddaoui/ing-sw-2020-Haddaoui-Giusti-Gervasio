@@ -12,6 +12,9 @@ import java.util.Set;
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public class PlacingWorkers extends State {
+
+
+
     @Override
     public boolean handleRequest(MessageEvent messageEvent){
         ClientHandler clientHandler = messageEvent.getClientHandler();

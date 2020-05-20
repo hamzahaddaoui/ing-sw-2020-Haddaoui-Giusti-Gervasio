@@ -37,8 +37,4 @@ public class SelectingGodCards extends State {
                 .forEach(player -> notify(observers, basicPlayerConfig(message, player)));
     }
 
-    @Override
-    public void exit(List<Observer<MessageEvent>> observers, int matchID, int playerID){
-
-    }
 }

@@ -23,12 +23,12 @@ public class View extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
 
-        Parent root = (Parent) fxmlLoader.load(location.openStream());
+        Parent root = fxmlLoader.load(location.openStream());
 
         stage.setTitle("Santorini online");
         stage.setScene(new Scene(root, 1200, 800));
         stage.setResizable(false);
-        Controller mainController = fxmlLoader.getController();
+        MainController mainController = fxmlLoader.getController();
         mainController.setStage(stage);
 
 

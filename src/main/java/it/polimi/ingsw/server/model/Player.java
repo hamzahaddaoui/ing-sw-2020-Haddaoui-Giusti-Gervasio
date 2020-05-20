@@ -24,6 +24,8 @@ public class Player{
     private PlayerState playerState;
     private TurnState turnState;
 
+    private String color;
+
     private boolean selectedCard;
     private boolean placedWorkers;
     private boolean selectedWorker;
@@ -41,6 +43,14 @@ public class Player{
 
     public int getID() {
         return ID;
+    }
+
+    public String getColor(){
+        return color;
+    }
+
+    public void setColor(String color){
+        this.color = color;
     }
 
     @Override

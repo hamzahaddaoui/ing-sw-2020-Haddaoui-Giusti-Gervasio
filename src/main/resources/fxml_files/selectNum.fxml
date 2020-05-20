@@ -18,7 +18,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Button?>
 
-<AnchorPane fx:id="paneSN" cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../startScreen.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.Controller">
+<AnchorPane fx:id="paneSN" cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../startScreen.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.MainController">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
@@ -28,16 +28,30 @@
             <Pane prefHeight="127.0" prefWidth="1200.0" BorderPane.alignment="CENTER" />
          </bottom>
          <right>
-            <Pane prefHeight="524.0" prefWidth="67.0" BorderPane.alignment="CENTER"> </Pane>
+            <Pane prefHeight="535.0" prefWidth="271.0" BorderPane.alignment="CENTER"> </Pane>
          </right>
          <left>
-            <Pane prefHeight="524.0" prefWidth="56.0" BorderPane.alignment="CENTER" />
+            <Pane prefHeight="535.0" prefWidth="266.0" BorderPane.alignment="CENTER" />
          </left>
          <center>
             <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button id="p3" fx:id="p3" layoutX="610.0" layoutY="196.0" mnemonicParsing="false" onMouseClicked="#selectedThreePlayers" prefHeight="178.0" prefWidth="288.0" styleClass="players3" stylesheets="@../selectNum.css" />
-                  <Button id="p2" fx:id="p2" layoutX="207.0" layoutY="189.0" mnemonicParsing="false" onMouseClicked="#selectedTwoPlayers" prefHeight="196.0" prefWidth="229.0" styleClass="players2" stylesheets="@../selectNum.css" />
+                  <GridPane alignment="CENTER" layoutX="-14.0" layoutY="-5.0" prefHeight="548.0" prefWidth="682.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.035400390625" minWidth="10.0" prefWidth="306.035400390625" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="216.32568359375" minWidth="10.0" prefWidth="71.964599609375" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.85479736328125" minWidth="10.0" prefWidth="301.719970703125" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="302.8390197753906" minHeight="10.0" prefHeight="94.95761108398438" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="314.1244812011719" minHeight="10.0" prefHeight="314.1244812011719" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="200.38137817382812" minHeight="10.0" prefHeight="110.87551879882812" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button id="p3" fx:id="p3" mnemonicParsing="false" onMouseClicked="#selectedThreePlayers" prefHeight="178.0" prefWidth="288.0" styleClass="players3" stylesheets="@../selectNum.css" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <Button id="p2" fx:id="p2" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#selectedTwoPlayers" prefHeight="196.0" prefWidth="229.0" styleClass="players2" stylesheets="@../selectNum.css" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                     </children>
+                  </GridPane>
                </children>
             </Pane>
          </center>
@@ -49,5 +63,6 @@
             </Label>
          </top>
       </BorderPane>
+      <HBox prefHeight="100.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

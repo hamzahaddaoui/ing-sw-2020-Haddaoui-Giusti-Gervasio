@@ -50,6 +50,7 @@ public class MessageEvent {
     private Map<Position,Boolean>           specialFunctionAvailable; //worker+disponibilità special function -
 
     private Map<Integer, String>            matchPlayers;             //i giocatori del gioco -
+    private Map<Integer, String>            matchColors;
     private int                             currentPlayer;
     //private int                           activeMatches;
     //private int                           playersConnected;
@@ -251,6 +252,14 @@ public class MessageEvent {
         this.matchPlayers = matchPlayers;
     }
 
+    public Map<Integer, String> getMatchColors(){
+        return matchColors;
+    }
+
+    public void setMatchColors(Map<Integer, String> matchColors){
+        this.matchColors = matchColors;
+    }
+
     public int getCurrentPlayer(){
         return currentPlayer;
     }
@@ -298,6 +307,8 @@ public class MessageEvent {
     public void setFinished(boolean finished){
         this.finished = finished;
     }
+
+
 
 
     @Override

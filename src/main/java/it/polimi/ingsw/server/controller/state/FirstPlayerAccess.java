@@ -87,8 +87,4 @@ public class FirstPlayerAccess extends State {
     public void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID){
     }
 
-    @Override
-    public void exit(List<Observer<MessageEvent>> observers, int matchID, int playerID){
-
-    }
 }
