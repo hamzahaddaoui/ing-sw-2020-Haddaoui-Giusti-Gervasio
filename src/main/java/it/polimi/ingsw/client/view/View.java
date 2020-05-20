@@ -1,18 +1,25 @@
 package it.polimi.ingsw.client.view;
 
-import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.client.NetworkHandler;
-import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
 
-import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author giusti-leo
+ *
+ * View class handles the receivement of message from the Network Handler, the update of DataBase and of visualization
+ * of the GameBoard
+ *
+ */
+
+/*
+    TODO -> MOSTRA POTERI CHE VENGONO PRESI DAGLI USER
+ */
 
 public class View extends Observable<String> implements Observer<MessageEvent> {
 
@@ -23,23 +30,20 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     private static boolean error;
     private static boolean active;
 
-    //private static GameBoard gameBoard;
-    //private static Player player;
-    //private static DataBase dataBase;
-
     public View(){
         refresh = true;
         error = false;
-        //dataBase = new DataBase();
-        //player = new Player();
-        //gameBoard = new GameBoard();
     }
 
-    //UPDATE FROM NETWORK HANDLER
+    // From NetWorkHandler
 
-    @Override //FROM CLIENT HANDLER
+    /**
+     * Receives a Message Event from Network Handler. It fetches the message and it changes his dates on the DataBase
+     *
+     * @param messageEvent  is the message from Network Handler
+     */
+    @Override
     public synchronized void update(MessageEvent messageEvent){
-        //System.out.println(messageEvent);
         executorData.submit(()->{
             synchronized (DataBase.class){
                 DataBase.updateStandardData(messageEvent);
@@ -64,11 +68,18 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         }
     }
 
-    //VIEW
+    // From Controller States (VISUALIZATION CHANGES)
+
+    /**
+     * Method that is called from Controller Classes and it submits visualization method that updates the GameBoard state
+     */
     public static void doUpdate(){
         executorView.submit(View::visualization);
     }
 
+    /**
+     * Depending on the MatchState and PlayerState, it launches various method that create different GameBoard State's visualization
+     */
     public static void visualization(){
         if(DataBase.getMatchState() == MatchState.PLACING_WORKERS ){
             System.out.println(getBillboardStat());
@@ -85,7 +96,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Method that organize the the visualization of the tables if the worker is active and have to choose the worker for the turn
+     * Method that organize the the visualization of the tables if the worker is active and it has to choose the worker for the turn
      *
      */
     public static synchronized void gameBoardVisualizationChooseCurrentWorker(){
@@ -115,7 +126,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Method that organize the the visualization of the tables if the worker is active and can do his movement
+     * Method that organizes the the visualization of the tables if the worker is active and it can do his movement
      *
      */
     public static synchronized void gameBoardVisualizationActive(){
@@ -146,7 +157,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Method that organize the the visualization of the tables if the worker is not active and have to choose his current worker
+     * Method that organizes the the visualization of the tables if the worker is not active and it has to choose his current worker
      */
     public static synchronized void gameBoardVisualizationNotActive(){
         StringBuilder output = new StringBuilder();
@@ -171,7 +182,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Print the GameBoard situation with colored blocks
+     * Prints the GameBoard situation with colored blocks
      *
      * @return  the string of the GameBoard's situation
      */
@@ -198,7 +209,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Print the height of the GameBoard' cells
+     * Prints the height of the GameBoard' cells
      *
      * @return  the string of the GameBoard's situation
      */
@@ -224,7 +235,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Put in evidence the position where the current worker can move or build
+     * Puts in evidence the position where the current worker can move or build
      *
      * @param cells  the set of available cells where worker can move or build
      * @param p  the actual position of the worker
@@ -250,7 +261,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * evidence the cells of the user in the billboard table
+     * Evidences the cells of the user in the billboard table
      *
      * @param cells  are the worker' positions of the user
      * @return  cells of the user in the billboard table
@@ -273,6 +284,11 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         return outputD.toString();
     }
 
+    // From Controller (INPUT ERROR / INCORRECT DATA)
+
+    /**
+     * Depending on ControllerState , it prints different indication for the correct game
+     */
     public static void print(){
         if(refresh){
             System.out.println(DataBase.getControlState().computeView());
@@ -299,31 +315,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         return error;
     }
 
-    /*public static void setDataBase(DataBase newDataBase){
-        dataBase = newDataBase;
-    }*/
-
-    /*public static DataBase getDataBase() {
-        return dataBase;
-    }*/
-
-    /*public static Player getPlayer() {
-        return player;
-    }
-
-    public static void setGameBoard(GameBoard newGameBoard){
-        gameBoard = newGameBoard;
-    }
-
-    public static void setPlayer(Player newPlayer){
-        player = newPlayer;
-    }
-
-    public static GameBoard getGameBoard() {
-        return gameBoard;
-    }
-     */
-
     public static boolean isActive() {
         return active;
     }
@@ -331,8 +322,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     public static void setActive(boolean active) {
         View.active = active;
     }
-
-
 
     public static void setRefresh(boolean value){
         refresh = value;

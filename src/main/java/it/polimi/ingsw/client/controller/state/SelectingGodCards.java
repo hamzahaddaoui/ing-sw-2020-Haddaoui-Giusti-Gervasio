@@ -1,48 +1,58 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.View;
-import it.polimi.ingsw.server.model.GodCards;
-import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+/**
+ * @author giusti-leo
+ *
+ * SelectingGodCards is a state of the Controller and it handles the selection of GodCards for the Match
+ *
+ */
 
 public class SelectingGodCards extends ControlState {
 
-    //DataBase dataBase = View.getDataBase();
-
     MessageEvent messageEvent = new MessageEvent();
 
+    /**
+     * It analyzes input from Controller.
+     * If the input is correct, it deletes the god Card from the MatchCards List and it adds GodCard to the SelectedGodCards
+     * If the size of SelectedGodCards is equals to PlayersNumber, it prepares the message for NetworkHandler
+     * If the input is not correct, it prints an advice
+     *
+     * @param input  is the GodCard if it is correct
+     * @return  true is PlayersNumber is equal to SelectedGodCards' size, else false
+     */
     @Override
     public MessageEvent computeInput(String input) {
         if(DataBase.getSelectedGodCards().size() == 0){
             messageEvent = new MessageEvent();
         }
 
-        if(DataBase.getSelectedGodCards().size() >= DataBase.getPlayerNumber())
+        if(DataBase.getSelectedGodCards().size() > DataBase.getPlayerNumber())
             throw new IllegalArgumentException("Errore di scambio tra stati");
 
-        //corretto
         if(DataBase.getMatchCards().stream().anyMatch(string -> (string.toUpperCase()).equals(input.toUpperCase()))
                 && !DataBase.getSelectedGodCards().contains(input.toUpperCase())){
+
                 DataBase.getSelectedGodCards().add(DataBase
                         .getMatchCards()
                         .stream()
                         .filter(w-> w.toUpperCase().equals(input.toUpperCase()))
                         .findFirst()
                         .get());
+
                 DataBase.getMatchCards().remove(DataBase
                         .getMatchCards()
                         .stream()
                         .filter(w-> w.toUpperCase().equals(input.toUpperCase()))
                         .findFirst()
                         .get());
+
                 if(DataBase.getSelectedGodCards().size() == DataBase.getPlayerNumber()){
                     messageEvent.setMatchCards(DataBase.getSelectedGodCards());
                     DataBase.setMessageReady(true);
@@ -55,7 +65,6 @@ public class SelectingGodCards extends ControlState {
                     View.setError(false);
                 }
         }
-        //sbagliato
         else{
             View.setError(true);
             View.print();
@@ -65,6 +74,12 @@ public class SelectingGodCards extends ControlState {
         return null;
     }
 
+    /**
+     * it contains Disconnection case.
+     * if PlayerState is equals to Active it saves on DataBase the MatchCards for the selection of match's gods
+     *
+     * @param message  is the Network Handler 's message
+     */
     @Override
     public void updateData(MessageEvent message) {
 
@@ -79,7 +94,7 @@ public class SelectingGodCards extends ControlState {
         }
 
         //caso SELECTING_GOD_CARDS
-        if(DataBase.getMatchState() == MatchState.SELECTING_GOD_CARDS && DataBase.getPlayerState() == PlayerState.ACTIVE){
+        if( DataBase.getPlayerState() == PlayerState.ACTIVE){
             DataBase.setMatchCards(message.getMatchCards());
             DataBase.setActiveInput(true);
             View.setRefresh(true);
@@ -91,6 +106,11 @@ public class SelectingGodCards extends ControlState {
 
     }
 
+    /**
+     * Depending on the Database's state, compute different String to print
+     *
+     * @return  String to print on view
+     */
     @Override
     public String computeView() {
         int number = DataBase.getPlayerNumber() - DataBase.getSelectedGodCards().size();
@@ -125,41 +145,14 @@ public class SelectingGodCards extends ControlState {
         return string.toString();
     }
 
+    /**
+     * Called if there is an error on the message, it announces that the input is incorrect and print the computeView method
+     */
     @Override
     public void error() {
         System.out.println("Input wrong\n");
-        DataBase.setSelectedGodCards(new HashSet<>());
         DataBase.setActiveInput(true);
         System.out.println(computeView());
     }
 
 }
-   /* Set<String> selectedCards = new HashSet<>();
-
-    @Override
-    public boolean processingMessage(String viewObject) throws IllegalArgumentException{
-
-        if (super.checkMessage(viewObject)) {
-
-        GameBoard gameBoard = View.getGameBoard();
-        Player player = View.getPlayer();
-
-        if (selectedCards.contains(viewObject)) {
-            System.out.println("CARD ALREADY SELECTED");
-            return false;
-        }
-
-        if (gameBoard.getMatchCards().contains(viewObject)) {
-            if (selectedCards.size()<player.getPlayerNumber()) {
-            selectedCards.add(viewObject);
-            if (selectedCards.size()==player.getPlayerNumber()) {
-                Controller.getMessage().setMatchCards(selectedCards);
-                return true; }
-            } else System.out.println("LIMIT NUMBER OF CARDS REACHED");
-        } else System.out.println("NOT-EXISTING CARD");
-        }
-        return false;
-    }
-
-}
-*/

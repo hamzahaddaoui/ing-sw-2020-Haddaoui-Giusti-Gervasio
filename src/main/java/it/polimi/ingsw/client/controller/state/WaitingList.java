@@ -4,52 +4,56 @@ import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 
+/**
+ * @author Vasio1298
+ *
+ * Waiting is a state of the Controller and it handles the waiting State of the Controller
+ *
+ */
+
 public class WaitingList extends ControlState {
 
+    /**
+     * Sets Active Input true
+     *
+     * @param input  String from controller
+     * @return  always null
+     */
     @Override
     public MessageEvent computeInput(String input) {
         DataBase.setActiveInput(true);
         return null;
     }
 
+    /**
+     * Sets the Input Active and print info to the user
+     *
+     * @param message  Message from Network Handler
+     */
     @Override
     public void updateData(MessageEvent message) {
         DataBase.setActiveInput(true);
-        /*Player player = View.getPlayer();
-        MatchState matchState = message.getMatchState();
-
-        player.setMatchState(matchState);
-        player.setPlayerState( message.getPlayerState() );
-
-        /*if (matchState == MatchState.WAITING_FOR_PLAYERS)                   //ENTRO NEL MATCH MA MANCA IL TERZO GIOCATORE
-            player.setControlState(new WaitingForPlayers());
-        else {
-            GameBoard gameBoard = View.getGameBoard();
-            player.setControlState(new SelectingGodCards());                //ENTRO E IMMEDIATAMENTE IL NUMERO DI GIOCATORI VIENE RAGGIUNTO
-            gameBoard.setMatchCards(message.getMatchCards());
-        }*/
-
-        //Controller.updateStandardData(message);
         View.setRefresh(true);
         View.print();
     }
 
+    /**
+     * Prepares the String to print
+     *
+     * @return String to print on view
+     */
     @Override
     public String computeView() {
         return "You are in the waiting list, wait to join a match!";
     }
 
+    /**
+     * Prepares the String to print to the user
+     */
     @Override
     public void error() {
-
+        System.out.println(computeView());
     }
+
 }
-    /*@Override
-    public boolean processingMessage(String viewObject) throws IllegalArgumentException{
 
-        System.out.println("WAIT FOR YOUR TURN!");
-
-        return false;
-    }
-
-}*/

@@ -120,6 +120,7 @@ public class DataBase {
         specialFunctionAvailable = modelMap;
     }
 
+
     static public void setNickname(String newNickname) {
         nickname = newNickname;
     }

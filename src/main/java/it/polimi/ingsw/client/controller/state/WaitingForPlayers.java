@@ -7,10 +7,21 @@ import it.polimi.ingsw.utilities.MessageEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Vasio1298
+ *
+ * WaitingForPlayers is a state of the Controller and it handles user when is in the Waiting List
+ *
+ */
+
 public class WaitingForPlayers extends ControlState {
 
-    //DataBase dataBase = View.getDataBase();
-
+    /**
+     * Sets Input active true and calls error to print info
+     *
+     * @param input  is the String from the Controller
+     * @return  always null
+     */
     @Override
     public MessageEvent computeInput(String input) {
         DataBase.setActiveInput(true);
@@ -18,10 +29,14 @@ public class WaitingForPlayers extends ControlState {
         return null;
     }
 
+    /**
+     * Handles the disconnection of other players. It sets Input active true and prints info
+     *
+     * @param message  is the message from the NetWork Handler
+     */
     @Override
     public void updateData(MessageEvent message) {
 
-        //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setControlState(new NotInitialized());
             DataBase.setPlayerState(null);
@@ -31,24 +46,16 @@ public class WaitingForPlayers extends ControlState {
             return;
         }
 
-        /*Player player = View.getPlayer();
-        MatchState matchState = message.getMatchState();
-
-        player.setMatchState(matchState);
-        player.setPlayerState( message.getPlayerState() );
-
-        /*if (matchState != MatchState.WAITING_FOR_PLAYERS) {                 //PLAYERSNUM VIENE RAGGIUNTO
-            GameBoard gameBoard = View.getGameBoard();
-            player.setControlState(new SelectingGodCards());
-            gameBoard.setMatchCards(message.getMatchCards());
-        }*/
-
-        //Controller.updateStandardData(message);
         DataBase.setActiveInput(true);
         View.setRefresh(true);
         View.print();
     }
 
+    /**
+     * Depending on the Database's state, computes different String to print
+     *
+     * @return  String to print on view
+     */
     @Override
     public String computeView() {
         List<String> players = new ArrayList<>(DataBase.getMatchPlayers().values());
@@ -58,6 +65,9 @@ public class WaitingForPlayers extends ControlState {
         else return "Wait for other players to join!";
     }
 
+    /**
+     * Prints error announcement to the user
+     */
     @Override
     public void error() {
         System.out.println("Please wait\n");

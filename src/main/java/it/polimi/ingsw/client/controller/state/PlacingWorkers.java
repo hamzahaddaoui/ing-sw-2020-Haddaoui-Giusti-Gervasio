@@ -10,19 +10,33 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PlacingWorkers extends ControlState {
+/**
+ * @author giusti-leo
+ *
+ * PlacingWorkers is a state of the Controller and it handles the placement of Workers in the GameBoard
+ *
+ */
 
-    //DataBase dataBase = View.getDataBase();
+public class PlacingWorkers extends ControlState {
 
     MessageEvent messageEvent = new MessageEvent();
     Position position;
     Set <Position> initializedPosition = new HashSet<>();
 
+    /**
+     * Analyzes the input String
+     * If all coordinates are correct and the position selected is contained in PlacingAvailable Cells, method inserts input in DataBase.
+     * If users select 2 correct position, it prepares the message to send
+     * If the position is incorrect, it prints error announcement
+     *
+     * @param input  is Controller String input
+     * @return true if the Placing State is done, else false
+     */
     @Override
     public MessageEvent computeInput(String input) {
         if(checkMessage(input)){
-            //corretto di lunghezza due
             Set<Position> placingPosition= DataBase.getPlacingAvailableCells();
+
             if(placingPosition.size() == 0){
                 throw new IllegalArgumentException("PLACING POSITION IS EMPTY!");
             }
@@ -57,10 +71,17 @@ public class PlacingWorkers extends ControlState {
         return null;
     }
 
+    /**
+     * It contains Disconnection case.
+     * If PlayerState is equals to Active, it saves on DataBase BillBoard status and Placing Available Cells List
+     * for the placing State.
+     * Then, it updates the GameBoard's visualization and launches computeView method
+     *
+     * @param message  is the Network Handler 's message
+     */
     @Override
     public void updateData(MessageEvent message) {
 
-        //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setControlState(new NotInitialized());
             DataBase.setPlayerState(null);
@@ -70,7 +91,6 @@ public class PlacingWorkers extends ControlState {
             return;
         }
 
-        //caso PLACING_WORKERS
         if(DataBase.getMatchState() == MatchState.PLACING_WORKERS){
             if(message.getBillboardStatus() != DataBase.getBillboardStatus() && message.getBillboardStatus() != null){
                 DataBase.setBillboardStatus(message.getBillboardStatus());
@@ -81,7 +101,7 @@ public class PlacingWorkers extends ControlState {
         }
 
         View.doUpdate();
-        //caso ACTIVE
+
         if(DataBase.getPlayerState() == PlayerState.ACTIVE){
             DataBase.setActiveInput(true);
             View.setRefresh(true);
@@ -93,6 +113,11 @@ public class PlacingWorkers extends ControlState {
 
     }
 
+    /**
+     * Depending on the Database's state, it computes different String to print
+     *
+     * @return  String to print on view
+     */
     @Override
     public String computeView() {
         if(DataBase.getPlayerState() == PlayerState.ACTIVE ){
@@ -112,6 +137,9 @@ public class PlacingWorkers extends ControlState {
         }
     }
 
+    /**
+     * Called if there is an error on the message, it announces that the input is incorrect and it prints the computeView method
+     */
     @Override
     public void error() {
         System.out.println("Position is not available or incorrect\n");
@@ -119,6 +147,12 @@ public class PlacingWorkers extends ControlState {
         System.out.println(computeView());
     }
 
+    /**
+     * Checks if the method is correct
+     *
+     * @param viewObject  is the input from the Controller
+     * @return  true if input is correct, else false
+     */
     private boolean checkMessage(String viewObject) {
         if (viewObject.length() != 2) {
             System.out.println("INPUT INCORRECT");
@@ -128,46 +162,3 @@ public class PlacingWorkers extends ControlState {
     }
 
 }
-   /* Set<Position> initializedPositions = new HashSet<>();
-    Position position;
-
-    @Override
-    public boolean processingMessage(String viewObject) throws IllegalArgumentException {
-        if (checkMessage(viewObject)) {
-            Set<Position> placingPosition= View.getGameBoard().getPlacingAvailableCells();
-            if(placingPosition.size() == 0){
-                throw new IllegalArgumentException("PLACING POSITION IS EMPTY!");
-            }
-
-            int x = Character.getNumericValue(viewObject.charAt(0))-1;
-            int y = Character.getNumericValue(viewObject.charAt(1))-1;
-
-            if (x <= 4 && x >= 0 && y <= 4 && y >= 0)
-                position = new Position(x, y);
-            else {
-                System.out.println("POSITION INCORRECT!");
-                return false;
-            }
-
-            GameBoard gameBoard = View.getGameBoard();
-            if (gameBoard.getPlacingAvailableCells().contains(position)){
-                initializedPositions.add(position);
-                gameBoard.getPlacingAvailableCells().remove(position);
-                View.doUpdate();
-                if(initializedPositions.size() == 1){
-                    System.out.println("INSERT THE NEXT POSITION");
-                }
-                if (initializedPositions.size() == 2) {
-                    Controller.getMessage().setInitializedPositions(initializedPositions);
-                    return true;
-                }
-            }
-            else {
-                System.out.println("POSITION IS NOT AVAILABLE!");
-                return false;
-            }
-        }
-        return false;
-    }
-
-}*/

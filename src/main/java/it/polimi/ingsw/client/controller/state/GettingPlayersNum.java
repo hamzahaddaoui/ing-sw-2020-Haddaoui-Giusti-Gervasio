@@ -1,17 +1,32 @@
 package it.polimi.ingsw.client.controller.state;
+
 import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
+/**
+ * @author Vasio1298
+ *
+ * GettingPlayersNum is a state of the Controller and it handles the selection of the playersNum
+ *
+ */
+
 public class GettingPlayersNum extends ControlState {
     MessageEvent message = new MessageEvent();
-    //DataBase dataBase = View.getDataBase();
 
+    /**
+     * Analyzes the input String
+     * If the input is correct, it prepares the message to send
+     * Else it prints error announcement
+     *
+     * @param input  is the string from the Controller
+     * @return  true is the message is ready to send, else false
+     */
     @Override
     public MessageEvent computeInput(String input) {
         int playersNum = 0;
-        //System.out.println(input.length());
+
         if(input.length() == 1){
             playersNum = Character.getNumericValue(input.charAt(0));
         }
@@ -30,59 +45,37 @@ public class GettingPlayersNum extends ControlState {
 
     }
 
+    /**
+     * Method that sets the Active Input on, then it prints info to the user
+     *
+     * @param message  is the message of the NetworkHandler
+     */
     @Override
     public void updateData(MessageEvent message) {
-        //Controller.updateStandardData(message);
-        //Player player = View.getPlayer();
-
-        //player.setMatchState( message.getMatchState() );
-        //player.setPlayerState( message.getPlayerState() );
-        //player.setPlayerNumber(message.getPlayersNum());
-        //player.setControlState(new SelectingGodCards());
         DataBase.setActiveInput(true);
 
         View.setRefresh(true);
         View.print();
     }
 
+    /**
+     * Method that computes the info to the user and it resets Active Input
+     *
+     * @return  the String to print on view
+     */
     @Override
     public String computeView() {
         DataBase.setActiveInput(true);
         return "Insert the number of players (2 or 3): ";
     }
 
+    /**
+     * Method that computes the error announcement to the user and it resets Active Input
+     *
+     */
     @Override
     public void error() {
         System.out.println("Incorrect number of players!");
         DataBase.setActiveInput(true);
     }
 }
-
-    /*@Override
-    public boolean processingMessage(String viewObject) throws IllegalArgumentException{
-
-        if (checkMessage(viewObject)) {
-            int playersNum = Character.getNumericValue(viewObject.charAt(0));
-
-            if (playersNum == 2 || playersNum == 3) {
-                View.getPlayer().setPlayerNumber(playersNum);
-                Controller.getMessage().setPlayersNum(playersNum);
-                return true;
-            }
-            else System.out.println("NOT LEGAL VALUE");
-        }
-        return false;
-    }
-
-    @Override
-    public boolean checkMessage(String viewObject) {
-        if (super.checkMessage(viewObject)) {
-            if (viewObject.length()!=1) {
-                System.out.println("INCORRECT INPUT");
-                return false;
-            }
-            else return true;
-        }
-        else return false;
-    }
-*/

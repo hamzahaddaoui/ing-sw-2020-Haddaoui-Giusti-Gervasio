@@ -1,12 +1,16 @@
-/*package it.polimi.ingsw.client.controller.state;
+package it.polimi.ingsw.client.controller.state;
 
+import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.client.controller.Controller;
+import it.polimi.ingsw.utilities.PlayerState;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,67 +19,40 @@ class SelectingSpecialCommandStatusTest {
 
     Controller controller = new Controller();
     View view = new View();
-    Player player = View.getPlayer();
-    GameBoard gameBoard = View.getGameBoard();
+    DataBase dataBase = new DataBase();
     ControlState state;
-    InsertCharacter viewObject;
+    String input;
     Set<String> testingCards = new HashSet<String>();
+    Map<Integer,String> players = new HashMap<>();
 
     @BeforeEach
     void setUp() {
-        controller.setState(new SelectingSpecialCommandStatus());
-        state = controller.getControlState();
-
         testingCards.add("APOLLO");
         testingCards.add("ARTHEMIS");
-
-        gameBoard.setSelectedGodCards(testingCards);
-        gameBoard.setColoredGodCard("APOLLO");
-        //player.setPlayersNum(2);
-    }
-
-    @AfterEach
-    void tearDown() {gameBoard.setColoredGodCard("APOLLO");}
-
-    @Test
-    void processingMessage_String() {
-        assertThrows(IllegalArgumentException.class,() -> state.processingMessage("Vasio"));
+        state = new SelectingSpecialCommand();
+        DataBase.setControlState(state);
+        DataBase.setMatchPlayers(players);
     }
 
     @Test
-    void processingMessage_ACommand() {
-        viewObject = InsertCharacter.A;
-        state.processingMessage(viewObject);
-        assertEquals("ARTHEMIS",gameBoard.getColoredGodCard());
+    void computeInput(){
+        input = "";
+
+        assertThrows(IllegalArgumentException.class, () -> state.computeInput(input) );
+
+        DataBase.setSelectedGodCards(testingCards);
+        input = "apolso";
+        state.computeInput(input);
+
+        assertFalse(DataBase.isMessageReady());
+        assertTrue(DataBase.isActiveInput());
+
+        input = "apollo";
+        state.computeInput(input);
+
+        assertTrue(DataBase.isMessageReady());
+        assertTrue(DataBase.getPlayerState() == PlayerState.IDLE);
+
     }
 
-    @Test
-    void processingMessage_DCommand() {
-        viewObject = InsertCharacter.D;
-        state.processingMessage(viewObject);
-        assertEquals("ARTHEMIS",gameBoard.getColoredGodCard());
-        state.processingMessage(viewObject);
-        assertEquals("APOLLO",gameBoard.getColoredGodCard());
-    }
-
-    @Test
-    void processingMessage_EnterCommand() {
-        viewObject = InsertCharacter.ENTER;
-        assertTrue(state.processingMessage(viewObject));
-        assertEquals("APOLLO",Controller.getMessage().getGodCard());
-    }
-
-    /*@Test
-    void nexState_MatchPlacingWorkers_PlayerNotActive() {
-        controller.setPlayerAndMatchState(PlayerState.IDLE, MatchState.PLACING_WORKERS);
-        state.nextState(controller);
-        assertEquals(WaitingStatus.class,controller.getControlState().getClass());
-    }
-
-    @Test
-    void nexState_MatchPlacingWorkers_PlayerActive() {
-        controller.setPlayerAndMatchState(PlayerState.ACTIVE, MatchState.PLACING_WORKERS);
-        state.nextState(controller);
-        assertEquals(PlacingWorkersStatus.class,controller.getControlState().getClass());
-    }
-}*/
+}

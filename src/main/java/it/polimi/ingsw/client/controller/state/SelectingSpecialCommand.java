@@ -1,23 +1,37 @@
 package it.polimi.ingsw.client.controller.state;
 
-import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
-public class SelectingSpecialCommand extends ControlState {
+/**
+ * @author giusti-leo
+ *
+ * SelectingSpecialCommand is a state of the Controller that handle the selection of Special GodCard for the Match
+ *
+ */
 
-    //DataBase dataBase = View.getDataBase();
+public class SelectingSpecialCommand extends ControlState {
 
     MessageEvent messageEvent = new MessageEvent();
 
+    /**
+     * It analyzes input from Controller.
+     * If the input is correct and user has selected a God ,it prepares the message to the NetWork Handler and it puts the
+     * PlayerState equals to Idle to allow correct computeView
+     * If the input is not correct, it prints an advice
+     *
+     * @param input  is the GodCard ,if it is correct
+     * @return  true if the Input is equals to a Card of SelectedGod Cards, else false
+     */
     @Override
     public MessageEvent computeInput(String input) {
         messageEvent = new MessageEvent();
+
         if(DataBase.getSelectedGodCards().size() <= 0)
             throw new IllegalArgumentException("Selected god cards empty");
-        //corretto
+
         if(DataBase.getSelectedGodCards().stream().anyMatch(string -> (string.toUpperCase()).equals(input.toUpperCase()))){
             String card = DataBase
                     .getSelectedGodCards()
@@ -34,7 +48,7 @@ public class SelectingSpecialCommand extends ControlState {
             return  messageEvent;
         }
         else{
-            //sbagliato
+
             View.setError(true);
             View.print();
             DataBase.setMessageReady(false);
@@ -43,8 +57,24 @@ public class SelectingSpecialCommand extends ControlState {
         return null;
     }
 
+    /**
+     * It contains Disconnection case.
+     * Updates the database through the message.
+     * Prints which are the Gods for the Match. Depending on the state of DataBase prints a different output message
+     *
+     * @param message  is the message from Network Handler
+     */
     @Override
     public void updateData(MessageEvent message) {
+        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            DataBase.setControlState(new NotInitialized());
+            DataBase.setPlayerState(null);
+            DataBase.setActiveInput(true);
+            View.setRefresh(true);
+            View.print();
+            return;
+        }
+
         if(message.getMatchCards().size() == message.getMatchPlayers().size() && DataBase.getPlayerState() != PlayerState.ACTIVE
                 && !message.getMatchPlayers().get(message.getMatchPlayers().keySet()
                 .stream()
@@ -59,23 +89,10 @@ public class SelectingSpecialCommand extends ControlState {
 
         DataBase.setPlayer(message.getCurrentPlayer());
 
-        //CASO DISCONNESSIONE UTENTE
-        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            DataBase.setControlState(new NotInitialized());
-            DataBase.setPlayerState(null);
-            DataBase.setActiveInput(true);
-            View.setRefresh(true);
-            View.print();
-            return;
-        }
-
-
-        //caso SELECTING_SPECIAL_COMMAND
         if( message.getMatchCards() != null){
             DataBase.setSelectedGodCards(message.getMatchCards());
         }
 
-        //caso ACTIVE
         if(DataBase.getPlayerState() == PlayerState.ACTIVE){
             DataBase.setActiveInput(true);
             View.setRefresh(true);
@@ -87,6 +104,11 @@ public class SelectingSpecialCommand extends ControlState {
 
     }
 
+    /**
+     * Depending on the Database's state, computes different String to print
+     *
+     * @return  String to print on view
+     */
     @Override
     public String computeView() {
         StringBuilder string = new StringBuilder();
@@ -116,6 +138,9 @@ public class SelectingSpecialCommand extends ControlState {
         }
     }
 
+    /**
+     * Called if there is an error on the message, it announces that the input is incorrect and it prints the computeView method
+     */
     @Override
     public void error() {
         System.out.println("Input wrong\n");
@@ -125,20 +150,3 @@ public class SelectingSpecialCommand extends ControlState {
     }
 
 }
-
-/*    @Override
-    public boolean processingMessage(String viewObject) throws IllegalArgumentException{
-
-        if (super.checkMessage(viewObject)) {
-
-            GameBoard gameBoard = View.getGameBoard();
-
-            if (gameBoard.getSelectedGodCards().contains(viewObject)) {
-                Controller.getMessage().setGodCard(viewObject);
-                return true;
-            } else System.out.println("CARD NOT AVAILABLE");
-        }
-        return false;
-    }
-}
-*/
