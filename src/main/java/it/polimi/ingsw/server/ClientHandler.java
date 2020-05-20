@@ -59,6 +59,13 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
     }
 
 
+    /**
+     * Starting method for the Client Handler thread.
+     * <p>
+     * The method launches a thread dedicate to the heartbeat messages and a thread dedicate to analyze the messages
+     * received by the client. When this socket is not active anymore, it shuts down both threads.
+     *
+     */
     @Override
     public void run() {
         System.out.println("Connected to " + client.getInetAddress());
@@ -71,6 +78,16 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         System.out.println("Connection to " + client.getInetAddress()+" closed");
     }
 
+    /**
+     * Method called after a notification from the Server Controller.
+     * <p>
+     * If the player specified in the message is different from the client's player, it does nothing.
+     * Otherwise, the method creates a string from the message received and creates a thread that
+     * handles the writing of the message to the client.
+     *
+     *
+     * @param message the message passed by the Controller
+     */
     @Override
     public void update(MessageEvent message){
         if (!(message.getPlayerID().equals(this.playerID)  && active)){
@@ -98,6 +115,13 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
         });
     }
 
+    /**
+     * Method that handle the sending of heartbeat messages to the client.
+     * <p>
+     * After every half of the timeout it sends a message of type Message Event
+     * useful to let the client knows that this is still connected.
+     * When the socket is not active anymore, the method shuts down the thread dedicate to this function.
+     */
     public void heartbeatAgent() {
         MessageEvent message =  new MessageEvent();
         message.setInfo("Heartbeat Message");
@@ -109,6 +133,15 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
             heartbeatService.shutdownNow();
     }
 
+    /**
+     * Method that reads the messages sent by the client.
+     * <p>
+     * The method builds a message from the string received.
+     * Then, if the message is an heartbeat one the method, it does nothing,
+     * otherwise it notifies the Server Controller with the message.
+     * If the client is no longer connected the method notifies the Server Controller
+     * with a last message with a reference to the client and the boolean exit set, then it closes.
+     */
     void inputHandler(){
         String inputObject;
         MessageEvent messageEvent;

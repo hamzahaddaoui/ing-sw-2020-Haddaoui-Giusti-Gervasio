@@ -65,7 +65,6 @@ public class Running extends ControlState {
             DataBase.getControlState().updateData(message);
         }
         else {
-            View.doUpdate();
 
             DataBase.setBillboardStatus(message.getBillboardStatus());
 
@@ -78,6 +77,7 @@ public class Running extends ControlState {
             else if (DataBase.getStartingPosition()!=null)
                 DataBase.setStartingPosition(null);
 
+            View.doUpdate();
             View.setRefresh(true);
             View.print();
         }

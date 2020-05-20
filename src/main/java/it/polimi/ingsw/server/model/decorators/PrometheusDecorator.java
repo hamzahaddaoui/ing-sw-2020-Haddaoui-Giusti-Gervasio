@@ -11,6 +11,10 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.utilities.TurnState.*;
 
+/**
+ * @author Vasio1298
+ */
+
 public class PrometheusDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Prometheus;
     public PrometheusDecorator(Commands commands){
@@ -103,6 +107,15 @@ public class PrometheusDecorator extends CommandsDecorator {
         }
     }
 
+    /**
+     * Method that modifies the standard turn after the special function activation.
+     * <p>
+     * If the special function has been activate, the method checks for both worker if the check cells method returns true.
+     * If it's true, the method remove the specific cell from the available building cells of the specific worker.
+     * After that the method does the check for both workers, this sets the turn state at BUILD.
+     *
+     * @param player the current player of the match
+     */
 
     @Override
     public void notifySpecialFunction(Player player){
@@ -130,11 +143,7 @@ public class PrometheusDecorator extends CommandsDecorator {
     /**
      * Method that checks if the boolean special function available can be true.
      * <p>
-     * If there's only one cell in the building available cells and that cell has a tower height == 0,
-     * you can build in it and then move in it too.
-     * Else if there's only one cell in the building available cell and that cell has a different tower height
-     * (i.e. tower height == 1) the player can't build in it because after that he won't be able to move in that cell.
-     * Else the method does the standard losing condition check.
+     * The method controls for both workers if they have at least one building available cells.
      *
      *
      * @param player  the current player of the match
@@ -143,26 +152,19 @@ public class PrometheusDecorator extends CommandsDecorator {
 
     private Map<Position, Boolean> canBuildBeforeMove(Player player){
         return player.getWorkers().stream().collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(BUILD)));
-
-
-
-        //return player.getWorkers().stream().noneMatch(worker -> worker.canDoSomething(BUILD));
-
-        /*boolean retVal;
-        Worker worker = player.getCurrentWorker();
-        //if (worker.getAvailableCells(state)==null)
-            //worker.setAvailableCells(state,player.getCommands().computeAvailableBuildings(player,worker));
-        Set<Position> buildingPositions = worker.getAvailableCells(BUILD);
-        TurnState prec = player.getTurnState();
-        player.setTurnState(BUILD);
-        if (buildingPositions.size()==1) {
-            retVal = buildingPositions.stream().anyMatch(position -> player.getMatch().getBillboard().getTowerHeight(position) == 0);
-        }
-        else retVal = !losingCondition(player);
-        player.setTurnState(prec);
-        return retVal;*/
     }
 
+
+    /**
+     * Method that analyze how many cells are available to move into, after the first building turn.
+     * <p>
+     * The method confronts every available cells of the worker with the starting cell
+     * and counts every cell that has an height tower of same or lower level then the starting one.
+     *
+     * @param player the current player of the match
+     * @param worker the worker of the player
+     * @return true if there's only one cell available, false otherwise
+     */
     private boolean checkCells(Player player, Worker worker) {
       Billboard billboard = player.getMatch().getBillboard();
 
