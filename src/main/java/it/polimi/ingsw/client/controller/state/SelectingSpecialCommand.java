@@ -67,9 +67,7 @@ public class SelectingSpecialCommand extends ControlState {
     @Override
     public void updateData(MessageEvent message) {
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            DataBase.setControlState(new NotInitialized());
-            DataBase.setPlayerState(null);
-            DataBase.setActiveInput(true);
+            DataBase.resetDataBase();
             View.setRefresh(true);
             View.print();
             return;

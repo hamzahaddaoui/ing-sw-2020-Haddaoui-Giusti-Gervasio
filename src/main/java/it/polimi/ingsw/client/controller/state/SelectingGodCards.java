@@ -85,9 +85,7 @@ public class SelectingGodCards extends ControlState {
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
-            DataBase.setControlState(new NotInitialized());
-            DataBase.setPlayerState(null);
-            DataBase.setActiveInput(true);
+            DataBase.resetDataBase();
             View.setRefresh(true);
             View.print();
             return;
@@ -113,11 +111,11 @@ public class SelectingGodCards extends ControlState {
      */
     @Override
     public String computeView() {
-        int number = DataBase.getPlayerNumber() - DataBase.getSelectedGodCards().size();
+        int number = DataBase.getMatchPlayers().size() - DataBase.getSelectedGodCards().size();
         StringBuilder string = new StringBuilder();
         List<String> players = new ArrayList<>(DataBase.getMatchPlayers().values());
 
-        if (players.size()==2 && DataBase.getSelectedGodCards().isEmpty() && !View.getError()) {
+        if (players.size() == 2 && DataBase.getSelectedGodCards().isEmpty() && !View.getError()) {
             players.remove(DataBase.getNickname());
             string.append("Your opponent is (" + players.get(0) + ")\n");
         }

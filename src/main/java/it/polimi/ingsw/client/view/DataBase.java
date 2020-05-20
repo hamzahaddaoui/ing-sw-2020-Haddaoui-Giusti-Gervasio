@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.view;
 
-import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.controller.state.*;
 import it.polimi.ingsw.utilities.*;
 
@@ -11,7 +10,6 @@ public class DataBase {
     static private ControlState controlState = new NotInitialized();
     static private boolean activeInput = true;
     static private boolean messageReady;
-
 
     static private String nickname;
     static private PlayerState playerState;
@@ -50,6 +48,7 @@ public class DataBase {
         matchPlayers = new HashMap<>();
         specialFunctionAvailable = new HashMap<>();
         activeInput = true;
+        controlState = new NotInitialized();
     }
 
     public static void setActiveInput(boolean actIn) {
@@ -119,7 +118,6 @@ public class DataBase {
     static public void setSpecialFunctionAvailable(Map<Position, Boolean> modelMap) {
         specialFunctionAvailable = modelMap;
     }
-
 
     static public void setNickname(String newNickname) {
         nickname = newNickname;
@@ -221,6 +219,11 @@ public class DataBase {
         selectedGodCards = new HashSet<>(godCards);
     }
 
+    /**
+     * It fetches the dates that are always sent from the Message Event
+     *
+     * @param messageEvent  is the message from the NetWorkHandler
+     */
     static public void updateStandardData(MessageEvent messageEvent) {
         if (messageEvent.getMatchState() != matchState && messageEvent.getMatchState() != null)
             matchState = messageEvent.getMatchState();
@@ -234,6 +237,9 @@ public class DataBase {
             currentPlayer = messageEvent.getCurrentPlayer();
     }
 
+    /**
+     * Depending on Database dates, it compute the next Control state
+     */
     static public void updateControllerState() {
         if (nickname == null && controlState.getClass() != NotInitialized.class) {
             controlState = new NotInitialized();
@@ -270,4 +276,5 @@ public class DataBase {
                 controlState = new WaitingList();
         }
     }
+
 }

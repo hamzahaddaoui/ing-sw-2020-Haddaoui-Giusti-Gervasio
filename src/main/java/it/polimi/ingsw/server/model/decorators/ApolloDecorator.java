@@ -63,6 +63,7 @@ public class ApolloDecorator extends CommandsDecorator {
         Player opponentPlayer = findOpponentPlayer(position, player);
         Worker opponentWorker = findOpponentWorker(position, opponentPlayer);
         Position actualPosition = myWorker.getPosition();
+        position.setZ(player.getMatch().getBillboard().getTowerHeight(position));
 
         realizationMove(player,position,actualPosition,myWorker);
 

@@ -48,17 +48,17 @@ public class DemeterDecorator extends CommandsDecorator {
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
+                secondBuildDone = false;
+                firstBuildPosition = null;
                 player.setTurnState(BUILD);
                 break;
             case BUILD:
-                if (losingCondition(player) || secondBuildDone){
+                if (losingCondition(player) || secondBuildDone || player.getCurrentWorker().getAvailableCells(BUILD).size() == 1){
                     player.setHasFinished();
                 }
                 else{
                     player.setTerminateTurnAvailable();
                 }
-                break;
-            default:
                 break;
         }
     }
@@ -93,14 +93,15 @@ public class DemeterDecorator extends CommandsDecorator {
      */
     @Override
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
-        Set<Position> result=super.computeAvailableBuildings(player, worker);
+        Set<Position> result = super.computeAvailableBuildings(player, worker);
 
-            if(this.firstBuildPosition==null)
+            if(this.firstBuildPosition == null)
                 return result;
             else{
+                //System.out.println(firstBuildPosition);
                 return result
                         .stream()
-                        .filter(position -> position != this.firstBuildPosition)
+                        .filter(position -> position.getX() != firstBuildPosition.getX() || position.getY() != firstBuildPosition.getY())
                         .collect(Collectors.toSet());
             }
         }
