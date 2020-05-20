@@ -1,5 +1,5 @@
 package it.polimi.ingsw.client.controller.state;
-
+import it.polimi.ingsw.client.controller.Controller;
 import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.*;
@@ -14,6 +14,8 @@ import java.util.Optional;
  */
 
 public class Running extends ControlState {
+
+    //DataBase dataBase = View.getDataBase();
 
     MessageEvent message = new MessageEvent();
 
@@ -57,6 +59,8 @@ public class Running extends ControlState {
      */
     @Override
     public void updateData(MessageEvent message) {
+
+        //CASO DISCONNESSIONE UTENTE
         if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setControlState(new NotInitialized());
             DataBase.setPlayerState(null);
@@ -75,6 +79,7 @@ public class Running extends ControlState {
             DataBase.getControlState().updateData(message);
         }
         else {
+
             DataBase.setBillboardStatus(message.getBillboardStatus());
 
             if (message.getPlayerState() == PlayerState.ACTIVE) {

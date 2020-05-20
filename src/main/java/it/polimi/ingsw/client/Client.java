@@ -12,12 +12,21 @@ import java.util.concurrent.Executors;
 public class Client {
     static ExecutorService inputListener = Executors.newSingleThreadExecutor();
     static ExecutorService networkListener = Executors.newSingleThreadExecutor();
-    //static ExecutorService viewManager = Executors.newSingleThreadExecutor();
     static NetworkHandler networkHandler;
     static View view;
     static Controller controller;
     static Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Main method for the Client.
+     * <p>
+     * The method asks at the user the server's ip and then instantiate the Network Handler socket.
+     * Then it assigns observer/observable roles and start a thread for the Network Handler,
+     * a thread for the print method of the View and a thread for the Controller.
+     *
+     *
+     * @param args   an array of command-line arguments for the application
+     */
     public static void main(String[] args) {
         view = new View();
         controller = new Controller();
@@ -28,7 +37,6 @@ public class Client {
             if (ip.equals("d") || ip.equals("default"))
                 ip = "127.0.0.1";
             networkHandler = new NetworkHandler(ip);
-            //scanner.close();
         } catch (IOException e) {
             System.out.println("SERVER UNREACHABLE");
             return;
@@ -43,6 +51,10 @@ public class Client {
         inputListener.submit(controller::inputListener);
     }
 
+
+    /**
+     * Method called by the current Control State when a player wants to quit from the game.
+     */
     public static void close() {
          {
             try {

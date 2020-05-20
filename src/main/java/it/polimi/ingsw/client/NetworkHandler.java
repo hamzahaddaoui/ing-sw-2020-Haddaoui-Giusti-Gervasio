@@ -36,6 +36,12 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         input = new ObjectInputStream(server.getInputStream());
     }
 
+    /**
+     * Starting method for the Network Handler thread.
+     * <p>
+     * The method launches a thread dedicate to the heartbeat messages and a thread dedicate to analyze the messages received by the server.
+     *
+     */
     @Override
     public void run() {
         System.out.println("Connected to " + server.getInetAddress());
@@ -43,10 +49,24 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         messageReader.submit(this::inputHandler);
     }
 
+
+    /**
+     * Method that closes the Client Connection.
+     * @throws IOException if an I/O error occurs when it closes this socket
+     */
     public void stop() throws IOException{
         active = false;
         server.close();
     }
+
+    /**
+     * Method called after a notification from the Client Controller.
+     * <p>
+     * The method creates a string from the message received and creates a thread that
+     * handles the writing of the message to the client.
+     *
+     * @param message the message passed by the Controller
+     */
 
     @Override
     public void update(MessageEvent message){
@@ -74,6 +94,15 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         });
     }
 
+
+    /**
+     * Method that handle the sending of heartbeat messages to the server.
+     * <p>
+     * After every half of the timeout it sends a message of type Message Event
+     * useful to let the server knows that this is still connected.
+     * When the socket is not active anymore, the method sends a last message to the server
+     * to let it know that this is not connected anymore and then shuts down the thread dedicate to this function.
+     */
     public void heartbeatRunnable() {
         MessageEvent msgEvent = new MessageEvent();
         if (active) {
@@ -88,6 +117,14 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
             heartbeatService.shutdownNow();
         }
     }
+
+    /**
+     * Method that reads the messages sent by the server.
+     * <p>
+     * The method builds a message from the string received.
+     * Then, if the message is an heartbeat one the method, it does nothing,
+     * otherwise it notifies the View with the message.
+     */
 
    private void inputHandler() {
        String inputObject;
