@@ -521,7 +521,7 @@ public class IslandLoader{
 
     public void moveWorker(Point2D startPos, Point2D endPos){
         Optional<Group> optionalWorker =  workers.keySet().stream()
-                .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getZ()).equals(startPos))
+                .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(startPos))
                 .findAny();
 
         if (!optionalWorker.isPresent()){
