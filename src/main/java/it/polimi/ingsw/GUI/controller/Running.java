@@ -199,6 +199,12 @@ public class Running extends State{
 
         if (billboardStatus != getBillboardStatus()){
             System.out.println("Different billboard");
+            System.out.println(billboardStatus);
+
+            System.out.println(getBillboardStatus());
+
+
+
             Set<Position> changedPositions =  getBillboardStatus()
                     .keySet()
                     .stream()
@@ -227,7 +233,6 @@ public class Running extends State{
                         movedOutPlayers.put(billboardStatus.get(position).getPlayerID(), position);
                 }
             }
-            System.out.println("Moved out players "+movedOutPlayers.keySet());
 
             if (movedOutPlayers.size() != 0){
                 movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
@@ -237,10 +242,6 @@ public class Running extends State{
         }
 
         billboardStatus = getBillboardStatus();
-
-        System.out.println(billboardStatus);
-
-        System.out.println(getBillboardStatus());
     }
 
     public Position pointToPosition(Point2D point){

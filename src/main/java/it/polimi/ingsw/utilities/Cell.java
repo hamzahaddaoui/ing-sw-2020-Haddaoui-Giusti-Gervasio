@@ -51,7 +51,7 @@ public class Cell implements Comparable{
     public int compareTo(Object o){
         if(o instanceof Cell){
             Cell cell = (Cell) o;
-            if (towerHeight == cell.towerHeight && dome == cell.dome && playerID == cell.playerID)
+            if (this.towerHeight == cell.getTowerHeight() && dome == cell.isDome() && playerID == cell.getPlayerID())
                 return 0;
             else
                 return -1;
