@@ -614,6 +614,7 @@ public class IslandLoader{
         }
 
         workers.replace(worker, new Point3D(endPos.getX(), endPos.getY(), boardCells.get(endPos)));
+        workers.keySet().forEach(w -> System.out.println(workers.get(w)));
     }
 
 
