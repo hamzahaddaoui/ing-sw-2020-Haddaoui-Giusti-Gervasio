@@ -65,6 +65,13 @@ public class Running extends State{
         }
 
         else if (getMatchLosers(matchID).size()!=0) {
+            getMatchLosers(matchID)
+                    .keySet()
+                    .forEach(player -> {
+                        MessageEvent message = new MessageEvent();
+                        message.setFinished(true);
+                        notify(observers, message);
+                    });
             getMatchLosers(matchID).keySet().forEach(this::clientHandlerReset);
             getMatchLosers(matchID).keySet().forEach(Server::removeClientSocket);
             removeLosers(matchID);
