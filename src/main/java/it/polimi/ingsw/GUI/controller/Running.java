@@ -168,16 +168,18 @@ public class Running extends State{
         if (getTurnState() == TurnState.MOVE){
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){
                 System.out.println("MOVE OK. SENDING movement...");
-                //getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+                getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
                 setEndPosition(position);
+                setStartingPosition(position);
                 sendData();
             }
         }
         else if (getTurnState() == TurnState.BUILD) {
+
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)) {
                 System.out.println("BUILD OK. SENDING build...");
                 setEndPosition(position);
-                //getIslandLoader().build(point, false);
+                getIslandLoader().build(point, false);
                 sendData();
             }
         }
