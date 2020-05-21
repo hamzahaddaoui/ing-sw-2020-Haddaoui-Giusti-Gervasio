@@ -171,6 +171,7 @@ public class Running extends State{
                 getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
                 setEndPosition(position);
                 sendData();
+                setStartingPosition(position);
             }
         }
         else if (getTurnState() == TurnState.BUILD) {
@@ -214,7 +215,6 @@ public class Running extends State{
                     else
                         movedOutPlayers.put(billboardStatus.get(position).getPlayerID(), position);
                 }
-
             }
             movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
             playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));

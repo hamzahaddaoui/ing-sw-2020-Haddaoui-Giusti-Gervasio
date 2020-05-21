@@ -218,7 +218,7 @@ public class IslandLoader{
                     new KeyFrame(
                             Duration.seconds(4),
                             new KeyValue(angleX, 30),
-                            new KeyValue(angleY, 360)
+                            new KeyValue(angleY, 450)
                     )
             );
             timeline.play();
@@ -525,14 +525,18 @@ public class IslandLoader{
                 .findAny();
 
         if (!optionalWorker.isPresent()){
+            System.out.println("worker non trovato");
             return;
         }
+
+
         Group worker = optionalWorker.get();
 
         Point3D prev = new Point3D(Point2DMap.get(new Point2D(workers.get(worker).getX(),workers.get(worker).getY())).getX(), cellHeight.get((int) workers.get(worker).getZ()) , Point2DMap.get(new Point2D(workers.get(worker).getX(),workers.get(worker).getY())).getY());
 
         Point3D next = new Point3D(Point2DMap.get(endPos).getX(), cellHeight.get(boardCells.get(endPos)), Point2DMap.get(endPos).getY());
 
+        System.out.println("worker trovato "+ prev+"  "+next);
 
         Point3D trasl = next.subtract(prev);
 
