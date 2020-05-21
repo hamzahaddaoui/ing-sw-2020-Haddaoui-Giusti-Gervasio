@@ -71,7 +71,8 @@ public class Running extends State{
                         MessageEvent message = new MessageEvent();
                         message.setPlayerID(player);
                         message.setMatchID(matchID);
-                        message.setFinished(true);
+                        message.setPlayerState(PlayerState.LOST);
+                        message.setMatchState(MatchState.RUNNING);
                         notify(observers, message);
                     });
             getMatchLosers(matchID).keySet().forEach(this::clientHandlerReset);
