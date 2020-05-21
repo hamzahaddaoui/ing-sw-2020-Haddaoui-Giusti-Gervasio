@@ -116,24 +116,24 @@ public class Running extends State{
 
         System.out.println("PlayerState: "+ getPlayerState());
         Platform.runLater(()  -> {
-        if (getPlayerState() == PlayerState.ACTIVE){
-            switch (getTurnState()){
-                case MOVE:
-                    if (getStartingPosition() == null)
-                        desc.setText("SELECT A WORKER");
-                    else
-                        desc.setText("SELECT the cell where you want to move");
-                    break;
-                case BUILD:
-                    desc.setText("SELECT the cell where you want to build");
+            if (getPlayerState() == PlayerState.ACTIVE){
+                switch (getTurnState()){
+                    case MOVE:
+                        if (getStartingPosition() == null)
+                            desc.setText("SELECT A WORKER");
+                        else
+                            desc.setText("SELECT the cell where you want to move");
+                        break;
+                    case BUILD:
+                        desc.setText("SELECT the cell where you want to build");
+                }
             }
-        }
-        else{
-            desc.setText(getMatchPlayers().get(getCurrentPlayer()) + " is making its move");
-            setStartingPosition(null);
-            setEndPosition(null);
-        }
-    });
+            else{
+                desc.setText(getMatchPlayers().get(getCurrentPlayer()) + " is making its move");
+                setStartingPosition(null);
+                setEndPosition(null);
+            }
+        });
         updateBillboard();
 
     }
@@ -199,11 +199,6 @@ public class Running extends State{
 
         if (billboardStatus != getBillboardStatus()){
             System.out.println("Different billboard");
-            System.out.println(billboardStatus);
-
-            System.out.println(getBillboardStatus());
-
-
 
             Set<Position> changedPositions =  getBillboardStatus()
                     .keySet()
@@ -211,7 +206,6 @@ public class Running extends State{
                     .filter(position -> !getBillboardStatus().get(position).equals(billboardStatus.get(position)))
                     .collect(Collectors.toSet());
 
-            System.out.println(changedPositions);
 
             for (Position position : changedPositions){
                 if (getBillboardStatus().get(position).getTowerHeight() != billboardStatus.get(position).getTowerHeight()){
@@ -235,6 +229,11 @@ public class Running extends State{
             }
 
             if (movedOutPlayers.size() != 0){
+                System.out.println("Moved in players: ");
+                movedInPlayers.keySet().forEach(player -> System.out.println("Player "+player +" - Position "+movedInPlayers.get(player)));
+                System.out.println("\nMoved out players: ");
+                movedOutPlayers.keySet().forEach(player -> System.out.println("Player "+player +" - Position "+movedOutPlayers.get(player)));
+
                 movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
                 playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
             }
