@@ -39,7 +39,7 @@ public class Cell implements Comparable{
     public boolean equals(Object obj){
         if(obj instanceof Cell){
             Cell cell = (Cell) obj;
-            if (towerHeight == cell.towerHeight && dome == cell.dome && playerID == cell.playerID)
+            if (this.towerHeight == cell.getTowerHeight() && dome == cell.isDome() && playerID == cell.getPlayerID())
                 return true;
             else
                 return false;

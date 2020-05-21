@@ -208,7 +208,7 @@ public class Running extends State{
             Set<Position> changedPositions =  getBillboardStatus()
                     .keySet()
                     .stream()
-                    .filter(position -> getBillboardStatus().get(position).compareTo(billboardStatus.get(position)) == 0)
+                    .filter(position -> !getBillboardStatus().get(position).equals(billboardStatus.get(position)))
                     .collect(Collectors.toSet());
 
             System.out.println(changedPositions);
