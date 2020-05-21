@@ -170,7 +170,6 @@ public class Running extends State{
                 System.out.println("MOVE OK. SENDING movement...");
                 getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
                 setEndPosition(position);
-                setStartingPosition(getStartingPosition());
                 sendData();
             }
         }
