@@ -5,6 +5,7 @@ import it.polimi.ingsw.GUI.controller.Running;
 import it.polimi.ingsw.utilities.Position;
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
@@ -401,7 +402,7 @@ public class IslandLoader{
         timeline.play();
 
 
-        group.getChildren().add(block);
+        Platform.runLater( () -> group.getChildren().add(block));
 
         block.setOnMouseEntered(e -> block.setCursor(Cursor.HAND));
 
@@ -432,7 +433,7 @@ public class IslandLoader{
         );
         timeline.play();
 
-        group.getChildren().add(block);
+        Platform.runLater( () -> group.getChildren().add(block));
         block.setOnMouseEntered(e -> block.setCursor(Cursor.HAND));
         block.setOnMouseClicked(e -> {
             clickHandler(point);
@@ -492,7 +493,7 @@ public class IslandLoader{
         );
         timeline.play();
 
-        group.getChildren().add(block);
+        Platform.runLater( () -> group.getChildren().add(block));
     }
 
 
