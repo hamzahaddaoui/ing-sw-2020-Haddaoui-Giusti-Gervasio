@@ -180,7 +180,7 @@ public class Running extends State{
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)) {
                 System.out.println("BUILD OK. SENDING build...");
                 setEndPosition(position);
-                getIslandLoader().build(point, false);
+                //getIslandLoader().build(point, false);
                 sendData();
             }
         }
