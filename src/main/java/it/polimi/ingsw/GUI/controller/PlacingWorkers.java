@@ -87,7 +87,7 @@ public class PlacingWorkers extends State{
     public void initialize(URL url, ResourceBundle resourceBundle){
         this.addObserver(getNetworkHandler());
         getNetworkHandler().addObserver(this);
-        System.out.println("Initializing...");
+
         int index = 4-getMatchPlayers().size();
         for(int player : getMatchPlayers().keySet()){
             StackPane pane = new StackPane();

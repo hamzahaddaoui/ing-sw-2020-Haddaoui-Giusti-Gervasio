@@ -11,4 +11,6 @@ public abstract class State extends Observable<MessageEvent> implements Observer
     public abstract void showError();
 
     public abstract void sendData();
+
+
 }

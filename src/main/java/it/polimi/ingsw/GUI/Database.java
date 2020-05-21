@@ -2,14 +2,18 @@ package it.polimi.ingsw.GUI;
 
 import it.polimi.ingsw.GUI.controller.State;
 import it.polimi.ingsw.utilities.*;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.*;
 
 public class Database {
     static private Stage stage;
+    static private Scene scene;
+
     static private NetworkHandler networkHandler;
     static private State currentState;
+    static private IslandLoader islandLoader;
 
 
     //#############     PRELIMINARY DATA     ####################
@@ -44,6 +48,7 @@ public class Database {
     static private Set<Position> placingAvailableCells;
 
     static private Position startingPosition;
+    static private Position endPosition;
 
     static private Map<Position, Set<Position>> workersAvailableCells;
 
@@ -74,6 +79,14 @@ public class Database {
         workersAvailableCells = null;
     }
 
+    public static Scene getScene(){
+        return scene;
+    }
+
+    public static void setScene(Scene scene){
+        Database.scene = scene;
+    }
+
     public static int getPlayerID(){
         return playerID;
     }
@@ -96,6 +109,14 @@ public class Database {
 
     public static void setNetworkHandler(NetworkHandler networkHandler){
         Database.networkHandler = networkHandler;
+    }
+
+    public static IslandLoader getIslandLoader(){
+        return islandLoader;
+    }
+
+    public static void setIslandLoader(IslandLoader islandLoader){
+        Database.islandLoader = islandLoader;
     }
 
     public static void setSelectedGodCards(List<String> selectedGodCards){
@@ -260,6 +281,14 @@ public class Database {
 
     public static void setStartingPosition(Position startingPosition){
         Database.startingPosition = startingPosition;
+    }
+
+    public static Position getEndPosition(){
+        return endPosition;
+    }
+
+    public static void setEndPosition(Position endPosition){
+        Database.endPosition = endPosition;
     }
 
     public static Map<Position, Set<Position>> getWorkersAvailableCells(){

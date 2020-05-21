@@ -37,7 +37,7 @@ public class View {
                     setCurrentState(new PlacingWorkers());
                 break;
             case RUNNING:
-                if (getCurrentState().getClass() != Running.class)
+                //if (getCurrentState().getClass() != Running.class)
                     setCurrentState(new Running());
                 break;
             case FINISHED:

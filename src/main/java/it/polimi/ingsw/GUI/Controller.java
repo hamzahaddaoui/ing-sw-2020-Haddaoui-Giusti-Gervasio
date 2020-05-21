@@ -16,20 +16,6 @@ public class Controller {
 
     public static void replaceSceneContent(String fxml) {
         Parent page;
-
-
-
-        /*URL location = Controller.class.getClassLoader().getResource("fxml_files/startScreen.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(location);
-        System.out.println(location);
-        try {
-            page = fxmlLoader.load(location.openStream());
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return;
-        }*/
-
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Controller.class.getClassLoader().getResource(fxml)); //potrebbe dare problemi, ma non credo
         try {
@@ -42,8 +28,14 @@ public class Controller {
 
 
         Scene scene = new Scene(page);
+        setScene(scene);
         setCurrentState(fxmlLoader.getController());
+
         getStage().setScene(scene);
+
+        //MAGARI QUI VA LA TRANSIZIONE
+
+
         getStage().show();
     }
 

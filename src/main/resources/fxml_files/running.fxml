@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+
+
+<StackPane fx:id="stackPane" stylesheets="@../css_files/running.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GUI.controller.Running">
+   <children>
+      <ImageView fx:id="background" fitHeight="800.0" fitWidth="1200.0" mouseTransparent="true">
+         <image>
+            <Image url="@../images/title_sky.png" />
+         </image>
+      </ImageView>
+      <BorderPane fx:id="borderPane" pickOnBounds="false" prefHeight="800.0" prefWidth="1200.0" styleClass="borderPane" stylesheets="@../css_files/running.css">
+         <right>
+            <Pane pickOnBounds="false" prefHeight="517.0" prefWidth="1111.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fx:id="god" fitHeight="181.0" fitWidth="164.0" layoutX="922.0" layoutY="367.0" mouseTransparent="true" preserveRatio="true" />
+               </children>
+               <BorderPane.margin>
+                  <Insets left="60.0" />
+               </BorderPane.margin>
+            </Pane>
+         </right>
+         <bottom>
+            <Pane prefHeight="101.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="83.0" fitWidth="237.0" layoutX="954.0" layoutY="-15.0" mouseTransparent="true">
+                     <image>
+                        <Image url="@../images/om_aiLevel.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="user" layoutX="1015.0" layoutY="10.0" mouseTransparent="true" pickOnBounds="false" prefHeight="47.0" prefWidth="163.0" />
+                  <ImageView fitHeight="98.0" fitWidth="926.0" layoutX="9.0" layoutY="-20.0" mouseTransparent="true">
+                     <image>
+                        <Image url="@../images/bar.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="desc" layoutX="81.0" layoutY="-2.0" mouseTransparent="true" pickOnBounds="false" prefHeight="64.0" prefWidth="813.0" />
+               </children>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+            </Pane>
+         </bottom>
+         <top>
+            <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefHeight="128.0" prefWidth="822.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" />
+               </children>
+               <padding>
+                  <Insets right="10.0" top="10.0" />
+               </padding>
+            </HBox>
+         </top>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
+      </BorderPane>
+   </children>
+</StackPane>

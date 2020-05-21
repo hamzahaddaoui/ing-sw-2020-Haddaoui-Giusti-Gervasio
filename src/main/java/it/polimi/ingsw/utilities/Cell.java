@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utilities;
 
-public class Cell {
+public class Cell implements Comparable{
     private int towerHeight;
     private boolean dome;
     private int playerID;
@@ -33,5 +33,29 @@ public class Cell {
 
     public void setPlayerID(int playerID){
         this.playerID = playerID;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof Cell){
+            Cell cell = (Cell) obj;
+            if (towerHeight == cell.towerHeight && dome == cell.dome && playerID == cell.playerID)
+                return true;
+            else
+                return false;
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(Object o){
+        if(o instanceof Cell){
+            Cell cell = (Cell) o;
+            if (towerHeight == cell.towerHeight && dome == cell.dome && playerID == cell.playerID)
+                return 0;
+            else
+                return -1;
+        }
+        return -1;
     }
 }

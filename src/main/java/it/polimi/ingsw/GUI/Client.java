@@ -1,5 +1,6 @@
 package it.polimi.ingsw.GUI;
 
+import it.polimi.ingsw.GUI.controller.Running;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -32,6 +33,10 @@ public class Client extends Application {
         //COMMENTATI PER DEBUG. NORMALMENTE SONO QUESTE LE ISTRUZIONI DA RUNNARE
         View.updateView();
         getCurrentState().showPane();
+
+
+        //setCurrentState(new Running());
+        //getCurrentState().showPane();
 
         /*setPlayerID(3);
         setMatchPlayers(Map.of(1,"Hamza", 2, "Leo", 3, "Vasio"));
