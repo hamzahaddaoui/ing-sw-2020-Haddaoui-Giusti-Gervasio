@@ -43,6 +43,7 @@ public class DataBase {
         playerState = null;
         matchState = null;
         turnState = null;
+        controlState = new NotInitialized();
         godCard = null;
         playerNumber = 0;
         matchPlayers = new HashMap<>();

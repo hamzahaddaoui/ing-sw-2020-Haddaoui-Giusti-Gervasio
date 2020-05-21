@@ -151,7 +151,11 @@ public class PrometheusDecorator extends CommandsDecorator {
      */
 
     private Map<Position, Boolean> canBuildBeforeMove(Player player){
-        return player.getWorkers().stream().collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(BUILD)));
+        player.setAvailableCells();
+        if (player.getWorkers().stream().allMatch(worker -> checkCells(player,worker)))
+            return null;
+        else return player.getWorkers().stream().collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(BUILD) &&
+                !(worker.getAvailableCells(MOVE).size()==1 && checkCells(player,worker))));
     }
 
 

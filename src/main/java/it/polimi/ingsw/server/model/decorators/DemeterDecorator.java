@@ -98,7 +98,6 @@ public class DemeterDecorator extends CommandsDecorator {
             if(this.firstBuildPosition == null)
                 return result;
             else{
-                //System.out.println(firstBuildPosition);
                 return result
                         .stream()
                         .filter(position -> position.getX() != firstBuildPosition.getX() || position.getY() != firstBuildPosition.getY())

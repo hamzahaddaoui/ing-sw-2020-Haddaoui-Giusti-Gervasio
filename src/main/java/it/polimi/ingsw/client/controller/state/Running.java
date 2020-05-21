@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.view.DataBase;
 import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -229,10 +230,17 @@ public class Running extends ControlState {
      * @return  true if correct , else false
      */
     boolean checkSpecialFunctionAvailable() {
-        if (DataBase.getSpecialFunctionAvailable()!=null) {
-            Optional<Boolean> isTrue = DataBase.getSpecialFunctionAvailable().values().stream().filter(bool -> bool != null && bool).findAny();
-            return isTrue.isPresent();
+        Position startingPosition = DataBase.getStartingPosition();
+        Map<Position,Boolean> specialFunctionAvailable = DataBase.getSpecialFunctionAvailable();
+
+        if (startingPosition==null) {
+            if (specialFunctionAvailable != null) {
+                Optional<Boolean> isTrue = DataBase.getSpecialFunctionAvailable().values().stream().filter(bool -> bool != null && bool).findAny();
+                return isTrue.isPresent();
+            }
         }
+        else if (specialFunctionAvailable != null)
+            return specialFunctionAvailable.get(startingPosition);
         return false;
     }
 
