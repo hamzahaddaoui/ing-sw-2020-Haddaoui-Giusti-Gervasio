@@ -536,8 +536,6 @@ public class IslandLoader{
 
         Point3D next = new Point3D(Point2DMap.get(endPos).getX(), cellHeight.get(boardCells.get(endPos)), Point2DMap.get(endPos).getY());
 
-        System.out.println("worker trovato "+ prev+"  "+next);
-
         Point3D trasl = next.subtract(prev);
 
         Translate translate = new Translate();
@@ -614,7 +612,7 @@ public class IslandLoader{
         }
 
         workers.replace(worker, new Point3D(endPos.getX(), endPos.getY(), boardCells.get(endPos)));
-        workers.keySet().forEach(w -> System.out.println(workers.get(w)));
+        workers.keySet().     forEach(w -> System.out.println(workers.get(w)));
     }
 
 

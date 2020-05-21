@@ -192,37 +192,52 @@ public class Running extends State{
         Map<Integer, Position> movedOutPlayers =  new HashMap<>();
         Map<Point2D, Point2D> playersMove = new HashMap<>();
 
+
+        System.out.println(billboardStatus);
+
+        System.out.println(getBillboardStatus());
+
         if (billboardStatus != getBillboardStatus()){
+            System.out.println("Different billboard");
             Set<Position> changedPositions =  getBillboardStatus()
                     .keySet()
                     .stream()
                     .filter(position -> getBillboardStatus().get(position) == billboardStatus.get(position))
                     .collect(Collectors.toSet());
 
+            System.out.println(changedPositions);
+
             for (Position position : changedPositions){
                 if (getBillboardStatus().get(position).getTowerHeight() != billboardStatus.get(position).getTowerHeight()){
-
+                    System.out.println("Different height in "+position);
                     for(int i=0; i<(getBillboardStatus().get(position).getTowerHeight() - billboardStatus.get(position).getTowerHeight()); i++){
                         getIslandLoader().build(positionToPoint(position), false);
                     }
                 }
                 if (getBillboardStatus().get(position).isDome() != billboardStatus.get(position).isDome()){
+                    System.out.println("Different dome in "+position);
                     getIslandLoader().build(positionToPoint(position), true);
                 }
                 if (getBillboardStatus().get(position).getPlayerID() != billboardStatus.get(position).getPlayerID()){
                     //positionPlayers.put(Map.of(billboardStatus.get(position).getPlayerID(), getBillboardStatus().get(position).getPlayerID()), position);
-
+                    System.out.println("Different player in "+position);
                     if (billboardStatus.get(position).getPlayerID() == 0) //se la cella era vuota, ed ora è piena
                         movedInPlayers.put(getBillboardStatus().get(position).getPlayerID(), position);
                     else
                         movedOutPlayers.put(billboardStatus.get(position).getPlayerID(), position);
                 }
             }
+            System.out.println("Moved out players "+movedOutPlayers.keySet());
+
             movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
             playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
         }
 
         billboardStatus = getBillboardStatus();
+
+        System.out.println(billboardStatus);
+
+        System.out.println(getBillboardStatus());
     }
 
     public Position pointToPosition(Point2D point){
