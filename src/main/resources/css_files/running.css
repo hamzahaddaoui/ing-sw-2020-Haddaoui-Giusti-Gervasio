@@ -1,12 +1,16 @@
+@font-face {
+    font-family: Bangers;
+    src: url("../fonts/Bangers-Regular.ttf");
+}
+
+
 .root {
     -fx-background-color: url("../images/title_sky.png");
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
 }
 
-@font-face {
-    src: url("../fonts/Bangers-Regular.ttf");
-}
+
 
 .label{
     -fx-font-size: 42;

@@ -1,3 +1,8 @@
+@font-face {
+    font-family: Bangers;
+    src: url("../fonts/Bangers-Regular.ttf");
+}
+
 .dialog-pane {
     -fx-background-image: url("/images/bg_panelMid.png");
     -fx-background-size: stretch;

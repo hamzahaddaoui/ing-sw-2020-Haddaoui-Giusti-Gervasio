@@ -1,3 +1,8 @@
+@font-face {
+    font-family: Bangers;
+    src: url("../fonts/Bangers-Regular.ttf");
+}
+
 #borderPane{
     -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, blanchedalmond, blue);
 }
