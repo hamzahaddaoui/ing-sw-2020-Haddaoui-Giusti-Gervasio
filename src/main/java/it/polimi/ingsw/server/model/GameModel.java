@@ -414,7 +414,7 @@ public class GameModel extends Observable<MessageEvent> {
      */
     private static boolean isNickAvailable(String nickname){
         return playersWaitingList.stream()
-                       .noneMatch(player -> player.toString().equals(nickname))
+                       .noneMatch(player -> player.toString().compareToIgnoreCase(nickname) == 0)
                &&
                activeMatches
                        .keySet()
@@ -422,8 +422,7 @@ public class GameModel extends Observable<MessageEvent> {
                        .map(activeMatches::get)
                        .filter(match -> !match.isStarted())
                        .noneMatch(match -> match.getPlayers()
-                               .stream().anyMatch(player -> player.toString()
-                                       .equals(nickname)));
+                               .stream().anyMatch(player -> player.toString().compareToIgnoreCase(nickname) == 0));
     }
 
 }
