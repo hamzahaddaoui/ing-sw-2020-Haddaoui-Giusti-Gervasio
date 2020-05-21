@@ -202,7 +202,7 @@ public class Running extends State{
             Set<Position> changedPositions =  getBillboardStatus()
                     .keySet()
                     .stream()
-                    .filter(position -> getBillboardStatus().get(position) == billboardStatus.get(position))
+                    .filter(position -> getBillboardStatus().get(position).compareTo(billboardStatus.get(position)) == 0)
                     .collect(Collectors.toSet());
 
             System.out.println(changedPositions);
@@ -229,8 +229,11 @@ public class Running extends State{
             }
             System.out.println("Moved out players "+movedOutPlayers.keySet());
 
-            movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
-            playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
+            if (movedOutPlayers.size() != 0){
+                movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
+                playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
+            }
+
         }
 
         billboardStatus = getBillboardStatus();
