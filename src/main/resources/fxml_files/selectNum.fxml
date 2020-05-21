@@ -18,7 +18,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Button?>
 
-<AnchorPane fx:id="paneSN" cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../startScreen.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.MainController">
+<AnchorPane cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../css_files/startScreen.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GUI.controller.GettingPlayersNum">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
@@ -48,8 +48,8 @@
                       <RowConstraints maxHeight="200.38137817382812" minHeight="10.0" prefHeight="110.87551879882812" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button id="p3" fx:id="p3" mnemonicParsing="false" onMouseClicked="#selectedThreePlayers" prefHeight="178.0" prefWidth="288.0" styleClass="players3" stylesheets="@../selectNum.css" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                        <Button id="p2" fx:id="p2" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#selectedTwoPlayers" prefHeight="196.0" prefWidth="229.0" styleClass="players2" stylesheets="@../selectNum.css" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <Button id="p3" fx:id="p3" mnemonicParsing="false" onMouseClicked="#selectedThreePlayers" prefHeight="178.0" prefWidth="288.0" styleClass="players3" stylesheets="@../css_files/selectNum.css" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <Button id="p2" fx:id="p2" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#selectedTwoPlayers" prefHeight="196.0" prefWidth="229.0" styleClass="players2" stylesheets="@../css_files/selectNum.css" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                      </children>
                   </GridPane>
                </children>
