@@ -106,10 +106,10 @@ public class GameModel extends Observable<MessageEvent> {
      */
     public static void addPlayerToMatch(Integer matchID, Integer playerID){
         Match match = translateMatchID(matchID);
-        Player player = translatePlayerID(match, playerID);
+        Player player = initializedPlayers.remove(playerID);
 
 
-        match.addPlayer(initializedPlayers.remove(playerID));
+        match.addPlayer(player);
         if(match.getPlayers().size() == 2)
             player.setColor("Orange");
         else
