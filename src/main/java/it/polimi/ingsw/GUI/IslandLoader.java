@@ -614,7 +614,7 @@ public class IslandLoader{
         }
 
         workers.put(worker, new Point3D(endPos.getX(), endPos.getY(), boardCells.get(endPos)));
-        stage.show();
+        //stage.show();
     }
 
 
