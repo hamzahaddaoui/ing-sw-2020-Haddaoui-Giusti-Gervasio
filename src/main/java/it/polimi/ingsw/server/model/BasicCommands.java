@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.utilities.Position;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -145,15 +144,14 @@ public class BasicCommands implements Commands {
 
     @Override
     public boolean losingCondition(Player player){
-        if(player.getCurrentWorker() == null ){
+        Worker currentWorker = player.getCurrentWorker();
+
+        if (currentWorker==null) {
             return player
-                    .getWorkers()
-                    .stream()
-                    .noneMatch(worker -> worker
-                            .canDoSomething(player.getTurnState()));
-        }
-        else{
-            return !player.getCurrentWorker().canDoSomething(player.getTurnState()) ;
-        }
+                .getWorkers()
+                .stream()
+                .noneMatch(worker -> worker
+                        .canDoSomething(player.getTurnState()));}
+        else return !currentWorker.canDoSomething(player.getTurnState());
     }
 }

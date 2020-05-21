@@ -58,12 +58,14 @@ public class ApolloDecorator extends CommandsDecorator {
      * @param position  is the cell where your worker will go
      */
     private void exchangePosition(Player player,Position position){
-
+        Billboard billboard = player.getMatch().getBillboard();
         Worker myWorker = player.getCurrentWorker();
         Player opponentPlayer = findOpponentPlayer(position, player);
         Worker opponentWorker = findOpponentWorker(position, opponentPlayer);
         Position actualPosition = myWorker.getPosition();
         position.setZ(player.getMatch().getBillboard().getTowerHeight(position));
+
+        position.setZ(billboard.getTowerHeight(position));
 
         realizationMove(player,position,actualPosition,myWorker);
 
