@@ -69,6 +69,8 @@ public class Running extends State{
                     .keySet()
                     .forEach(player -> {
                         MessageEvent message = new MessageEvent();
+                        message.setPlayerID(player);
+                        message.setMatchID(matchID);
                         message.setFinished(true);
                         notify(observers, message);
                     });
