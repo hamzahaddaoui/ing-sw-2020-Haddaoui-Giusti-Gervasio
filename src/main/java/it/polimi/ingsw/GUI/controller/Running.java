@@ -112,6 +112,7 @@ public class Running extends State{
         setTerminateTurnAvailable(message.getTerminateTurnAvailable());
         setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
         setWorkersAvailableCells(message.getWorkersAvailableCells());
+        setBillboardStatus(message.getBillboardStatus());
 
         System.out.println("PlayerState: "+ getPlayerState());
         Platform.runLater(()  -> {
@@ -200,6 +201,7 @@ public class Running extends State{
 
             for (Position position : changedPositions){
                 if (getBillboardStatus().get(position).getTowerHeight() != billboardStatus.get(position).getTowerHeight()){
+
                     for(int i=0; i<(getBillboardStatus().get(position).getTowerHeight() - billboardStatus.get(position).getTowerHeight()); i++){
                         getIslandLoader().build(positionToPoint(position), false);
                     }
