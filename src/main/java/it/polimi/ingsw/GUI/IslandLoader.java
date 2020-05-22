@@ -637,6 +637,9 @@ public class IslandLoader{
             return;
         }
 
+        System.out.println("worker1: " + startPos1 + endPos1);
+        System.out.println("worker2: " + startPos2 + endPos2);
+
 
 
         Group worker1 = optionalWorker1.get();
@@ -733,9 +736,6 @@ public class IslandLoader{
         System.out.println(workers.get(worker1) + "  to  " + endPos1);
         workers.remove(worker1);
         workers.put(worker1, new Point3D(endPos1.getX(), endPos1.getY(), boardCells.get(endPos1)));
-        workers.keySet().forEach(w -> System.out.println(workers.get(w)));
-
-
 
 
 
@@ -816,7 +816,6 @@ public class IslandLoader{
         System.out.println(workers.get(worker2) + "  to  " + endPos2);
         workers.remove(worker2);
         workers.put(worker2, new Point3D(endPos2.getX(), endPos2.getY(), boardCells.get(endPos2)));
-        workers.keySet().forEach(w -> System.out.println(workers.get(w)));
 
 
 
