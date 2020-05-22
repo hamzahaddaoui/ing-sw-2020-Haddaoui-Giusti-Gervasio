@@ -33,7 +33,6 @@ import java.util.Set;
 
 import static it.polimi.ingsw.GUI.Controller.replaceSceneContent;
 import static it.polimi.ingsw.GUI.Database.*;
-import static it.polimi.ingsw.GUI.View.updateView;
 
 public class SelectingSpecialCommand extends State {
 
@@ -183,13 +182,12 @@ public class SelectingSpecialCommand extends State {
                 setPlacingAvailableCells(message.getAvailablePlacingCells());
                 setBillboardStatus(message.getBillboardStatus());
             }
-            if (updateView()) {
-                getCurrentState().showPane();
-                new Thread(() -> {
-                    getNetworkHandler().removeObserver(this);
-                    this.removeObserver(getNetworkHandler());
-                }).start();
-            }
+            View.updateView();
+            getCurrentState().showPane();
+            new Thread(()->{
+                getNetworkHandler().removeObserver(this);
+                this.removeObserver(getNetworkHandler());
+            }).start();
         }
     }
 

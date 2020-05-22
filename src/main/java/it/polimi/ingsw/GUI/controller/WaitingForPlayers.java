@@ -35,56 +35,6 @@ public class WaitingForPlayers extends State {
         this.addObserver(getNetworkHandler());
         getNetworkHandler().addObserver(this);
 
-        updateScreen();
-
-    }
-
-
-    @Override
-    public void showPane(){
-        Platform.runLater(() -> replaceSceneContent("fxml_files/waitForPlayers.fxml"));
-    }
-
-    @Override
-    public void showError(){
-
-    }
-
-    @Override
-    public void sendData(){
-
-    }
-
-
-
-    @Override
-    public void update(MessageEvent message){
-        if (message.getError()){
-            System.out.println(message);
-            showError();
-        }
-        else if (message.isFinished()){
-            setCurrentState(new userDisconnected());
-            getCurrentState().showPane();
-        }
-        else {
-            updateStandardData(message);
-            Platform.runLater(() -> updateScreen());
-        }
-
-    }
-
-    void goOn(){
-        new Thread(()->{
-            getNetworkHandler().removeObserver(this);
-            this.removeObserver(getNetworkHandler());
-        }).start();
-        updateView();
-        getCurrentState().showPane();
-    }
-
-
-    void updateScreen(){
         if (getMatchState() == MatchState.SELECTING_GOD_CARDS){
             Button button = new Button();
             button.setId("button");
@@ -128,6 +78,57 @@ public class WaitingForPlayers extends State {
             gridPane.add(pane,0,index);
             index += 2;
         }
+
     }
+
+
+    @Override
+    public void showPane(){
+        Platform.runLater(() -> replaceSceneContent("fxml_files/waitForPlayers.fxml"));
+    }
+
+    @Override
+    public void showError(){
+
+    }
+
+    @Override
+    public void sendData(){
+
+    }
+
+
+
+    @Override
+    public void update(MessageEvent message){
+        if (message.getError()){
+            System.out.println(message);
+            showError();
+        }
+        else if (message.isFinished()){
+            setCurrentState(new userDisconnected());
+            getCurrentState().showPane();
+        }
+        else {
+            updateStandardData(message);
+            updateView();
+            this.showPane();
+            new Thread(()->{
+                getNetworkHandler().removeObserver(this);
+                this.removeObserver(getNetworkHandler());
+            }).start();
+        }
+
+    }
+
+    void goOn(){
+        new Thread(()->{
+            getNetworkHandler().removeObserver(this);
+            this.removeObserver(getNetworkHandler());
+        }).start();
+        updateView();
+        getCurrentState().showPane();
+    }
+
 
 }

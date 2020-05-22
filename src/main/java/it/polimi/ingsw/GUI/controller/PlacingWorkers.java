@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 
 import static it.polimi.ingsw.GUI.Controller.replaceSceneContent;
 import static it.polimi.ingsw.GUI.Database.*;
-import static it.polimi.ingsw.GUI.View.updateView;
 
 public class PlacingWorkers extends State{
 
@@ -75,13 +74,12 @@ public class PlacingWorkers extends State{
                 setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
                 setWorkersAvailableCells(message.getWorkersAvailableCells());
             }
-            if (updateView()) {
-                getCurrentState().showPane();
-                new Thread(() -> {
-                    getNetworkHandler().removeObserver(this);
-                    this.removeObserver(getNetworkHandler());
-                }).start();
-            }
+            View.updateView();
+            getCurrentState().showPane();
+            new Thread(()->{
+                getNetworkHandler().removeObserver(this);
+                this.removeObserver(getNetworkHandler());
+            }).start();
         }
     }
 

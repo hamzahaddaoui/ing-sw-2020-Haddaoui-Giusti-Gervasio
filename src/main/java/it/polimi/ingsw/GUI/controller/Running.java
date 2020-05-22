@@ -45,8 +45,6 @@ public class Running extends State{
     public void initialize(URL url, ResourceBundle resourceBundle){
         this.addObserver(getNetworkHandler());
         getNetworkHandler().addObserver(this);
-        billboardStatus = getBillboardStatus();
-
         user.getStylesheets().add("/css_files/placingWorkers.css");
         user.getStyleClass().add("player");
         user.setText(getNickname());
@@ -66,6 +64,8 @@ public class Running extends State{
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+
+        billboardStatus = getBillboardStatus();
 
         for (Position position : billboardStatus.keySet()){
             if (billboardStatus.get(position).getPlayerID() != 0){
@@ -192,6 +192,10 @@ public class Running extends State{
         Map<Integer, Position> movedOutPlayers =  new HashMap<>();
         Map<Point2D, Point2D> playersMove = new HashMap<>();
 
+
+        System.out.println(billboardStatus);
+
+        System.out.println(getBillboardStatus());
 
         if (billboardStatus != getBillboardStatus()){
             System.out.println("Different billboard");

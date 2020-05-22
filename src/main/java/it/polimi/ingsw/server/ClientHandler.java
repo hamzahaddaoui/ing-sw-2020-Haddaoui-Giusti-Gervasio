@@ -2,7 +2,9 @@ package it.polimi.ingsw.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.utilities.*;
+import it.polimi.ingsw.utilities.MessageEvent;
+import it.polimi.ingsw.utilities.Observable;
+import it.polimi.ingsw.utilities.Observer;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,8 +23,6 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
     private boolean active;
     private int playerID;
     private int matchID;
-
-    private MessageEvent lastMessage;
 
     private final ObjectOutputStream output;
     private final ObjectInputStream input;
@@ -95,35 +95,8 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                 .create()
                 .toJson(message, MessageEvent.class);
 
-        if (message.getInfo() == null || !message.getInfo().equals("Heartbeat Message")) {
-            System.out.print("SENDING to player" + message.getPlayerID()+ " - ");
-            if (matchID != 0) {
-                System.out.print(message.getMatchPlayers().get(message.getPlayerID()) + ": CurrentState: "+ message.getPlayerState());
-                if (message.getMatchState() == MatchState.RUNNING)
-                    System.out.println(" - TurnState: " + message.getTurnState());
-                else
-                    System.out.println("");
-
-                System.out.print("Match Players:  ");
-                message.getMatchPlayers().keySet().stream()
-                        .forEach(player -> System.out.println(player + ": " + message.getMatchPlayers().get(player)+" - "+ message.getMatchColors().get(player)));
-
-                if (message.getMatchState() == MatchState.PLACING_WORKERS) {
-                    System.out.println("BillboardStatus: " + message.getBillboardStatus() + "\n");
-                    System.out.println("PLACING POSITIONS: " + message.getAvailablePlacingCells());
-                }
-                else if (message.getMatchState() == MatchState.RUNNING && message.getPlayerState() == PlayerState.ACTIVE){
-                    System.out.println("BillboardStatus: " + message.getBillboardStatus() + "\n");
-                    System.out.println("WORKERS AVAILABLE POSITIONS: " + message.getWorkersAvailableCells());
-                    System.out.println("SPECIAL FUNCTION AVAILABILITY: " + message.getSpecialFunctionAvailable());
-                    System.out.println("END TURN AVAILABILITY: " + message.getEndTurn());
-                }
-            }
-            if (message.getWinner()!=0)
-                System.out.println("\nThe winner is: "+message.getMatchPlayers().get(message.getWinner()));
-
-        }
-        lastMessage = message;
+        if (message.getInfo() == null || !message.getInfo().equals("Heartbeat Message"))
+            System.out.println("SENDING "+ json);
 
         outputTaskQueue.submit(() -> {
             try {
@@ -146,18 +119,12 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
      * When the socket is not active anymore, the method shuts down the thread dedicate to this function.
      */
     public void heartbeatAgent() {
-        MessageEvent messageEvent;
-        if (active){
-            if (lastMessage != null)
-                messageEvent = lastMessage;
-            else {
-                messageEvent = new MessageEvent();
-                messageEvent.setPlayerID(playerID);
-            }
-            update(messageEvent);
-
+        MessageEvent message =  new MessageEvent();
+        message.setInfo("Heartbeat Message");
+        message.setPlayerID(playerID);
+        update(message);
+        if (active)
             heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT/2, TimeUnit.MILLISECONDS);
-        }
     }
 
     /**

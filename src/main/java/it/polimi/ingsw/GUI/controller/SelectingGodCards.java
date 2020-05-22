@@ -24,9 +24,6 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.*;
 
-import static it.polimi.ingsw.GUI.Database.getNetworkHandler;
-import static it.polimi.ingsw.GUI.View.updateView;
-
 public class SelectingGodCards extends State {
     Glow glowEffect = new Glow(0.5);
 
@@ -105,13 +102,12 @@ public class SelectingGodCards extends State {
         else {
             Database.updateStandardData(message);
             Database.setMatchCards(new ArrayList<>(message.getMatchCards()));
-            if (updateView()) {
-                this.showPane();
-                new Thread(() -> {
-                    getNetworkHandler().removeObserver(this);
-                    this.removeObserver(getNetworkHandler());
-                }).start();
-            }
+            View.updateView();
+            Database.getCurrentState().showPane();
+            new Thread(()->{
+                Database.getNetworkHandler().removeObserver(this);
+                this.removeObserver(Database.getNetworkHandler());
+            }).start();
         }
     }
 

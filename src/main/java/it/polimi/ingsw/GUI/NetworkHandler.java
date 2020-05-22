@@ -15,17 +15,17 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class NetworkHandler extends Observable<MessageEvent> implements Runnable, Observer<MessageEvent> {
     public final static int SOCKET_PORT = 12345;
-    public final static int SOCKET_TIMEOUT = 20000;
+    public final static int SOCKET_TIMEOUT = 5000;
 
     private ScheduledExecutorService heartbeatService = Executors.newSingleThreadScheduledExecutor();
-    private ExecutorService inputHandler  = Executors.newSingleThreadScheduledExecutor();
-    final ScheduledExecutorService resendMessage =  Executors.newSingleThreadScheduledExecutor();
-    private MessageEvent lastSentMessage;
-    private boolean response;
+    private ExecutorService inputHandler  = Executors.newSingleThreadScheduledExecutor();;
 
     private Socket server;
     private ObjectOutputStream output;
@@ -54,16 +54,13 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
 
     @Override
     public void update(MessageEvent message){
-        lastSentMessage = message;
-        response = false;
-
         String json = new GsonBuilder().enableComplexMapKeySerialization().create().toJson(message);
 
         new Thread (() -> {
             try {
                 output.reset();
                 output.writeObject(json);
-                resendMessage.schedule(this::messageResendHandler, SOCKET_TIMEOUT, TimeUnit.MILLISECONDS);
+                output.flush();
             } catch (SocketException e) {
                 connectionError();
                 shutdownAll();
@@ -93,7 +90,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            while (active) {
                inputObject = (String) input.readObject();
                messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
-               response = true;
+
                if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
                    notify(messageEvent);
                }
@@ -103,6 +100,8 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            connectionError();
            shutdownAll();
            e.printStackTrace();
+           System.out.println("socket timed out");
+
        }
    }
 
@@ -118,15 +117,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
 
        Platform.runLater(() -> {
            Alert alert = new Alert(Alert.AlertType.ERROR);
-           alert.setTitle("Connection ERROR");
+           alert.setTitle("Connection timeout");
            alert.setHeaderText("Check your internet connection");
            alert.setContentText("The server is no longer reachable");
            alert.showAndWait();
        });
-   }
-
-   public void messageResendHandler(){
-        if (!response)
-            update(lastSentMessage);
    }
 }
