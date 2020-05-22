@@ -26,13 +26,18 @@ import static it.polimi.ingsw.GUI.Database.*;
 
 public class PlacingWorkers extends State{
 
-    @FXML GridPane gridPane;
-    @FXML GridPane playerGrid;
+    @FXML
+    GridPane gridPane;
+    @FXML
+    GridPane playerGrid;
 
-    @FXML Label desc;
-    @FXML Label user;
+    @FXML
+    Label desc;
+    @FXML
+    Label user;
 
-    @FXML ImageView god;
+    @FXML
+    ImageView god;
 
 
 

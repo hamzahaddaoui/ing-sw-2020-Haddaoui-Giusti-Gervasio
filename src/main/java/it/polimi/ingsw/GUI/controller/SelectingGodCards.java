@@ -28,17 +28,27 @@ public class SelectingGodCards extends State {
     Glow glowEffect = new Glow(0.5);
 
 
-    @FXML private BorderPane borderPane;
+    @FXML
+    private BorderPane borderPane;
 
-    @FXML private ToggleButton Apollo;
-    @FXML private ToggleButton Artemis;
-    @FXML private ToggleButton Athena;
-    @FXML private ToggleButton Atlas;
-    @FXML private ToggleButton Demeter;
-    @FXML private ToggleButton Hephaestus;
-    @FXML private ToggleButton Minotaur;
-    @FXML private ToggleButton Pan;
-    @FXML private ToggleButton Prometheus;
+    @FXML
+    private ToggleButton Apollo;
+    @FXML
+    private ToggleButton Artemis;
+    @FXML
+    private ToggleButton Athena;
+    @FXML
+    private ToggleButton Atlas;
+    @FXML
+    private ToggleButton Demeter;
+    @FXML
+    private ToggleButton Hephaestus;
+    @FXML
+    private ToggleButton Minotaur;
+    @FXML
+    private ToggleButton Pan;
+    @FXML
+    private ToggleButton Prometheus;
 
     static Map<String, ToggleButton> buttonStringMap;
 

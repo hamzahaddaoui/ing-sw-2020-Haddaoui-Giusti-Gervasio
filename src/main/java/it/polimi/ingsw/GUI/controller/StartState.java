@@ -24,19 +24,24 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static it.polimi.ingsw.GUI.Controller.*;
+import static it.polimi.ingsw.GUI.Controller.replaceSceneContent;
+import static it.polimi.ingsw.GUI.Controller.setServer;
 import static it.polimi.ingsw.GUI.Database.*;
 import static javafx.scene.control.Alert.AlertType;
 
 public class StartState extends State {
 
 
-    @FXML private ImageView santorini;
+    @FXML
+    private ImageView santorini;
 
-    @FXML private TextField nickname;
-    @FXML private TextField address;
+    @FXML
+    private TextField nickname;
+    @FXML
+    private TextField address;
 
-    @FXML private BorderPane startScreen;
+    @FXML
+    private BorderPane startScreen;
 
     Node dataBox;
 

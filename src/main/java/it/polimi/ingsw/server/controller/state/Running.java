@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.controller.state;
 
 import it.polimi.ingsw.server.ClientHandler;
 import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.server.model.GameModel;
 import it.polimi.ingsw.utilities.*;
 
 import java.util.List;
@@ -22,14 +23,15 @@ public class Running extends State{
             return true;
         }
 
-        else if (messageEvent.getSpecialFunction() && (isSpecialFunctionAvailable(matchID).keySet().size() !=0 )){
+        else if ((messageEvent.getSpecialFunction() && isSpecialFunctionAvailable(matchID).keySet().size() !=0) ||
+                (!messageEvent.getSpecialFunction() && hasSpecialFunction(matchID) && endPosition == null)){
             setUnsetSpecialFunction(matchID, messageEvent.getSpecialFunction());
             return true;
         }
 
         else if (startPosition != null && endPosition != null && checkPosition(startPosition) && checkPosition(endPosition)
                  && getWorkersAvailableCells(matchID).containsKey(startPosition) && getWorkersAvailableCells(matchID).get(startPosition).contains(endPosition)
-                && !(isSpecialFunctionAvailable(matchID) !=null && !isSpecialFunctionAvailable(matchID).get(startPosition))
+                && (isSpecialFunctionAvailable(matchID) == null || !hasSpecialFunction(matchID) || isSpecialFunctionAvailable(matchID).get(startPosition))
         ){
 
             playerTurn(matchID, startPosition, endPosition);

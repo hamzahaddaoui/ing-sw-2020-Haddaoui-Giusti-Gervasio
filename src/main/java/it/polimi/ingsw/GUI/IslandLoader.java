@@ -2,21 +2,16 @@ package it.polimi.ingsw.GUI;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import it.polimi.ingsw.GUI.controller.Running;
-import it.polimi.ingsw.utilities.Position;
 import javafx.animation.*;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.effect.Lighting;
-import javafx.scene.image.Image;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
@@ -26,11 +21,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static it.polimi.ingsw.GUI.Database.*;
-import static javafx.application.Application.launch;
+import static it.polimi.ingsw.GUI.Database.getCurrentState;
+import static it.polimi.ingsw.GUI.Database.getStage;
 
 public class IslandLoader{
 
@@ -367,7 +365,7 @@ public class IslandLoader{
         worker.setOnMouseEntered(e -> worker.setCursor(Cursor.HAND));
 
         worker.setOnMouseClicked(e -> {
-            Point2D point2D = new Point2D (workers.get(worker).getX(), workers.get(worker).getY());
+            Point2D point2D = new Point2D(workers.get(worker).getX(), workers.get(worker).getY());
             System.out.println("Mouse clicked in "+ point2D);
             if (((Running) getCurrentState()).workerClick(point2D)){
                 //Lighting lighting = new Lighting();

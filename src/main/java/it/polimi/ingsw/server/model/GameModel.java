@@ -288,6 +288,10 @@ public class GameModel extends Observable<MessageEvent> {
         translateMatchID(matchID).getCurrentPlayer().setUnsetSpecialFunction(specialFunction);
     }
 
+    public static boolean hasSpecialFunction(Integer matchID){
+        return translateMatchID(matchID).getCurrentPlayer().hasSpecialFunction();
+    }
+
     public static void setHasFinished(Integer matchID){
         translateMatchID(matchID).getCurrentPlayer().setHasFinished();
         translateMatchID(matchID).nextTurn();

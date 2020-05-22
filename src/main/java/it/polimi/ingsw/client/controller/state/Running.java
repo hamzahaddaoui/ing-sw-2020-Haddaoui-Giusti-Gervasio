@@ -16,8 +16,6 @@ import java.util.Optional;
 
 public class Running extends ControlState {
 
-    //DataBase dataBase = View.getDataBase();
-
     MessageEvent message = new MessageEvent();
 
     /**
@@ -89,6 +87,8 @@ public class Running extends ControlState {
             }
             else if (DataBase.getStartingPosition()!=null)
                 DataBase.setStartingPosition(null);
+            else if (DataBase.isSpecialFunction())
+                DataBase.resetSpecialFunction();
 
             View.doUpdate();
             View.setRefresh(true);
@@ -108,17 +108,25 @@ public class Running extends ControlState {
         if (DataBase.getPlayerState()!= PlayerState.ACTIVE)
             return DataBase.getMatchPlayers().get(DataBase.getPlayer())+" is doing his turn";
 
-        if (startingPosition==null && checkSpecialFunctionAvailable())
-            return "Choose your starting worker OR type 'f' to use your special function: ";
+        if (startingPosition==null && checkSpecialFunctionAvailable()) {
+            if (DataBase.isSpecialFunction())
+                return "Choose your starting worker OR type 'f' to disable your special function: ";
+            else
+                return "Choose your starting worker OR type 'f' to enable your special function: ";
+        }
         else if (startingPosition==null)
             return "Choose your starting worker, insert its coordinates: ";
+
         StringBuilder string = new StringBuilder();
         if (DataBase.getTurnState()==TurnState.MOVE)
             string.append("Insert the position you want to move to");
         else if (DataBase.getTurnState()==TurnState.BUILD)
             string.append("Insert the position you want to build in");
-        if (checkSpecialFunctionAvailable())
-            string.append(" OR type 'f' to use your special function");
+        if (checkSpecialFunctionAvailable()) {
+            if (DataBase.isSpecialFunction())
+                string.append(" OR type 'f' to disable your special function");
+            else
+                string.append(" OR type 'f' to enable your special function");}
         if (DataBase.isTerminateTurnAvailable())
             string.append(" OR type 'e' to terminate your turn");
         string.append(": ");
@@ -169,7 +177,10 @@ public class Running extends ControlState {
 
         if (num == 15) {
             if (checkSpecialFunctionAvailable()) {
-                    message.setSpecialFunction(true);
+                    System.out.println(DataBase.isSpecialFunction());
+                    DataBase.setUnsetSpecialFunction();
+                    System.out.println(DataBase.isSpecialFunction());
+                    message.setSpecialFunction(DataBase.isSpecialFunction());
                     return true;
                 } else System.out.println("SPECIAL FUNCTION IS NOT AVAILABLE!");
         }

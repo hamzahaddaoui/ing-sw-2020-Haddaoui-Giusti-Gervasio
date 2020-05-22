@@ -1,6 +1,5 @@
 package it.polimi.ingsw.GUI;
 
-import it.polimi.ingsw.GUI.controller.Running;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -10,7 +9,6 @@ import javafx.stage.WindowEvent;
 import java.io.IOException;
 
 import static it.polimi.ingsw.GUI.Database.*;
-import static it.polimi.ingsw.GUI.Database.getNetworkHandler;
 
 public class Client extends Application {
     static private Stage stage;

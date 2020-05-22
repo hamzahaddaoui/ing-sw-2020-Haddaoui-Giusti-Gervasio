@@ -19,16 +19,16 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static it.polimi.ingsw.GUI.Controller.*;
 import static it.polimi.ingsw.GUI.Controller.replaceSceneContent;
-import static it.polimi.ingsw.GUI.Database.*;
 import static it.polimi.ingsw.GUI.Database.*;
 import static it.polimi.ingsw.GUI.View.updateView;
 
 public class WaitingForPlayers extends State {
 
-    @FXML private BorderPane borderPane;
-    @FXML private GridPane gridPane;
+    @FXML
+    private BorderPane borderPane;
+    @FXML
+    private GridPane gridPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){

@@ -7,7 +7,8 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static it.polimi.ingsw.GUI.Controller.*;
+import static it.polimi.ingsw.GUI.Controller.exit;
+import static it.polimi.ingsw.GUI.Controller.replaceSceneContent;
 import static it.polimi.ingsw.GUI.Database.*;
 
 public class userDisconnected extends State{

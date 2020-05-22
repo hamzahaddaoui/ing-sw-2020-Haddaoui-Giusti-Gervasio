@@ -23,6 +23,7 @@ public class DataBase {
     static private int currentPlayer;
     static private boolean terminateTurnAvailable;
     static private Map<Position, Boolean> specialFunctionAvailable;
+    static private boolean specialFunction;
 
     static private HashSet<String> selectedGodCards = new HashSet<>();    // usate per la Selection Special Command
     static private ArrayList<String> matchCards;           //date dal Server, usate per la Selecting God Card
@@ -278,4 +279,15 @@ public class DataBase {
         }
     }
 
+    public static boolean isSpecialFunction() {
+        return specialFunction;
+    }
+
+    public static void setUnsetSpecialFunction() {
+        specialFunction = !specialFunction;
+    }
+
+    public static void resetSpecialFunction() {
+        specialFunction = false;
+    }
 }

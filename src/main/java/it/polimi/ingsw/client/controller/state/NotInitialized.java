@@ -70,7 +70,7 @@ public class NotInitialized extends ControlState{
             return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
         else if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.LOST)
             return "Unlucky! You lost!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
-        else if (DataBase.getMatchState()!= null)
+        else if (DataBase.getNickname()!= null)
             return "A user has disconnected from the match so the match is over.\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
         else return "\nPress 'q' if you want to quit from SANTORINI.\nTo start a game insert your nickname: ";
     }

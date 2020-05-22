@@ -46,8 +46,10 @@ public class PrometheusDecorator extends CommandsDecorator {
                 player.setUnsetSpecialFunctionAvailable(null);
                 break;
             case BUILD:
-                if (player.hasSpecialFunction() && hasBuiltBeforeMoving)
+                if (player.hasSpecialFunction() && hasBuiltBeforeMoving) {
                     player.setTurnState(MOVE);
+                    player.setUnsetSpecialFunctionAvailable(null);
+                }
                 else player.setHasFinished();
                 break;
         }
@@ -125,7 +127,7 @@ public class PrometheusDecorator extends CommandsDecorator {
         Worker worker;
 
         if (player.hasSpecialFunction()){
-            player.setUnsetSpecialFunctionAvailable(null);
+            //player.setUnsetSpecialFunctionAvailable(null);
             for (int i=0;i<2;i++) {
                 worker = workers.get(i);
                 if (checkCells(player, worker)) {
@@ -133,11 +135,13 @@ public class PrometheusDecorator extends CommandsDecorator {
                     avoidPosition = worker.getAvailableCells(MOVE).stream()
                             .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(workerPosition))
                             .findAny().get();
-                    worker.getAvailableCells(BUILD).remove(avoidPosition);
+                    if (billboard.getTowerHeight(avoidPosition) == billboard.getTowerHeight(workerPosition))
+                        worker.getAvailableCells(BUILD).remove(avoidPosition);
                 }
             }
             player.setTurnState(BUILD);
         }
+        else player.setTurnState(MOVE);
     }
 
     /**

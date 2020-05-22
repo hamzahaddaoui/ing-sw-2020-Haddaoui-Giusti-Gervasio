@@ -1,36 +1,38 @@
 package it.polimi.ingsw.GUI.controller;
 
 import it.polimi.ingsw.GUI.Controller;
-import it.polimi.ingsw.GUI.Database;
 import it.polimi.ingsw.GUI.IslandLoader;
 import it.polimi.ingsw.utilities.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.GUI.Database.*;
-import static it.polimi.ingsw.GUI.Database.getGodCard;
-
 
 
 public class Running extends State{
-    @FXML StackPane stackPane;
-    @FXML BorderPane borderPane;
-    @FXML Label user;
-    @FXML Label desc;
-    @FXML ImageView god;
+    @FXML
+    StackPane stackPane;
+    @FXML
+    BorderPane borderPane;
+    @FXML
+    Label user;
+    @FXML
+    Label desc;
+    @FXML
+    ImageView god;
 
     static private Map<Position, Cell> billboardStatus = new HashMap<>();
 

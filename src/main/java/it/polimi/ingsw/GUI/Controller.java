@@ -6,10 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
-import java.net.URL;
 
 import static it.polimi.ingsw.GUI.Database.*;
-import static it.polimi.ingsw.GUI.Database.getNetworkHandler;
 
 public class Controller {
 

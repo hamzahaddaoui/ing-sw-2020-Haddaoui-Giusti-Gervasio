@@ -53,6 +53,7 @@ public class ArtemisDecorator extends CommandsDecorator {
             case MOVE:
                 if(!secondMoveDone)
                     player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
+                else player.setUnsetSpecialFunctionAvailable(null);
                 player.setTurnState(BUILD);
                 break;
             case BUILD:
@@ -73,9 +74,9 @@ public class ArtemisDecorator extends CommandsDecorator {
     @Override
     public void notifySpecialFunction(Player player){
         if (player.hasSpecialFunction()){
-            player.setUnsetSpecialFunctionAvailable(null);
             player.setTurnState(MOVE);
         }
+        else player.setTurnState(BUILD);
     }
 
     /**

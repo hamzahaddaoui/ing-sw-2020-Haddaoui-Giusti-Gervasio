@@ -36,9 +36,12 @@ import static it.polimi.ingsw.GUI.Database.*;
 
 public class SelectingSpecialCommand extends State {
 
-    @FXML BorderPane borderPane;
-    @FXML StackPane spane;
-    @FXML Label title;
+    @FXML
+    BorderPane borderPane;
+    @FXML
+    StackPane spane;
+    @FXML
+    Label title;
 
 
     Set<Button> buttonSet ;
@@ -102,7 +105,7 @@ public class SelectingSpecialCommand extends State {
                 pane.getChildren().add(desc);
                 pane.setMinSize(839,626);
                 pane.setMaxSize(839,626);
-                pane.setAlignment(desc,Pos.CENTER);
+                pane.setAlignment(desc, Pos.CENTER);
                 borderPane.setRight(pane);
             });
 
