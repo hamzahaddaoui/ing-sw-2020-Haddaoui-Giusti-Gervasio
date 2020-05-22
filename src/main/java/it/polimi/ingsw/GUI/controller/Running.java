@@ -271,8 +271,10 @@ public class Running extends State{
                     getIslandLoader().swapWorkers(startPos1, startPos2, playersMove.get(startPos1), playersMove.get(startPos2));
                 }
 
-                if (movedOutPlayers.containsKey(getPlayerID()) && movedOutPlayers.get(getPlayerID()) == getStartingPosition())
-                    setStartingPosition( movedInPlayers.get(getPlayerID()));
+                /*if (movedOutPlayers.containsKey(getPlayerID()) && movedOutPlayers.get(getPlayerID()) == getStartingPosition()) {
+                    setStartingPosition(movedInPlayers.get(getPlayerID()));
+                    System.out.println("CHANGED STARTING POSITION");
+                }*/
 
             }
 
