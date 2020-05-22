@@ -746,7 +746,7 @@ public class IslandLoader{
         {
             SequentialTransition sequence2;
 
-            if (boardCells.get(endPos2) - workers.get(worker2).getZ() == 1) {
+            if (boardCells.get(endPos2) - boardCells.get(startPos2) == 1) {
                 Timeline timeline1 = new Timeline(
                         new KeyFrame(Duration.seconds(.15 * (boardCells.get(endPos2) - workers.get(worker2).getZ())),
                                 new KeyValue(translate2.yProperty(), trasl2.getY())
@@ -768,7 +768,7 @@ public class IslandLoader{
                 timeline2.getKeyFrames().addAll(xKF, yKF, zKF);
 
                 sequence2 = new SequentialTransition(timeline1, timeline2);
-            } else if (boardCells.get(endPos2) - workers.get(worker2).getZ() == 0) {
+            } else if (boardCells.get(endPos2) - boardCells.get(startPos2) == 0) {
                 Timeline timeline = new Timeline();
 
                 KeyValue xKV = new KeyValue(translate2.xProperty(), trasl2.getX());
