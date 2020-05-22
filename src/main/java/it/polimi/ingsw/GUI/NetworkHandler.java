@@ -34,6 +34,8 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     private ObjectInputStream input;
     private boolean active;
 
+    private String lastJson;
+
     public NetworkHandler(String ip) throws IOException{
         active = true;
         server = new Socket();
@@ -91,10 +93,12 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        try {
            while (active) {
                inputObject = (String) input.readObject();
-               messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
+               if (! inputObject.equals(lastJson)){
+                   lastJson = inputObject;
+                   messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
 
-               if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
-                   notify(messageEvent);
+                   if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message"))
+                       notify(messageEvent);
                }
            }
        }
