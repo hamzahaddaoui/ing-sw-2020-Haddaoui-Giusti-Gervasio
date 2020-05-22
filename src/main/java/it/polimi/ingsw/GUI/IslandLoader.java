@@ -2,6 +2,7 @@ package it.polimi.ingsw.GUI;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import it.polimi.ingsw.GUI.controller.Running;
+import it.polimi.ingsw.utilities.Position;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -21,12 +22,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static it.polimi.ingsw.GUI.Database.*;
 import static it.polimi.ingsw.GUI.Database.getCurrentState;
 import static it.polimi.ingsw.GUI.Database.getStage;
 
@@ -48,6 +47,7 @@ public class IslandLoader{
     private static final Map<Group, Point3D> workers = new HashMap<>();
 
     static Group group;
+    static Set<Group> cells = new HashSet<>();
     static Stage stage;
     static ToggleButton button;
 
@@ -179,7 +179,7 @@ public class IslandLoader{
         {
             Timeline timelineBoat = new Timeline(
                     new KeyFrame(
-                            Duration.seconds(5),
+                            Duration.seconds(30),
                             new KeyValue(boat.translateXProperty(), 13)
                     )
             );
@@ -189,13 +189,13 @@ public class IslandLoader{
             // setting the angle of rotation
             rotate1.setByAngle(180);
             //Setting duration of the transition
-            rotate1.setDuration(Duration.millis(5000));
+            rotate1.setDuration(Duration.seconds(10));
             rotate1.setNode(boat);
 
 
             Timeline timelineBoat3 = new Timeline(
                     new KeyFrame(
-                            Duration.seconds(5),
+                            Duration.seconds(30),
                             new KeyValue(boat.translateXProperty(), 0)
                     )
             );
@@ -205,7 +205,7 @@ public class IslandLoader{
             // setting the angle of rotation
             rotate2.setByAngle(- 180);
             //Setting duration of the transition
-            rotate2.setDuration(Duration.millis(5000));
+            rotate2.setDuration(Duration.seconds(10));
             rotate2.setNode(boat);
 
             SequentialTransition transition = new SequentialTransition(timelineBoat, rotate1, timelineBoat3, rotate2);
@@ -371,12 +371,10 @@ public class IslandLoader{
                 //Lighting lighting = new Lighting();
                 //worker.setEffect(lighting);
                 System.out.println("WORKER SELEZIONATO "+point2D);
-                //creo oggetti illuminati che indicano dove può muoversi - oggetti mouse transparent
             }
         });
 
         group.getChildren().add(worker);
-        //stage.show();
     }
 
     private void buildBlockLevel1(Point2D point){
@@ -619,6 +617,37 @@ public class IslandLoader{
         workers.put(worker, new Point3D(endPos.getX(), endPos.getY(), boardCells.get(endPos)));
         workers.keySet().forEach(w -> System.out.println(workers.get(w)));
     }
+
+
+    public void showCells(Set<Position> positionSet){
+        Platform.runLater( () -> {
+            if(cells.size() != 0)
+                cells.forEach(cell -> group.getChildren().remove(cell));
+            cells = new HashSet<>();
+            if (positionSet == null){
+                return;
+            }
+            positionSet.stream().map(Running::positionToPoint).forEach(point2D -> {
+                Group cell = loadModel(IslandLoader.class.getClassLoader().getResource("3D_files/pose.obj"));
+
+                cell.setTranslateX(Point2DMap.get(point2D).getX());
+                cell.setTranslateY(cellHeight.get(boardCells.get(point2D))-0.3);
+                cell.setTranslateZ(Point2DMap.get(point2D).getY());
+                cell.setMouseTransparent(true);
+
+                cells.add(cell);
+
+                //illuminare???
+            });
+            cells.forEach(cell -> group.getChildren().add(cell));
+        });
+
+
+
+
+
+    }
+
 
 
 

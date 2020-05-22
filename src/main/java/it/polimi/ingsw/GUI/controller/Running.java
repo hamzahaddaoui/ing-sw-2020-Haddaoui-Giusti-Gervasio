@@ -36,6 +36,8 @@ public class Running extends State{
 
     static private Map<Position, Cell> billboardStatus = new HashMap<>();
 
+    boolean confirmedStartPosition;
+
     @Override
     public void showPane(){
         Platform.runLater(() -> {
@@ -47,6 +49,9 @@ public class Running extends State{
     public void initialize(URL url, ResourceBundle resourceBundle){
         this.addObserver(getNetworkHandler());
         getNetworkHandler().addObserver(this);
+
+        billboardStatus = getBillboardStatus();
+
         user.getStylesheets().add("/css_files/placingWorkers.css");
         user.getStyleClass().add("player");
         user.setText(getNickname());
@@ -67,7 +72,7 @@ public class Running extends State{
             exception.printStackTrace();
         }
 
-        billboardStatus = getBillboardStatus();
+
 
         for (Position position : billboardStatus.keySet()){
             if (billboardStatus.get(position).getPlayerID() != 0){
@@ -121,12 +126,11 @@ public class Running extends State{
             if (getPlayerState() == PlayerState.ACTIVE){
                 switch (getTurnState()){
                     case MOVE:
-                        if (getStartingPosition() == null)
-                            desc.setText("SELECT A WORKER");
-                        else
-                            desc.setText("SELECT the cell where you want to move");
+                        confirmedStartPosition = false;
+                        desc.setText("SELECT A WORKER");
                         break;
                     case BUILD:
+                        getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
                         desc.setText("SELECT the cell where you want to build");
                 }
             }
@@ -149,9 +153,11 @@ public class Running extends State{
             System.out.println("PLAYER NOT ACTIVE");
             return false;
         }
-        else if (getWorkersAvailableCells().containsKey(position)){
+        else if (getWorkersAvailableCells().containsKey(position) && !confirmedStartPosition){
             System.out.println("PLAYER ACTIVE. SETTED POSITION");
+            Platform.runLater(()  -> desc.setText("SELECT the cell where you want to move"));
             setStartingPosition(position);
+            getIslandLoader().showCells(getWorkersAvailableCells().get(position));
             return true;
             //lIGHTNING / LIGHT SU WORKER?
             //illuminare le celle dove può muoversi
@@ -167,11 +173,17 @@ public class Running extends State{
             System.out.println("IDLE OR NOT SELECTED ANY WORKER");
             return;
         }
-
+        confirmedStartPosition = true;
         if (getTurnState() == TurnState.MOVE){
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){
                 System.out.println("MOVE OK. SENDING movement...");
-                //getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+                getIslandLoader().showCells(null);
+
+                getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+                billboardStatus.get(position).setPlayerID(getPlayerID());
+                billboardStatus.get(getStartingPosition()).setPlayerID(0);
+
+
                 setEndPosition(position);
                 sendData();
                 setStartingPosition(position);
@@ -182,7 +194,15 @@ public class Running extends State{
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)) {
                 System.out.println("BUILD OK. SENDING build...");
                 setEndPosition(position);
-                //getIslandLoader().build(point, false);
+                getIslandLoader().showCells(null);
+                //PER ATLAS -> VERIFICARE SPECIAL FUNCTION, E MODIFICARE BIT DI DOME
+                getIslandLoader().build(point, false);
+                int towerHeight = billboardStatus.get(position).getTowerHeight();
+                if (towerHeight < 3)
+                    billboardStatus.get(position).setTowerHeight(towerHeight + 1);
+                else
+                    billboardStatus.get(position).setDome(true);
+
                 sendData();
             }
         }
@@ -246,11 +266,11 @@ public class Running extends State{
         billboardStatus = getBillboardStatus();
     }
 
-    public Position pointToPosition(Point2D point){
+    public static Position pointToPosition(Point2D point){
         return new Position((int) point.getX(), (int) point.getY());
     }
 
-    public Point2D positionToPoint(Position position){
+    public static Point2D positionToPoint(Position position){
         return new Point2D(position.getX(), position.getY());
     }
 
