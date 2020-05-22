@@ -46,6 +46,8 @@ public class SelectingSpecialCommand extends State {
 
     Set<Button> buttonSet ;
 
+    boolean selectedCard = false;
+
     @Override
     public void showPane(){
         Platform.runLater(() -> replaceSceneContent("fxml_files/selectingSpecialCommand.fxml"));
@@ -196,10 +198,13 @@ public class SelectingSpecialCommand extends State {
 
 
     public void selectedCard(ActionEvent event){
+        if (selectedCard)
+            return;
+
         String card = ((Node) event.getSource()).getId();
-        Button button =  (Button) event.getSource();
         setGodCard(card);
         sendData();
+        selectedCard = true;
         System.out.println("selected card: "+ card);
     }
 
