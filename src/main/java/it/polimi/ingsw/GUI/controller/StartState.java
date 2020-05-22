@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 
 import static it.polimi.ingsw.GUI.Controller.*;
 import static it.polimi.ingsw.GUI.Database.*;
+import static it.polimi.ingsw.GUI.View.updateView;
 import static javafx.scene.control.Alert.AlertType;
 
 public class StartState extends State {
@@ -185,12 +186,13 @@ public class StartState extends State {
         }
         else {
             updateStandardData(message);
-            View.updateView();
-            getCurrentState().showPane();
-            new Thread(()->{
-                getNetworkHandler().removeObserver(this);
-                this.removeObserver(getNetworkHandler());
-            }).start();
+            if (updateView()) {
+                getCurrentState().showPane();
+                new Thread(() -> {
+                    getNetworkHandler().removeObserver(this);
+                    this.removeObserver(getNetworkHandler());
+                }).start();
+            }
 
         }
     }

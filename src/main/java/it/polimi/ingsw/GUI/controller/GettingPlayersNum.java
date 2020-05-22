@@ -10,12 +10,15 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static it.polimi.ingsw.GUI.Database.*;
+import static it.polimi.ingsw.GUI.View.updateView;
+
 public class GettingPlayersNum extends State {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        this.addObserver(Database.getNetworkHandler());
-        Database.getNetworkHandler().addObserver(this);
+        this.addObserver(getNetworkHandler());
+        getNetworkHandler().addObserver(this);
     }
 
 
@@ -33,7 +36,7 @@ public class GettingPlayersNum extends State {
     @Override
     public void sendData(){
         MessageEvent message = new MessageEvent();
-        message.setPlayersNum(Database.getPlayersNum());
+        message.setPlayersNum(getPlayersNum());
         notify(message);
     }
 
@@ -47,25 +50,26 @@ public class GettingPlayersNum extends State {
             return;
         }
         else {
-            Database.updateStandardData(message);
-            View.updateView();
-            Database.getCurrentState().showPane();
-            new Thread(()->{
-                Database.getNetworkHandler().removeObserver(this);
-                this.removeObserver(Database.getNetworkHandler());
-            }).start();
+            updateStandardData(message);
+            if (updateView()) {
+                getCurrentState().showPane();
+                new Thread(() -> {
+                    getNetworkHandler().removeObserver(this);
+                    this.removeObserver(getNetworkHandler());
+                }).start();
+            }
         }
     }
 
 
     public void selectedTwoPlayers(MouseEvent mouseEvent){
-        Database.setPlayersNum(2);
+        setPlayersNum(2);
         System.out.println("Match players: 2");
         sendData();
     }
 
     public void selectedThreePlayers(MouseEvent mouseEvent){
-        Database.setPlayersNum(3);
+        setPlayersNum(3);
         System.out.println("Match players: 3");
         sendData();
     }
