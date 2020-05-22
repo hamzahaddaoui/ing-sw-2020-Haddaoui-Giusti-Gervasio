@@ -245,8 +245,11 @@ public class Running extends State{
                     System.out.println("Different player in "+position);
                     if (billboardStatus.get(position).getPlayerID() == 0) //se la cella era vuota, ed ora è piena
                         movedInPlayers.put(getBillboardStatus().get(position).getPlayerID(), position);
-                    else
+                    else {
                         movedOutPlayers.put(billboardStatus.get(position).getPlayerID(), position);
+                        if (getBillboardStatus().get(position).getPlayerID() != 0)
+                            movedInPlayers.put(getBillboardStatus().get(position).getPlayerID(), position);
+                    }
                 }
             }
 
