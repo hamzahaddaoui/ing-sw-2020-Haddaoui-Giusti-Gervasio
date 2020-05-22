@@ -748,7 +748,7 @@ public class IslandLoader{
 
             if (boardCells.get(endPos2) - boardCells.get(startPos2) == 1) {
                 Timeline timeline1 = new Timeline(
-                        new KeyFrame(Duration.seconds(.15 * (boardCells.get(endPos2) - workers.get(worker2).getZ())),
+                        new KeyFrame(Duration.seconds(.15 * (boardCells.get(endPos2) - boardCells.get(startPos2))),
                                 new KeyValue(translate2.yProperty(), trasl2.getY())
                         )
                 );
@@ -787,7 +787,7 @@ public class IslandLoader{
                 sequence2 = new SequentialTransition(timeline);
             } else {
                 Timeline timeline1 = new Timeline(
-                        new KeyFrame(Duration.seconds(.15 * - (boardCells.get(endPos2) - workers.get(worker2).getZ())),
+                        new KeyFrame(Duration.seconds(.15 * - (boardCells.get(endPos2) - boardCells.get(startPos2))),
                                 new KeyValue(translate2.yProperty(), trasl2.getY())
                         )
                 );
@@ -813,7 +813,7 @@ public class IslandLoader{
 
         }
 
-        System.out.println(workers.get(worker2) + "  to  " + endPos2);
+        System.out.println(startPos1 + "  to  " + endPos2);
         workers.remove(worker2);
         workers.put(worker2, new Point3D(endPos2.getX(), endPos2.getY(), boardCells.get(endPos2)));
 
