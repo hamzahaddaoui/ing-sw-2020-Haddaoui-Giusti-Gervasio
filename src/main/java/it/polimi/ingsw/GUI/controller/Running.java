@@ -13,10 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.GUI.Database.*;
@@ -179,9 +176,14 @@ public class Running extends State{
                 System.out.println("MOVE OK. SENDING movement...");
                 getIslandLoader().showCells(null);
 
-                getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
-                billboardStatus.get(position).setPlayerID(getPlayerID());
-                billboardStatus.get(getStartingPosition()).setPlayerID(0);
+                if (billboardStatus.get(position).getPlayerID() == 0) {
+
+                    getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+                    billboardStatus.get(position).setPlayerID(getPlayerID());
+                    billboardStatus.get(getStartingPosition()).setPlayerID(0);
+                }
+
+
 
 
                 setEndPosition(position);
@@ -203,6 +205,8 @@ public class Running extends State{
                 else
                     billboardStatus.get(position).setDome(true);
 
+
+
                 sendData();
             }
         }
@@ -214,10 +218,6 @@ public class Running extends State{
         Map<Integer, Position> movedOutPlayers =  new HashMap<>();
         Map<Point2D, Point2D> playersMove = new HashMap<>();
 
-
-        System.out.println(billboardStatus);
-
-        System.out.println(getBillboardStatus());
 
         if (billboardStatus != getBillboardStatus()){
             System.out.println("Different billboard");
@@ -261,7 +261,19 @@ public class Running extends State{
                 movedOutPlayers.keySet().forEach(player -> System.out.println("Player "+player +" - Position "+movedOutPlayers.get(player)));
 
                 movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
-                playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
+
+                if(playersMove.size() == 1)
+                    playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
+                else{
+                    Iterator iterator = playersMove.keySet().iterator();
+                    Point2D startPos1 = (Point2D) iterator.next();
+                    Point2D startPos2 = (Point2D) iterator.next();
+                    getIslandLoader().swapWorkers(startPos1, startPos2, playersMove.get(startPos1), playersMove.get(startPos2));
+                }
+
+                if (movedOutPlayers.containsKey(getPlayerID()) && movedOutPlayers.get(getPlayerID()) == getStartingPosition())
+                    setStartingPosition( movedInPlayers.get(getPlayerID()));
+
             }
 
         }

@@ -618,6 +618,209 @@ public class IslandLoader{
         workers.keySet().forEach(w -> System.out.println(workers.get(w)));
     }
 
+    public void swapWorkers(Point2D startPos1, Point2D startPos2, Point2D endPos1, Point2D endPos2){
+        Optional<Group> optionalWorker1 = workers.keySet().stream()
+                .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(startPos1))
+                .findAny();
+
+        if (! optionalWorker1.isPresent()) {
+            System.out.println("worker 1 non trovato");
+            return;
+        }
+
+        Optional<Group> optionalWorker2 = workers.keySet().stream()
+                .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(startPos2))
+                .findAny();
+
+        if (! optionalWorker2.isPresent()) {
+            System.out.println("worker 2 non trovato");
+            return;
+        }
+
+
+
+        Group worker1 = optionalWorker1.get();
+
+        Point3D prev1 = new Point3D(Point2DMap.get(new Point2D(workers.get(worker1).getX(), workers.get(worker1).getY())).getX(), cellHeight.get((int) workers.get(worker1).getZ()), Point2DMap.get(new Point2D(workers.get(worker1).getX(), workers.get(worker1).getY())).getY());
+
+        Point3D next1 = new Point3D(Point2DMap.get(endPos1).getX(), cellHeight.get(boardCells.get(endPos1)), Point2DMap.get(endPos1).getY());
+
+        Point3D trasl1 = next1.subtract(prev1);
+
+
+        Group worker2 = optionalWorker2.get();
+
+        Point3D prev2 = new Point3D(Point2DMap.get(new Point2D(workers.get(worker2).getX(),workers.get(worker2).getY())).getX(), cellHeight.get((int) workers.get(worker2).getZ()) , Point2DMap.get(new Point2D(workers.get(worker2).getX(),workers.get(worker2).getY())).getY());
+
+        Point3D next2 = new Point3D(Point2DMap.get(endPos2).getX(), cellHeight.get(boardCells.get(endPos2)), Point2DMap.get(endPos2).getY());
+
+        Point3D trasl2 = next2.subtract(prev2);
+
+
+
+
+        Translate translate1 = new Translate();
+        worker1.getTransforms().add(translate1);
+
+
+        SequentialTransition sequence1;
+
+        if (boardCells.get(endPos1) - workers.get(worker1).getZ() == 1) {
+            Timeline timeline1 = new Timeline(
+                    new KeyFrame(Duration.seconds(.15 * (boardCells.get(endPos1) - workers.get(worker1).getZ())),
+                            new KeyValue(translate1.yProperty(), trasl1.getY())
+                    )
+            );
+
+            Timeline timeline2 = new Timeline();
+            KeyValue xKV = new KeyValue(translate1.xProperty(), trasl1.getX());
+            KeyValue zKV = new KeyValue(translate1.zProperty(), trasl1.getZ());
+            KeyValue yKV = new KeyValue(translate1.yProperty(), trasl1.getY() - 1, new Interpolator() {
+                @Override
+                protected double curve(double t){
+                    return - 4 * (t - .5) * (t - .5) + 1;
+                }
+            });
+            KeyFrame xKF = new KeyFrame(Duration.seconds(0.3), xKV);
+            KeyFrame yKF = new KeyFrame(Duration.seconds(0.3), yKV);
+            KeyFrame zKF = new KeyFrame(Duration.seconds(0.3), zKV);
+            timeline2.getKeyFrames().addAll(xKF, yKF, zKF);
+
+            sequence1 = new SequentialTransition(timeline1, timeline2);
+        } else if (boardCells.get(endPos1) - workers.get(worker1).getZ() == 0) {
+            Timeline timeline = new Timeline();
+
+            KeyValue xKV = new KeyValue(translate1.xProperty(), trasl1.getX());
+            KeyValue zKV = new KeyValue(translate1.zProperty(), trasl1.getZ());
+            KeyValue yKV = new KeyValue(translate1.yProperty(), trasl1.getY() - 1, new Interpolator() {
+                @Override
+                protected double curve(double t){
+                    return - 4 * (t - .5) * (t - .5) + 1;
+                }
+            });
+            KeyFrame xKF = new KeyFrame(Duration.seconds(0.3), xKV);
+            KeyFrame yKF = new KeyFrame(Duration.seconds(0.3), yKV);
+            KeyFrame zKF = new KeyFrame(Duration.seconds(0.3), zKV);
+            timeline.getKeyFrames().addAll(xKF, yKF, zKF);
+
+            sequence1 = new SequentialTransition(timeline);
+        } else {
+            Timeline timeline1 = new Timeline(
+                    new KeyFrame(Duration.seconds(.15 * - (boardCells.get(endPos1) - workers.get(worker1).getZ())),
+                            new KeyValue(translate1.yProperty(), trasl1.getY())
+                    )
+            );
+
+            Timeline timeline2 = new Timeline();
+            KeyValue xKV = new KeyValue(translate1.xProperty(), trasl1.getX());
+            KeyValue zKV = new KeyValue(translate1.zProperty(), trasl1.getZ());
+            KeyValue yKV = new KeyValue(translate1.yProperty(), - 1, new Interpolator() {
+                @Override
+                protected double curve(double t){
+                    return - 4 * (t - .5) * (t - .5) + 1;
+                }
+            });
+            KeyFrame xKF = new KeyFrame(Duration.seconds(0.3), xKV);
+            KeyFrame yKF = new KeyFrame(Duration.seconds(0.3), yKV);
+            KeyFrame zKF = new KeyFrame(Duration.seconds(0.3), zKV);
+            timeline2.getKeyFrames().addAll(xKF, yKF, zKF);
+
+            sequence1 = new SequentialTransition(timeline2, timeline1);
+        }
+
+        sequence1.play();
+
+        System.out.println(workers.get(worker1) + "  to  " + endPos1);
+        workers.remove(worker1);
+        workers.put(worker1, new Point3D(endPos1.getX(), endPos1.getY(), boardCells.get(endPos1)));
+        workers.keySet().forEach(w -> System.out.println(workers.get(w)));
+
+
+
+
+
+
+        Translate translate2 = new Translate();
+        worker2.getTransforms().add(translate2);
+
+        {
+            SequentialTransition sequence2;
+
+            if (boardCells.get(endPos2) - workers.get(worker2).getZ() == 1) {
+                Timeline timeline1 = new Timeline(
+                        new KeyFrame(Duration.seconds(.15 * (boardCells.get(endPos2) - workers.get(worker2).getZ())),
+                                new KeyValue(translate2.yProperty(), trasl2.getY())
+                        )
+                );
+
+                Timeline timeline2 = new Timeline();
+                KeyValue xKV = new KeyValue(translate2.xProperty(), trasl2.getX());
+                KeyValue zKV = new KeyValue(translate2.zProperty(), trasl2.getZ());
+                KeyValue yKV = new KeyValue(translate2.yProperty(), trasl2.getY() - 1, new Interpolator() {
+                    @Override
+                    protected double curve(double t){
+                        return - 4 * (t - .5) * (t - .5) + 1;
+                    }
+                });
+                KeyFrame xKF = new KeyFrame(Duration.seconds(0.3), xKV);
+                KeyFrame yKF = new KeyFrame(Duration.seconds(0.3), yKV);
+                KeyFrame zKF = new KeyFrame(Duration.seconds(0.3), zKV);
+                timeline2.getKeyFrames().addAll(xKF, yKF, zKF);
+
+                sequence2 = new SequentialTransition(timeline1, timeline2);
+            } else if (boardCells.get(endPos2) - workers.get(worker2).getZ() == 0) {
+                Timeline timeline = new Timeline();
+
+                KeyValue xKV = new KeyValue(translate2.xProperty(), trasl2.getX());
+                KeyValue zKV = new KeyValue(translate2.zProperty(), trasl2.getZ());
+                KeyValue yKV = new KeyValue(translate2.yProperty(), trasl2.getY() - 1, new Interpolator() {
+                    @Override
+                    protected double curve(double t){
+                        return - 4 * (t - .5) * (t - .5) + 1;
+                    }
+                });
+                KeyFrame xKF = new KeyFrame(Duration.seconds(0.3), xKV);
+                KeyFrame yKF = new KeyFrame(Duration.seconds(0.3), yKV);
+                KeyFrame zKF = new KeyFrame(Duration.seconds(0.3), zKV);
+                timeline.getKeyFrames().addAll(xKF, yKF, zKF);
+
+                sequence2 = new SequentialTransition(timeline);
+            } else {
+                Timeline timeline1 = new Timeline(
+                        new KeyFrame(Duration.seconds(.15 * - (boardCells.get(endPos2) - workers.get(worker2).getZ())),
+                                new KeyValue(translate2.yProperty(), trasl2.getY())
+                        )
+                );
+
+                Timeline timeline2 = new Timeline();
+                KeyValue xKV = new KeyValue(translate2.xProperty(), trasl2.getX());
+                KeyValue zKV = new KeyValue(translate2.zProperty(), trasl2.getZ());
+                KeyValue yKV = new KeyValue(translate2.yProperty(), - 1, new Interpolator() {
+                    @Override
+                    protected double curve(double t){
+                        return - 4 * (t - .5) * (t - .5) + 1;
+                    }
+                });
+                KeyFrame xKF = new KeyFrame(Duration.seconds(0.3), xKV);
+                KeyFrame yKF = new KeyFrame(Duration.seconds(0.3), yKV);
+                KeyFrame zKF = new KeyFrame(Duration.seconds(0.3), zKV);
+                timeline2.getKeyFrames().addAll(xKF, yKF, zKF);
+
+                sequence2 = new SequentialTransition(timeline2, timeline1);
+            }
+
+            sequence2.play();
+
+        }
+
+        System.out.println(workers.get(worker2) + "  to  " + endPos2);
+        workers.remove(worker2);
+        workers.put(worker2, new Point3D(endPos2.getX(), endPos2.getY(), boardCells.get(endPos2)));
+        workers.keySet().forEach(w -> System.out.println(workers.get(w)));
+
+
+
+}
 
     public void showCells(Set<Position> positionSet){
         Platform.runLater( () -> {
