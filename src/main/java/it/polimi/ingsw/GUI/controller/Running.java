@@ -169,7 +169,7 @@ public class Running extends State{
         if (getTurnState() == TurnState.MOVE){
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){
                 System.out.println("MOVE OK. SENDING movement...");
-                getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+                //getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
                 setEndPosition(position);
                 sendData();
                 setStartingPosition(position);
@@ -232,6 +232,7 @@ public class Running extends State{
                 System.out.println("Moved in players: ");
                 movedInPlayers.keySet().forEach(player -> System.out.println("Player "+player +" - Position "+movedInPlayers.get(player)));
                 System.out.println("\nMoved out players: ");
+
                 movedOutPlayers.keySet().forEach(player -> System.out.println("Player "+player +" - Position "+movedOutPlayers.get(player)));
 
                 movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
