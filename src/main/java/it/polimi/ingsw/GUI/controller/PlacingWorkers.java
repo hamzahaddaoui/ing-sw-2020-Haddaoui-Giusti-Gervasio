@@ -39,7 +39,7 @@ public class PlacingWorkers extends State{
     @FXML
     ImageView god;
 
-
+    boolean finished = false;
 
     @Override
     public void showPane(){
@@ -135,6 +135,8 @@ public class PlacingWorkers extends State{
                     .forEach(node -> node.setMouseTransparent(false));
 
             gridPane.getChildren().forEach(node -> node.setOnMouseEntered(e->{
+                if (finished)
+                    return;
                 ImageView circle = new ImageView(new Image("images/"+getMatchColors().get(getPlayerID())+"_circle.png" ,38,38, false,true));
                 circle.setMouseTransparent(true);
                 circle.setId("circle");
@@ -156,6 +158,8 @@ public class PlacingWorkers extends State{
 
     @FXML
     private void chooseCell(MouseEvent event) {
+        if (finished)
+            return;
         Node source = (Node) event.getSource();
         Integer colIndex = GridPane.getColumnIndex(source);
         Integer rowIndex = GridPane.getRowIndex(source);
@@ -171,6 +175,7 @@ public class PlacingWorkers extends State{
         System.out.printf("Mouse clicked cell in [%d, %d]%n", rowIndex, colIndex);
         System.out.println(getInitializedPositions());
         if (getInitializedPositions().size() == 2){
+            finished = true;
             System.out.println("Sending data");
             sendData();
         }

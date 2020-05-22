@@ -12,6 +12,8 @@ import java.util.ResourceBundle;
 
 public class GettingPlayersNum extends State {
 
+    boolean selected = false;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         this.addObserver(Database.getNetworkHandler());
@@ -59,12 +61,21 @@ public class GettingPlayersNum extends State {
 
 
     public void selectedTwoPlayers(MouseEvent mouseEvent){
+        if (selected)
+            return;
+
+        selected = true;
         Database.setPlayersNum(2);
         System.out.println("Match players: 2");
+        selected = true;
         sendData();
     }
 
     public void selectedThreePlayers(MouseEvent mouseEvent){
+        if (selected)
+            return;
+
+        selected = true;
         Database.setPlayersNum(3);
         System.out.println("Match players: 3");
         sendData();
