@@ -13,10 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.GUI.Database.*;
@@ -268,7 +265,16 @@ public class Running extends State{
                 movedOutPlayers.keySet().forEach(player -> System.out.println("Player "+player +" - Position "+movedOutPlayers.get(player)));
 
                 movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
-                playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
+
+                if(playersMove.size() == 1)
+                    playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
+                else{
+                    Iterator iterator = playersMove.keySet().iterator();
+                    Point2D startPos1 = (Point2D) iterator.next();
+                    Point2D startPos2 = (Point2D) iterator.next();
+                    getIslandLoader().swapWorkers(startPos1, startPos2, playersMove.get(startPos1), playersMove.get(startPos2));
+                }
+
             }
 
         }
