@@ -366,11 +366,12 @@ public class IslandLoader{
         worker.setOnMouseEntered(e -> worker.setCursor(Cursor.HAND));
 
         worker.setOnMouseClicked(e -> {
-            System.out.println("Mouse clicked in "+ point);
-            if (((Running) getCurrentState()).workerClick(point)){
+            Point2D point2D = new Point2D (workers.get(worker).getX(), workers.get(worker).getY());
+            System.out.println("Mouse clicked in "+ point2D);
+            if (((Running) getCurrentState()).workerClick(point2D)){
                 //Lighting lighting = new Lighting();
                 //worker.setEffect(lighting);
-                System.out.println("");
+                System.out.println("WORKER SELEZIONATO "+point2D);
                 //creo oggetti illuminati che indicano dove può muoversi - oggetti mouse transparent
             }
         });
