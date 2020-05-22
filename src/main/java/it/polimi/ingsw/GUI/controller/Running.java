@@ -176,14 +176,14 @@ public class Running extends State{
                 System.out.println("MOVE OK. SENDING movement...");
                 getIslandLoader().showCells(null);
 
+                if (billboardStatus.get(position).getPlayerID() == 0) {
 
-                //getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+                    getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+                    billboardStatus.get(position).setPlayerID(getPlayerID());
+                    billboardStatus.get(getStartingPosition()).setPlayerID(0);
+                }
 
-                /*Map<Position, Cell> billboardCopy = getBillboardStatus();
-                billboardCopy.get(position).setPlayerID(getPlayerID());
-                billboardCopy.get(getStartingPosition()).setPlayerID(0);
-                setBillboardStatus(billboardCopy);
-                updateBillboard();*/
+
 
 
                 setEndPosition(position);
@@ -198,17 +198,13 @@ public class Running extends State{
                 setEndPosition(position);
                 getIslandLoader().showCells(null);
                 //PER ATLAS -> VERIFICARE SPECIAL FUNCTION, E MODIFICARE BIT DI DOME
-                //getIslandLoader().build(point, false);
-
-
-                /*Map<Position, Cell> billboardCopy = getBillboardStatus();
-                int towerHeight = billboardCopy.get(position).getTowerHeight();
+                getIslandLoader().build(point, false);
+                int towerHeight = billboardStatus.get(position).getTowerHeight();
                 if (towerHeight < 3)
-                    billboardCopy.get(position).setTowerHeight(towerHeight + 1);
+                    billboardStatus.get(position).setTowerHeight(towerHeight + 1);
                 else
-                    billboardCopy.get(position).setDome(true);
-                setBillboardStatus(billboardCopy);
-                updateBillboard();*/
+                    billboardStatus.get(position).setDome(true);
+
 
 
                 sendData();
@@ -274,6 +270,9 @@ public class Running extends State{
                     Point2D startPos2 = (Point2D) iterator.next();
                     getIslandLoader().swapWorkers(startPos1, startPos2, playersMove.get(startPos1), playersMove.get(startPos2));
                 }
+
+                if (movedOutPlayers.containsKey(getPlayerID()) && movedOutPlayers.get(getPlayerID()) == getStartingPosition())
+                    setStartingPosition( movedInPlayers.get(getPlayerID());
 
             }
 
