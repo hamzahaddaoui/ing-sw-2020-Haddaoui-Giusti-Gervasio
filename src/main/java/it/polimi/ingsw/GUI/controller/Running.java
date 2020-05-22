@@ -272,7 +272,7 @@ public class Running extends State{
                 }
 
                 if (movedOutPlayers.containsKey(getPlayerID()) && movedOutPlayers.get(getPlayerID()) == getStartingPosition())
-                    setStartingPosition( movedInPlayers.get(getPlayerID());
+                    setStartingPosition( movedInPlayers.get(getPlayerID()));
 
             }
 

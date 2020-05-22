@@ -9,12 +9,14 @@ import it.polimi.ingsw.utilities.Observer;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -95,13 +97,22 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
                    notify(messageEvent);
                }
            }
-       } catch (Exception e) {
-           active= false;
+       }
+       catch (ClassNotFoundException | ClassCastException exception) {
+           System.out.println("invalid stream from client");
+       }
+       catch(EOFException exception) {
+           exception.printStackTrace();
+       }
+       catch(SocketTimeoutException exception) {
+           active = false;
            connectionError();
            shutdownAll();
-           e.printStackTrace();
+           exception.printStackTrace();
            System.out.println("socket timed out");
-
+       }
+       catch(IOException exception) {
+           System.out.println("Connection error - Unexpected client disconnection.");
        }
    }
 
