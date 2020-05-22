@@ -34,6 +34,8 @@ public class Running extends State{
     static private Map<Position, Cell> billboardStatus = new HashMap<>();
 
     boolean confirmedStartPosition;
+    boolean moved;
+    boolean built;
 
     @Override
     public void showPane(){
@@ -123,10 +125,12 @@ public class Running extends State{
             if (getPlayerState() == PlayerState.ACTIVE){
                 switch (getTurnState()){
                     case MOVE:
+                        moved = false;
                         confirmedStartPosition = false;
                         desc.setText("SELECT A WORKER");
                         break;
                     case BUILD:
+                        built = false;
                         getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
                         desc.setText("SELECT the cell where you want to build");
                 }
@@ -171,8 +175,9 @@ public class Running extends State{
             return;
         }
         confirmedStartPosition = true;
-        if (getTurnState() == TurnState.MOVE){
+        if (getTurnState() == TurnState.MOVE && !moved){
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){
+                moved = true;
                 System.out.println("MOVE OK. SENDING movement...");
                 getIslandLoader().showCells(null);
 
@@ -193,8 +198,9 @@ public class Running extends State{
         }
         else if (getTurnState() == TurnState.BUILD) {
 
-            if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)) {
+            if (getWorkersAvailableCells().get(getStartingPosition()).contains(position) && !built) {
                 System.out.println("BUILD OK. SENDING build...");
+                built = true;
                 setEndPosition(position);
                 getIslandLoader().showCells(null);
                 //PER ATLAS -> VERIFICARE SPECIAL FUNCTION, E MODIFICARE BIT DI DOME
