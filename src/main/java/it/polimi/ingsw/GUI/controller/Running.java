@@ -179,11 +179,11 @@ public class Running extends State{
 
                 //getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
 
-                Map<Position, Cell> billboardCopy = getBillboardStatus();
+                /*Map<Position, Cell> billboardCopy = getBillboardStatus();
                 billboardCopy.get(position).setPlayerID(getPlayerID());
                 billboardCopy.get(getStartingPosition()).setPlayerID(0);
                 setBillboardStatus(billboardCopy);
-                updateBillboard();
+                updateBillboard();*/
 
 
                 setEndPosition(position);
@@ -201,14 +201,14 @@ public class Running extends State{
                 //getIslandLoader().build(point, false);
 
 
-                Map<Position, Cell> billboardCopy = getBillboardStatus();
+                /*Map<Position, Cell> billboardCopy = getBillboardStatus();
                 int towerHeight = billboardCopy.get(position).getTowerHeight();
                 if (towerHeight < 3)
                     billboardCopy.get(position).setTowerHeight(towerHeight + 1);
                 else
                     billboardCopy.get(position).setDome(true);
                 setBillboardStatus(billboardCopy);
-                updateBillboard();
+                updateBillboard();*/
 
 
                 sendData();
