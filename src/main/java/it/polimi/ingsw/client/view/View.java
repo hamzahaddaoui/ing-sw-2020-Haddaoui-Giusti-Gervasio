@@ -44,28 +44,19 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      */
     @Override
     public synchronized void update(MessageEvent messageEvent){
-        executorData.submit(()->{
-            synchronized (DataBase.class){
+            executorData.submit(()->{
+                synchronized (DataBase.class){
                 DataBase.updateStandardData(messageEvent);
                 DataBase.updateControllerState();
-                notifyAll();}
-        });
-        if(messageEvent.getError()){
-            executorData.submit(()->{
-                synchronized (DataBase.class){
+                if(messageEvent.getError()){
                     DataBase.getControlState().error();
-                    notifyAll();
-                    }
-            });
-        }
-        else {
-            executorData.submit(()->{
-                synchronized (DataBase.class){
-                    DataBase.getControlState().updateData(messageEvent);
-                    notifyAll();
                 }
-            });
-        }
+                else {
+                    DataBase.getControlState().updateData(messageEvent);
+                }
+                notifyAll();
+            }
+        });
     }
 
     // From Controller States (VISUALIZATION CHANGES)

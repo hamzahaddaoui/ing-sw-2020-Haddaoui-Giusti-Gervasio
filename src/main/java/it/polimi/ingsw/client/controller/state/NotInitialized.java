@@ -51,7 +51,7 @@ public class NotInitialized extends ControlState{
     @Override
     public void updateData(MessageEvent message) {
 
-        if (DataBase.getPlayerState()==PlayerState.WIN || DataBase.getPlayerState()==PlayerState.LOST){
+        if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST){
             System.out.println(computeView());
             DataBase.resetDataBase();
             }

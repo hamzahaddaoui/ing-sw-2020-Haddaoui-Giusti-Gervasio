@@ -60,18 +60,18 @@ public class Running extends ControlState {
     public void updateData(MessageEvent message) {
 
         //CASO DISCONNESSIONE UTENTE
-        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+        if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...") ) {
             DataBase.resetDataBase();
             View.setRefresh(true);
             View.print();
             return;
         }
 
-        if(!message.getInfo().equals("Match data update")){
+        if(message.getInfo()!=null && !message.getInfo().equals("Match data update") ){
             System.out.println(message.getInfo());
         }
 
-        if (message.getPlayerState() == PlayerState.LOST ) {
+        if (DataBase.getPlayerState() == PlayerState.LOST ) {
             DataBase.setControlState(new NotInitialized());
             DataBase.getControlState().updateData(message);
         }
@@ -79,7 +79,7 @@ public class Running extends ControlState {
 
             DataBase.setBillboardStatus(message.getBillboardStatus());
 
-            if (message.getPlayerState() == PlayerState.ACTIVE) {
+            if (DataBase.getPlayerState() == PlayerState.ACTIVE) {
                 DataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
                 DataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
                 DataBase.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
