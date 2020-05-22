@@ -231,7 +231,7 @@ public class Running extends State{
             if (movedOutPlayers.size() != 0){
                 System.out.println("Moved in players: ");
                 movedInPlayers.keySet().forEach(player -> System.out.println("Player "+player +" - Position "+movedInPlayers.get(player)));
-                System.out.println("\nMoved out players: ");
+                System.out.println("Moved out players: ");
 
                 movedOutPlayers.keySet().forEach(player -> System.out.println("Player "+player +" - Position "+movedOutPlayers.get(player)));
 

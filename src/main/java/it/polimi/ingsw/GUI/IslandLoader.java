@@ -242,7 +242,8 @@ public class IslandLoader{
         board.setOnMouseClicked(e -> {
             Point3D click = e.getPickResult().getIntersectedPoint();
             Point2D point = new Point2D(click.getX(), click.getZ());
-            clickHandler(point);
+            Point2D point2D = findCell(new Point2D(point.getX(), point.getY()));
+            clickHandler(point2D);
 
         });
 
@@ -321,13 +322,13 @@ public class IslandLoader{
         return new Point2D(i,j);
     }
 
-    private static void clickHandler(Point2D clickPoint){
+    private static void clickHandler(Point2D point){
         if (drag.get()){
             drag.set(false);
             return;
         }
 
-        Point2D point = findCell(new Point2D(clickPoint.getX(), clickPoint.getY()));
+
         System.out.println("Click on board/building detected on "+ point);
         ((Running) getCurrentState()).boardClick(point);
     }
@@ -390,18 +391,20 @@ public class IslandLoader{
         block.setTranslateZ(Point2DMap.get(new Point2D(point.getY(), point.getY())).getY());
 
         boardCells.replace(point, 1);
-        Translate translate = new Translate();
-        double height = -10;
-        block.setTranslateY(height);
-        block.getTransforms().add(translate);
-        Timeline timeline = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(0.35),
-                        new KeyValue(translate.yProperty(), -height)
-                )
-        );
-        timeline.play();
 
+        {
+            Translate translate = new Translate();
+            double height = - 10;
+            block.setTranslateY(height);
+            block.getTransforms().add(translate);
+            Timeline timeline = new Timeline(
+                    new KeyFrame(
+                            Duration.seconds(0.35),
+                            new KeyValue(translate.yProperty(), - height)
+                    )
+            );
+            timeline.play();
+        }
 
         Platform.runLater( () -> group.getChildren().add(block));
 
@@ -421,19 +424,19 @@ public class IslandLoader{
         block.setTranslateX(Point2DMap.get(new Point2D(point.getX(), point.getY())).getX());
         block.setTranslateZ(Point2DMap.get(new Point2D(point.getY(), point.getY())).getY());
         boardCells.replace(point, 2);
-
-        Translate translate = new Translate();
-        double height = -10;
-        block.setTranslateY(height);
-        block.getTransforms().add(translate);
-        Timeline timeline = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(0.35),
-                        new KeyValue(translate.yProperty(), -height)
-                )
-        );
-        timeline.play();
-
+        {
+            Translate translate = new Translate();
+            double height = - 10;
+            block.setTranslateY(height);
+            block.getTransforms().add(translate);
+            Timeline timeline = new Timeline(
+                    new KeyFrame(
+                            Duration.seconds(0.35),
+                            new KeyValue(translate.yProperty(), - height)
+                    )
+            );
+            timeline.play();
+        }
         Platform.runLater( () -> group.getChildren().add(block));
         block.setOnMouseEntered(e -> block.setCursor(Cursor.HAND));
         block.setOnMouseClicked(e -> {
@@ -464,7 +467,7 @@ public class IslandLoader{
         timeline.play();
 
 
-        group.getChildren().add(block);
+        Platform.runLater( () -> group.getChildren().add(block));
         block.setOnMouseEntered(e -> block.setCursor(Cursor.HAND));
         block.setOnMouseClicked(e -> {
             clickHandler(point);
@@ -613,7 +616,7 @@ public class IslandLoader{
 
         }
 
-        workers.keySet().forEach(w -> System.out.println(workers.get(w) + "  to  " + endPos));
+        System.out.println(workers.get(worker) + "  to  " + endPos);
         workers.remove(worker);
         workers.put(worker, new Point3D(endPos.getX(), endPos.getY(), boardCells.get(endPos)));
         workers.keySet().forEach(w -> System.out.println(workers.get(w)));
