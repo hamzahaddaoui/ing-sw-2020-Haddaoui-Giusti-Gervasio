@@ -6,6 +6,7 @@ import it.polimi.ingsw.utilities.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,11 +32,17 @@ public class Running extends State{
     @FXML
     ImageView god;
 
+    @FXML ImageView specialFunction;
+    @FXML ImageView function;
+
     static private Map<Position, Cell> billboardStatus = new HashMap<>();
 
     boolean confirmedStartPosition;
     boolean moved;
     boolean built;
+
+    boolean sAvailable;
+    boolean sFunction;
 
     @Override
     public void showPane(){
@@ -71,8 +78,6 @@ public class Running extends State{
             exception.printStackTrace();
         }
 
-
-
         for (Position position : billboardStatus.keySet()){
             if (billboardStatus.get(position).getPlayerID() != 0){
                 getIslandLoader().putWorker(positionToPoint(position), getMatchColors().get(billboardStatus.get(position).getPlayerID()));
@@ -82,6 +87,12 @@ public class Running extends State{
 
     @Override
     public void showError(){
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Server error");
+            alert.setContentText("Error from the server");
+            alert.showAndWait();
+        });
 
     }
 
@@ -120,9 +131,14 @@ public class Running extends State{
         setWorkersAvailableCells(message.getWorkersAvailableCells());
         setBillboardStatus(message.getBillboardStatus());
 
+        updateBillboard();
+
         System.out.println("PlayerState: "+ getPlayerState());
         Platform.runLater(()  -> {
             if (getPlayerState() == PlayerState.ACTIVE){
+
+                specialFunctionHandler();
+
                 switch (getTurnState()){
                     case MOVE:
                         moved = false;
@@ -142,8 +158,6 @@ public class Running extends State{
                 setEndPosition(null);
             }
         });
-        updateBillboard();
-
     }
 
 
@@ -162,6 +176,9 @@ public class Running extends State{
             getIslandLoader().hideArrow();
             getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(position).getPlayerID()), point);
             getIslandLoader().showCells(getWorkersAvailableCells().get(position));
+
+            specialFunctionHandler();
+
             return true;
         }
         return false;
@@ -182,6 +199,7 @@ public class Running extends State{
                 System.out.println("MOVE OK. SENDING movement...");
                 getIslandLoader().hideArrow();
                 getIslandLoader().showCells(null);
+
 
                 if (billboardStatus.get(position).getPlayerID() == 0) {
 
@@ -298,6 +316,36 @@ public class Running extends State{
 
     public static Point2D positionToPoint(Position position){
         return new Point2D(position.getX(), position.getY());
+    }
+
+
+    public void specialFunctionHandler(){
+        if (confirmedStartPosition && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
+            specialFunction.setImage(new Image("images/specialpow/false.png",150,75,false,true));
+            function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true));
+            sFunction = false;
+
+            function.setOnMouseClicked(mouseEvent -> {
+                sFunction ^= true;
+                Platform.runLater(() -> {
+                    if (sFunction) {
+                        specialFunction.setImage(new Image("images/specialpow/true.png", 150, 75, false, true));
+                        function.translateXProperty().set(72);
+                    } else {
+                        specialFunction.setImage(new Image("images/specialpow/false.png", 150, 75, false, true));
+                        function.translateXProperty().set(- 72);
+                    }
+                });
+
+                MessageEvent message = new MessageEvent();
+                message.setSpecialFunction(sFunction);
+                notify(message);
+            });
+        }
+        else{
+            specialFunction.setVisible(false);
+            function.setVisible(false);
+        }
     }
 
 

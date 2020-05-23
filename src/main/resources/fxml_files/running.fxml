@@ -20,7 +20,7 @@
          <right>
             <Pane pickOnBounds="false" prefHeight="517.0" prefWidth="1111.0" BorderPane.alignment="CENTER">
                <children>
-                  <ImageView fx:id="god" fitHeight="181.0" fitWidth="164.0" layoutX="922.0" layoutY="367.0" mouseTransparent="true" preserveRatio="true" />
+                  <ImageView fx:id="god" fitHeight="181.0" fitWidth="164.0" layoutX="931.0" layoutY="299.0" mouseTransparent="true" preserveRatio="true" />
                </children>
                <BorderPane.margin>
                   <Insets left="60.0" />
@@ -54,8 +54,9 @@
          <top>
             <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <ImageView fx:id="specialFunction" fitHeight="60.0" fitWidth="120.0" layoutX="22.0" layoutY="2.0" pickOnBounds="true" />
+                  <ImageView fx:id="specialFunction" fitHeight="75.0" fitWidth="150.0" layoutX="22.0" layoutY="18.0" pickOnBounds="true" />
                   <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="1075.0" mnemonicParsing="false" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" />
+                  <ImageView fx:id="function" fitHeight="47.0" fitWidth="60.0" layoutX="31.0" layoutY="28.0" pickOnBounds="true" />
                </children>
             </Pane>
          </top>
