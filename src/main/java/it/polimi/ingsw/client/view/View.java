@@ -76,13 +76,16 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
             System.out.println(getBillboardStat());
         }
         else if(DataBase.getMatchState() == MatchState.RUNNING && DataBase.getStartingPosition() != null && DataBase.getPlayerState() == PlayerState.ACTIVE){ // visualizzaione delle 3 tabelle
-            gameBoardVisualizationActive();
+            gameBoardVisualizationActive2();
+            //gameBoardVisualizationActive();
         }
         else if(DataBase.getMatchState() == MatchState.RUNNING && DataBase.getStartingPosition() == null && DataBase.getPlayerState() == PlayerState.ACTIVE){
-            gameBoardVisualizationChooseCurrentWorker();
+            gameBoardVisualizationChooseCurrentWorker2();
+            //gameBoardVisualizationChooseCurrentWorker();
         }
         else {
-            gameBoardVisualizationNotActive();
+            System.out.println(getBillboardStat2());
+            //gameBoardVisualizationNotActive();
         }
     }
 
@@ -183,19 +186,28 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
         List<Integer> players = new ArrayList<>(DataBase.getMatchPlayers().keySet());
 
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_BLUE = "\u001B[34m";
+        final String ANSI_PURPLE = "\u001B[35m";
+        final String ANSI_RED = "\u001B[31m";
+        final String ANSI_WHITE = "\u001B[37m";
 
         billboardCells
                 .keySet()
                 .stream()
                 .sorted()
                 .forEach(position -> outputA
-                        .append(billboardCells.get(position).getPlayerID() == 0 ? "⬜ " : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? "🟥 " : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? "🟩 " : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? "🟦 " : "")
+                        .append(billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥 " + ANSI_RESET : "") //⬜
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥 " + ANSI_RESET : "")
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥 " + ANSI_RESET : "") //🟩
+                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥 " + ANSI_RESET : "") //🟦
                         .append((position.getY() == 4) ? "\n" : " "));
 
         outputA.append("\n");
+        Map<Integer,String> playersName = DataBase.getMatchPlayers();
+        outputA.append("KEY: " + ANSI_BLUE + playersName.get(1) + ANSI_RESET + ", " + ANSI_RED + playersName.get(2) + ANSI_RESET);
+        if (playersName.size()==3)
+            outputA.append(", " + ANSI_PURPLE + playersName.get(3) + ANSI_RESET);
         return outputA.toString();
     }
 
@@ -273,6 +285,127 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
 
         outputD.append("\n");
         return outputD.toString();
+    }
+
+    static String getBillboardStat2() {
+        StringBuilder output = new StringBuilder();
+
+        Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
+        List<Integer> players = new ArrayList<>(DataBase.getMatchPlayers().keySet());
+
+       final String ANSI_RESET = "\u001B[0m";
+       final String ANSI_BLUE = "\u001B[34m";
+       final String ANSI_PURPLE = "\u001B[35m";
+       final String ANSI_RED = "\u001B[31m";
+       final String ANSI_WHITE = "\u001B[37m";
+
+        billboardCells
+                .keySet()
+                .stream()
+                .sorted()
+                .forEach(position -> output
+                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "⏺ " : "")
+                        .append(billboardCells.get(position).isDome() && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "⏺ " : "")
+                        .append(billboardCells.get(position).isDome() && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "⏺ " : "")
+                        .append(billboardCells.get(position).isDome() && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "⏺ " : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "0️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "0️" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "0️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "0️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "1️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "1️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "1️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "1️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "2️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "2️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "2️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "2️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "3️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "3️" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "3️" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "3️" : "")
+                        .append((position.getY() == 4) ? "\n" : " "));
+
+        output.append("\n");
+        Map<Integer,String> playersName = DataBase.getMatchPlayers();
+        output.append("KEY: " + ANSI_BLUE + playersName.get(1) + ANSI_RESET + ", " + ANSI_RED + playersName.get(2) + ANSI_RESET);
+        if (playersName.size()==3)
+            output.append(", " + ANSI_PURPLE + playersName.get(3) + ANSI_RESET);
+        return output.toString();
+    }
+
+    /**
+     * Method that organizes the the visualization of the tables if the worker is active and it can do his movement
+     *
+     */
+    public static synchronized void gameBoardVisualizationActive2(){
+        StringBuilder output = new StringBuilder();
+        String billboardStat2 = getBillboardStat2();
+        String availableMovements = getBillboardStat(DataBase.getWorkersAvailableCells(DataBase.getStartingPosition()),DataBase.getStartingPosition());
+
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_BLUE = "\u001B[34m";
+        final String ANSI_PURPLE = "\u001B[35m";
+        final String ANSI_RED = "\u001B[31m";
+
+        int q, w;
+        int j, k;
+        int i;
+        for (i = 0, q = 0, j = 0, w = billboardStat2.indexOf("\n", 0), k = availableMovements.indexOf("\n", 0);
+             i < 5;
+             i++, w = billboardStat2.indexOf("\n", q), k = availableMovements.indexOf("\n", j)) {
+
+            output.append(billboardStat2, q, w);
+            output.append("\t\t\t");
+            output.append(availableMovements, j, k);
+            output.append("\n");
+            q = ++ w;
+            j = ++ k;
+        }
+        System.out.println(output.toString());
+        Map<Integer,String> playersName = DataBase.getMatchPlayers();
+        StringBuilder keyLegend = new StringBuilder();
+        keyLegend.append("KEY: " + ANSI_BLUE + playersName.get(1) + ANSI_RESET + ", " + ANSI_RED + playersName.get(2) + ANSI_RESET);
+        if (playersName.size()==3)
+            keyLegend.append(", " + ANSI_PURPLE + playersName.get(3) + ANSI_RESET);
+        System.out.println(keyLegend.toString());
+    }
+
+    /**
+     * Method that organize the the visualization of the tables if the worker is active and it has to choose the worker for the turn
+     *
+     */
+    public static synchronized void gameBoardVisualizationChooseCurrentWorker2(){
+        StringBuilder output = new StringBuilder();
+        String billboardStat2 = getBillboardStat2();
+        String availableMovements = getBillBoardEvidence(DataBase.getWorkersPositions());
+
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_BLUE = "\u001B[34m";
+        final String ANSI_PURPLE = "\u001B[35m";
+        final String ANSI_RED = "\u001B[31m";
+
+        int q, w;
+        int j, k;
+        int i;
+        for (i = 0, q = 0, j = 0, w = billboardStat2.indexOf("\n", 0), k = availableMovements.indexOf("\n", 0);
+             i < 5;
+             i++, w = billboardStat2.indexOf("\n", q), k = availableMovements.indexOf("\n", j)) {
+
+            output.append(billboardStat2, q, w);
+            output.append("\t\t\t");
+            output.append(availableMovements, j, k);
+            output.append("\n");
+            q = ++ w;
+            j = ++ k;
+        }
+        System.out.println(output.toString());
+        Map<Integer,String> playersName = DataBase.getMatchPlayers();
+        StringBuilder keyLegend = new StringBuilder();
+        keyLegend.append("KEY: " + ANSI_BLUE + playersName.get(1) + ANSI_RESET + ", " + ANSI_RED + playersName.get(2) + ANSI_RESET);
+        if (playersName.size()==3)
+            keyLegend.append(", " + ANSI_PURPLE + playersName.get(3) + ANSI_RESET);
+        System.out.println(keyLegend.toString());
     }
 
     // From Controller (INPUT ERROR / INCORRECT DATA)

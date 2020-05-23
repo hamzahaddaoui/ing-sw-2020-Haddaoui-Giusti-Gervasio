@@ -70,7 +70,7 @@ public class Running extends ControlState {
         if(message.getInfo()!=null && !message.getInfo().equals("Match data update") ){
             System.out.println(message.getInfo());
         }
-        
+
         DataBase.setBillboardStatus(message.getBillboardStatus());
 
         if (DataBase.getPlayerState() == PlayerState.LOST ) {
@@ -78,9 +78,11 @@ public class Running extends ControlState {
             DataBase.getControlState().updateData(message);
         }
         else {
-            View.doUpdate();
 
-            if (DataBase.getPlayerState() == PlayerState.ACTIVE) {
+
+            DataBase.setBillboardStatus(message.getBillboardStatus());
+            View.doUpdate();
+            if (message.getPlayerState() == PlayerState.ACTIVE) {
                 DataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
                 DataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
                 DataBase.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
@@ -91,6 +93,7 @@ public class Running extends ControlState {
             else if (DataBase.isSpecialFunction())
                 DataBase.resetSpecialFunction();
 
+            View.doUpdate();
             View.setRefresh(true);
             View.print();
         }
