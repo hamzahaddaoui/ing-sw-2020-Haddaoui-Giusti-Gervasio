@@ -173,6 +173,12 @@ public class Running extends State{
                 setStartingPosition(null);
                 setEndPosition(null);
                 confirmedStartPosition = false;
+
+                if (sFunction)
+                    function.translateXProperty().set(-72);
+                specialFunction.setVisible(false);
+                function.setVisible(false);
+
                 sFunction = false;
             }
         });

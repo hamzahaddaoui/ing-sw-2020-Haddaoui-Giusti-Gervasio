@@ -52,14 +52,14 @@
             <Insets top="20.0" />
          </padding>
          <top>
-            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <Pane pickOnBounds="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
                   <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="1075.0" mnemonicParsing="false" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" />
                </children>
             </Pane>
          </top>
          <left>
-            <Pane prefHeight="479.0" prefWidth="233.0" BorderPane.alignment="CENTER">
+            <Pane pickOnBounds="false" prefHeight="479.0" prefWidth="233.0" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fx:id="specialFunction" fitHeight="75.0" fitWidth="150.0" layoutX="27.0" layoutY="383.0" pickOnBounds="true" />
                   <ImageView fx:id="function" fitHeight="47.0" fitWidth="60.0" layoutX="36.0" layoutY="393.0" pickOnBounds="true" />
