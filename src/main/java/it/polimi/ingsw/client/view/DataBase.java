@@ -227,13 +227,13 @@ public class DataBase {
      * @param messageEvent  is the message from the NetWorkHandler
      */
     static public void updateStandardData(MessageEvent messageEvent) {
-        if (messageEvent.getMatchState() != matchState && messageEvent.getMatchState() != null)
+        if ( messageEvent.getMatchState() != null)
             matchState = messageEvent.getMatchState();
-        if (messageEvent.getPlayerState() != playerState && messageEvent.getPlayerState() != null)
+        if ( messageEvent.getPlayerState() != null)
             playerState = messageEvent.getPlayerState();
-        if (messageEvent.getTurnState() != turnState && messageEvent.getTurnState() != null)
+        if (messageEvent.getTurnState() != null)
             turnState = messageEvent.getTurnState();
-        if (messageEvent.getMatchPlayers() != matchPlayers && messageEvent.getMatchPlayers() != null)
+        if ( messageEvent.getMatchPlayers() != null)
             matchPlayers = messageEvent.getMatchPlayers();
         if ((MatchState.SELECTING_SPECIAL_COMMAND != matchState || currentPlayer == 0))
             currentPlayer = messageEvent.getCurrentPlayer();
@@ -272,10 +272,12 @@ public class DataBase {
                     controlState = new Running();
                 break;
             case FINISHED:
-                controlState = new NotInitialized();
+                if(controlState.getClass()!= NotInitialized.class)
+                    controlState = new NotInitialized();
                 break;
             default:
                 controlState = new WaitingList();
+                break;
         }
     }
 

@@ -51,9 +51,12 @@ public class ArtemisDecorator extends CommandsDecorator {
                 player.setTurnState(MOVE);
                 break;
             case MOVE:
-                if(!secondMoveDone)
+                if(!secondMoveDone){
                     player.setUnsetSpecialFunctionAvailable(canDoSecondMove(player));
-                else player.setUnsetSpecialFunctionAvailable(null);
+                }
+                else {
+                    player.setUnsetSpecialFunctionAvailable(null);
+                }
                 player.setTurnState(BUILD);
                 break;
             case BUILD:
