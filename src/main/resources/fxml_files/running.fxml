@@ -6,10 +6,8 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-
 
 <StackPane fx:id="stackPane" stylesheets="@../css_files/running.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GUI.controller.Running">
    <children>
@@ -50,19 +48,17 @@
                </padding>
             </Pane>
          </bottom>
-         <top>
-            <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefHeight="128.0" prefWidth="822.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" />
-               </children>
-               <padding>
-                  <Insets right="10.0" top="10.0" />
-               </padding>
-            </HBox>
-         </top>
          <padding>
             <Insets top="20.0" />
          </padding>
+         <top>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fx:id="specialFunction" fitHeight="60.0" fitWidth="120.0" layoutX="22.0" layoutY="2.0" pickOnBounds="true" />
+                  <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="1075.0" mnemonicParsing="false" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" />
+               </children>
+            </Pane>
+         </top>
       </BorderPane>
    </children>
 </StackPane>
