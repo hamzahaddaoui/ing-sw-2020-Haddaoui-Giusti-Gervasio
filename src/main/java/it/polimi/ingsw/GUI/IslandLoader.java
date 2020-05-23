@@ -51,8 +51,10 @@ public class IslandLoader{
     static Stage stage;
     static ToggleButton button;
 
+    static Group arrow;
 
     static AtomicBoolean drag = new AtomicBoolean(false);
+
 
     //posizione reale di ogni punto
     private static final Map<Point2D, Point2D> Point2DMap = Collections.unmodifiableMap(new HashMap<Point2D, Point2D>(){{
@@ -368,8 +370,6 @@ public class IslandLoader{
             Point2D point2D = new Point2D(workers.get(worker).getX(), workers.get(worker).getY());
             System.out.println("Mouse clicked in "+ point2D);
             if (((Running) getCurrentState()).workerClick(point2D)){
-                //Lighting lighting = new Lighting();
-                //worker.setEffect(lighting);
                 System.out.println("WORKER SELEZIONATO "+point2D);
             }
         });
@@ -850,6 +850,33 @@ public class IslandLoader{
 
     }
 
+    public void hideArrow(){
+        Platform.runLater(() -> group.getChildren().remove(arrow));
+    }
+
+    public void showArrow(String color, Point2D point2D){
+        arrow = loadModel(IslandLoader.class.getClassLoader().getResource("3D_files/arrow_"+color.toLowerCase()+".obj"));
+        //arrow.setTranslateX(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxX()+arrow.localToScene(arrow.getBoundsInLocal()).getWidth()/2);
+        //arrow.setTranslateY(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxY());
+        //arrow.setTranslateZ(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxZ()+arrow.localToScene(arrow.getBoundsInLocal()).getDepth()/2);
+
+        arrow.setTranslateX(Point2DMap.get(point2D).getX());
+        arrow.setTranslateY(cellHeight.get(boardCells.get(point2D)));
+        arrow.setTranslateZ(Point2DMap.get(point2D).getY());
+
+        Platform.runLater(() -> group.getChildren().add(arrow));
+
+        RotateTransition rotate1 = new RotateTransition();
+        rotate1.setAxis(Rotate.Y_AXIS);
+        // setting the angle of rotation
+        rotate1.setByAngle(360);
+        //Setting duration of the transition
+        rotate1.setDuration(Duration.seconds(5));
+        rotate1.setNode(arrow);
+        rotate1.setCycleCount(- 1);
+        rotate1.play();
+
+    }
 
 
 

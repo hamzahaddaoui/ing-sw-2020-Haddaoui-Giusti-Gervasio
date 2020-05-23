@@ -132,6 +132,7 @@ public class Running extends State{
                     case BUILD:
                         built = false;
                         getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
+                        getIslandLoader().showArrow(getMatchColors().get(getPlayerID()), positionToPoint(getStartingPosition()));
                         desc.setText("SELECT the cell where you want to build");
                 }
             }
@@ -158,6 +159,7 @@ public class Running extends State{
             System.out.println("PLAYER ACTIVE. SETTED POSITION");
             Platform.runLater(()  -> desc.setText("SELECT the cell where you want to move"));
             setStartingPosition(position);
+            getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(position).getPlayerID()), point);
             getIslandLoader().showCells(getWorkersAvailableCells().get(position));
             return true;
             //lIGHTNING / LIGHT SU WORKER?
@@ -179,6 +181,7 @@ public class Running extends State{
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){
                 moved = true;
                 System.out.println("MOVE OK. SENDING movement...");
+                getIslandLoader().hideArrow();
                 getIslandLoader().showCells(null);
 
                 if (billboardStatus.get(position).getPlayerID() == 0) {
@@ -203,6 +206,7 @@ public class Running extends State{
                 built = true;
                 setEndPosition(position);
                 getIslandLoader().showCells(null);
+                getIslandLoader().hideArrow();
                 //PER ATLAS -> VERIFICARE SPECIAL FUNCTION, E MODIFICARE BIT DI DOME
                 getIslandLoader().build(point, false);
                 int towerHeight = billboardStatus.get(position).getTowerHeight();
