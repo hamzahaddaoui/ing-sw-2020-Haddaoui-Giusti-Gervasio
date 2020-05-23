@@ -321,15 +321,44 @@ public class Running extends State{
 
 
     public void specialFunctionHandler(){
-        if (confirmedStartPosition && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
-            specialFunction.setImage(new Image("images/specialpow/false.png",150,75,false,true));
-            function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true));
+        System.out.println(getSpecialFunctionAvailable());
+        System.out.println(isTerminateTurnAvailable());
+
+        if (getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus") && isTerminateTurnAvailable()){
+            specialFunction.setVisible(true);
+            function.setVisible(true);
+
+            Platform.runLater(() -> specialFunction.setImage(new Image("images/specialpow/false.png",150,75,false,true)));
+                Platform.runLater(() -> function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true)));
+
+            function.setOnMouseClicked(mouseOver -> function.setCursor(Cursor.HAND));
+
+            function.setOnMouseClicked(mouseEvent -> {
+                System.out.println("END TURN ACTIVATED");
+                Platform.runLater(() -> {
+                    specialFunction.setImage(new Image("images/specialpow/true.png", 150, 75, false, true));
+                    function.translateXProperty().set(72);
+                });
+                MessageEvent message = new MessageEvent();
+                message.setEndTurn(true);
+                notify(message);
+            });
+        }
+
+
+        else if (confirmedStartPosition && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
+            specialFunction.setVisible(true);
+            function.setVisible(true);
+
+            Platform.runLater(() -> specialFunction.setImage(new Image("images/specialpow/false.png",150,75,false,true)));
+            Platform.runLater(() -> function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true)));
             sFunction = false;
 
             function.setOnMouseClicked(mouseOver -> function.setCursor(Cursor.HAND));
 
             function.setOnMouseClicked(mouseEvent -> {
                 sFunction ^= true;
+                System.out.println("SPECIAL FUNCTION"+  sFunction);
                 Platform.runLater(() -> {
                     if (sFunction) {
                         specialFunction.setImage(new Image("images/specialpow/true.png", 150, 75, false, true));
@@ -341,11 +370,7 @@ public class Running extends State{
                 });
 
                 MessageEvent message = new MessageEvent();
-                if (getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus"))
-                    message.setEndTurn(true);
-                else
-                    message.setSpecialFunction(sFunction);
-
+                message.setSpecialFunction(sFunction);
                 notify(message);
             });
         }
