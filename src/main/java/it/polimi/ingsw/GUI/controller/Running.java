@@ -159,12 +159,10 @@ public class Running extends State{
             System.out.println("PLAYER ACTIVE. SETTED POSITION");
             Platform.runLater(()  -> desc.setText("SELECT the cell where you want to move"));
             setStartingPosition(position);
-
+            getIslandLoader().hideArrow();
             getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(position).getPlayerID()), point);
             getIslandLoader().showCells(getWorkersAvailableCells().get(position));
             return true;
-            //lIGHTNING / LIGHT SU WORKER?
-            //illuminare le celle dove può muoversi
         }
         return false;
     }

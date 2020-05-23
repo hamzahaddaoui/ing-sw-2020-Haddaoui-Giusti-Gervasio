@@ -855,29 +855,28 @@ public class IslandLoader{
     }
 
     public void showArrow(String color, Point2D point2D){
-        Platform.runLater(() -> group.getChildren().remove(arrow));
-        arrow = loadModel(IslandLoader.class.getClassLoader().getResource("3D_files/arrow_"+color.toLowerCase()+".obj"));
+        Group temp = loadModel(IslandLoader.class.getClassLoader().getResource("3D_files/arrow_"+color.toLowerCase()+".obj"));
         //arrow.setTranslateX(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxX()+arrow.localToScene(arrow.getBoundsInLocal()).getWidth()/2);
         //arrow.setTranslateY(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxY());
         //arrow.setTranslateZ(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxZ()+arrow.localToScene(arrow.getBoundsInLocal()).getDepth()/2);
 
-        arrow.setTranslateX(Point2DMap.get(point2D).getX());
-        arrow.setTranslateY(cellHeight.get(boardCells.get(point2D)));
-        arrow.setTranslateZ(Point2DMap.get(point2D).getY());
+        temp.setTranslateX(Point2DMap.get(point2D).getX());
+        temp.setTranslateY(cellHeight.get(boardCells.get(point2D)));
+        temp.setTranslateZ(Point2DMap.get(point2D).getY());
 
-        Platform.runLater(() -> group.getChildren().add(arrow));
-
-        RotateTransition rotate1 = new RotateTransition();
-        rotate1.setAxis(Rotate.Y_AXIS);
-        // setting the angle of rotation
-        rotate1.setByAngle(80000);
-        //Setting duration of the transition
-        rotate1.setDuration(Duration.seconds(1200));
-        rotate1.setNode(arrow);
-        rotate1.setAutoReverse(true);
-        rotate1.setCycleCount(- 1);
-        rotate1.play();
-
+        Platform.runLater(() -> {
+            arrow = temp;
+            group.getChildren().add(arrow);
+            RotateTransition rotate1 = new RotateTransition();
+            rotate1.setAxis(Rotate.Y_AXIS);
+            // setting the angle of rotation
+            rotate1.setByAngle(720);
+            //Setting duration of the transition
+            rotate1.setDuration(Duration.seconds(10));
+            rotate1.setNode(arrow);
+            rotate1.setCycleCount(- 1);
+            rotate1.play();
+        });
     }
 
 
