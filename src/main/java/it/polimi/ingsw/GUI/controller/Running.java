@@ -151,8 +151,10 @@ public class Running extends State{
 
                         if (!confirmedStartPosition)
                             desc.setText("SELECT A WORKER");
-                        else
+                        else {
+                            updateLightenedCells();
                             desc.setText("SELECT the cell where you want to move");
+                        }
                         break;
                     case BUILD:
                         built = false;
