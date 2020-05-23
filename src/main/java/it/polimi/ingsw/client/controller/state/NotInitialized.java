@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.controller.state;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.view.DataBase;
+import it.polimi.ingsw.client.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
@@ -52,6 +53,7 @@ public class NotInitialized extends ControlState{
     public void updateData(MessageEvent message) {
 
         if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST){
+            View.doUpdate();
             System.out.println(computeView());
             DataBase.resetDataBase();
             }

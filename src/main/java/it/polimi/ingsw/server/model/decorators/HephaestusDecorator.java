@@ -30,7 +30,7 @@ public class HephaestusDecorator extends CommandsDecorator {
                 player.setTurnState(BUILD);
                 break;
             case BUILD:
-                if (losingCondition(player) || secondBuildDone){
+                if (losingCondition(player) || secondBuildDone || firstBuildPosition.getZ() >= 3){
                     player.setHasFinished();
                 }
                 else{
@@ -45,13 +45,13 @@ public class HephaestusDecorator extends CommandsDecorator {
     @Override
     public void build(Position position, Player player) {
         if (firstBuildPosition == null){
-            position.setZ(player.getMatch().getBillboard().getTowerHeight(position));
             firstBuildPosition = position;
         }
         else{
             secondBuildDone = true;
         }
         super.build(firstBuildPosition, player);
+        position.setZ(player.getMatch().getBillboard().getTowerHeight(position));
     }
 
 
@@ -75,5 +75,6 @@ public class HephaestusDecorator extends CommandsDecorator {
 
 
     }
+
 
 }

@@ -28,7 +28,7 @@ public abstract class State extends Controller{
         messageEvent.setMatchColors(Collections.unmodifiableMap(getMatchColors(matchID)));
         messageEvent.setWinner(getMatchWinner(matchID));
         messageEvent.setFinished(getMatchState(matchID) == MatchState.FINISHED);
-        if(getMatchState(matchID) == MatchState.RUNNING || getMatchState(matchID) == MatchState.PLACING_WORKERS)
+        if(getMatchState(matchID) == MatchState.RUNNING || getMatchState(matchID) == MatchState.PLACING_WORKERS || getMatchState(matchID) == MatchState.FINISHED)
             messageEvent.setBillboardStatus(getBillboardStatus(matchID));
 
         return messageEvent;
