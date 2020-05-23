@@ -143,8 +143,11 @@ public class Running extends State{
                 switch (getTurnState()){
                     case MOVE:
                         moved = false;
-                        confirmedStartPosition = false;
-                        desc.setText("SELECT A WORKER");
+
+                        if (confirmedStartPosition)
+                            desc.setText("SELECT A WORKER");
+                        else
+                            desc.setText("SELECT the cell where you want to move");
                         break;
                     case BUILD:
                         built = false;
@@ -157,6 +160,7 @@ public class Running extends State{
                 desc.setText(getMatchPlayers().get(getCurrentPlayer()) + " is making its move");
                 setStartingPosition(null);
                 setEndPosition(null);
+                confirmedStartPosition = false;
             }
         });
     }
