@@ -81,7 +81,6 @@ public class Running extends ControlState {
 
 
             DataBase.setBillboardStatus(message.getBillboardStatus());
-            View.doUpdate();
             if (message.getPlayerState() == PlayerState.ACTIVE) {
                 DataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
                 DataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
