@@ -28,7 +28,7 @@
             </Pane>
          </right>
          <bottom>
-            <Pane prefHeight="101.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+            <Pane mouseTransparent="true" pickOnBounds="false" prefHeight="101.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fx:id="userPane" fitHeight="83.0" fitWidth="237.0" layoutX="954.0" layoutY="-15.0" mouseTransparent="true">
                      <image>

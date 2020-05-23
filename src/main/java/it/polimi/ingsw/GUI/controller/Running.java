@@ -356,7 +356,8 @@ public class Running extends State{
             function.setVisible(true);
 
             Platform.runLater(() -> specialFunction.setImage(new Image("images/specialpow/false.png",150,75,false,true)));
-                Platform.runLater(() -> function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true)));
+            Platform.runLater(() -> function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true)));
+            Platform.runLater(() -> function.translateXProperty().set(-72));
 
             function.setOnMouseClicked(mouseOver -> function.setCursor(Cursor.HAND));
 
@@ -386,7 +387,7 @@ public class Running extends State{
 
             Platform.runLater(() -> specialFunction.setImage(new Image("images/specialpow/false.png",150,75,false,true)));
             Platform.runLater(() -> function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true)));
-            Platform.runLater(() -> function.translateXProperty().set(0));
+            Platform.runLater(() -> function.translateXProperty().set(-72));
             sFunction = false;
 
             function.setOnMouseClicked(mouseOver -> function.setCursor(Cursor.HAND));
