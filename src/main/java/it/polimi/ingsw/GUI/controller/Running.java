@@ -354,6 +354,13 @@ public class Running extends State{
                 MessageEvent message = new MessageEvent();
                 message.setEndTurn(true);
                 notify(message);
+                specialFunction.setVisible(false);
+                function.setVisible(false);
+                getIslandLoader().hideArrow();
+                getIslandLoader().showCells(null);
+                function.translateXProperty().set(-72);
+
+
             });
         }
 
