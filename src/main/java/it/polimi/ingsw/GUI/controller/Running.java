@@ -237,17 +237,21 @@ public class Running extends State{
                 getIslandLoader().showCells(null);
                 getIslandLoader().hideArrow();
 
-
+                if(getGodCard() == "Atlas" && sFunction){
+                    getIslandLoader().build(point, true);
+                    billboardStatus.get(position).setDome(true);
+                }
 
                 //PER ATLAS -> VERIFICARE SPECIAL FUNCTION, E MODIFICARE BIT DI DOME
 
-                getIslandLoader().build(point, false);
-                int towerHeight = billboardStatus.get(position).getTowerHeight();
-                if (towerHeight < 3)
-                    billboardStatus.get(position).setTowerHeight(towerHeight + 1);
-                else
-                    billboardStatus.get(position).setDome(true);
-
+                else {
+                    getIslandLoader().build(point, false);
+                    int towerHeight = billboardStatus.get(position).getTowerHeight();
+                    if (towerHeight < 3)
+                        billboardStatus.get(position).setTowerHeight(towerHeight + 1);
+                    else
+                        billboardStatus.get(position).setDome(true);
+                }
 
 
                 sendData();
