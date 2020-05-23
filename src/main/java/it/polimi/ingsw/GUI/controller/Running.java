@@ -137,7 +137,7 @@ public class Running extends State{
         setBillboardStatus(message.getBillboardStatus());
 
         updateBillboard();
-
+        getIslandLoader().showCells(null);
         System.out.println("PlayerState: "+ getPlayerState());
         Platform.runLater(()  -> {
             if (getPlayerState() == PlayerState.ACTIVE){
@@ -148,7 +148,7 @@ public class Running extends State{
                     case MOVE:
                         moved = false;
 
-                        if (confirmedStartPosition)
+                        if (!confirmedStartPosition)
                             desc.setText("SELECT A WORKER");
                         else
                             desc.setText("SELECT the cell where you want to move");
@@ -332,7 +332,7 @@ public class Running extends State{
         System.out.println(getSpecialFunctionAvailable());
         System.out.println(isTerminateTurnAvailable());
 
-        if (getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus") && isTerminateTurnAvailable()){
+        if ((getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus")) && isTerminateTurnAvailable()){
             specialFunction.setVisible(true);
             function.setVisible(true);
 
