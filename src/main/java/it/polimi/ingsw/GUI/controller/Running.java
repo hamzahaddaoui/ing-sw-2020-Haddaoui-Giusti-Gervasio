@@ -6,6 +6,7 @@ import it.polimi.ingsw.utilities.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -325,6 +326,8 @@ public class Running extends State{
             function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true));
             sFunction = false;
 
+            function.setOnMouseClicked(mouseOver -> function.setCursor(Cursor.HAND));
+
             function.setOnMouseClicked(mouseEvent -> {
                 sFunction ^= true;
                 Platform.runLater(() -> {
@@ -338,7 +341,11 @@ public class Running extends State{
                 });
 
                 MessageEvent message = new MessageEvent();
-                message.setSpecialFunction(sFunction);
+                if (getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus"))
+                    message.setEndTurn(true);
+                else
+                    message.setSpecialFunction(sFunction);
+
                 notify(message);
             });
         }
