@@ -137,9 +137,10 @@ public class Running extends State{
         setBillboardStatus(message.getBillboardStatus());
 
         updateBillboard();
-        getIslandLoader().showCells(null);
+
         System.out.println("PlayerState: "+ getPlayerState());
         Platform.runLater(()  -> {
+            getIslandLoader().showCells(null);
             if (getPlayerState() == PlayerState.ACTIVE){
 
                 specialFunctionHandler();
