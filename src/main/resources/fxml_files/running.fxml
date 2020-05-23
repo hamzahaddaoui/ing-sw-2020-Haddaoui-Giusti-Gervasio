@@ -18,7 +18,7 @@
       </ImageView>
       <BorderPane fx:id="borderPane" pickOnBounds="false" prefHeight="800.0" prefWidth="1200.0" styleClass="borderPane" stylesheets="@../css_files/running.css">
          <right>
-            <Pane pickOnBounds="false" prefHeight="517.0" prefWidth="1111.0" BorderPane.alignment="CENTER">
+            <Pane pickOnBounds="false" prefHeight="479.0" prefWidth="795.0" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fx:id="god" fitHeight="181.0" fitWidth="164.0" layoutX="931.0" layoutY="299.0" mouseTransparent="true" preserveRatio="true" />
                </children>
@@ -30,7 +30,7 @@
          <bottom>
             <Pane prefHeight="101.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
                <children>
-                  <ImageView fitHeight="83.0" fitWidth="237.0" layoutX="954.0" layoutY="-15.0" mouseTransparent="true">
+                  <ImageView fx:id="userPane" fitHeight="83.0" fitWidth="237.0" layoutX="954.0" layoutY="-15.0" mouseTransparent="true">
                      <image>
                         <Image url="@../images/om_aiLevel.png" />
                      </image>
@@ -54,12 +54,18 @@
          <top>
             <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <ImageView fx:id="specialFunction" fitHeight="75.0" fitWidth="150.0" layoutX="22.0" layoutY="18.0" pickOnBounds="true" />
                   <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="1075.0" mnemonicParsing="false" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" />
-                  <ImageView fx:id="function" fitHeight="47.0" fitWidth="60.0" layoutX="31.0" layoutY="28.0" pickOnBounds="true" />
                </children>
             </Pane>
          </top>
+         <left>
+            <Pane prefHeight="479.0" prefWidth="233.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fx:id="specialFunction" fitHeight="75.0" fitWidth="150.0" layoutX="27.0" layoutY="383.0" pickOnBounds="true" />
+                  <ImageView fx:id="function" fitHeight="47.0" fitWidth="60.0" layoutX="36.0" layoutY="393.0" pickOnBounds="true" />
+               </children>
+            </Pane>
+         </left>
       </BorderPane>
    </children>
 </StackPane>

@@ -36,6 +36,8 @@ public class Running extends State{
     Label desc;
     @FXML
     ImageView god;
+    @FXML ImageView userPane;
+
 
     @FXML ImageView specialFunction;
     @FXML ImageView function;
@@ -64,6 +66,7 @@ public class Running extends State{
         billboardStatus = getBillboardStatus();
 
         user.getStylesheets().add("/css_files/placingWorkers.css");
+        userPane.setImage(new Image("images/user_"+getMatchColors().get(getPlayerID())+".png", 150, 75, false, true));
         user.getStyleClass().add("player");
         user.setText(getNickname());
         god.setImage(new Image("images/gods_no_back/" + getGodCard() + ".png",120,140,false,true));
@@ -365,7 +368,7 @@ public class Running extends State{
         }
 
 
-        else if (confirmedStartPosition && getSpecialFunctionAvailable() !=null && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
+        else if (getStartingPosition()!=null && getSpecialFunctionAvailable() !=null && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
             specialFunction.setVisible(true);
             function.setVisible(true);
 
