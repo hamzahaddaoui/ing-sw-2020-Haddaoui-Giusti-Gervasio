@@ -354,7 +354,7 @@ public class Running extends State{
         }
 
 
-        else if (confirmedStartPosition && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
+        else if (confirmedStartPosition && getSpecialFunctionAvailable() !=null && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
             specialFunction.setVisible(true);
             function.setVisible(true);
 
