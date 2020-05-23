@@ -3,6 +3,9 @@ package it.polimi.ingsw.GUI.controller;
 import it.polimi.ingsw.GUI.Controller;
 import it.polimi.ingsw.GUI.IslandLoader;
 import it.polimi.ingsw.utilities.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -13,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
@@ -167,7 +171,7 @@ public class Running extends State{
 
 
     public boolean workerClick(Point2D point){
-        Position position = new Position((int) point.getX(), (int) point.getY());
+        Position position = pointToPosition(point);
         System.out.println("worker clicked + "+position);
         System.out.println(getWorkersAvailableCells());
         if (getPlayerState() == PlayerState.IDLE) {
@@ -178,10 +182,8 @@ public class Running extends State{
             System.out.println("PLAYER ACTIVE. SETTED POSITION");
             Platform.runLater(()  -> desc.setText("SELECT the cell where you want to move"));
             setStartingPosition(position);
-            getIslandLoader().hideArrow();
-            getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(position).getPlayerID()), point);
-            getIslandLoader().showCells(getWorkersAvailableCells().get(position));
 
+            updateLightenedCells();
             specialFunctionHandler();
 
             return true;
@@ -214,8 +216,6 @@ public class Running extends State{
                 }
 
 
-
-
                 setEndPosition(position);
                 sendData();
                 setStartingPosition(position);
@@ -229,7 +229,11 @@ public class Running extends State{
                 setEndPosition(position);
                 getIslandLoader().showCells(null);
                 getIslandLoader().hideArrow();
+
+
+
                 //PER ATLAS -> VERIFICARE SPECIAL FUNCTION, E MODIFICARE BIT DI DOME
+
                 getIslandLoader().build(point, false);
                 int towerHeight = billboardStatus.get(position).getTowerHeight();
                 if (towerHeight < 3)
@@ -366,10 +370,13 @@ public class Running extends State{
                 Platform.runLater(() -> {
                     if (sFunction) {
                         specialFunction.setImage(new Image("images/specialpow/true.png", 150, 75, false, true));
-                        function.translateXProperty().set(72);
+                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), new KeyValue(function.xProperty(), 72)));
+                        timeline.play();
+
                     } else {
                         specialFunction.setImage(new Image("images/specialpow/false.png", 150, 75, false, true));
-                        function.translateXProperty().set(- 72);
+                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), new KeyValue(function.xProperty(), 0)));
+                        timeline.play();
                     }
                 });
 
@@ -382,6 +389,12 @@ public class Running extends State{
             specialFunction.setVisible(false);
             function.setVisible(false);
         }
+    }
+
+    public void updateLightenedCells(){
+        getIslandLoader().hideArrow();
+        getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(getStartingPosition()).getPlayerID()), positionToPoint(getStartingPosition()));
+        getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
     }
 
 
