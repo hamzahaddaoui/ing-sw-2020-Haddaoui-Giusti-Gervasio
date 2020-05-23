@@ -208,7 +208,7 @@
                      <bottom>
                         <Pane prefHeight="90.0" prefWidth="822.0" BorderPane.alignment="CENTER">
                            <children>
-                              <ImageView fitHeight="83.0" fitWidth="237.0" layoutX="574.0" layoutY="-14.0" pickOnBounds="true">
+                              <ImageView fx:id="userPane" fitHeight="83.0" fitWidth="237.0" layoutX="574.0" layoutY="-14.0" pickOnBounds="true">
                                  <image>
                                     <Image url="@../images/om_aiLevel.png" />
                                  </image>

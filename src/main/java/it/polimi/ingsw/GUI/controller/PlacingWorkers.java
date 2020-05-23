@@ -39,6 +39,8 @@ public class PlacingWorkers extends State{
     @FXML
     ImageView god;
 
+    @FXML ImageView userPane;
+
     boolean finished = false;
 
     @Override
@@ -92,6 +94,7 @@ public class PlacingWorkers extends State{
     public void initialize(URL url, ResourceBundle resourceBundle){
         this.addObserver(getNetworkHandler());
         getNetworkHandler().addObserver(this);
+        userPane.setImage(new Image("images/user_"+getMatchColors().get(getPlayerID())+".png", 150, 75, false, true));
 
         int index = 4-getMatchPlayers().size();
         for(int player : getMatchPlayers().keySet()){

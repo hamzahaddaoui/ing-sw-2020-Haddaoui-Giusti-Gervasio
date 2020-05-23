@@ -118,6 +118,7 @@ public class Running extends State{
         if (message.getError()){
             System.out.println(message);
             showError();
+            return;
         }
         else if (message.isFinished()){
             if (message.getWinner() != 0){
@@ -161,6 +162,7 @@ public class Running extends State{
                         break;
                     case BUILD:
                         built = false;
+                        getIslandLoader().hideArrow();
                         getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
                         getIslandLoader().showArrow(getMatchColors().get(getPlayerID()), positionToPoint(getStartingPosition()));
                         desc.setText("SELECT the cell where you want to build");
@@ -237,7 +239,7 @@ public class Running extends State{
                 getIslandLoader().showCells(null);
                 getIslandLoader().hideArrow();
 
-                if(getGodCard() == "Atlas" && sFunction){
+                if(getGodCard().equals("Atlas") && sFunction){
                     getIslandLoader().build(point, true);
                     billboardStatus.get(position).setDome(true);
                 }
