@@ -855,6 +855,7 @@ public class IslandLoader{
     }
 
     public void showArrow(String color, Point2D point2D){
+        Platform.runLater(() -> group.getChildren().remove(arrow));
         arrow = loadModel(IslandLoader.class.getClassLoader().getResource("3D_files/arrow_"+color.toLowerCase()+".obj"));
         //arrow.setTranslateX(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxX()+arrow.localToScene(arrow.getBoundsInLocal()).getWidth()/2);
         //arrow.setTranslateY(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxY());
@@ -869,10 +870,11 @@ public class IslandLoader{
         RotateTransition rotate1 = new RotateTransition();
         rotate1.setAxis(Rotate.Y_AXIS);
         // setting the angle of rotation
-        rotate1.setByAngle(360);
+        rotate1.setByAngle(80000);
         //Setting duration of the transition
-        rotate1.setDuration(Duration.seconds(5));
+        rotate1.setDuration(Duration.seconds(1200));
         rotate1.setNode(arrow);
+        rotate1.setAutoReverse(true);
         rotate1.setCycleCount(- 1);
         rotate1.play();
 
