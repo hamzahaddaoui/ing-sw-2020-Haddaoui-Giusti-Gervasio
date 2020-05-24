@@ -42,7 +42,7 @@ public class userDisconnected extends State{
     }
 
     public void userNewGame(MouseEvent mouseEvent){
-        getNetworkHandler().shutdownAll();
+        //provare a chiudere conneessione server
         wipeData();
         setCurrentState(new StartState());
         getCurrentState().showPane();

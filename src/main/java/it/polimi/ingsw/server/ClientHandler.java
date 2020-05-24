@@ -96,7 +96,8 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                 .toJson(message, MessageEvent.class);
 
         if (message.getInfo() == null || !message.getInfo().equals("Heartbeat Message")) {
-            System.out.print("SENDING to player" + message.getPlayerID()+ " - ");
+            System.out.println(message);
+            /*System.out.print("SENDING to player" + message.getPlayerID()+ " - ");
             if (matchID != 0) {
                 System.out.print(message.getMatchPlayers().get(message.getPlayerID()) + ": CurrentState: "+ message.getPlayerState());
                 if (message.getMatchState() == MatchState.RUNNING)
@@ -120,9 +121,10 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                 }
             }
             if (message.getWinner()!=0)
-                System.out.println("\nThe winner is: "+message.getMatchPlayers().get(message.getWinner()));
+                System.out.println("\nThe winner is: "+message.getMatchPlayers().get(message.getWinner()));*/
 
         }
+
         lastMessage = message;
 
         outputTaskQueue.submit(() -> {
@@ -154,6 +156,10 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                 messageEvent = new MessageEvent();
                 messageEvent.setPlayerID(playerID);
             }
+
+            if (messageEvent.isFinished())
+                return;
+
             update(messageEvent);
 
             heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT/2, TimeUnit.MILLISECONDS);

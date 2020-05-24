@@ -72,11 +72,10 @@ public class Running extends State{
                         message.setFinished(true);
                         message.setWinner(getMatchWinner(matchID));
                         message.setPlayerState(PlayerState.LOST);
-                        message.setMatchState(MatchState.RUNNING);
+                        message.setMatchState(getMatchState(matchID));
                         notify(observers, message);
                     });
-            getMatchLosers(matchID).keySet().forEach(this::clientHandlerReset);
-            getMatchLosers(matchID).keySet().forEach(Server::removeClientSocket);
+
             removeLosers(matchID);
         }
 
@@ -84,10 +83,10 @@ public class Running extends State{
         if (getMatchState(matchID) == MatchState.FINISHED) {
             getMatchPlayers(matchID).keySet().forEach(this::clientHandlerReset);
             getMatchPlayers(matchID).keySet().forEach(Server::removeClientSocket);
+            getMatchLosers(matchID).keySet().forEach(this::clientHandlerReset);
+            getMatchLosers(matchID).keySet().forEach(Server::removeClientSocket);
             deleteMatch(matchID);
         }
-
-
     }
 
 }
