@@ -488,7 +488,7 @@ public class IslandLoader{
         Timeline timeline = new Timeline(
                 new KeyFrame(
                         Duration.seconds(0.35),
-                        new KeyValue(translate.yProperty(), - height + cellHeight.get(boardCells.get(point)))
+                        new KeyValue(translate.yProperty(), - height + cellHeight.get(boardCells.get(point)) -0.3)
                 )
         );
         timeline.play();
