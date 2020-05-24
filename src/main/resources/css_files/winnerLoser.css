@@ -4,8 +4,12 @@
 }
 
 #borderPane{
-    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, blanchedalmond, blue);
-    -fx-opacity: 0.4;
+    -fx-background-color: rgba(51, 153, 255, 0.4);
+    -fx-background-radius: 10;
+}
+
+.label{
+    -fx-font-size: 120;
 }
 
 #button1{
