@@ -841,9 +841,9 @@ public class IslandLoader{
     public void endAnimation(){
         Timeline timeline = new Timeline(
                 new KeyFrame(
-                        Duration.seconds(4),
+                        Duration.seconds(15),
                         new KeyValue(angleX, 30),
-                        new KeyValue(angleY, 450)
+                        new KeyValue(angleY, 1080)
                 )
         );
         timeline.setCycleCount(-1);

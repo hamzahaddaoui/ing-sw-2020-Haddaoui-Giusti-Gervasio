@@ -122,6 +122,7 @@ public class Running extends State{
         }
         else if (message.isFinished()){
             if (message.getPlayerState() == PlayerState.WIN){
+                getIslandLoader().endAnimation();
                 System.out.println("WINNER");
                 win();
             }
