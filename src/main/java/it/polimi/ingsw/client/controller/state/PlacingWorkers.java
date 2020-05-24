@@ -82,7 +82,7 @@ public class PlacingWorkers extends ControlState {
     @Override
     public void updateData(MessageEvent message) {
 
-        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+        if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.resetDataBase();
             View.setRefresh(true);
             View.print();

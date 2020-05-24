@@ -66,7 +66,7 @@ public class SelectingSpecialCommand extends ControlState {
      */
     @Override
     public void updateData(MessageEvent message) {
-        if (message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+        if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.resetDataBase();
             View.setRefresh(true);
             View.print();
@@ -81,9 +81,9 @@ public class SelectingSpecialCommand extends ControlState {
             System.out.println("For this match the Gods are "+ message.getMatchCards());
         }
 
-        if(!message.getInfo().equals("Match data update") && DataBase.getPlayer() != message.getCurrentPlayer() ){
+        /*if(message.getInfo()!=null && !message.getInfo().equals("Match data update") && DataBase.getPlayer() != message.getCurrentPlayer() ){
             System.out.println(message.getInfo());
-        }
+        }*/
 
         DataBase.setPlayer(message.getCurrentPlayer());
 

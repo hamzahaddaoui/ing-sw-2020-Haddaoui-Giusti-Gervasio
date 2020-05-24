@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
@@ -27,6 +28,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     private boolean active;
     private static ObjectOutputStream output;
     private static ObjectInputStream input;
+    private MessageEvent lastMessage;
 
     public NetworkHandler(String ip) throws IOException {
         active = true;
@@ -132,10 +134,15 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        try {
            while (active) {
                inputObject = (String) input.readObject();
-               messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
+               messageEvent = new Gson().newBuilder().enableComplexMapKeySerialization().create().fromJson(inputObject, MessageEvent.class);
 
-               if (messageEvent.getInfo()==null || !messageEvent.getInfo().equals("Heartbeat Message")) {
-                   notify(messageEvent);
+               if (messageEvent.getInfo() == null || !messageEvent.getInfo().equals("Heartbeat Message")) {
+                   //System.out.println("MSG1: " + messageEvent);
+                   if (lastMessage==null || !lastMessage.toString().equals(messageEvent.toString())) {
+                       //System.out.println("MSG2: " +messageEvent);
+                       lastMessage = messageEvent;
+                       notify(messageEvent);
+                   }
                }
            }
        } catch (SocketTimeoutException e) {

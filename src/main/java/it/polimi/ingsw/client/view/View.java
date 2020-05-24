@@ -43,20 +43,19 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      * @param messageEvent  is the message from Network Handler
      */
     @Override
-    public synchronized void update(MessageEvent messageEvent){
-            executorData.submit(()->{
-                synchronized (DataBase.class){
-                DataBase.updateStandardData(messageEvent);
-                DataBase.updateControllerState();
-                if(messageEvent.getError()){
-                    DataBase.getControlState().error();
+    public synchronized void update(MessageEvent messageEvent) {
+            executorData.submit(() -> {
+                synchronized (DataBase.class) {
+                    DataBase.updateStandardData(messageEvent);
+                    DataBase.updateControllerState();
+                    if (messageEvent.getError()) {
+                        DataBase.getControlState().error();
+                    } else {
+                        DataBase.getControlState().updateData(messageEvent);
+                    }
+                    notifyAll();
                 }
-                else {
-                    DataBase.getControlState().updateData(messageEvent);
-                }
-                notifyAll();
-            }
-        });
+            });
     }
 
     // From Controller States (VISUALIZATION CHANGES)
