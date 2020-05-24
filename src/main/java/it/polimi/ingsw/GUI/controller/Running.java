@@ -114,6 +114,7 @@ public class Running extends State{
     @Override
     public void update(MessageEvent message){
         System.out.println("Message received: "+ message);
+
         if (message.getError()){
             System.out.println(message);
             showError();

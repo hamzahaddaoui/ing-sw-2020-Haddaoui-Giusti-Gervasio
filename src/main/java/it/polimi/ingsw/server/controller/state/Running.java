@@ -76,7 +76,7 @@ public class Running extends State{
                         notify(observers, message);
                     });
 
-            removeLosers(matchID);
+
         }
 
 
@@ -85,6 +85,7 @@ public class Running extends State{
             getMatchPlayers(matchID).keySet().forEach(Server::removeClientSocket);
             getMatchLosers(matchID).keySet().forEach(this::clientHandlerReset);
             getMatchLosers(matchID).keySet().forEach(Server::removeClientSocket);
+            removeLosers(matchID);
             deleteMatch(matchID);
         }
     }

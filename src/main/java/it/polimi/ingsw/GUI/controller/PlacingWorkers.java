@@ -1,5 +1,6 @@
 package it.polimi.ingsw.GUI.controller;
 
+import it.polimi.ingsw.GUI.Controller;
 import it.polimi.ingsw.GUI.View;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
@@ -7,17 +8,21 @@ import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -30,6 +35,9 @@ public class PlacingWorkers extends State{
     GridPane gridPane;
     @FXML
     GridPane playerGrid;
+
+    @FXML
+    AnchorPane anchorPane;
 
     @FXML
     Label desc;
@@ -67,6 +75,10 @@ public class PlacingWorkers extends State{
             showError();
         }
         else if (message.isFinished()){
+            if (message.getPlayerState() == PlayerState.LOST){
+                System.out.println("LOSER");
+                lost();
+            }
             setCurrentState(new userDisconnected());
             getCurrentState().showPane();
         }
@@ -182,5 +194,23 @@ public class PlacingWorkers extends State{
             System.out.println("Sending data");
             sendData();
         }
+    }
+
+    public void lost(){
+        Parent page;
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(Controller.class.getClassLoader().getResource("fxml_files/loser.fxml")); //potrebbe dare problemi, ma non credo
+        try {
+            page = fxmlLoader.load();
+        } catch (IOException exception) {
+            System.out.println("Failed to load fxml file.");
+            exception.printStackTrace();
+            return;
+        }
+        Platform.runLater(() -> {
+            anchorPane.getChildren().add(page);
+            page.toFront();
+            getStage().show();
+        });
     }
 }
