@@ -404,8 +404,6 @@ public class Running extends State{
                                   "-fx-cursor: hand;");
             });
 
-            sFunction = false;
-
             function.setOnMouseEntered (mouseOver -> {
                 function.setCursor(Cursor.HAND);
                 function.scaleXProperty().set(1.1);
