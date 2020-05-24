@@ -434,6 +434,7 @@ public class Running extends State{
                 MessageEvent message = new MessageEvent();
                 message.setSpecialFunction(sFunction);
                 notify(message);
+                resetCells();
             });
         }
         else{

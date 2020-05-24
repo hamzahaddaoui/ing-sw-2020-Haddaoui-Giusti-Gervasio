@@ -22,7 +22,7 @@ public class Running extends State{
             return true;
         }
 
-        else if (isSpecialFunctionAvailable(matchID).keySet().size() !=0 ){
+        else if ( (hasSpecialFunction(matchID) ^ messageEvent.getSpecialFunction()) && isSpecialFunctionAvailable(matchID).keySet().size() !=0 ){
             setUnsetSpecialFunction(matchID, messageEvent.getSpecialFunction());
             return true;
         }
