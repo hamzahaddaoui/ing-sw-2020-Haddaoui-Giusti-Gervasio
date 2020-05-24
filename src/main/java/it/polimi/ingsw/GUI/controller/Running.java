@@ -376,7 +376,7 @@ public class Running extends State{
                 function.scaleZProperty().set(1.0);
             });
 
-            function.setOnMouseClicked(mouseEvent -> {
+            function.setOnMouseReleased(mouseEvent -> {
                 System.out.println("END TURN ACTIVATED");
                 Platform.runLater(() -> {
                     function.setEffect(new Glow(0.5));
@@ -419,7 +419,7 @@ public class Running extends State{
                 function.scaleZProperty().set(1.0);
             });
 
-            function.setOnMouseClicked(mouseEvent -> {
+            function.setOnMouseReleased(mouseEvent -> {
                 sFunction ^= true;
                 System.out.println("SPECIAL FUNCTION"+  sFunction);
                 Platform.runLater(() -> {
