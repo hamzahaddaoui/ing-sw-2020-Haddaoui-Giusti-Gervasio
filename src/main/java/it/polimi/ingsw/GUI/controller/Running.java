@@ -193,11 +193,10 @@ public class Running extends State{
                 sendData();
                 setStartingPosition(position);
             }
-
-            else if (!confirmedStartPosition){
-                setStartingPosition(null);
-                resetCells();
-            }
+            else if(moved)
+                System.out.println("Already moved");
+            else
+                System.out.println("position not contained in available cells");
         }
         else if (getTurnState() == TurnState.BUILD) {
 
@@ -218,6 +217,10 @@ public class Running extends State{
                 }
                 sendData();
             }
+            else if(built)
+                System.out.println("Already built");
+            else
+                System.out.println("position not contained in available cells");
         }
     }
 
@@ -254,6 +257,9 @@ public class Running extends State{
 
                 function.setEffect(new Glow(0));
                 function.setVisible(false);
+
+                moved = false;
+                built = false;
 
                 sFunction = false;
             }
@@ -445,6 +451,8 @@ public class Running extends State{
     }
 
     public void updateLightenedCells(){
+        getIslandLoader().showCells(null);
+        getIslandLoader().hideArrow();
         if (getPlayerState() == PlayerState.ACTIVE) {
             getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(getStartingPosition()).getPlayerID()), positionToPoint(getStartingPosition()));
             getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
