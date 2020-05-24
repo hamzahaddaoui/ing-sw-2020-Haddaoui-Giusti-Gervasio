@@ -58,7 +58,7 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </Button>
-                        <ImageView fitHeight="284.0" fitWidth="293.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <ImageView fitHeight="284.0" fitWidth="293.0" opacity="0.71" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <image>
                               <Image url="@../images/winner.png" />
                            </image>

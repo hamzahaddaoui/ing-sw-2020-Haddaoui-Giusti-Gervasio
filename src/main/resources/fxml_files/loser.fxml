@@ -58,7 +58,7 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </Button>
-                        <ImageView fitHeight="190.0" fitWidth="298.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <ImageView fitHeight="190.0" fitWidth="298.0" opacity="0.63" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <image>
                               <Image url="@../images/sad.png" />
                            </image>

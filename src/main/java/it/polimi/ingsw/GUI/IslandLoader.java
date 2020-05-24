@@ -841,13 +841,21 @@ public class IslandLoader{
     public void endAnimation(){
         Timeline timeline = new Timeline(
                 new KeyFrame(
-                        Duration.seconds(15),
-                        new KeyValue(angleX, 30),
+                        Duration.seconds(0.0001),
+                        new KeyValue(angleX, 30)
+                )
+        );
+        timeline.play();
+
+        Timeline timeline2 = new Timeline(
+                new KeyFrame(
+                        Duration.seconds(30),
                         new KeyValue(angleY, 1080)
                 )
         );
-        timeline.setCycleCount(-1);
-        timeline.play();
+        timeline2.setCycleCount(-1);
+        timeline2.play();
+
     }
 
     public void showCells(Set<Position> positionSet){
