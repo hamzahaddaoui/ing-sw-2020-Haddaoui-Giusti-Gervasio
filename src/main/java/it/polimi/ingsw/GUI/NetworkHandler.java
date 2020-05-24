@@ -122,9 +122,14 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        }
    }
 
-   public void shutdownAll(){
+   public void shutdownAll() {
         heartbeatService.shutdown();
         inputHandler.shutdown();
+       try {
+           server.close();
+       } catch (IOException exception) {
+           exception.printStackTrace();
+       }
    }
 
    public void connectionError(){
