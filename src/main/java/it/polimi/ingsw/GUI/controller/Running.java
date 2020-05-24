@@ -227,7 +227,7 @@ public class Running extends State{
 
                 specialFunctionHandler();
 
-                if (!confirmedStartPosition &&  getStartingPosition() != null)
+                if (!confirmedStartPosition &&  getStartingPosition() == null)
                     desc.setText("SELECT A WORKER");
                 else {
                     switch (getTurnState()) {
