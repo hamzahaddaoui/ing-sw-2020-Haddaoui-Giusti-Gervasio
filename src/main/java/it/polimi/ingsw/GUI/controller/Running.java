@@ -60,8 +60,6 @@ public class Running extends State{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        for(Observer observer : getNetworkHandler().getObservers())
-            getNetworkHandler().removeObserver(observer);
 
         this.addObserver(getNetworkHandler());
         getNetworkHandler().addObserver(this);

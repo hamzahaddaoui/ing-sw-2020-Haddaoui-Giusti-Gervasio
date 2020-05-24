@@ -138,4 +138,12 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            alert.showAndWait();
        });
    }
+
+    @Override
+    public void addObserver(Observer<MessageEvent> observer){
+        for (Observer obs : getObservers())
+            super.removeObserver(obs);
+
+        super.addObserver(observer);
+    }
 }
