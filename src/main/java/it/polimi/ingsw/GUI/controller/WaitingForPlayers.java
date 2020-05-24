@@ -55,6 +55,10 @@ public class WaitingForPlayers extends State {
                 goOn();
             });
         }
+        else if(getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND){
+            goOn();
+        }
+
         else {
             final ProgressIndicator pi = new ProgressIndicator(- 1.0f);
             pi.setStyle(" -fx-progress-color: darkgreen;");
