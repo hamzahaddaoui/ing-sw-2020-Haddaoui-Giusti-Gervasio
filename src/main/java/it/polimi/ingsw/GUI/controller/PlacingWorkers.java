@@ -78,6 +78,7 @@ public class PlacingWorkers extends State{
             if (message.getPlayerState() == PlayerState.LOST){
                 System.out.println("LOSER");
                 lost();
+                return;
             }
             setCurrentState(new userDisconnected());
             getCurrentState().showPane();
