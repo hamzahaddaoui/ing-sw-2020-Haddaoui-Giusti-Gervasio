@@ -61,11 +61,6 @@ public class Running extends State{
                     notify(observers, message);
                 });
 
-        if (getMatchState(matchID) == MatchState.FINISHED) {
-            getMatchPlayers(matchID).keySet().forEach(this::clientHandlerReset);
-            getMatchPlayers(matchID).keySet().forEach(Server::removeClientSocket);
-            deleteMatch(matchID);
-        }
 
         if (getMatchLosers(matchID).size()!=0) {
             getMatchLosers(matchID)
@@ -84,6 +79,15 @@ public class Running extends State{
             getMatchLosers(matchID).keySet().forEach(Server::removeClientSocket);
             removeLosers(matchID);
         }
+
+
+        if (getMatchState(matchID) == MatchState.FINISHED) {
+            getMatchPlayers(matchID).keySet().forEach(this::clientHandlerReset);
+            getMatchPlayers(matchID).keySet().forEach(Server::removeClientSocket);
+            deleteMatch(matchID);
+        }
+
+
     }
 
 }

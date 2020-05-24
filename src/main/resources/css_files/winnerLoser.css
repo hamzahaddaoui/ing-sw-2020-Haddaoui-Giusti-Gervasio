@@ -4,7 +4,8 @@
 }
 
 #borderPane{
-    -fx-background-color: transparent;
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, blanchedalmond, blue);
+    -fx-opacity: 0.4;
 }
 
 #button1{

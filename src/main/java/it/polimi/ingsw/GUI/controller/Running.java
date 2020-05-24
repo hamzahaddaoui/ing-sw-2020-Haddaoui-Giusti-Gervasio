@@ -20,6 +20,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -113,16 +114,19 @@ public class Running extends State{
     @Override
     public void update(MessageEvent message){
         System.out.println("Message received: "+ message);
+        win();
         if (message.getError()){
             System.out.println(message);
             showError();
             return;
         }
         else if (message.isFinished()){
-            if (message.getWinner() != 0){
+            if (message.getPlayerState() == PlayerState.WIN){
+                System.out.println("WINNER");
                 win();
             }
             else if (message.getPlayerState() == PlayerState.LOST){
+                System.out.println("LOSER");
                 lost();
             }
             else{
@@ -475,7 +479,7 @@ public class Running extends State{
     }
 
     public void win(){
-        Parent page;
+        AnchorPane page;
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Controller.class.getClassLoader().getResource("fxml_files/winner.fxml")); //potrebbe dare problemi, ma non credo
         try {
@@ -485,7 +489,12 @@ public class Running extends State{
             exception.printStackTrace();
             return;
         }
-        stackPane.getChildren().add(page);
+        //stackPane.getChildren().clear();
+        Platform.runLater(() -> {
+            stackPane.getChildren().add(page);
+            page.toFront();
+            getStage().show();
+        });
     }
 
     public void lost(){
@@ -499,7 +508,11 @@ public class Running extends State{
             exception.printStackTrace();
             return;
         }
-        stackPane.getChildren().add(page);
+        Platform.runLater(() -> {
+            stackPane.getChildren().add(page);
+            page.toFront();
+            getStage().show();
+        });
     }
 }
 
