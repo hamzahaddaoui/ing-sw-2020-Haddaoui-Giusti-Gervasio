@@ -128,7 +128,6 @@ public class StartState extends State {
             popup.setOnShown(e -> {
                 popup.setX(getStage().getX() + getStage().getWidth()/2 - popup.getWidth()/2);
                 popup.setY(nickname.localToScene(0,0).getY()+63 );
-
             });
             popup.show(getStage());
             return;

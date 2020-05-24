@@ -44,6 +44,7 @@ public class Running extends State{
     @FXML Button function;
 
     static private Map<Position, Cell> billboardStatus = new HashMap<>();
+    static private Map<Integer, String> matchPlayers = new HashMap<>();
 
     boolean confirmedStartPosition;
     boolean moved;
@@ -66,6 +67,7 @@ public class Running extends State{
         getNetworkHandler().addObserver(this);
 
         billboardStatus = getBillboardStatus();
+        matchPlayers = getMatchPlayers();
 
         //inizializzo gli elementi grafici del layer superiore
         user.getStylesheets().add("/css_files/placingWorkers.css");
@@ -297,7 +299,8 @@ public class Running extends State{
             System.out.println("Different billboard");
 
 
-            for (int player : getMatchPlayers().keySet()) {
+
+            for (int player : matchPlayers.keySet()) {
                 if (getBillboardStatus().values().stream().noneMatch(cell -> cell.getPlayerID() == player)) {
                     Set<Position> positions = billboardStatus.keySet().stream().filter(pos -> billboardStatus.get(pos).getPlayerID() == player).collect(Collectors.toSet());
                     positions.forEach(pos -> billboardStatus.get(pos).setPlayerID(0));
@@ -305,6 +308,7 @@ public class Running extends State{
                 }
             }
 
+            matchPlayers = getMatchPlayers();
 
             Set<Position> changedPositions =  getBillboardStatus()
                     .keySet()
