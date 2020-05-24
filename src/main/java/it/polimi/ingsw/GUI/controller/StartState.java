@@ -128,7 +128,6 @@ public class StartState extends State {
             popup.getContent().add(label);
             popup.setAutoHide(true);
             popup.setHideOnEscape(true);
-            popup.
             label.setText("Insert your nickname");
             popup.setOnShown(e -> {
                 popup.setX(getStage().getX() + getStage().getWidth()/2 - popup.getWidth()/2);
