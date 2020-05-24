@@ -1,5 +1,6 @@
 package it.polimi.ingsw.GUI.controller;
 
+import it.polimi.ingsw.GUI.Database;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import javafx.application.Platform;
@@ -17,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static it.polimi.ingsw.GUI.Controller.replaceSceneContent;
@@ -115,7 +117,8 @@ public class WaitingForPlayers extends State {
             updateView();
             this.showPane();
             if(getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND) {
-                goOn();
+                Database.setMatchCards(new ArrayList<>(message.getMatchCards()));
+                Platform.runLater(() -> goOn());
                 return;
             }
             new Thread(()->{
