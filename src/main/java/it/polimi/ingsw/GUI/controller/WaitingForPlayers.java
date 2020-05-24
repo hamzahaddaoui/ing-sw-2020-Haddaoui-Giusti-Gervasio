@@ -55,9 +55,6 @@ public class WaitingForPlayers extends State {
                 goOn();
             });
         }
-        else if(getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND){
-            goOn();
-        }
 
         else {
             final ProgressIndicator pi = new ProgressIndicator(- 1.0f);
@@ -117,6 +114,10 @@ public class WaitingForPlayers extends State {
             updateStandardData(message);
             updateView();
             this.showPane();
+            if(getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND) {
+                goOn();
+                return;
+            }
             new Thread(()->{
                 getNetworkHandler().removeObserver(this);
                 this.removeObserver(getNetworkHandler());
