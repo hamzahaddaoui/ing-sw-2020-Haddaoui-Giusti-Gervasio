@@ -115,6 +115,7 @@ public class Running extends State{
 
     @Override
     public void update(MessageEvent message){
+
         System.out.println("Message received: "+ message);
 
         if (message.getError()){
@@ -299,12 +300,13 @@ public class Running extends State{
             System.out.println("Different billboard");
 
 
-
-            for (int player : matchPlayers.keySet()) {
-                if (getBillboardStatus().values().stream().noneMatch(cell -> cell.getPlayerID() == player)) {
-                    Set<Position> positions = billboardStatus.keySet().stream().filter(pos -> billboardStatus.get(pos).getPlayerID() == player).collect(Collectors.toSet());
-                    positions.forEach(pos -> billboardStatus.get(pos).setPlayerID(0));
-                    positions.forEach(pos -> getIslandLoader().removeWorker(positionToPoint(pos)));
+            if (matchPlayers.size() != getMatchPlayers().size()) {
+                for (int player : matchPlayers.keySet()) {
+                    if (getBillboardStatus().values().stream().noneMatch(cell -> cell.getPlayerID() == player)) {
+                        Set<Position> positions = billboardStatus.keySet().stream().filter(pos -> billboardStatus.get(pos).getPlayerID() == player).collect(Collectors.toSet());
+                        positions.forEach(pos -> billboardStatus.get(pos).setPlayerID(0));
+                        positions.forEach(pos -> getIslandLoader().removeWorker(positionToPoint(pos)));
+                    }
                 }
             }
 
