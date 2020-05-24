@@ -3,6 +3,7 @@ package it.polimi.ingsw.GUI.controller;
 import it.polimi.ingsw.GUI.Controller;
 import it.polimi.ingsw.GUI.IslandLoader;
 import it.polimi.ingsw.utilities.*;
+import it.polimi.ingsw.utilities.Observer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -59,6 +60,9 @@ public class Running extends State{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
+        for(Observer observer : getNetworkHandler().getObservers())
+            getNetworkHandler().removeObserver(observer);
+
         this.addObserver(getNetworkHandler());
         getNetworkHandler().addObserver(this);
 
@@ -110,6 +114,7 @@ public class Running extends State{
 
     @Override
     public void update(MessageEvent message){
+        System.out.println(getNetworkHandler().getObservers());
         System.out.println("Message received: "+ message);
         if (message.getError()){
             System.out.println(message);

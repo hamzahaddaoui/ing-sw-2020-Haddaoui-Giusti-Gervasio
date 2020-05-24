@@ -118,8 +118,7 @@ public class WaitingForPlayers extends State {
             this.showPane();
             if(getMatchState() == MatchState.SELECTING_SPECIAL_COMMAND) {
                 Database.setMatchCards(new ArrayList<>(message.getMatchCards()));
-                Platform.runLater(() -> goOn());
-                return;
+                goOn();
             }
             new Thread(()->{
                 getNetworkHandler().removeObserver(this);

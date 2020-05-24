@@ -29,15 +29,15 @@ public class View {
                 }
                 break;
             case SELECTING_SPECIAL_COMMAND:
-                //if (getCurrentState().getClass() != SelectingSpecialCommand.class)
+                if (getCurrentState().getClass() != SelectingSpecialCommand.class)
                     setCurrentState(new SelectingSpecialCommand());
                 break;
             case PLACING_WORKERS:
-                //if (getCurrentState().getClass() != PlacingWorkers.class)
+                if (getCurrentState().getClass() != PlacingWorkers.class)
                     setCurrentState(new PlacingWorkers());
                 break;
             case RUNNING:
-                //if (getCurrentState().getClass() != Running.class)
+                if (getCurrentState().getClass() != Running.class)
                     setCurrentState(new Running());
                 break;
             case FINISHED:
