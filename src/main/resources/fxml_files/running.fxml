@@ -62,7 +62,7 @@
          <left>
             <Pane pickOnBounds="false" prefHeight="479.0" prefWidth="233.0" BorderPane.alignment="CENTER">
                <children>
-                  <ToggleButton fx:id="function" layoutX="40.0" layoutY="379.0" mnemonicParsing="false" prefHeight="71.0" prefWidth="70.0" style="-fx-background-color: transparent;" />
+                  <Button fx:id="function" layoutX="40.0" layoutY="379.0" mnemonicParsing="false" prefHeight="71.0" prefWidth="70.0" style="-fx-background-color: transparent;" />
                </children>
             </Pane>
          </left>

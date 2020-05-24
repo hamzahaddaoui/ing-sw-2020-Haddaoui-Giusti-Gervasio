@@ -13,6 +13,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.Glow;
@@ -38,7 +39,7 @@ public class Running extends State{
     @FXML ImageView god;
     @FXML ImageView userPane;
 
-    @FXML ToggleButton function;
+    @FXML Button function;
 
     static private Map<Position, Cell> billboardStatus = new HashMap<>();
 
