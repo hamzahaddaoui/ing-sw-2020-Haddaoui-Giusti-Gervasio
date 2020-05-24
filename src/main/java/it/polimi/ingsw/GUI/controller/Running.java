@@ -120,26 +120,28 @@ public class Running extends State{
             showError();
             return;
         }
-        else if (message.isFinished()){
-            if (message.getPlayerState() == PlayerState.WIN){
-                getIslandLoader().endAnimation();
-                System.out.println("WINNER");
-                win();
-            }
-            else if (message.getPlayerState() == PlayerState.LOST){
-                setBillboardStatus(message.getBillboardStatus());
-                updateBillboard();
-                getIslandLoader().endAnimation();
-                System.out.println("LOSER");
-                lost();
-            }
-            else{
-                //disconnessione di qualcuno <.<
-                setCurrentState(new userDisconnected());
-                getCurrentState().showPane();
-            }
+        else if (message.getPlayerState() == PlayerState.LOST){
+            setBillboardStatus(message.getBillboardStatus());
+            updateBillboard();
+            getIslandLoader().endAnimation();
+            System.out.println("LOSER");
+            lost();
             return;
         }
+        else if (message.getPlayerState() == PlayerState.WIN){
+            getIslandLoader().endAnimation();
+            System.out.println("WINNER");
+            win();
+            return;
+        }
+        else if (message.isFinished()){
+            //disconnessione di qualcuno <.<
+            setCurrentState(new userDisconnected());
+            getCurrentState().showPane();
+            return;
+        }
+
+
 
         updateStandardData(message);
         setTerminateTurnAvailable(message.getTerminateTurnAvailable());
