@@ -153,7 +153,7 @@ public class PlacingWorkers extends State{
             }));
         }
         else{
-            desc.setText(getMatchPlayers().get(getCurrentPlayer()) + " is placing its workers");
+            desc.setText(getMatchPlayers().get(getCurrentPlayer()) + "'s turn to place the workers");
         }
     }
 

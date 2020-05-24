@@ -154,7 +154,12 @@ public class Running extends State{
         }
         else if (getWorkersAvailableCells().containsKey(position) && !confirmedStartPosition){
             System.out.println("PLAYER ACTIVE. SETTED POSITION");
-            Platform.runLater(()  -> desc.setText("SELECT the cell where you want to move"));
+            Platform.runLater(()  -> {
+                    if (getTurnState() == TurnState.MOVE)
+                        desc.setText("SELECT the cell where you want to move");
+                if (getTurnState() == TurnState.BUILD)
+                    desc.setText("SELECT the cell where you want to build");
+            });
             setStartingPosition(position);
             updateLightenedCells();
 
