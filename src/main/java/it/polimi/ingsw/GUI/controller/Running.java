@@ -126,6 +126,9 @@ public class Running extends State{
                 win();
             }
             else if (message.getPlayerState() == PlayerState.LOST){
+                setBillboardStatus(message.getBillboardStatus());
+                updateBillboard();
+                getIslandLoader().endAnimation();
                 System.out.println("LOSER");
                 lost();
             }
@@ -187,9 +190,10 @@ public class Running extends State{
         }
 
 
-        confirmedStartPosition = true;
+
         if (getTurnState() == TurnState.MOVE && !moved){
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){
+                confirmedStartPosition = true;
                 moved = true;
                 System.out.println("MOVE OK. SENDING movement...");
 
@@ -289,11 +293,23 @@ public class Running extends State{
         if (billboardStatus != getBillboardStatus()){
             System.out.println("Different billboard");
 
+
+            for (int player : getMatchPlayers().keySet()) {
+                if (getBillboardStatus().values().stream().noneMatch(cell -> cell.getPlayerID() == player)) {
+                    Set<Position> positions = billboardStatus.keySet().stream().filter(pos -> billboardStatus.get(pos).getPlayerID() == player).collect(Collectors.toSet());
+                    positions.forEach(pos -> billboardStatus.get(pos).setPlayerID(0));
+                    positions.forEach(pos -> getIslandLoader().removeWorker(positionToPoint(pos)));
+                }
+            }
+
+
             Set<Position> changedPositions =  getBillboardStatus()
                     .keySet()
                     .stream()
                     .filter(position -> !getBillboardStatus().get(position).equals(billboardStatus.get(position)))
                     .collect(Collectors.toSet());
+
+
 
 
             for (Position position : changedPositions){
@@ -319,6 +335,8 @@ public class Running extends State{
                     }
                 }
             }
+
+
 
             if (movedOutPlayers.size() != 0){
                 System.out.println("Moved in players: ");

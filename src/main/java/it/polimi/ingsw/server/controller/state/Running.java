@@ -61,8 +61,22 @@ public class Running extends State{
                     notify(observers, message);
                 });
 
+        //update!
+        getMatchLosers(matchID)
+                .keySet()
+                .forEach(player -> {
+                    MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
+                    basicPlayerConfig(message, player);
+                    if (getPlayerState(matchID,player) == PlayerState.ACTIVE){
+                        message.setWorkersAvailableCells(getWorkersAvailableCells(matchID));
+                        message.setSpecialFunctionAvailable(isSpecialFunctionAvailable(matchID));
+                        message.setTerminateTurnAvailable(isTerminateTurnAvailable(matchID));
+                    }
+                    notify(observers, message);
+                });
 
-        if (getMatchLosers(matchID).size()!=0) {
+
+        /*if (getMatchLosers(matchID).size()!=0) {
             getMatchLosers(matchID)
                     .keySet()
                     .forEach(player -> {
@@ -77,7 +91,7 @@ public class Running extends State{
                     });
 
 
-        }
+        }*/
 
 
         if (getMatchState(matchID) == MatchState.FINISHED) {

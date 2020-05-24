@@ -58,4 +58,9 @@ public class Cell implements Comparable{
         }
         return -1;
     }
+
+    @Override
+    public String toString(){
+        return towerHeight + (dome ? "D" : "")+(playerID==0?"":"-ID_"+playerID);
+    }
 }

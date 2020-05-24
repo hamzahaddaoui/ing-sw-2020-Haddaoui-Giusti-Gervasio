@@ -822,6 +822,34 @@ public class IslandLoader{
 
 }
 
+
+    public void removeWorker(Point2D pos){
+        Optional<Group> optionalWorker =  workers.keySet().stream()
+                .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(pos))
+                .findAny();
+
+        if (!optionalWorker.isPresent()) {
+            System.out.println("worker non trovato");
+            return;
+        }
+
+        Group worker = optionalWorker.get();
+
+        Platform.runLater(() -> group.getChildren().remove(worker));
+    }
+
+    public void endAnimation(){
+        Timeline timeline = new Timeline(
+                new KeyFrame(
+                        Duration.seconds(4),
+                        new KeyValue(angleX, 30),
+                        new KeyValue(angleY, 450)
+                )
+        );
+        timeline.setCycleCount(-1);
+        timeline.play();
+    }
+
     public void showCells(Set<Position> positionSet){
         Platform.runLater( () -> {
             if(cells.size() != 0)
