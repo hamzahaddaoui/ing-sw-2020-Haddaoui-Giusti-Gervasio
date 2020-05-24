@@ -8,16 +8,21 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,21 +31,14 @@ import static it.polimi.ingsw.GUI.Database.*;
 
 
 public class Running extends State{
-    @FXML
-    StackPane stackPane;
-    @FXML
-    BorderPane borderPane;
-    @FXML
-    Label user;
-    @FXML
-    Label desc;
-    @FXML
-    ImageView god;
+    @FXML StackPane stackPane;
+    @FXML BorderPane borderPane;
+    @FXML Label user;
+    @FXML Label desc;
+    @FXML ImageView god;
     @FXML ImageView userPane;
 
-
-    @FXML ImageView specialFunction;
-    @FXML ImageView function;
+    @FXML ToggleButton function;
 
     static private Map<Position, Cell> billboardStatus = new HashMap<>();
 
@@ -65,32 +63,29 @@ public class Running extends State{
 
         billboardStatus = getBillboardStatus();
 
+        //inizializzo gli elementi grafici del layer superiore
         user.getStylesheets().add("/css_files/placingWorkers.css");
         userPane.setImage(new Image("images/user_"+getMatchColors().get(getPlayerID())+".png", 150, 75, false, true));
         user.getStyleClass().add("player");
         user.setText(getNickname());
         god.setImage(new Image("images/gods_no_back/" + getGodCard() + ".png",120,140,false,true));
 
-
-        if (getPlayerState() == PlayerState.ACTIVE){
-            desc.setText("SELECT A WORKER");
-        }
-        else{
-            desc.setText(getMatchPlayers().get(getCurrentPlayer()) + " is making its move");
-        }
-
+        //inizializzo l'isola
         setIslandLoader(new IslandLoader());
         try {
             IslandLoader.start(stackPane);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-
+        //inizializzo i giocatori
         for (Position position : billboardStatus.keySet()){
             if (billboardStatus.get(position).getPlayerID() != 0){
                 getIslandLoader().putWorker(positionToPoint(position), getMatchColors().get(billboardStatus.get(position).getPlayerID()));
             }
         }
+
+        updateGame();
+
     }
 
     @Override
@@ -122,16 +117,17 @@ public class Running extends State{
         }
         else if (message.isFinished()){
             if (message.getWinner() != 0){
-                //vincitore!!!
+                win();
             }
             else if (message.getPlayerState() == PlayerState.LOST){
-                //perdente!!!
+                lost();
             }
             else{
                 //disconnessione di qualcuno <.<
                 setCurrentState(new userDisconnected());
                 getCurrentState().showPane();
             }
+            return;
         }
 
         updateStandardData(message);
@@ -142,46 +138,7 @@ public class Running extends State{
 
         updateBillboard();
 
-        System.out.println("PlayerState: "+ getPlayerState());
-        Platform.runLater(()  -> {
-            getIslandLoader().showCells(null);
-            if (getPlayerState() == PlayerState.ACTIVE){
-
-                specialFunctionHandler();
-
-                switch (getTurnState()){
-                    case MOVE:
-                        moved = false;
-
-                        if (!confirmedStartPosition)
-                            desc.setText("SELECT A WORKER");
-                        else {
-                            updateLightenedCells();
-                            desc.setText("SELECT the cell where you want to move");
-                        }
-                        break;
-                    case BUILD:
-                        built = false;
-                        getIslandLoader().hideArrow();
-                        getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
-                        getIslandLoader().showArrow(getMatchColors().get(getPlayerID()), positionToPoint(getStartingPosition()));
-                        desc.setText("SELECT the cell where you want to build");
-                }
-            }
-            else{
-                desc.setText(getMatchPlayers().get(getCurrentPlayer()) + " is making its move");
-                setStartingPosition(null);
-                setEndPosition(null);
-                confirmedStartPosition = false;
-
-                if (sFunction)
-                    function.translateXProperty().set(-72);
-                specialFunction.setVisible(false);
-                function.setVisible(false);
-
-                sFunction = false;
-            }
-        });
+        updateGame();
     }
 
 
@@ -189,6 +146,7 @@ public class Running extends State{
         Position position = pointToPosition(point);
         System.out.println("worker clicked + "+position);
         System.out.println(getWorkersAvailableCells());
+
         if (getPlayerState() == PlayerState.IDLE) {
             System.out.println("PLAYER NOT ACTIVE");
             return false;
@@ -197,10 +155,9 @@ public class Running extends State{
             System.out.println("PLAYER ACTIVE. SETTED POSITION");
             Platform.runLater(()  -> desc.setText("SELECT the cell where you want to move"));
             setStartingPosition(position);
-
             updateLightenedCells();
-            specialFunctionHandler();
 
+            specialFunctionHandler();
             return true;
         }
         return false;
@@ -210,30 +167,34 @@ public class Running extends State{
     public void boardClick(Point2D point){
         Position position = pointToPosition(point);
         System.out.println("Click on board/building detected on "+ position);
+
         if (getPlayerState() == PlayerState.IDLE || getStartingPosition() == null) {
             System.out.println("IDLE OR NOT SELECTED ANY WORKER");
             return;
         }
+
+
         confirmedStartPosition = true;
         if (getTurnState() == TurnState.MOVE && !moved){
             if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){
                 moved = true;
                 System.out.println("MOVE OK. SENDING movement...");
-                getIslandLoader().hideArrow();
-                getIslandLoader().showCells(null);
 
+                resetCells();
 
                 if (billboardStatus.get(position).getPlayerID() == 0) {
-
                     getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
                     billboardStatus.get(position).setPlayerID(getPlayerID());
                     billboardStatus.get(getStartingPosition()).setPlayerID(0);
                 }
-
-
                 setEndPosition(position);
                 sendData();
                 setStartingPosition(position);
+            }
+
+            else if (!confirmedStartPosition){
+                setStartingPosition(null);
+                resetCells();
             }
         }
         else if (getTurnState() == TurnState.BUILD) {
@@ -242,17 +203,10 @@ public class Running extends State{
                 System.out.println("BUILD OK. SENDING build...");
                 built = true;
                 setEndPosition(position);
-                getIslandLoader().showCells(null);
-                getIslandLoader().hideArrow();
 
-                if(getGodCard().equals("Atlas") && sFunction){
-                    getIslandLoader().build(point, true);
-                    billboardStatus.get(position).setDome(true);
-                }
+                resetCells();
 
-                //PER ATLAS -> VERIFICARE SPECIAL FUNCTION, E MODIFICARE BIT DI DOME
-
-                else {
+                if(!getGodCard().equals("Atlas")){
                     getIslandLoader().build(point, false);
                     int towerHeight = billboardStatus.get(position).getTowerHeight();
                     if (towerHeight < 3)
@@ -260,13 +214,52 @@ public class Running extends State{
                     else
                         billboardStatus.get(position).setDome(true);
                 }
-
-
                 sendData();
             }
         }
     }
 
+    public void updateGame(){
+        Platform.runLater(()  -> {
+            if (getPlayerState() == PlayerState.ACTIVE){
+
+                specialFunctionHandler();
+
+                if (!confirmedStartPosition)
+                    desc.setText("SELECT A WORKER");
+                else {
+                    switch (getTurnState()) {
+                        case MOVE:
+                            desc.setText("SELECT the cell where you want to move");
+                            moved = false;
+                            updateLightenedCells();
+                            break;
+                        case BUILD:
+                            desc.setText("SELECT the cell where you want to build");
+                            built = false;
+                            updateLightenedCells();
+
+                    }
+                }
+            }
+            else{
+                desc.setText("it's "+getMatchPlayers().get(getCurrentPlayer())+"'s turn");
+
+                resetCells();
+                setStartingPosition(null);
+                setEndPosition(null);
+                confirmedStartPosition = false;
+
+                function.setEffect(new Glow(0));
+                function.setVisible(false);
+
+                sFunction = false;
+            }
+        });
+
+
+
+    }
 
     public void updateBillboard(){
         Map<Integer, Position> movedInPlayers = new HashMap<>();
@@ -339,11 +332,17 @@ public class Running extends State{
     }
 
     public static Position pointToPosition(Point2D point){
-        return new Position((int) point.getX(), (int) point.getY());
+        if (point == null)
+            return null;
+        else
+            return new Position((int) point.getX(), (int) point.getY());
     }
 
     public static Point2D positionToPoint(Position position){
-        return new Point2D(position.getX(), position.getY());
+        if (position == null)
+            return null;
+        else
+            return new Point2D(position.getX(), position.getY());
     }
 
 
@@ -352,29 +351,40 @@ public class Running extends State{
         System.out.println(isTerminateTurnAvailable());
 
         if ((getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus")) && isTerminateTurnAvailable()){
-            specialFunction.setVisible(true);
             function.setVisible(true);
 
-            Platform.runLater(() -> specialFunction.setImage(new Image("images/specialpow/false.png",150,75,false,true)));
-            Platform.runLater(() -> function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true)));
-            Platform.runLater(() -> function.translateXProperty().set(-72));
+            Platform.runLater(() -> {
+                String url = "url(images/specialpow/"+getGodCard()+".png)";
+                function.setStyle("-fx-background-image: "+url+";\n" +
+                                  "-fx-background-size: 70;\n" +
+                                  "-fx-background-repeat: no-repeat;\n" +
+                                  "-fx-background-position: center;\n" +
+                                  "-fx-cursor: hand;");
+            });
 
-            function.setOnMouseClicked(mouseOver -> function.setCursor(Cursor.HAND));
+            function.setOnMouseEntered (mouseOver -> {
+                function.setCursor(Cursor.HAND);
+                function.scaleXProperty().set(1.1);
+                function.scaleYProperty().set(1.1);
+                function.scaleZProperty().set(1.1);
+            });
+
+            function.setOnMouseExited (mouseOver -> {
+                function.setCursor(Cursor.HAND);
+                function.scaleXProperty().set(1.0);
+                function.scaleYProperty().set(1.0);
+                function.scaleZProperty().set(1.0);
+            });
 
             function.setOnMouseClicked(mouseEvent -> {
                 System.out.println("END TURN ACTIVATED");
                 Platform.runLater(() -> {
-                    specialFunction.setImage(new Image("images/specialpow/true.png", 150, 75, false, true));
-                    function.translateXProperty().set(72);
+                    function.setEffect(new Glow(0.5));
                 });
+
                 MessageEvent message = new MessageEvent();
                 message.setEndTurn(true);
                 notify(message);
-                specialFunction.setVisible(false);
-                function.setVisible(false);
-                getIslandLoader().hideArrow();
-                getIslandLoader().showCells(null);
-                function.translateXProperty().set(-72);
 
 
             });
@@ -382,29 +392,42 @@ public class Running extends State{
 
 
         else if (getStartingPosition()!=null && getSpecialFunctionAvailable() !=null && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
-            specialFunction.setVisible(true);
             function.setVisible(true);
 
-            Platform.runLater(() -> specialFunction.setImage(new Image("images/specialpow/false.png",150,75,false,true)));
-            Platform.runLater(() -> function.setImage(new Image("images/specialpow/"+getGodCard()+".png",60,47,false,true)));
-            Platform.runLater(() -> function.translateXProperty().set(-72));
+            Platform.runLater(() -> {
+                String url = "url(images/specialpow/"+getGodCard()+".png)";
+                function.setStyle("-fx-background-image: "+url+";\n" +
+                                  "-fx-background-size: 70;\n" +
+                                  "-fx-background-repeat: no-repeat;\n" +
+                                  "-fx-background-position: center;\n" +
+                                  "-fx-cursor: hand;");
+            });
+
             sFunction = false;
 
-            function.setOnMouseClicked(mouseOver -> function.setCursor(Cursor.HAND));
+            function.setOnMouseEntered (mouseOver -> {
+                function.setCursor(Cursor.HAND);
+                function.scaleXProperty().set(1.1);
+                function.scaleYProperty().set(1.1);
+                function.scaleZProperty().set(1.1);
+            });
+
+            function.setOnMouseExited (mouseOver -> {
+                function.setCursor(Cursor.HAND);
+                function.scaleXProperty().set(1.0);
+                function.scaleYProperty().set(1.0);
+                function.scaleZProperty().set(1.0);
+            });
 
             function.setOnMouseClicked(mouseEvent -> {
                 sFunction ^= true;
                 System.out.println("SPECIAL FUNCTION"+  sFunction);
                 Platform.runLater(() -> {
                     if (sFunction) {
-                        specialFunction.setImage(new Image("images/specialpow/true.png", 150, 75, false, true));
-                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), new KeyValue(function.xProperty(), 72)));
-                        timeline.play();
+                        function.setEffect(new Glow(0.5));
 
                     } else {
-                        specialFunction.setImage(new Image("images/specialpow/false.png", 150, 75, false, true));
-                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), new KeyValue(function.xProperty(), 0)));
-                        timeline.play();
+                        function.setEffect(new Glow(0));
                     }
                 });
 
@@ -414,16 +437,50 @@ public class Running extends State{
             });
         }
         else{
-            specialFunction.setVisible(false);
+            function.setEffect(new Glow(0));
             function.setVisible(false);
+            sFunction = false;
         }
     }
 
     public void updateLightenedCells(){
-        getIslandLoader().hideArrow();
-        getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(getStartingPosition()).getPlayerID()), positionToPoint(getStartingPosition()));
-        getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
+        if (getPlayerState() == PlayerState.ACTIVE) {
+            getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(getStartingPosition()).getPlayerID()), positionToPoint(getStartingPosition()));
+            getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
+        }
     }
 
+    public void resetCells(){
+        getIslandLoader().showCells(null);
+        getIslandLoader().hideArrow();
+    }
 
+    public void win(){
+        Parent page;
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(Controller.class.getClassLoader().getResource("fxml_files/winner.fxml")); //potrebbe dare problemi, ma non credo
+        try {
+            page = fxmlLoader.load();
+        } catch (IOException exception) {
+            System.out.println("Failed to load fxml file.");
+            exception.printStackTrace();
+            return;
+        }
+        stackPane.getChildren().add(page);
+    }
+
+    public void lost(){
+        Parent page;
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(Controller.class.getClassLoader().getResource("fxml_files/loser.fxml")); //potrebbe dare problemi, ma non credo
+        try {
+            page = fxmlLoader.load();
+        } catch (IOException exception) {
+            System.out.println("Failed to load fxml file.");
+            exception.printStackTrace();
+            return;
+        }
+        stackPane.getChildren().add(page);
+    }
 }
+

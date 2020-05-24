@@ -865,6 +865,7 @@ public class IslandLoader{
         temp.setTranslateZ(Point2DMap.get(point2D).getY());
 
         Platform.runLater(() -> {
+            group.getChildren().remove(arrow);
             arrow = temp;
             group.getChildren().add(arrow);
             RotateTransition rotate1 = new RotateTransition();

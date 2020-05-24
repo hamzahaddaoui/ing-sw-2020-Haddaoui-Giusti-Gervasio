@@ -22,14 +22,14 @@ public class Running extends State{
             return true;
         }
 
-        else if (messageEvent.getSpecialFunction() && (isSpecialFunctionAvailable(matchID).keySet().size() !=0 )){
+        else if (isSpecialFunctionAvailable(matchID).keySet().size() !=0 ){
             setUnsetSpecialFunction(matchID, messageEvent.getSpecialFunction());
             return true;
         }
 
         else if (startPosition != null && endPosition != null && checkPosition(startPosition) && checkPosition(endPosition)
                  && getWorkersAvailableCells(matchID).containsKey(startPosition) && getWorkersAvailableCells(matchID).get(startPosition).contains(endPosition)
-                && !(isSpecialFunctionAvailable(matchID) !=null && !isSpecialFunctionAvailable(matchID).get(startPosition))
+                && ( isSpecialFunctionAvailable(matchID) == null || isSpecialFunctionAvailable(matchID).get(startPosition) || !hasSpecialFunction(matchID))
         ){
 
             playerTurn(matchID, startPosition, endPosition);
@@ -64,7 +64,7 @@ public class Running extends State{
             deleteMatch(matchID);
         }
 
-        else if (getMatchLosers(matchID).size()!=0) {
+        if (getMatchLosers(matchID).size()!=0) {
             getMatchLosers(matchID)
                     .keySet()
                     .forEach(player -> {
@@ -72,6 +72,7 @@ public class Running extends State{
                         message.setPlayerID(player);
                         message.setMatchID(matchID);
                         message.setFinished(true);
+                        message.setWinner(getMatchWinner(matchID));
                         message.setPlayerState(PlayerState.LOST);
                         message.setMatchState(MatchState.RUNNING);
                         notify(observers, message);

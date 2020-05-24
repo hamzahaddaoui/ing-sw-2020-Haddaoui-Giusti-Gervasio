@@ -29,7 +29,7 @@
     -fx-cursor: hand;
 }
 
-.label{
+.button{
     -fx-font-size: 42;
     -fx-font-family: Bangers;
     -fx-text-fill: white;
