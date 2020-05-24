@@ -107,7 +107,9 @@ public class StartState extends State {
             label.setOnMouseReleased(e -> popup.hide());
             label.getStylesheets().add("/css_files/startScreen.css");
             label.getStyleClass().add("popup");
+            popup.setHideOnEscape(true);
             label.setText("Insert Server IP");
+            popup.setAutoHide(true);
             popup.setOnShown(e -> {
                 popup.setX(getStage().getX() + getStage().getWidth() / 2 - popup.getWidth() / 2);
                 popup.setY(address.localToScene(0, 0).getY() + 63);
@@ -124,6 +126,9 @@ public class StartState extends State {
             label.getStylesheets().add("/css_files/startScreen.css");
             label.getStyleClass().add("popup");
             popup.getContent().add(label);
+            popup.setAutoHide(true);
+            popup.setHideOnEscape(true);
+            popup.
             label.setText("Insert your nickname");
             popup.setOnShown(e -> {
                 popup.setX(getStage().getX() + getStage().getWidth()/2 - popup.getWidth()/2);
