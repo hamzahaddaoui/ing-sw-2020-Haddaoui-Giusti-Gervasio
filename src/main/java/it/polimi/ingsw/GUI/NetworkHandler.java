@@ -17,6 +17,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -141,7 +143,12 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
 
     @Override
     public void addObserver(Observer<MessageEvent> observer){
+        List<Observer<MessageEvent>> observers = new ArrayList<>();
+
         for (Observer obs : getObservers())
+            observers.add(obs);
+
+        for (Observer obs : observers)
             super.removeObserver(obs);
 
         super.addObserver(observer);

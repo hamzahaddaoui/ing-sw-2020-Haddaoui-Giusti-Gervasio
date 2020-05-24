@@ -479,7 +479,7 @@ public class IslandLoader{
         //block.setMouseTransparent(true);
         block.setTranslateX(Point2DMap.get(new Point2D(point.getX(), point.getY())).getX());
         block.setTranslateZ(Point2DMap.get(new Point2D(point.getY(), point.getY())).getY());
-        boardCells.replace(point, 4);
+
 
         Translate translate = new Translate();
         double height = -10;
@@ -488,11 +488,12 @@ public class IslandLoader{
         Timeline timeline = new Timeline(
                 new KeyFrame(
                         Duration.seconds(0.35),
-                        new KeyValue(translate.yProperty(), - height + cellHeight.get(boardCells.get(point))
+                        new KeyValue(translate.yProperty(), - height + cellHeight.get(boardCells.get(point)))
                 )
-        ));
+        );
         timeline.play();
 
+        boardCells.replace(point, 4);
         Platform.runLater( () -> group.getChildren().add(block));
     }
 
