@@ -23,6 +23,7 @@ public class WaitingList extends State{
     BorderPane borderPane;
 
 
+
     @Override
     public void showPane(){
         Platform.runLater(() -> replaceSceneContent("fxml_files/waitingList.fxml"));
@@ -51,7 +52,7 @@ public class WaitingList extends State{
         else {
             updateStandardData(message);
             updateView();
-            this.showPane();
+            getCurrentState().showPane();
             new Thread(()->{
                 getNetworkHandler().removeObserver(this);
                 this.removeObserver(getNetworkHandler());

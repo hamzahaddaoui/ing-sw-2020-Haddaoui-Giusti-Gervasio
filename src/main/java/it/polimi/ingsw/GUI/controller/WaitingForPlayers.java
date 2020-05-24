@@ -112,7 +112,7 @@ public class WaitingForPlayers extends State {
         else {
             updateStandardData(message);
             updateView();
-            getCurrentState().showPane();
+            this.showPane();
             new Thread(()->{
                 getNetworkHandler().removeObserver(this);
                 this.removeObserver(getNetworkHandler());
