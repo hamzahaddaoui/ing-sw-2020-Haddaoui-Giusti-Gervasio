@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../css_files/startScreen.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GUI.controller.WaitingList">
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <children>
+      <BorderPane fx:id="borderPane" prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <right>
+            <Pane prefHeight="535.0" prefWidth="342.0" BorderPane.alignment="CENTER"> </Pane>
+         </right>
+         <left>
+            <Pane prefHeight="535.0" prefWidth="342.0" BorderPane.alignment="CENTER" />
+         </left>
+         <center>
+            <Pane prefHeight="423.0" prefWidth="516.0" BorderPane.alignment="CENTER" />
+         </center>
+         <top>
+            <Label alignment="CENTER" contentDisplay="CENTER" opacity="0.68" prefHeight="138.0" prefWidth="1057.0" text="wait for a match to start..." textAlignment="CENTER" textFill="#234565" textOverrun="LEADING_WORD_ELLIPSIS" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="Bangers Regular" size="96.0" />
+               </font>
+            </Label>
+         </top>
+         <padding>
+            <Insets bottom="40.0" />
+         </padding>
+      </BorderPane>
+   </children>
+</AnchorPane>

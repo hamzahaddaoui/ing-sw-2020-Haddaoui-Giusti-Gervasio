@@ -158,6 +158,7 @@ public class Running extends State{
             setStartingPosition(position);
             updateLightenedCells();
 
+
             specialFunctionHandler();
             return true;
         }
@@ -226,7 +227,7 @@ public class Running extends State{
 
                 specialFunctionHandler();
 
-                if (!confirmedStartPosition)
+                if (!confirmedStartPosition &&  getStartingPosition() != null)
                     desc.setText("SELECT A WORKER");
                 else {
                     switch (getTurnState()) {
