@@ -451,6 +451,8 @@ public class Running extends State{
     }
 
     public void updateLightenedCells(){
+        System.out.println("LIGHTNING CELLS: You are on cell "+getStartingPosition());
+        System.out.println("AVAILABLE CELLS -> "+getWorkersAvailableCells().get((getStartingPosition())));
         getIslandLoader().showCells(null);
         getIslandLoader().hideArrow();
         if (getPlayerState() == PlayerState.ACTIVE) {
@@ -460,6 +462,7 @@ public class Running extends State{
     }
 
     public void resetCells(){
+        System.out.println("RESETTED CELLS");
         getIslandLoader().showCells(null);
         getIslandLoader().hideArrow();
     }

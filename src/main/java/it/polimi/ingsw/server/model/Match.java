@@ -26,6 +26,8 @@ public class Match {
     private boolean started;
     private boolean moveUpActive = true;
 
+    private String info;
+
     private int index = 0;
     private Player winner;
 
@@ -229,5 +231,13 @@ public class Match {
 
     public Player getWinner(){
         return winner;
+    }
+
+    public String getInfo(){
+        return info;
+    }
+
+    public void setInfo(String info){
+        this.info = info;
     }
 }

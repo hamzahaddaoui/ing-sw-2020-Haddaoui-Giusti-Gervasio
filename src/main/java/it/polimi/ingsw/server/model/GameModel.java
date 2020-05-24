@@ -285,7 +285,9 @@ public class GameModel extends Observable<MessageEvent> {
     }
 
     public static void setUnsetSpecialFunction(Integer matchID, boolean specialFunction){
-        translateMatchID(matchID).getCurrentPlayer().setUnsetSpecialFunction(specialFunction);
+        Match match = translateMatchID(matchID);
+        match.getCurrentPlayer().setUnsetSpecialFunction(specialFunction);
+        match.setInfo(match.getCurrentPlayer().toString()+" has "+(specialFunction ? "activated" : "deactivated")+" the special function");
     }
 
     public static boolean hasSpecialFunction(Integer matchID){
@@ -293,19 +295,31 @@ public class GameModel extends Observable<MessageEvent> {
     }
 
     public static void setHasFinished(Integer matchID){
-        translateMatchID(matchID).getCurrentPlayer().setHasFinished();
-        translateMatchID(matchID).nextTurn();
+        Match match =  translateMatchID(matchID);
+        match.getCurrentPlayer().setHasFinished();
+        match.setInfo(match.getCurrentPlayer().toString()+" has terminated the turn");
+        match.nextTurn();
+
+
     }
 
     public static void playerTurn(Integer matchID, Position startPosition, Position endPosition){
         Match match = translateMatchID(matchID);
         Player player = match.getCurrentPlayer();
 
+        match.setInfo(player.toString() + " has " + (player.getTurnState() == TurnState.BUILD ? ("built in "+ endPosition) : ("moved from " + startPosition +" to "+ endPosition)));
+
         if (!player.hasSelectedWorker())
             player.setCurrentWorker(startPosition);
         player.playerAction(endPosition);
 
+
+
         //match.checkPlayers();
+    }
+
+    public static String getMatchInfo(Integer matchID){
+        return translateMatchID(matchID).getInfo();
     }
 
     /*

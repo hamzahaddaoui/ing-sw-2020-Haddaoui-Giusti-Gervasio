@@ -20,7 +20,7 @@ public abstract class State extends Controller{
     public abstract void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID);
 
     protected MessageEvent basicMatchConfig(MessageEvent messageEvent, Integer matchID){
-        messageEvent.setInfo("Match data update");
+        messageEvent.setInfo(getMatchInfo(matchID));
         messageEvent.setMatchID(matchID);
         messageEvent.setMatchState(getMatchState(matchID));
         messageEvent.setCurrentPlayer(getCurrentPlayer(matchID));
@@ -38,8 +38,9 @@ public abstract class State extends Controller{
         int matchID = messageEvent.getMatchID();
         messageEvent.setPlayerID(playerID);
         messageEvent.setPlayerState(getPlayerState(matchID, playerID));
-        if(getMatchState(matchID) == MatchState.RUNNING)
+        if(getMatchState(matchID) == MatchState.RUNNING) {
             messageEvent.setTurnState(getPlayerTurn(matchID, playerID));
+        }
         return messageEvent;
     }
 

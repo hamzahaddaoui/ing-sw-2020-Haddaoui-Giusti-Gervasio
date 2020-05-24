@@ -483,14 +483,9 @@ public class IslandLoader{
 
         Translate translate = new Translate();
         double height = -10;
-        block.setTranslateY(height);
+        block.setTranslateY(height+cellHeight.get(boardCells.get(point)));
         block.getTransforms().add(translate);
-        Timeline timeline = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(0.35),
-                        new KeyValue(translate.yProperty(), -height)
-                )
-        );
+        Timeline timeline = new Timeline( new KeyFrame(Duration.seconds(0.35), new KeyValue(translate.yProperty(), -height)));
         timeline.play();
 
         Platform.runLater( () -> group.getChildren().add(block));
