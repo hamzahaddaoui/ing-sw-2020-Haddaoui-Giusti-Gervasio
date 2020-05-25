@@ -213,12 +213,12 @@ public class Running extends State{
 
                 resetCells();
 
-                if (billboardStatus.get(position).getPlayerID() == 0) {
+                /*if (billboardStatus.get(position).getPlayerID() == 0) {
                     //getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
                     billboardStatus.get(position).setPlayerID(getPlayerID());
                     billboardStatus.get(getStartingPosition()).setPlayerID(0);
                     updateBillboard(false);
-                }
+                }*/
                 setEndPosition(position);
                 sendData();
                 setStartingPosition(position);
@@ -237,8 +237,8 @@ public class Running extends State{
 
                 resetCells();
 
-                if(!getGodCard().equals("Atlas")){
-                    //getIslandLoader().build(point, false);
+                /*if(!getGodCard().equals("Atlas")){
+                    getIslandLoader().build(point, false);
                     int towerHeight = billboardStatus.get(position).getTowerHeight();
                     if (towerHeight < 3)
                         billboardStatus.get(position).setTowerHeight(towerHeight + 1);
@@ -246,7 +246,7 @@ public class Running extends State{
                         billboardStatus.get(position).setDome(true);
 
                     updateBillboard(false);
-                }
+                }*/
                 sendData();
             }
             else if(built)
