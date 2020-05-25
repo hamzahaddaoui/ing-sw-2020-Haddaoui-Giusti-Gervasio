@@ -249,7 +249,7 @@ public class IslandLoader{
 
         //INIZIALIZZO MOVIMENTO E ZOOM TELECAMERA
         {
-        initMouseControl(group, subScene, camera);
+        initMouseControl(group, subScene);
         subScene.addEventHandler(ZoomEvent.ZOOM, zoomEvent -> {
             camera.setTranslateZ(camera.getTranslateZ()/zoomEvent.getZoomFactor());
             if(camera.getTranslateZ()>-15)
@@ -260,7 +260,7 @@ public class IslandLoader{
     }
 
 
-    private static void initMouseControl(Group group, SubScene scene, Camera camera) {
+    private static void initMouseControl(Group group, SubScene scene) {
         Rotate xRotate;
         Rotate yRotate;
         group.getTransforms().addAll(
@@ -406,9 +406,7 @@ public class IslandLoader{
 
         block.setOnMouseEntered(e -> block.setCursor(Cursor.HAND));
 
-        block.setOnMouseClicked(e -> {
-            clickHandler(point);
-        });
+        block.setOnMouseClicked(e -> clickHandler(point));
     }
 
     private void buildBlockLevel2(Point2D point){
@@ -435,9 +433,7 @@ public class IslandLoader{
         }
         Platform.runLater( () -> group.getChildren().add(block));
         block.setOnMouseEntered(e -> block.setCursor(Cursor.HAND));
-        block.setOnMouseClicked(e -> {
-            clickHandler(point);
-        });
+        block.setOnMouseClicked(e -> clickHandler(point));
     }
 
     private void buildBlockLevel3(Point2D point){
@@ -534,7 +530,7 @@ public class IslandLoader{
 
         Group worker = optionalWorker.get();
 
-        Point3D prev = new Point3D(Point2DMap.get(new Point2D(workers.get(worker).getX(),workers.get(worker).getY())).getX(), cellHeight.get((int) workers.get(worker).getZ()) , Point2DMap.get(new Point2D(workers.get(worker).getX(),workers.get(worker).getY())).getY());
+        Point3D prev = new Point3D(Point2DMap.get(startPos).getX(), cellHeight.get(boardCells.get(startPos)), Point2DMap.get(startPos).getY());
 
         Point3D next = new Point3D(Point2DMap.get(endPos).getX(), cellHeight.get(boardCells.get(endPos)), Point2DMap.get(endPos).getY());
 
@@ -546,9 +542,9 @@ public class IslandLoader{
         {
             SequentialTransition sequence;
 
-            if (boardCells.get(endPos) - workers.get(worker).getZ() == 1) {
+            if (boardCells.get(endPos) - boardCells.get(startPos) == 1) {
                 Timeline timeline1 = new Timeline(
-                        new KeyFrame(Duration.seconds(.15 * (boardCells.get(endPos) - workers.get(worker).getZ())),
+                        new KeyFrame(Duration.seconds(.15 * (boardCells.get(endPos) - boardCells.get(startPos))),
                                 new KeyValue(translate.yProperty(), trasl.getY())
                         )
                 );
@@ -568,7 +564,7 @@ public class IslandLoader{
                 timeline2.getKeyFrames().addAll(xKF, yKF, zKF);
 
                 sequence = new SequentialTransition(timeline1, timeline2);
-            } else if (boardCells.get(endPos) - workers.get(worker).getZ() == 0) {
+            } else if (boardCells.get(endPos) - boardCells.get(startPos) == 0) {
                 Timeline timeline = new Timeline();
 
                 KeyValue xKV = new KeyValue(translate.xProperty(), trasl.getX());
@@ -587,7 +583,7 @@ public class IslandLoader{
                 sequence = new SequentialTransition(timeline);
             } else {
                 Timeline timeline1 = new Timeline(
-                        new KeyFrame(Duration.seconds(.15 * - (boardCells.get(endPos) - workers.get(worker).getZ())),
+                        new KeyFrame(Duration.seconds(.15 * Math.abs(boardCells.get(endPos) - boardCells.get(startPos))),
                                 new KeyValue(translate.yProperty(), trasl.getY())
                         )
                 );
@@ -613,10 +609,11 @@ public class IslandLoader{
 
         }
 
-        System.out.println(workers.get(worker) + "  to  " + endPos);
-        workers.remove(worker);
+
+        //workers.remove(worker);
         workers.put(worker, new Point3D(endPos.getX(), endPos.getY(), boardCells.get(endPos)));
         workers.keySet().forEach(w -> System.out.println(workers.get(w)));
+        System.out.println(startPos + "  to  " + workers.get(worker));
     }
 
     public void swapWorkers(Point2D startPos1, Point2D startPos2, Point2D endPos1, Point2D endPos2){
@@ -642,10 +639,21 @@ public class IslandLoader{
         System.out.println("worker2: " + startPos2 + endPos2);
 
 
+/*
+*  Group worker1 = optionalWorker1.get();
+
+        Point3D prev1 = new Point3D(Point2DMap.get(new Point2D(workers.get(worker1).getX(), workers.get(worker1).getY())).getX(), cellHeight.get((int) workers.get(worker1).getZ()), Point2DMap.get(new Point2D(workers.get(worker1).getX(), workers.get(worker1).getY())).getY());
+
+        Point3D next1 = new Point3D(Point2DMap.get(endPos1).getX(), cellHeight.get(boardCells.get(endPos1)), Point2DMap.get(endPos1).getY());
+
+        Point3D trasl1 = next1.subtract(prev1);
+        *
+        * */
+
 
         Group worker1 = optionalWorker1.get();
 
-        Point3D prev1 = new Point3D(Point2DMap.get(new Point2D(workers.get(worker1).getX(), workers.get(worker1).getY())).getX(), cellHeight.get((int) workers.get(worker1).getZ()), Point2DMap.get(new Point2D(workers.get(worker1).getX(), workers.get(worker1).getY())).getY());
+        Point3D prev1 = new Point3D(Point2DMap.get(startPos1).getX(), cellHeight.get(boardCells.get(startPos1)), Point2DMap.get(startPos1).getY());
 
         Point3D next1 = new Point3D(Point2DMap.get(endPos1).getX(), cellHeight.get(boardCells.get(endPos1)), Point2DMap.get(endPos1).getY());
 
@@ -654,7 +662,7 @@ public class IslandLoader{
 
         Group worker2 = optionalWorker2.get();
 
-        Point3D prev2 = new Point3D(Point2DMap.get(new Point2D(workers.get(worker2).getX(),workers.get(worker2).getY())).getX(), cellHeight.get((int) workers.get(worker2).getZ()) , Point2DMap.get(new Point2D(workers.get(worker2).getX(),workers.get(worker2).getY())).getY());
+        Point3D prev2 = new Point3D(Point2DMap.get(startPos2).getX(), cellHeight.get(boardCells.get(startPos2)), Point2DMap.get(startPos2).getY());
 
         Point3D next2 = new Point3D(Point2DMap.get(endPos2).getX(), cellHeight.get(boardCells.get(endPos2)), Point2DMap.get(endPos2).getY());
 
@@ -710,7 +718,7 @@ public class IslandLoader{
             sequence1 = new SequentialTransition(timeline);
         } else {
             Timeline timeline1 = new Timeline(
-                    new KeyFrame(Duration.seconds(.15 * - (boardCells.get(endPos1) - boardCells.get(startPos1))),
+                    new KeyFrame(Duration.seconds(.15 * Math.abs(boardCells.get(endPos1) - boardCells.get(startPos1))),
                             new KeyValue(translate1.yProperty(), trasl1.getY())
                     )
             );
@@ -734,11 +742,11 @@ public class IslandLoader{
 
         sequence1.play();
 
-        System.out.println(workers.get(worker1) + "  to  " + endPos1);
-        workers.remove(worker1);
+
+        //workers.remove(worker1);
         workers.put(worker1, new Point3D(endPos1.getX(), endPos1.getY(), boardCells.get(endPos1)));
 
-
+        System.out.println(startPos1 + "  to  " + workers.get(worker1));
 
 
         Translate translate2 = new Translate();
@@ -788,7 +796,7 @@ public class IslandLoader{
                 sequence2 = new SequentialTransition(timeline);
             } else {
                 Timeline timeline1 = new Timeline(
-                        new KeyFrame(Duration.seconds(.15 * - (boardCells.get(endPos2) - boardCells.get(startPos2))),
+                        new KeyFrame(Duration.seconds(.15 * Math.abs(boardCells.get(endPos2) - boardCells.get(startPos2))),
                                 new KeyValue(translate2.yProperty(), trasl2.getY())
                         )
                 );
@@ -811,13 +819,12 @@ public class IslandLoader{
             }
 
             sequence2.play();
-
         }
 
-        System.out.println(startPos1 + "  to  " + endPos2);
-        workers.remove(worker2);
-        workers.put(worker2, new Point3D(endPos2.getX(), endPos2.getY(), boardCells.get(endPos2)));
 
+        //workers.remove(worker2);
+        workers.put(worker2, new Point3D(endPos2.getX(), endPos2.getY(), boardCells.get(endPos2)));
+        System.out.println(startPos1 + "  to  " + workers.get(worker2));
 
 
 }

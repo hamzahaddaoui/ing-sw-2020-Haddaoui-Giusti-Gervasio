@@ -54,7 +54,10 @@ public abstract class State extends Controller{
         if (matchID==0){
             removePlayerWaitingList(playerID);
         }
-        else if (matchID!=0) {
+        else if (getMatchLosers(matchID).containsKey(playerID)){
+            return;
+        }
+        else {
             MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);
             message.setFinished(true);
             message.setInfo("A user has disconnected from the match. Closing...");
