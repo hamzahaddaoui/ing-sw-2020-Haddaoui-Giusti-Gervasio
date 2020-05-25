@@ -1,0 +1,46 @@
+.root {
+    -fx-background-image: url("../images/top_board.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+@font-face {
+    font-family: Bangers;
+    src: url("../fonts/Bangers-Regular.ttf");
+}
+
+.label{
+    -fx-font-size: 42;
+    -fx-font-family: Bangers;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+    -fx-translate-y: -5;
+}
+
+.player{
+    -fx-font-size: 34;
+    -fx-font-family: Bangers;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+.button{
+    -fx-pref-width: 110;
+    -fx-pref-height: 110;
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/helper.png");
+    -fx-background-size: 90;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+    -fx-cursor: hand;
+}
+
+
+

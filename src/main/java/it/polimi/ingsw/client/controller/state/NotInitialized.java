@@ -29,6 +29,11 @@ public class NotInitialized extends ControlState{
             System.out.println("\nInsert something different\n");
             return null;
         }
+        else if (DataBase.getNickname()!=null && input.toUpperCase().equals(DataBase.getNickname().toUpperCase())) {
+            DataBase.setActiveInput(true);
+            System.out.println("Are you kidding? Choose a new one!");
+            return null;
+        }
 
         MessageEvent message = new MessageEvent();
 
@@ -82,10 +87,10 @@ public class NotInitialized extends ControlState{
      */
     @Override
     public void error() {
-        System.out.println("Nickname already taken!\n");
-        DataBase.setNickname(null);
         DataBase.setActiveInput(true);
-        System.out.println(computeView());
+        System.out.println("Nickname already taken!\nInsert a new one or press 'q' to quit disconnect: ");
+        //DataBase.setNickname(null);
+        //System.out.println(computeView());
     }
 
 }

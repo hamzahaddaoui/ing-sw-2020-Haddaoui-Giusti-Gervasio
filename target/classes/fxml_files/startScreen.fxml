@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../css_files/startScreen.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GUI.controller.StartState">
+   <children>
+      <BorderPane fx:id="startScreen" layoutX="29.0" layoutY="7.0" prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <ImageView id="santorini" fx:id="santorini" fitHeight="250.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+               <image>
+                  <Image url="@../images/santorini-logo.png" />
+               </image>
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+            </ImageView>
+         </top>
+         <left>
+            <Pane focusTraversable="true" prefHeight="373.0" prefWidth="400.0" BorderPane.alignment="CENTER" />
+         </left>
+         <right>
+            <Pane blendMode="HARD_LIGHT" prefHeight="373.0" prefWidth="400.0" stylesheets="@../css_files/startScreen.css" BorderPane.alignment="CENTER" />
+         </right>
+         <center>
+            <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints maxHeight="115.81063842773438" minHeight="10.0" prefHeight="50.295623779296875" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="115.81063842773438" minHeight="10.0" prefHeight="65.56814575195312" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="196.70437622070312" minHeight="10.0" prefHeight="76.32565307617188" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="196.70437622070312" minHeight="10.0" prefHeight="23.674346923828125" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="212.74017333984375" minHeight="0.0" prefHeight="55.384521484375" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="194.50347900390625" minHeight="0.0" prefHeight="49.284088134765625" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="194.50347900390625" minHeight="10.0" prefHeight="83.47344970703125" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" cacheHint="QUALITY" contentDisplay="CENTER" depthTest="ENABLE" ellipsisString="234" graphicTextGap="10.0" prefHeight="307.0" prefWidth="241.0" text="Server address" textAlignment="CENTER" textFill="#4a4a4a" textOverrun="LEADING_ELLIPSIS" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Bangers Regular" size="32.0" />
+                     </font>
+                     <effect>
+                        <InnerShadow blurType="ONE_PASS_BOX" />
+                     </effect>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="address" alignment="CENTER" onAction="#enterPressed" opacity="0.66" promptText="insert server IP" text="127.0.0.1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                     <font>
+                        <Font name="Geneva" size="21.0" />
+                     </font>
+                     <effect>
+                        <Blend />
+                     </effect>
+                  </TextField>
+                  <TextField fx:id="nickname" alignment="CENTER" onAction="#enterPressed" opacity="0.55" promptText="Insert your nickname" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Geneva" size="21.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="307.0" prefWidth="241.0" text="Nickname" textAlignment="CENTER" textFill="#2c2c2c" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Bangers Regular" size="32.0" />
+                     </font>
+                  </Label>
+               </children>
+            </GridPane>
+         </center>
+         <bottom>
+            <Button id="button_play" mnemonicParsing="false" onMouseClicked="#playButton" prefHeight="177.0" prefWidth="197.0" styleClass="button_play" stylesheets="@../css_files/startScreen.css" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+               <BorderPane.margin>
+                  <Insets bottom="40.0" />
+               </BorderPane.margin></Button>
+         </bottom>
+      </BorderPane>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</AnchorPane>

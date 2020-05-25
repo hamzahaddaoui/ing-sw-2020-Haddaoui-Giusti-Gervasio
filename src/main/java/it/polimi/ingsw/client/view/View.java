@@ -183,7 +183,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         StringBuilder outputA = new StringBuilder();
 
         Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
-        List<Integer> players = new ArrayList<>(DataBase.getMatchPlayers().keySet());
+        Map<Integer,String> playerColors = DataBase.getMatchColors();
 
         final String ANSI_RESET = "\u001B[0m";
         final String ANSI_BLUE = "\u001B[34m";
@@ -196,17 +196,14 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 .stream()
                 .sorted()
                 .forEach(position -> outputA
-                        .append(billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥 " + ANSI_RESET : "") //⬜
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥 " + ANSI_RESET : "")
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥 " + ANSI_RESET : "") //🟩
-                        .append(players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥 " + ANSI_RESET : "") //🟦
+                        .append(billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜ " + ANSI_RESET : "") //⬜
+                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + " 🟦 " + ANSI_RESET : "")
+                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧 " + ANSI_RESET : "") //🟩
+                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪 " + ANSI_RESET : "") //🟦
                         .append((position.getY() == 4) ? "\n" : " "));
 
         outputA.append("\n");
-        Map<Integer,String> playersName = DataBase.getMatchPlayers();
-        outputA.append("KEY: " + ANSI_BLUE + playersName.get(1) + ANSI_RESET + ", " + ANSI_RED + playersName.get(2) + ANSI_RESET);
-        if (playersName.size()==3)
-            outputA.append(", " + ANSI_PURPLE + playersName.get(3) + ANSI_RESET);
+        outputA.append(keyLegend());
         return outputA.toString();
     }
 
@@ -290,7 +287,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         StringBuilder output = new StringBuilder();
 
         Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
-        List<Integer> players = new ArrayList<>(DataBase.getMatchPlayers().keySet());
+        Map<Integer,String> playerColors = DataBase.getMatchColors();
 
        final String ANSI_RESET = "\u001B[0m";
        final String ANSI_BLUE = "\u001B[34m";
@@ -303,33 +300,30 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 .stream()
                 .sorted()
                 .forEach(position -> output
-                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "⏺ " : "")
-                        .append(billboardCells.get(position).isDome() && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "⏺ " : "")
-                        .append(billboardCells.get(position).isDome() && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "⏺ " : "")
-                        .append(billboardCells.get(position).isDome() && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "⏺ " : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "0️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "0️" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "0️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "0️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "1️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "1️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "1️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "1️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "2️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "2️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "2️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "2️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "🟥" + ANSI_RESET + "3️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && players.indexOf(billboardCells.get(position).getPlayerID()) == 0 ? ANSI_BLUE + "🟥" + ANSI_RESET + "3️" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && players.indexOf(billboardCells.get(position).getPlayerID()) == 1 ? ANSI_RED + "🟥" + ANSI_RESET + "3️" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && players.indexOf(billboardCells.get(position).getPlayerID()) == 2 ? ANSI_PURPLE + "🟥" + ANSI_RESET + "3️" : "")
+                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "⏺ " : "")
+                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET + "⏺ " : "")
+                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET + "⏺ " : "")
+                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪" + ANSI_RESET + "⏺ " : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "0️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET + "0️" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET + "0️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪" + ANSI_RESET + "0️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "1️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET + "1️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET + "1️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪" + ANSI_RESET + "1️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "2️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET + "2️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET + "2️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪" + ANSI_RESET + "2️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "3️⃣" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET + "3️" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET + "3️" : "")
+                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪" + ANSI_RESET + "3️" : "")
                         .append((position.getY() == 4) ? "\n" : " "));
 
         output.append("\n");
-        Map<Integer,String> playersName = DataBase.getMatchPlayers();
-        output.append("KEY: " + ANSI_BLUE + playersName.get(1) + ANSI_RESET + ", " + ANSI_RED + playersName.get(2) + ANSI_RESET);
-        if (playersName.size()==3)
-            output.append(", " + ANSI_PURPLE + playersName.get(3) + ANSI_RESET);
+        output.append(keyLegend());
         return output.toString();
     }
 
@@ -342,11 +336,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         String billboardStat2 = getBillboardStat2();
         String availableMovements = getBillboardStat(DataBase.getWorkersAvailableCells(DataBase.getStartingPosition()),DataBase.getStartingPosition());
 
-        final String ANSI_RESET = "\u001B[0m";
-        final String ANSI_BLUE = "\u001B[34m";
-        final String ANSI_PURPLE = "\u001B[35m";
-        final String ANSI_RED = "\u001B[31m";
-
         int q, w;
         int j, k;
         int i;
@@ -361,13 +350,8 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
             q = ++ w;
             j = ++ k;
         }
+        output.append(keyLegend());
         System.out.println(output.toString());
-        Map<Integer,String> playersName = DataBase.getMatchPlayers();
-        StringBuilder keyLegend = new StringBuilder();
-        keyLegend.append("KEY: " + ANSI_BLUE + playersName.get(1) + ANSI_RESET + ", " + ANSI_RED + playersName.get(2) + ANSI_RESET);
-        if (playersName.size()==3)
-            keyLegend.append(", " + ANSI_PURPLE + playersName.get(3) + ANSI_RESET);
-        System.out.println(keyLegend.toString());
     }
 
     /**
@@ -379,11 +363,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         String billboardStat2 = getBillboardStat2();
         String availableMovements = getBillBoardEvidence(DataBase.getWorkersPositions());
 
-        final String ANSI_RESET = "\u001B[0m";
-        final String ANSI_BLUE = "\u001B[34m";
-        final String ANSI_PURPLE = "\u001B[35m";
-        final String ANSI_RED = "\u001B[31m";
-
         int q, w;
         int j, k;
         int i;
@@ -398,13 +377,36 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
             q = ++ w;
             j = ++ k;
         }
+        output.append(keyLegend());
         System.out.println(output.toString());
+    }
+
+    public static synchronized String keyLegend() {
+
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_BLUE = "\u001B[34m";
+        final String ANSI_PURPLE = "\u001B[35m";
+        final String ANSI_RED = "\u001B[31m";
+
         Map<Integer,String> playersName = DataBase.getMatchPlayers();
+        Map<Integer,String> playersColor = DataBase.getMatchColors();
+        List<Integer> playersList = new ArrayList<>(playersColor.keySet());
         StringBuilder keyLegend = new StringBuilder();
-        keyLegend.append("KEY: " + ANSI_BLUE + playersName.get(1) + ANSI_RESET + ", " + ANSI_RED + playersName.get(2) + ANSI_RESET);
-        if (playersName.size()==3)
-            keyLegend.append(", " + ANSI_PURPLE + playersName.get(3) + ANSI_RESET);
-        System.out.println(keyLegend.toString());
+
+        keyLegend.append("KEY: ");
+
+        for (int i=0;i<playersName.size();i++) {
+            if (playersName.containsKey(playersList.get(i))) {
+                if (playersColor.get(playersList.get(i)).equals("Blue"))
+                    keyLegend.append(ANSI_BLUE + playersName.get(playersList.get(i)) + ANSI_RESET + ", ");
+                else if (playersColor.get(playersList.get(i)).equals("Orange"))
+                    keyLegend.append(ANSI_RED + playersName.get(playersList.get(i)) + ANSI_RESET + ", ");
+                else
+                    keyLegend.append(ANSI_PURPLE + playersName.get(playersList.get(i)) + ANSI_RESET + ", ");
+            }
+        }
+        keyLegend.deleteCharAt(keyLegend.length()-2);
+        return keyLegend.toString();
     }
 
     // From Controller (INPUT ERROR / INCORRECT DATA)

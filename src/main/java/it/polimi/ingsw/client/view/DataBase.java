@@ -12,6 +12,7 @@ public class DataBase {
     static private boolean messageReady;
 
     static private String nickname;
+    static private Map<Integer,String> matchColors;
     static private PlayerState playerState;
     static private MatchState matchState;
     static private TurnState turnState;
@@ -35,6 +36,7 @@ public class DataBase {
     static private Position startingPosition;
 
     static public void resetDataBase() {
+        matchColors = null;
         selectedGodCards = new HashSet<>();
         matchCards = new ArrayList<>();
         billboardStatus = new HashMap<>();
@@ -235,6 +237,8 @@ public class DataBase {
             turnState = messageEvent.getTurnState();
         if ( messageEvent.getMatchPlayers() != null)
             matchPlayers = messageEvent.getMatchPlayers();
+        if (messageEvent.getMatchColors() != matchColors && messageEvent.getMatchColors() != null)
+            matchColors = messageEvent.getMatchColors();
         if ((MatchState.SELECTING_SPECIAL_COMMAND != matchState || currentPlayer == 0))
             currentPlayer = messageEvent.getCurrentPlayer();
     }
@@ -243,8 +247,9 @@ public class DataBase {
      * Depending on Database dates, it compute the next Control state
      */
     static public void updateControllerState() {
-        if (nickname == null && controlState.getClass() != NotInitialized.class) {
+        if (matchState==null) {
             controlState = new NotInitialized();
+            return;
         }
         switch (matchState) {
             case GETTING_PLAYERS_NUM:
@@ -292,4 +297,7 @@ public class DataBase {
     public static void resetSpecialFunction() {
         specialFunction = false;
     }
+
+    public static Map<Integer,String> getMatchColors() {return matchColors;}
+
 }

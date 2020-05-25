@@ -1,0 +1,43 @@
+@font-face {
+    font-family: Bangers;
+    src: url("../fonts/Bangers-Regular.ttf");
+}
+
+.dialog-pane {
+    -fx-background-image: url("/images/bg_panelMid.png");
+    -fx-background-size: stretch;
+    -fx-text-alignment: center;
+}
+
+.dialog-pane .label {
+    -fx-background-color: transparent;
+    -fx-text-alignment: center;
+    -fx-font-size: 26;
+    -fx-font-family: Bangers;
+    -fx-text-fill: #3f3f3f;
+}
+
+.dialog-pane .header-panel {
+    -fx-text-alignment: center;
+    -fx-background-color: transparent;
+    -fx-background-size: stretch;
+}
+
+
+.dialog-pane .button {
+    -fx-background-color: transparent;
+    -fx-pref-width: 50;
+    -fx-pref-height: 50;
+    -fx-background-image: url("../images/symbol-2.png");
+    -fx-background-size: 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-text-fill: transparent;
+    -fx-cursor: hand;
+}
+
+.dialog-pane .button:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-scale-z: 1.02;
+}

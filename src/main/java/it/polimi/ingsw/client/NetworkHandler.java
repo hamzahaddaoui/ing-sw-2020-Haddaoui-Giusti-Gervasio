@@ -18,7 +18,7 @@ import java.util.concurrent.*;
 
 public class NetworkHandler extends Observable<MessageEvent> implements Runnable, Observer<MessageEvent> {
     public final static int SOCKET_PORT = 12345;
-    public final static int SOCKET_TIMEOUT = 5000;
+    public final static int SOCKET_TIMEOUT = 10000;
 
     private final Socket server;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -28,7 +28,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     private boolean active;
     private static ObjectOutputStream output;
     private static ObjectInputStream input;
-    private MessageEvent lastMessage;
+    private String lastMessage;
 
     public NetworkHandler(String ip) throws IOException {
         active = true;
@@ -134,15 +134,14 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        try {
            while (active) {
                inputObject = (String) input.readObject();
+               if (!inputObject.equals(lastMessage)) {
+                   lastMessage = inputObject;
+
                messageEvent = new Gson().newBuilder().enableComplexMapKeySerialization().create().fromJson(inputObject, MessageEvent.class);
 
-               if (messageEvent.getInfo() == null || !messageEvent.getInfo().equals("Heartbeat Message")) {
-                   //System.out.println("MSG1: " + messageEvent);
-                   if (lastMessage==null || !lastMessage.toString().equals(messageEvent.toString())) {
-                       //System.out.println("MSG2: " +messageEvent);
-                       lastMessage = messageEvent;
+               if (messageEvent.getInfo() == null || !messageEvent.getInfo().equals("Heartbeat Message"))
                        notify(messageEvent);
-                   }
+
                }
            }
        } catch (SocketTimeoutException e) {
