@@ -856,7 +856,7 @@ public class IslandLoader{
 
         Timeline timeline2 = new Timeline(
                 new KeyFrame(
-                        Duration.seconds(90),
+                        Duration.seconds(180),
                         new KeyValue(angleY, 3240)
                 )
         );
