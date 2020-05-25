@@ -1,7 +1,8 @@
-package it.polimi.ingsw.utilities;
+package it.polimi.ingsw.GUI;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import it.polimi.ingsw.GUI.controller.Running;
+import it.polimi.ingsw.utilities.Position;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -24,6 +25,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static it.polimi.ingsw.GUI.Database.*;
 import static it.polimi.ingsw.GUI.Database.getCurrentState;
 import static it.polimi.ingsw.GUI.Database.getStage;
 
