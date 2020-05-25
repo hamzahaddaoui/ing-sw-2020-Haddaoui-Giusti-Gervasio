@@ -124,6 +124,7 @@ public class Running extends State{
             return;
         }
         else if (message.getPlayerState() == PlayerState.LOST){
+            updateStandardData(message);
             setBillboardStatus(message.getBillboardStatus());
             updateBillboard();
             getIslandLoader().endAnimation();
@@ -132,6 +133,9 @@ public class Running extends State{
             return;
         }
         else if (message.getPlayerState() == PlayerState.WIN){
+            updateStandardData(message);
+            setBillboardStatus(message.getBillboardStatus());
+            updateBillboard();
             getIslandLoader().endAnimation();
             System.out.println("WINNER");
             win();
