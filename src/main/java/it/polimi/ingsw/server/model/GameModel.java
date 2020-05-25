@@ -307,7 +307,7 @@ public class GameModel extends Observable<MessageEvent> {
         Match match = translateMatchID(matchID);
         Player player = match.getCurrentPlayer();
 
-        match.setInfo(player.toString() + " has " + (player.getTurnState() == TurnState.BUILD ? ("built in "+ endPosition) : ("moved from " + startPosition +" to "+ endPosition)));
+        match.setInfo(player.toString() + " has " + (player.getTurnState() == TurnState.BUILD ? ("built in "+ (endPosition.getX()+1)+ "" + (endPosition.getY()+1)) : ("moved from " + (startPosition.getX()+1) + "" + (startPosition.getY()+1) +" to "+  (endPosition.getX()+1)+ "" + (endPosition.getY()+1))));
 
         if (!player.hasSelectedWorker())
             player.setCurrentWorker(startPosition);

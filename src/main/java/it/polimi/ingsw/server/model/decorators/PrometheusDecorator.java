@@ -2,11 +2,13 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
+import javafx.scene.shape.MoveTo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.utilities.TurnState.*;
@@ -17,6 +19,7 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 
 public class PrometheusDecorator extends CommandsDecorator {
     static final GodCards card = GodCards.Prometheus;
+
     public PrometheusDecorator(Commands commands){
         this.commands=commands;
     }
@@ -46,14 +49,18 @@ public class PrometheusDecorator extends CommandsDecorator {
                 player.setUnsetSpecialFunctionAvailable(null);
                 break;
             case BUILD:
-                if (player.hasSpecialFunction() && hasBuiltBeforeMoving) {
+                if (hasBuiltBeforeMoving) {
                     player.setTurnState(MOVE);
                     player.setUnsetSpecialFunctionAvailable(null);
                 }
-                else player.setHasFinished();
+                else{
+                    player.setHasFinished();
+                }
+
                 break;
         }
     }
+
 
     /**
      * Method that allows the specific building block action of Prometheus.
@@ -67,7 +74,7 @@ public class PrometheusDecorator extends CommandsDecorator {
      * @param position   the position that player have inserted, not null
      */
     @Override
-    public void build(Position position, Player player) {
+    public void build (Position position, Player player) {
         if (player.hasSpecialFunction() && !hasBuiltBeforeMoving) {
             super.build(position,player);
             hasBuiltBeforeMoving = true;
@@ -77,7 +84,6 @@ public class PrometheusDecorator extends CommandsDecorator {
             hasBuiltBeforeMoving = false;
         }
     }
-
 
     /**
      * Returns the spaces that are available after a check in the billboard.
@@ -118,8 +124,148 @@ public class PrometheusDecorator extends CommandsDecorator {
      *
      * @param player the current player of the match
      */
-
     @Override
+    public void notifySpecialFunction(Player player){
+        Billboard billboard = player.getMatch().getBillboard();
+        Set<Position> avoidPositions = new HashSet<>();
+        ArrayList<Worker> workers = new ArrayList<>(player.getWorkers());
+        Position avoidPosition;
+        Worker worker;
+
+        if (player.hasSpecialFunction()){
+            for (int i=0;i<2;i++) {
+                worker = workers.get(i);
+                if (checkCells(player, worker)) {
+                    Position workerPosition = worker.getPosition();
+
+                    avoidPositions = worker.getAvailableCells(MOVE)
+                            .stream()
+                            .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(workerPosition))
+                            .collect(Collectors.toSet());
+
+
+                    if(avoidPositions.size() == 1 ){
+                        avoidPosition = avoidPositions.stream().findFirst().get();
+                        if(billboard.getTowerHeight(avoidPosition) == billboard.getTowerHeight(workerPosition))
+                            worker.getAvailableCells(BUILD).remove(avoidPosition);
+                    }
+                }
+            }
+            player.setTurnState(BUILD);
+        }
+        else player.setTurnState(MOVE);
+    }
+
+    /**
+     * Method that analyze how many cells are available to move into, after the first building turn.
+     * <p>
+     * The method confronts every available cells of the worker with the starting cell
+     * and counts every cell that has an height tower of same or lower level then the starting one.
+     *
+     * @param player the current player of the match
+     * @param worker the worker of the player
+     * @return true if there's only one cell available, false otherwise
+     */
+    private boolean checkCells(Player player, Worker worker) {
+        Billboard billboard = player.getMatch().getBillboard();
+
+        long num1 = worker
+                .getAvailableCells(MOVE)
+                .stream()
+                .filter(pos -> billboard.getTowerHeight(pos) <= billboard.getTowerHeight(worker.getPosition()))
+                .count();
+
+        long num2 = worker
+                .getAvailableCells(MOVE)
+                .stream()
+                .filter(pos -> billboard.getTowerHeight(pos) < billboard.getTowerHeight(worker.getPosition()))
+                .count();
+
+        return (num1>0 && worker.getAvailableCells(BUILD).size() >1) || (num2>0);
+    }
+
+    /**
+     * Method that checks if the boolean special function available can be true.
+     * <p>
+     * The method controls for both workers if they have at least one building available cells.
+     *
+     *
+     * @param player  the current player of the match
+     * @return        true if you can build before move, false otherwise
+     */
+    private Map<Position, Boolean> canBuildBeforeMove(Player player){
+        player.setAvailableCells();
+
+        return player
+                .getWorkers()
+                .stream()
+                .collect(Collectors
+                        .toMap(Worker::getPosition, worker -> checkCells(player,worker)));
+    }
+
+
+
+
+//OLD VERSION PROMETHEUS
+
+    /*@Override
+    public void nextState(Player player) {
+        switch(player.getTurnState()){
+            case IDLE:
+                hasBuiltBeforeMoving = false;
+                player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player));
+                player.setTurnState(MOVE);
+                break;
+            case MOVE:
+                player.setTurnState(BUILD);
+                player.setUnsetSpecialFunctionAvailable(null);
+                break;
+            case BUILD:
+                if (player.hasSpecialFunction() && hasBuiltBeforeMoving) {
+                    player.setTurnState(MOVE);
+                    player.setUnsetSpecialFunctionAvailable(null);
+                }
+                else player.setHasFinished();
+                break;
+        }
+    }*/
+
+    /*@Override
+    public void build(Position position, Player player) {
+        if (player.hasSpecialFunction() && !hasBuiltBeforeMoving) {
+            super.build(position,player);
+            hasBuiltBeforeMoving = true;
+        }
+        else {
+            super.build(position, player);
+            hasBuiltBeforeMoving = false;
+        }
+    }*/
+
+
+
+    /*@Override
+    public Set<Position> computeAvailableMovements(Player player, Worker worker) {
+
+        if (!player.hasSpecialFunction())
+            return super.computeAvailableMovements(player, worker);
+        else {
+            Billboard billboard = player.getMatch().getBillboard();
+            Position currentPosition = player.getCurrentWorker().getPosition();
+
+            return currentPosition
+                    .neighbourPositions()
+                    .stream()
+                    .filter(position -> billboard.getPlayer(position) == 0)
+                    .filter(position -> (billboard.getTowerHeight(position) + 1 <= billboard.getTowerHeight(currentPosition)))
+                    .filter(position -> !billboard.getDome(position))
+                    .collect(Collectors.toSet());
+        }
+    }*/
+
+
+
+    /*@Override
     public void notifySpecialFunction(Player player){
         Billboard billboard = player.getMatch().getBillboard();
         Position avoidPosition;
@@ -135,6 +281,7 @@ public class PrometheusDecorator extends CommandsDecorator {
                     avoidPosition = worker.getAvailableCells(MOVE).stream()
                             .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(workerPosition))
                             .findAny().get();
+
                     if (billboard.getTowerHeight(avoidPosition) == billboard.getTowerHeight(workerPosition))
                         worker.getAvailableCells(BUILD).remove(avoidPosition);
                 }
@@ -142,43 +289,30 @@ public class PrometheusDecorator extends CommandsDecorator {
             player.setTurnState(BUILD);
         }
         else player.setTurnState(MOVE);
-    }
+    }*/
 
-    /**
-     * Method that checks if the boolean special function available can be true.
-     * <p>
-     * The method controls for both workers if they have at least one building available cells.
-     *
-     *
-     * @param player  the current player of the match
-     * @return        true if you can build before move, false otherwise
-     */
 
-    private Map<Position, Boolean> canBuildBeforeMove(Player player){
+
+    /*private Map<Position, Boolean> canBuildBeforeMove(Player player){
         player.setAvailableCells();
-        if (player.getWorkers().stream().allMatch(worker -> worker.getAvailableCells(BUILD).size()==1 && checkCells(player,worker)))
+        if (player.getWorkers().stream().allMatch(worker -> checkCells(player,worker)))
             return null;
         else return player.getWorkers().stream().collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(BUILD) &&
-                !(worker.getAvailableCells(BUILD).size()==1 && checkCells(player,worker))));
-    }
+                !(worker.getAvailableCells(MOVE).size()==1 && checkCells(player,worker))));
+    }*/
 
 
-    /**
-     * Method that analyze how many cells are available to move into, after the first building turn.
-     * <p>
-     * The method confronts every available cells of the worker with the starting cell
-     * and counts every cell that has an height tower of same or lower level then the starting one.
-     *
-     * @param player the current player of the match
-     * @param worker the worker of the player
-     * @return true if there's only one cell available, false otherwise
-     */
-    private boolean checkCells(Player player, Worker worker) {
-      Billboard billboard = player.getMatch().getBillboard();
 
-      long num = worker.getAvailableCells(MOVE).stream()
-              .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(worker.getPosition()))
-              .count();
-      return num == 1;
-    }
+    /*private boolean checkCells(Player player, Worker worker) {
+        Billboard billboard = player.getMatch().getBillboard();
+
+
+        long num = worker.getAvailableCells(MOVE)
+                .stream()
+                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(worker.getPosition()))
+                .count();
+
+        return (num>1) ;
+    }*/
+
 }

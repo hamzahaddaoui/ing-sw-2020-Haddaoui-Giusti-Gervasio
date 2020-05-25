@@ -109,14 +109,7 @@ public class Running extends ControlState {
 
         if (DataBase.getPlayerState()!= PlayerState.ACTIVE)
             return DataBase.getMatchPlayers().get(DataBase.getPlayer())+" is doing his turn";
-
-        if (startingPosition==null && checkSpecialFunctionAvailable()) {
-            if (DataBase.isSpecialFunction())
-                return "Choose your starting worker OR type 'f' to disable your special function: ";
-            else
-                return "Choose your starting worker OR type 'f' to enable your special function: ";
-        }
-        else if (startingPosition==null)
+        if (startingPosition==null)
             return "Choose your starting worker, insert its coordinates: ";
 
         StringBuilder string = new StringBuilder();
@@ -157,11 +150,13 @@ public class Running extends ControlState {
         int num = Character.getNumericValue(input);
 
         if (num == 15) {
-            if (checkSpecialFunctionAvailable()) {
+            if(DataBase.getStartingPosition() == null) System.out.println("SELECT YOUR WORKER!");
+            else if (checkSpecialFunctionAvailable() ) {
                     DataBase.setUnsetSpecialFunction();
                     message.setSpecialFunction(DataBase.isSpecialFunction());
                     return true;
-                } else System.out.println("SPECIAL FUNCTION IS NOT AVAILABLE!");
+                }
+            else System.out.println("SPECIAL FUNCTION IS NOT AVAILABLE!");
         }
         else if (num == 14) {
 

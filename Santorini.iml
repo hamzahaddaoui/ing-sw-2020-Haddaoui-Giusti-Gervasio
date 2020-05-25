@@ -29,7 +29,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../ing-sw-2020-Haddaoui-Giusti-Gervasio/lib/jimObjModelImporterJFX.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jimObjModelImporterJFX.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
