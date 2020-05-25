@@ -36,6 +36,7 @@ public class DataBase {
     static private Position startingPosition;
 
     static public void resetDataBase() {
+        nickname = null;
         matchColors = null;
         selectedGodCards = new HashSet<>();
         matchCards = new ArrayList<>();

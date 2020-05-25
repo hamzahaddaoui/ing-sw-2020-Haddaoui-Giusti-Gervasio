@@ -89,8 +89,6 @@ public class NotInitialized extends ControlState{
     public void error() {
         DataBase.setActiveInput(true);
         System.out.println("Nickname already taken!\nInsert a new one or press 'q' to quit disconnect: ");
-        //DataBase.setNickname(null);
-        //System.out.println(computeView());
     }
 
 }

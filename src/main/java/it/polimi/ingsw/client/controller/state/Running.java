@@ -133,27 +133,6 @@ public class Running extends ControlState {
             string.append(" OR type 'e' to terminate your turn");
         string.append(": ");
         return string.toString();
-        /*else if (checkSpecialFunctionAvailable() && player.isTerminateTurnAvailable()) {
-            if (player.getTurnState() == TurnState.MOVE)
-                return "Insert the position you want to move to OR type 'f' to use your special function OR type 'e' to terminate your turn: ";
-            else //if (player.getTurnState() == TurnState.BUILD)
-                return "Insert the position you want to build in OR type 'f' to use your special function OR type 'e' to terminate your turn: ";
-        } else if (checkSpecialFunctionAvailable()) {
-            if (player.getTurnState() == TurnState.MOVE)
-                return "Insert the position you want to move to OR type 'f' to use your special function: ";
-            else //if (player.getTurnState() == TurnState.BUILD)
-                return "Insert the position you want to build in OR type 'f' to use your special function: ";
-        } else if (player.isTerminateTurnAvailable()) {
-            if (player.getTurnState() == TurnState.MOVE)
-                return "Insert the position you want to move to OR type 'e' to terminate your turn: ";
-            else //if (player.getTurnState() == TurnState.BUILD)
-                return "Insert the position you want to build in OR type 'e' to terminate your turn: ";
-        } else {
-            if (player.getTurnState() == TurnState.MOVE)
-                return "Insert the position you want to move to: ";
-            else //if (player.getTurnState() == TurnState.BUILD)
-                return "Insert the position you want to build in: ";
-        }*/
     }
 
     /**
@@ -179,9 +158,7 @@ public class Running extends ControlState {
 
         if (num == 15) {
             if (checkSpecialFunctionAvailable()) {
-                    System.out.println(DataBase.isSpecialFunction());
                     DataBase.setUnsetSpecialFunction();
-                    System.out.println(DataBase.isSpecialFunction());
                     message.setSpecialFunction(DataBase.isSpecialFunction());
                     return true;
                 } else System.out.println("SPECIAL FUNCTION IS NOT AVAILABLE!");

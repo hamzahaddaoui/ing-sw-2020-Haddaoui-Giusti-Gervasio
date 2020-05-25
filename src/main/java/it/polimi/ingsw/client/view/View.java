@@ -72,106 +72,17 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      */
     public static void visualization(){
         if(DataBase.getMatchState() == MatchState.PLACING_WORKERS ){
-            System.out.println(getBillboardStat());
+            System.out.println(placingWorkerSituation());
         }
         else if(DataBase.getMatchState() == MatchState.RUNNING && DataBase.getStartingPosition() != null && DataBase.getPlayerState() == PlayerState.ACTIVE){ // visualizzaione delle 3 tabelle
-            gameBoardVisualizationActive2();
-            //gameBoardVisualizationActive();
+            gameBoardVisualizationActive();
         }
         else if(DataBase.getMatchState() == MatchState.RUNNING && DataBase.getStartingPosition() == null && DataBase.getPlayerState() == PlayerState.ACTIVE){
-            gameBoardVisualizationChooseCurrentWorker2();
-            //gameBoardVisualizationChooseCurrentWorker();
+            gameBoardVisualizationChooseCurrentWorker();
         }
         else {
-            System.out.println(getBillboardStat2());
-            //gameBoardVisualizationNotActive();
+            System.out.println(getBillboardPlayersAndHeights());
         }
-    }
-
-    /**
-     * Method that organize the the visualization of the tables if the worker is active and it has to choose the worker for the turn
-     *
-     */
-    public static synchronized void gameBoardVisualizationChooseCurrentWorker(){
-        StringBuilder output = new StringBuilder();
-        String coloredGameBoard = getBillboardStat();
-        String heightStateGameBoard = getBillboardHeightStat();
-        String availableMovements = getBillBoardEvidence(DataBase.getWorkersPositions());
-        int q, w;
-        int j, k;
-        int c, v;
-        int i;
-        for (i = 0, q = 0, j = 0, c = 0, w = coloredGameBoard.indexOf("\n", 0), k = heightStateGameBoard.indexOf("\n", 0), v = availableMovements.indexOf("\n", 0);
-             i < 5;
-             i++, w = coloredGameBoard.indexOf("\n", q), k = heightStateGameBoard.indexOf("\n", j), v = availableMovements.indexOf("\n", c)) {
-
-            output.append(coloredGameBoard, q, w);
-            output.append("\t\t\t");
-            output.append(heightStateGameBoard, j, k);
-            output.append("\t\t\t");
-            output.append(availableMovements, c, v);
-            output.append("\n");
-            q = ++ w;
-            j = ++ k;
-            c = ++ v;
-        }
-        System.out.println(output.toString());
-    }
-
-    /**
-     * Method that organizes the the visualization of the tables if the worker is active and it can do his movement
-     *
-     */
-    public static synchronized void gameBoardVisualizationActive(){
-        StringBuilder output = new StringBuilder();
-        String coloredGameBoard = getBillboardStat();
-        String heightStateGameBoard = getBillboardHeightStat();
-        String availableMovements = getBillboardStat(DataBase.getWorkersAvailableCells(DataBase.getStartingPosition()),DataBase.getStartingPosition());
-
-        int q, w;
-        int j, k;
-        int c, v;
-        int i;
-        for (i = 0, q = 0, j = 0, c = 0, w = coloredGameBoard.indexOf("\n", 0), k = heightStateGameBoard.indexOf("\n", 0), v = availableMovements.indexOf("\n", 0);
-             i < 5;
-             i++, w = coloredGameBoard.indexOf("\n", q), k = heightStateGameBoard.indexOf("\n", j), v = availableMovements.indexOf("\n", c)) {
-
-            output.append(coloredGameBoard, q, w);
-            output.append("\t\t\t");
-            output.append(heightStateGameBoard, j, k);
-            output.append("\t\t\t");
-            output.append(availableMovements, c, v);
-            output.append("\n");
-            q = ++ w;
-            j = ++ k;
-            c = ++ v;
-        }
-        System.out.println(output.toString());
-    }
-
-    /**
-     * Method that organizes the the visualization of the tables if the worker is not active and it has to choose his current worker
-     */
-    public static synchronized void gameBoardVisualizationNotActive(){
-        StringBuilder output = new StringBuilder();
-        String coloredGameBoard = getBillboardStat();
-        String heightStateGameBoard = getBillboardHeightStat();
-
-        int q, w;
-        int j, k;
-        int i;
-        for (i = 0, q = 0, j = 0, w = coloredGameBoard.indexOf("\n", 0), k = heightStateGameBoard.indexOf("\n", 0);
-             i < 5;
-             i++, w = coloredGameBoard.indexOf("\n", q), k = heightStateGameBoard.indexOf("\n", j)) {
-
-            output.append(coloredGameBoard, q, w);
-            output.append("\t\t\t");
-            output.append(heightStateGameBoard, j, k);
-            output.append("\n");
-            q = ++ w;
-            j = ++ k;
-        }
-        System.out.println(output.toString());
     }
 
     /**
@@ -179,7 +90,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      *
      * @return  the string of the GameBoard's situation
      */
-    static String getBillboardStat(){
+    static String placingWorkerSituation(){
         StringBuilder outputA = new StringBuilder();
 
         Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
@@ -196,41 +107,15 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 .stream()
                 .sorted()
                 .forEach(position -> outputA
-                        .append(billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜ " + ANSI_RESET : "") //⬜
-                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + " 🟦 " + ANSI_RESET : "")
-                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧 " + ANSI_RESET : "") //🟩
-                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪 " + ANSI_RESET : "") //🟦
+                        .append(billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET : "") //⬜
+                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET : "")
+                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET : "") //🟩
+                        .append(billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪" + ANSI_RESET : "") //🟦
                         .append((position.getY() == 4) ? "\n" : " "));
 
         outputA.append("\n");
         outputA.append(keyLegend());
         return outputA.toString();
-    }
-
-    /**
-     * Prints the height of the GameBoard' cells
-     *
-     * @return  the string of the GameBoard's situation
-     */
-    static String getBillboardHeightStat() {
-        StringBuilder outputB = new StringBuilder();
-
-        Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
-
-        billboardCells
-                .keySet()
-                .stream()
-                .sorted()
-                .forEach(position -> outputB
-                        .append(billboardCells.get(position).isDome() ? "⏺" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 ? "0️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 1 ? "1️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 2 ? "2️⃣" : "")
-                        .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 3 ? "3️⃣" : "")
-                        .append((position.getY() == 4) ? "\n" : " "));
-
-        outputB.append("\n");
-        return outputB.toString();
     }
 
     /**
@@ -283,7 +168,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         return outputD.toString();
     }
 
-    static String getBillboardStat2() {
+    static String getBillboardPlayersAndHeights() {
         StringBuilder output = new StringBuilder();
 
         Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
@@ -331,9 +216,9 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      * Method that organizes the the visualization of the tables if the worker is active and it can do his movement
      *
      */
-    public static synchronized void gameBoardVisualizationActive2(){
+    public static synchronized void gameBoardVisualizationActive(){
         StringBuilder output = new StringBuilder();
-        String billboardStat2 = getBillboardStat2();
+        String billboardStat2 = getBillboardPlayersAndHeights();
         String availableMovements = getBillboardStat(DataBase.getWorkersAvailableCells(DataBase.getStartingPosition()),DataBase.getStartingPosition());
 
         int q, w;
@@ -358,9 +243,9 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      * Method that organize the the visualization of the tables if the worker is active and it has to choose the worker for the turn
      *
      */
-    public static synchronized void gameBoardVisualizationChooseCurrentWorker2(){
+    public static synchronized void gameBoardVisualizationChooseCurrentWorker(){
         StringBuilder output = new StringBuilder();
-        String billboardStat2 = getBillboardStat2();
+        String billboardStat2 = getBillboardPlayersAndHeights();
         String availableMovements = getBillBoardEvidence(DataBase.getWorkersPositions());
 
         int q, w;
