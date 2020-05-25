@@ -130,7 +130,7 @@ public class Running extends State{
         else if (message.getPlayerState() == PlayerState.LOST){
             updateStandardData(message);
             setBillboardStatus(message.getBillboardStatus());
-            updateBillboard();
+            updateBillboard(true);
             getIslandLoader().endAnimation();
             System.out.println("LOSER");
             lost();
@@ -139,7 +139,7 @@ public class Running extends State{
         else if (message.getPlayerState() == PlayerState.WIN){
             updateStandardData(message);
             setBillboardStatus(message.getBillboardStatus());
-            updateBillboard();
+            updateBillboard(true);
             getIslandLoader().endAnimation();
             System.out.println("WINNER");
             win();
@@ -160,7 +160,7 @@ public class Running extends State{
         setWorkersAvailableCells(message.getWorkersAvailableCells());
         setBillboardStatus(message.getBillboardStatus());
 
-        updateBillboard();
+        updateBillboard(true);
 
         updateGame();
     }
@@ -214,9 +214,10 @@ public class Running extends State{
                 resetCells();
 
                 if (billboardStatus.get(position).getPlayerID() == 0) {
-                    getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+                    //getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
                     billboardStatus.get(position).setPlayerID(getPlayerID());
                     billboardStatus.get(getStartingPosition()).setPlayerID(0);
+                    updateBillboard(false);
                 }
                 setEndPosition(position);
                 sendData();
@@ -237,12 +238,14 @@ public class Running extends State{
                 resetCells();
 
                 if(!getGodCard().equals("Atlas")){
-                    getIslandLoader().build(point, false);
+                    //getIslandLoader().build(point, false);
                     int towerHeight = billboardStatus.get(position).getTowerHeight();
                     if (towerHeight < 3)
                         billboardStatus.get(position).setTowerHeight(towerHeight + 1);
                     else
                         billboardStatus.get(position).setDome(true);
+
+                    updateBillboard(false);
                 }
                 sendData();
             }
@@ -298,7 +301,7 @@ public class Running extends State{
 
     }
 
-    public void updateBillboard(){
+    public void updateBillboard(boolean bool){
         Map<Integer, Position> movedInPlayers = new HashMap<>();
         Map<Integer, Position> movedOutPlayers =  new HashMap<>();
         Map<Point2D, Point2D> playersMove = new HashMap<>();
@@ -382,7 +385,8 @@ public class Running extends State{
 
         }
 
-        billboardStatus = getBillboardStatus();
+        if (bool)
+            billboardStatus = getBillboardStatus();
     }
 
     public static Position pointToPosition(Point2D point){
