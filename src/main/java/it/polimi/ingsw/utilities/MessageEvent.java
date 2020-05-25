@@ -309,12 +309,11 @@ public class MessageEvent {
     }
 
 
-
-
     @Override
     public String toString(){
         return "MessageEvent{" +
-               "info='" + info + '\'' +
+               "clientHandler=" + clientHandler +
+               ", info='" + info + '\'' +
                ", matchID=" + matchID +
                ", playerID=" + playerID +
                ", nickname='" + nickname + '\'' +
@@ -338,6 +337,8 @@ public class MessageEvent {
                ", terminateTurnAvailable=" + terminateTurnAvailable +
                ", specialFunctionAvailable=" + specialFunctionAvailable +
                ", matchPlayers=" + matchPlayers +
+               ", matchColors=" + matchColors +
+               ", currentPlayer=" + currentPlayer +
                ", winner=" + winner +
                ", finished=" + finished +
                '}';
