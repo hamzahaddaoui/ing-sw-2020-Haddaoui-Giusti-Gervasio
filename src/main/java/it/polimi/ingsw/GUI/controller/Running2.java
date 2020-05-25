@@ -2,7 +2,7 @@
 package it.polimi.ingsw.GUI.controller;
 
 import it.polimi.ingsw.GUI.Controller;
-import it.polimi.ingsw.GUI.IslandLoader;
+import it.polimi.ingsw.utilities.IslandLoader;
 import it.polimi.ingsw.utilities.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
