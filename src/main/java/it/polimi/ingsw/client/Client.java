@@ -13,6 +13,9 @@ import java.util.concurrent.Executors;
  * 🟧 arancio
  * 🟪 viola
  * 🟥 rosso
+ * ⬜️ bianco
+ * 🟩 verde
+ *
  */
 
 
