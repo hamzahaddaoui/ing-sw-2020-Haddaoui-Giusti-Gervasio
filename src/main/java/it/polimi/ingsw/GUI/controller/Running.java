@@ -553,16 +553,24 @@ public class Running extends State{
 
     public void helperClick(MouseEvent event){
         Popup popup = new Popup();
-        ImageView imageView = new ImageView(new Image("images/helper/" + getGodCard() + ".png",600,400,false,true));
-        imageView.setOnMouseReleased(e -> popup.hide());
+        //ImageView imageView = new ImageView(new Image("images/helper/" + getGodCard() + ".png",450,225,true,true));
+        final ImageView imgView = new ImageView();
+        Image image = new Image("images/helper/" + getGodCard() + ".png");
+        imgView.setImage(image);
+        imgView.setFitWidth(450);
+        imgView.setPreserveRatio(true);
+        imgView.setSmooth(true);
+        imgView.setCache(true);
+
+        imgView.setOnMouseReleased(e -> popup.hide());
         //popup.getStylesheets().add("/css_files/running.css");
         //imageView.getStyleClass().add("popup");
-        popup.getContent().add(imageView);
+        popup.getContent().add(imgView);
         popup.setAutoHide(true);
         popup.setHideOnEscape(true);
         popup.setOnShown(e -> {
             popup.setX(getStage().getX() + getStage().getMaxWidth() - popup.getWidth());
-            popup.setY(getStage().getY());
+            popup.setY(getStage().getY() + 22);
             helper.setVisible(false);
         });
 
