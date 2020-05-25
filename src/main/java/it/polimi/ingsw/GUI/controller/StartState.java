@@ -196,9 +196,8 @@ public class StartState extends State {
         else {
             updateStandardData(message);
             View.updateView();
+
             getCurrentState().showPane();
-            popupIP.hide();
-            popupNick.hide();
             new Thread(()->{
                 getNetworkHandler().removeObserver(this);
                 this.removeObserver(getNetworkHandler());
