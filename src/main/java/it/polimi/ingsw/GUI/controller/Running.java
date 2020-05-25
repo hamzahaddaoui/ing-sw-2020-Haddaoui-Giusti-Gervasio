@@ -45,6 +45,8 @@ public class Running extends State{
 
     @FXML Button function;
 
+    @FXML Button helper;
+
     static private Map<Position, Cell> billboardStatus = new HashMap<>();
     static private Map<Integer, String> matchPlayers = new HashMap<>();
 
@@ -559,9 +561,13 @@ public class Running extends State{
         popup.setAutoHide(true);
         popup.setHideOnEscape(true);
         popup.setOnShown(e -> {
-            popup.setX(getStage().getX() - popup.getWidth());
-            popup.setY(0.0);
+            popup.setX(getStage().getX() + getStage().getMaxWidth() - popup.getWidth());
+            popup.setY(getStage().getY());
+            helper.setVisible(false);
         });
+
+        popup.setOnHidden( e -> helper.setVisible(true));
+
         popup.show(getStage());
     }
 

@@ -54,7 +54,7 @@
          <top>
             <Pane pickOnBounds="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="1075.0" mnemonicParsing="false" onMouseClicked="#helperClick" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" styleClass="buttonHelper" />
+                  <Button fx:id="helper" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="1075.0" mnemonicParsing="false" onMouseClicked="#helperClick" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" styleClass="buttonHelper" />
                </children>
             </Pane>
          </top>
