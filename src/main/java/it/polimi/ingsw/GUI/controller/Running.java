@@ -576,7 +576,7 @@ public class Running extends State{
 
         popup.setOnHidden( e -> helper.setVisible(true));
 
-        popup.show(getStage());
+        Platform.runLater(() -> popup.show(getStage()));
     }
 
 }
