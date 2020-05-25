@@ -54,14 +54,14 @@
          <top>
             <Pane pickOnBounds="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="1075.0" mnemonicParsing="false" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" />
+                  <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="1075.0" mnemonicParsing="false" onMouseClicked="#helperClick" pickOnBounds="false" prefHeight="127.0" prefWidth="131.0" styleClass="buttonHelper" />
                </children>
             </Pane>
          </top>
          <left>
             <Pane pickOnBounds="false" prefHeight="479.0" prefWidth="233.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="function" layoutX="31.0" layoutY="353.0" mnemonicParsing="false" prefHeight="71.0" prefWidth="70.0" style="-fx-background-color: transparent;" />
+                  <Button fx:id="function" layoutX="49.0" layoutY="389.0" mnemonicParsing="false" prefHeight="71.0" prefWidth="70.0" style="-fx-background-color: transparent;" />
                </children>
             </Pane>
          </left>

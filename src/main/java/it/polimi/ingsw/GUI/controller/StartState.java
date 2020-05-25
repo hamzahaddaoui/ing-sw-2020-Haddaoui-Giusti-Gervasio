@@ -45,6 +45,8 @@ public class StartState extends State {
 
     Node dataBox;
 
+    Popup popupIP, popupNick;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         ScaleTransition rt = new ScaleTransition(Duration.seconds(0.0005), santorini);
@@ -101,39 +103,39 @@ public class StartState extends State {
         System.out.println(getIP()+"  "+getNickname());
 
         if(getIP().equals("") ){
-            Popup popup = new Popup();
+            popupIP = new Popup();
             Label label = new Label();
-            popup.getContent().add(label);
-            label.setOnMouseReleased(e -> popup.hide());
+            popupIP.getContent().add(label);
+            label.setOnMouseReleased(e -> popupIP.hide());
             label.getStylesheets().add("/css_files/startScreen.css");
             label.getStyleClass().add("popup");
-            popup.setHideOnEscape(true);
+            popupIP.setHideOnEscape(true);
             label.setText("Insert Server IP");
-            popup.setAutoHide(true);
-            popup.setOnShown(e -> {
-                popup.setX(getStage().getX() + getStage().getWidth() / 2 - popup.getWidth() / 2);
-                popup.setY(address.localToScene(0, 0).getY() + 63);
+            popupIP.setAutoHide(true);
+            popupIP.setOnShown(e -> {
+                popupIP.setX(getStage().getX() + getStage().getWidth() / 2 - popupIP.getWidth() / 2);
+                popupIP.setY(address.localToScene(0, 0).getY() + 63);
 
             });
-            popup.show(getStage());
+            popupIP.show(getStage());
             return;
         }
 
         if (getNickname().equals("")){
-            Popup popup = new Popup();
+            popupNick = new Popup();
             Label label = new Label();
-            label.setOnMouseReleased(e -> popup.hide());
+            label.setOnMouseReleased(e -> popupNick.hide());
             label.getStylesheets().add("/css_files/startScreen.css");
             label.getStyleClass().add("popup");
-            popup.getContent().add(label);
-            popup.setAutoHide(true);
-            popup.setHideOnEscape(true);
+            popupNick.getContent().add(label);
+            popupNick.setAutoHide(true);
+            popupNick.setHideOnEscape(true);
             label.setText("Insert your nickname");
-            popup.setOnShown(e -> {
-                popup.setX(getStage().getX() + getStage().getWidth()/2 - popup.getWidth()/2);
-                popup.setY(nickname.localToScene(0,0).getY()+63 );
+            popupNick.setOnShown(e -> {
+                popupNick.setX(getStage().getX() + getStage().getWidth()/2 - popupNick.getWidth()/2);
+                popupNick.setY(nickname.localToScene(0,0).getY()+63 );
             });
-            popup.show(getStage());
+            popupNick.show(getStage());
             return;
         }
 
@@ -195,6 +197,8 @@ public class StartState extends State {
             updateStandardData(message);
             View.updateView();
             getCurrentState().showPane();
+            popupIP.hide();
+            popupNick.hide();
             new Thread(()->{
                 getNetworkHandler().removeObserver(this);
                 this.removeObserver(getNetworkHandler());

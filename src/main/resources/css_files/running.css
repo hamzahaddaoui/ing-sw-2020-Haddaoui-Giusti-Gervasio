@@ -27,7 +27,7 @@
     -fx-text-alignment: center;
 }
 
-.button{
+.buttonHelper{
     -fx-pref-width: 110;
     -fx-pref-height: 110;
     -fx-background-color: transparent;
@@ -45,3 +45,17 @@
     -fx-cursor: hand;
 }
 
+
+.popup {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+    -fx-border-color: red;
+    -fx-border-width: 5;
+    -fx-font-size: 21;
+    -fx-font-family: Geneva;
+    -fx-text-fill: red;
+    -fx-highlight-fill: derive(-fx-control-inner-background,-20%);
+    -fx-highlight-text-fill: -fx-text-inner-color;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+    -fx-cursor: hand;
+}

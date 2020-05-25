@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -227,9 +226,6 @@
                      </bottom>
                      <top>
                         <HBox alignment="TOP_RIGHT" prefHeight="128.0" prefWidth="822.0" BorderPane.alignment="CENTER">
-                           <children>
-                              <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="127.0" prefWidth="131.0" />
-                           </children>
                            <padding>
                               <Insets right="10.0" top="10.0" />
                            </padding>

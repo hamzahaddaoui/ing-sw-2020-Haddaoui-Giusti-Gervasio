@@ -20,9 +20,11 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Popup;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -545,5 +547,22 @@ public class Running extends State{
             getStage().show();
         });
     }
+
+
+    public void helperClick(MouseEvent event){
+        Popup popup = new Popup();
+        ImageView imageView = new ImageView(new Image("images/helper/" + getGodCard() + ".png",600,400,false,true));
+        imageView.setOnMouseReleased(e -> popup.hide());
+        //popup.getStylesheets().add("/css_files/running.css");
+        //imageView.getStyleClass().add("popup");
+        popup.getContent().add(imageView);
+        popup.setAutoHide(true);
+        popup.setHideOnEscape(true);
+        popup.setOnShown(e -> {
+            popup.setX(getStage().getX() + getStage().getWidth()/2 - popup.getWidth()/2);
+        });
+        popup.show(getStage());
+    }
+
 }
 

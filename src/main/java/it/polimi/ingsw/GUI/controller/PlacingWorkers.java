@@ -21,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Popup;
 
 import java.io.IOException;
 import java.net.URL;
@@ -214,4 +215,10 @@ public class PlacingWorkers extends State{
             getStage().show();
         });
     }
+
+
+
 }
+
+
+
