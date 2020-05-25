@@ -21,10 +21,7 @@ public class View {
                     setCurrentState(new WaitingForPlayers());
                 break;
             case SELECTING_GOD_CARDS:
-                if (getCurrentState().getClass() == StartState.class){
-                    setCurrentState(new WaitingForPlayers());
-                }
-                else{
+                if (getCurrentState().getClass() != StartState.class){
                     setCurrentState(new SelectingGodCards());
                 }
                 break;
