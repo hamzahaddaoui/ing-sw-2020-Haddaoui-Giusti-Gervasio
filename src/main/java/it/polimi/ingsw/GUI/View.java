@@ -11,7 +11,7 @@ public class View {
             setCurrentState(new StartState());
             return;
         }
-        switch (getMatchState()) { //NON CAPISCO PERCHE QUESTI IF... SE SI PUò TOGLIAMOLI!
+        switch (getMatchState()) {
             case GETTING_PLAYERS_NUM:
                 if (getCurrentState().getClass() != GettingPlayersNum.class)
                     setCurrentState(new GettingPlayersNum());

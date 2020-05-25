@@ -160,7 +160,7 @@ public class Running extends State{
         setWorkersAvailableCells(message.getWorkersAvailableCells());
         setBillboardStatus(message.getBillboardStatus());
 
-        updateBillboard(true);
+        Platform.runLater(() -> updateBillboard(true));
 
         updateGame();
     }
@@ -367,19 +367,18 @@ public class Running extends State{
 
                 movedOutPlayers.keySet().forEach(ID -> playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));
 
-                if(playersMove.size() == 1)
+                if(playersMove.size() == 1) {
+                    System.out.println("SINGLE MOVE");
                     playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
+                }
                 else{
-                    Iterator iterator = playersMove.keySet().iterator();
-                    Point2D startPos1 = (Point2D) iterator.next();
-                    Point2D startPos2 = (Point2D) iterator.next();
+                    System.out.println("DOUBLE MOVE");
+                    Iterator<Point2D> iterator = playersMove.keySet().iterator();
+                    Point2D startPos1 = iterator.next();
+                    Point2D startPos2 = iterator.next();
                     getIslandLoader().swapWorkers(startPos1, startPos2, playersMove.get(startPos1), playersMove.get(startPos2));
                 }
 
-                /*if (movedOutPlayers.containsKey(getPlayerID()) && movedOutPlayers.get(getPlayerID()) == getStartingPosition()) {
-                    setStartingPosition(movedInPlayers.get(getPlayerID()));
-                    System.out.println("CHANGED STARTING POSITION");
-                }*/
 
             }
 
