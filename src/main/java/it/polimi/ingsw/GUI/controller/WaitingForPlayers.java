@@ -125,6 +125,7 @@ public class WaitingForPlayers extends State {
                 this.removeObserver(getNetworkHandler());
             }).start();
         }
+
     }
 
     void goOn(){

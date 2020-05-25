@@ -11,7 +11,7 @@ public class View {
             setCurrentState(new StartState());
             return;
         }
-        switch (getMatchState()) { //NON CAPISCO PERCHE QUESTI IF... SE SI PUò TOGLIAMOLI!
+        switch (getMatchState()) {
             case GETTING_PLAYERS_NUM:
                 if (getCurrentState().getClass() != GettingPlayersNum.class)
                     setCurrentState(new GettingPlayersNum());
@@ -21,7 +21,10 @@ public class View {
                     setCurrentState(new WaitingForPlayers());
                 break;
             case SELECTING_GOD_CARDS:
-                if (getCurrentState().getClass() != StartState.class){
+                if (getCurrentState().getClass() == StartState.class){
+                    setCurrentState(new WaitingForPlayers());
+                }
+                else{
                     setCurrentState(new SelectingGodCards());
                 }
                 break;
