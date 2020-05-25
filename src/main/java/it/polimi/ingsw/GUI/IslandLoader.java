@@ -824,7 +824,7 @@ public class IslandLoader{
 
         //workers.remove(worker2);
         workers.put(worker2, new Point3D(endPos2.getX(), endPos2.getY(), boardCells.get(endPos2)));
-        System.out.println(startPos1 + "  to  " + workers.get(worker2));
+        System.out.println(startPos2 + "  to  " + workers.get(worker2));
 
 
     }
