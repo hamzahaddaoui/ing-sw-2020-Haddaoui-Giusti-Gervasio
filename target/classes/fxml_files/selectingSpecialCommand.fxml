@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+
+<AnchorPane fx:id="paneSC" cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../css_files/selectingGodCards.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GUI.controller.SelectingSpecialCommand">
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <children>
+      <BorderPane fx:id="borderPane" prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <Pane prefHeight="154.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="title" alignment="CENTER" layoutX="-3.0" layoutY="8.0" prefHeight="164.0" prefWidth="1205.0" stylesheets="@../css_files/selectingSpecialCommand.css" textAlignment="CENTER" />
+               </children></Pane>
+         </top>
+         <padding>
+            <Insets bottom="20.0" />
+         </padding>
+         <center>
+            <Pane prefHeight="580.0" prefWidth="865.0" BorderPane.alignment="CENTER" />
+         </center>
+         <left>
+            <StackPane fx:id="spane" prefHeight="580.0" prefWidth="361.0" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets left="70.0" />
+               </padding>
+            </StackPane>
+         </left>
+      </BorderPane>
+   </children>
+</AnchorPane>

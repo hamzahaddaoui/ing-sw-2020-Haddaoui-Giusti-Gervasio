@@ -1,0 +1,122 @@
+@font-face {
+    font-family: Bangers;
+    src: url("../fonts/Bangers-Regular.ttf");
+}
+
+.root {
+    -fx-background-image: url("../images/background_blurred.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+.Apollo {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Apollo.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Artemis {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Artemis.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Athena {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Athena.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Atlas {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Atlas.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+
+.Demeter {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Demeter.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.Hephaestus {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Hephaestus.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.Minotaur {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Minotaur.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.Pan {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Pan.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Prometheus {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Prometheus.png");
+    -fx-background-size: 137;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+
+
+.toggle-button:hover{
+    -fx-scale-x: 1.07;
+    -fx-scale-y: 1.07;
+    -fx-scale-z: 1.07;
+}
+
+.cards_select :selected{
+    -fx-scale-x: 1.07;
+    -fx-scale-y: 1.07;
+    -fx-scale-z: 1.07;
+    -fx-border-color: yellow;
+    -fx-border-width: 450%;
+}
+
+#ok_button{
+    -fx-pref-height: 300;
+    -fx-pref-width: 300;
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/ok.png");
+    -fx-background-size: 300;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+}
+
+#ok_button:hover{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+    -fx-cursor: hand;
+}
+
+.label_idle{
+    -fx-font-size: 68;
+    -fx-font-family: Bangers;
+    -fx-text-fill: #234565;
+    -fx-text-alignment: center;
+    -fx-opacity: 0.68;
+}

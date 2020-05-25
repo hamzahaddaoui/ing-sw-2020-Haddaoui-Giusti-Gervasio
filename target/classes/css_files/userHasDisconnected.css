@@ -1,0 +1,45 @@
+@font-face {
+    font-family: Bangers;
+    src: url("../fonts/Bangers-Regular.ttf");
+}
+
+#borderPane{
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, blanchedalmond, blue);
+}
+
+#button1{
+    -fx-pref-width: 400;
+    -fx-pref-height: 100;
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/btn_blue.png");
+    -fx-background-size: 400;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+}
+
+#button2{
+    -fx-pref-width: 400;
+    -fx-pref-height: 100;
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/btn_coral.png");
+    -fx-background-size: 400;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+}
+
+.button{
+    -fx-font-size: 42;
+    -fx-font-family: Bangers;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+    -fx-translate-y: -5;
+}
+
+.button:hover{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+    -fx-cursor: hand;
+}
