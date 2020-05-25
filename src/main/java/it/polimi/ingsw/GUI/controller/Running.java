@@ -559,7 +559,8 @@ public class Running extends State{
         popup.setAutoHide(true);
         popup.setHideOnEscape(true);
         popup.setOnShown(e -> {
-            popup.setX(getStage().getX() + getStage().getWidth()/2 - popup.getWidth()/2);
+            popup.setX(getStage().getX() - popup.getWidth());
+            popup.setY(0.0);
         });
         popup.show(getStage());
     }
