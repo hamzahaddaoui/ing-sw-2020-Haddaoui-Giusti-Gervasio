@@ -846,13 +846,14 @@ public class IslandLoader{
     }
 
     public void endAnimation(){
+        SequentialTransition sequentialTransition ;
         Timeline timeline = new Timeline(
                 new KeyFrame(
                         Duration.seconds(0.0001),
                         new KeyValue(angleX, 30)
                 )
         );
-        timeline.play();
+        //timeline.play();
 
         Timeline timeline2 = new Timeline(
                 new KeyFrame(
@@ -860,7 +861,10 @@ public class IslandLoader{
                         new KeyValue(angleY, 1080)
                 )
         );
-        timeline2.play();
+        //timeline2.play();
+
+        sequentialTransition = new SequentialTransition(timeline, timeline2);
+        sequentialTransition.play();
 
     }
 
