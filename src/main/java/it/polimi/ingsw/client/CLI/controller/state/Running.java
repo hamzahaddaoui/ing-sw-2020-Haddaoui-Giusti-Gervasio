@@ -59,13 +59,14 @@ public class Running extends ControlState {
     public void updateData(MessageEvent message) {
 
         //CASO DISCONNESSIONE UTENTE
-        if (message.getInfo()!=null && message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...") ) {
+        if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
             View.setRefresh(true);
             View.print();
+            DataBase.setDisconnectedUser(false);
             return;
         }
-
         if(message.getInfo()!=null && !message.getInfo().equals("Match data update") ){
             System.out.println(message.getInfo());
         }
