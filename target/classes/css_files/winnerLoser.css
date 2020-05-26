@@ -4,7 +4,7 @@
 }
 
 #borderPane{
-    -fx-background-color: rgba(153, 221, 255, 0.7);
+    -fx-background-color: rgba(153, 221, 255, 0.5);
     -fx-background-radius: 10;
 }
 
