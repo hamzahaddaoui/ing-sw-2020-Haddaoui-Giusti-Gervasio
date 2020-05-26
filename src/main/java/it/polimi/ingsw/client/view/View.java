@@ -185,7 +185,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 .stream()
                 .sorted()
                 .forEach(position -> output
-                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "⏺ " : "")
+                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "⏺" : "")
                         .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET + "⏺" : "")
                         .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET + "⏺" : "")
                         .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪" + ANSI_RESET + "⏺" : "")
