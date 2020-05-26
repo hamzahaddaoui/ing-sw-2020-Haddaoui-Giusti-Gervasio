@@ -6,6 +6,7 @@ import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -57,6 +58,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     public void stop() throws IOException{
         active = false;
         messageReader.shutdownNow();
+        heartbeatService.shutdownNow();
         server.close();
     }
 
@@ -145,6 +147,8 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            }
        } catch (SocketTimeoutException e) {
            System.out.println("socket timed out");
+       } catch (SocketException e) {
+           System.out.println("Disconnessione in corso..");
        } catch (ClassNotFoundException | ClassCastException | IOException exception) {
            System.out.println("invalid stream from server");
        }finally {
