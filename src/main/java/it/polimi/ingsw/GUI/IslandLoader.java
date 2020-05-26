@@ -38,18 +38,18 @@ public class IslandLoader{
     private static final DoubleProperty angleY = new SimpleDoubleProperty(0);
 
     //altezza ideale di ogni cella 0 1 2 3
-    private static final Map<Point2D, Integer> boardCells = new HashMap<>();
+    private static Map<Point2D, Integer> boardCells = new HashMap<>();
 
     //altezza reale di ogni cella
     private static final Map<Integer, Double> cellHeight = Map.of(0, 0.3, 1, - 0.9, 2, - 2.2, 3, - 3.0);
 
     //posizione ideale dei worker nella mappa
-    private static final Map<Group, Point3D> workers = new HashMap<>();
+    private static Map<Group, Point3D> workers = new HashMap<>();
+
+    static SequentialTransition sequentialTransition ;
 
     static Group group;
     static Set<Group> cells = new HashSet<>();
-    static Stage stage;
-    static ToggleButton button;
 
     static Group arrow;
 
@@ -135,6 +135,10 @@ public class IslandLoader{
                 boardCells.put(new Point2D(i, j), 0);
             }
         }
+        drag.set(false);
+        arrow = null;
+        cells = new HashSet<>();
+        workers = new HashMap<>();
 
         AmbientLight ambientLight = new AmbientLight();
         ambientLight.setLightOn(true);
@@ -855,7 +859,7 @@ public class IslandLoader{
     }
 
     public void endAnimation(){
-        SequentialTransition sequentialTransition ;
+
         Timeline timeline = new Timeline(
                 new KeyFrame(
                         Duration.seconds(0.0001),

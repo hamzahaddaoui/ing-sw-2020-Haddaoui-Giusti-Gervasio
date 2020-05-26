@@ -120,6 +120,7 @@ public class Running extends State{
     @Override
     public void update(MessageEvent message){
 
+        System.out.println(getNetworkHandler().getObservers());
         System.out.println("Message received: "+ message);
 
         if (message.getError()){
