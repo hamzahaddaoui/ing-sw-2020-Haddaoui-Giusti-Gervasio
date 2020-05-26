@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.CLI.controller.state;
 import it.polimi.ingsw.client.CLI.Client;
 import it.polimi.ingsw.client.CLI.view.DataBase;
 import it.polimi.ingsw.client.CLI.view.View;
+import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
@@ -24,6 +25,11 @@ public class NotInitialized extends ControlState{
     @Override
     public MessageEvent computeInput(String input) {
 
+        if(DataBase.isViewer() &&(!input.equals("q") && !input.equals("Q"))){
+            DataBase.setActiveInput(true);
+            System.out.println("\nYou can only disconnect by pressing 'q' or continue Viewer Mode\n");
+            return null;
+        }
         if(input.equals("")){
             DataBase.setActiveInput(true);
             System.out.println("\nInsert something different\n");
@@ -57,10 +63,12 @@ public class NotInitialized extends ControlState{
     @Override
     public void updateData(MessageEvent message) {
 
-        if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST){
+        if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST || DataBase.isViewer()){
+            DataBase.setBillboardStatus(message.getBillboardStatus());
             View.doUpdate();
             System.out.println(computeView());
-            DataBase.resetDataBase();
+            if(DataBase.getMatchState() == MatchState.FINISHED)
+                DataBase.resetDataBase();
             }
 
         DataBase.setActiveInput(true);
@@ -73,6 +81,8 @@ public class NotInitialized extends ControlState{
      */
     @Override
     public String computeView() {
+        if(DataBase.isViewer())
+            return "Viewer mode on. Press 'q' if you want to quit";
         if (DataBase.getPlayerState() != null && DataBase.getPlayerState()==PlayerState.WIN)
             return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
         else if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.LOST)

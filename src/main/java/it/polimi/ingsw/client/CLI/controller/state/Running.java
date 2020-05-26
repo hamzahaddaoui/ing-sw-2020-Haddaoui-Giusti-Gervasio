@@ -73,6 +73,7 @@ public class Running extends ControlState {
         DataBase.setBillboardStatus(message.getBillboardStatus());
 
         if (DataBase.getPlayerState() == PlayerState.LOST ) {
+            DataBase.setViewer(true);
             DataBase.setControlState(new NotInitialized());
             DataBase.getControlState().updateData(message);
         }

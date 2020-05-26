@@ -18,6 +18,8 @@ public class DataBase {
     static private MatchState matchState;
     static private TurnState turnState;
 
+    static private boolean viewer;
+
     static private int playerNumber;
     static private String godCard;
 
@@ -249,7 +251,7 @@ public class DataBase {
      * Depending on Database dates, it compute the next Control state
      */
     static public void updateControllerState() {
-        if (matchState==null) {
+        if (matchState==null || viewer) {
             controlState = new NotInitialized();
             return;
         }
@@ -302,4 +304,11 @@ public class DataBase {
 
     public static Map<Integer,String> getMatchColors() {return matchColors;}
 
+    public static boolean isViewer() {
+        return viewer;
+    }
+
+    public static void setViewer(boolean viewer) {
+        DataBase.viewer = viewer;
+    }
 }

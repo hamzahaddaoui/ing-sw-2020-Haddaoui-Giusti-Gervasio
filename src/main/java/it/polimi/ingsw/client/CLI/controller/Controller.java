@@ -28,7 +28,7 @@ public class Controller extends Observable<MessageEvent> {
         while (true) {
             String input = scanner.nextLine();
             synchronized (DataBase.class){
-            if (DataBase.isActiveInput() && (DataBase.getPlayerState() == PlayerState.ACTIVE || DataBase.getPlayerState() == null)) {
+            if (DataBase.isActiveInput() && (DataBase.getPlayerState() == PlayerState.ACTIVE || DataBase.getPlayerState() == null || DataBase.isViewer())) {
                 DataBase.setActiveInput(false);
                 executor.submit(() -> {
                         MessageEvent message = DataBase.getControlState().computeInput(input);
