@@ -86,7 +86,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Prints the GameBoard situation with colored blocks
+     * Prints the GameBoard situation with colored blocks during the placing phase.
      *
      * @return  the string of the GameBoard's situation
      */
@@ -168,6 +168,8 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         return outputD.toString();
     }
 
+
+
     static String getBillboardPlayersAndHeights() {
         StringBuilder output = new StringBuilder();
 
@@ -186,9 +188,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                 .sorted()
                 .forEach(position -> output
                         .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "⏺ " : "")
-                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET + "⏺" : "")
-                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET + "⏺" : "")
-                        .append(billboardCells.get(position).isDome() && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Purple") ? ANSI_PURPLE + "🟪" + ANSI_RESET + "⏺" : "")
                         .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() == 0 ? ANSI_WHITE + "⬜" + ANSI_RESET + "0️⃣" : "")
                         .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Blue") ? ANSI_BLUE + "🟦" + ANSI_RESET + "0️⃣ " : "")
                         .append(!billboardCells.get(position).isDome() && billboardCells.get(position).getTowerHeight() == 0 && billboardCells.get(position).getPlayerID() != 0 && playerColors.get(billboardCells.get(position).getPlayerID()).equals("Orange") ? ANSI_RED + "🟧" + ANSI_RESET + "0️⃣ " : "")

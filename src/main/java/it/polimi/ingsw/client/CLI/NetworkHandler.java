@@ -56,6 +56,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
      */
     public void stop() throws IOException{
         active = false;
+        messageReader.shutdownNow();
         server.close();
     }
 
