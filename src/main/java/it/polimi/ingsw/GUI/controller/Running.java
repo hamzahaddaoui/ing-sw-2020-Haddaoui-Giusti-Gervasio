@@ -53,8 +53,6 @@ public class Running extends State{
     boolean confirmedStartPosition;
     boolean moved;
     boolean built;
-
-    boolean sAvailable;
     boolean sFunction;
 
     @Override
@@ -132,10 +130,12 @@ public class Running extends State{
             updateStandardData(message);
             setBillboardStatus(message.getBillboardStatus());
             updateBillboard(true);
-            getIslandLoader().endAnimation();
+
             System.out.println("LOSER");
+            getIslandLoader().endAnimation();
             lost();
             return;
+
         }
         else if (message.getPlayerState() == PlayerState.WIN){
             updateStandardData(message);
@@ -582,5 +582,6 @@ public class Running extends State{
 
         Platform.runLater(() -> popup.show(getStage()));
     }
+
 
 }
