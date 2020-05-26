@@ -19,6 +19,7 @@ public class DataBase {
     static private TurnState turnState;
 
     static private boolean viewer;
+    static private boolean disconnectedUser;
 
     static private int playerNumber;
     static private String godCard;
@@ -56,6 +57,7 @@ public class DataBase {
         matchPlayers = new HashMap<>();
         specialFunctionAvailable = new HashMap<>();
         activeInput = true;
+        viewer = false;
         controlState = new NotInitialized();
     }
 
@@ -310,5 +312,13 @@ public class DataBase {
 
     public static void setViewer(boolean viewer) {
         DataBase.viewer = viewer;
+    }
+
+    public static boolean isDisconnectedUser() {
+        return disconnectedUser;
+    }
+
+    public static void setDisconnectedUser(boolean disconnectedUser) {
+        DataBase.disconnectedUser = disconnectedUser;
     }
 }

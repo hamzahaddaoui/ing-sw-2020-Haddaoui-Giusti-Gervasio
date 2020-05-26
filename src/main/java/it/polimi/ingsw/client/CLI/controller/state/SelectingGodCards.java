@@ -85,9 +85,11 @@ public class SelectingGodCards extends ControlState {
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
+            DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
             View.setRefresh(true);
             View.print();
+            DataBase.setDisconnectedUser(false);
             return;
         }
 

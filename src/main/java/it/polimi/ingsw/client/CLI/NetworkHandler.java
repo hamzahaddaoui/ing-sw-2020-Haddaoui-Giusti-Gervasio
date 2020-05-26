@@ -83,7 +83,6 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
                 output.flush();
             } catch (SocketException e) {
                 try {
-                    System.out.println("server connection closed");
                     stop();
                 }
                 catch (IOException ex) {
@@ -148,7 +147,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        } catch (SocketTimeoutException e) {
            System.out.println("socket timed out");
        } catch (SocketException e) {
-           System.out.println("Disconnessione in corso..");
+           System.out.println("DISCONNECTED FROM THE SERVER");
        } catch (ClassNotFoundException | ClassCastException | IOException exception) {
            System.out.println("invalid stream from server");
        }finally {
