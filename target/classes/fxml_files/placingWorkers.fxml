@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="anchorPane" cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" stylesheets="@../css_files/placingWorkers.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.GUI.controller.PlacingWorkers">
+<AnchorPane fx:id="anchorPane" cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" stylesheets="@../css_files/placingWorkers.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.PlacingWorkers">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
