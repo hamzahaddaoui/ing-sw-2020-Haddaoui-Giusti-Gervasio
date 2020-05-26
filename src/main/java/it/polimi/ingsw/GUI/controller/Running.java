@@ -132,7 +132,7 @@ public class Running extends State{
             updateBillboard(true);
 
             System.out.println("LOSER");
-            getIslandLoader().endAnimation();
+            //getIslandLoader().endAnimation();
             lost();
             return;
 
