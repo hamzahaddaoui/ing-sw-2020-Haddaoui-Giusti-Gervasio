@@ -139,6 +139,8 @@ public class IslandLoader{
         arrow = null;
         cells = new HashSet<>();
         workers = new HashMap<>();
+        if (sequentialTransition != null && sequentialTransition.getStatus() == Animation.Status.RUNNING)
+            sequentialTransition.stop();
 
         AmbientLight ambientLight = new AmbientLight();
         ambientLight.setLightOn(true);
