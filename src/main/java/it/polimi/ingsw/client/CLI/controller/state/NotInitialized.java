@@ -50,7 +50,6 @@ public class NotInitialized extends ControlState{
 
         if(input.equals("q") || input.equals("Q") ) {
             DataBase.setActiveInput(false);
-            DataBase.setOnline(false);
             Client.close();
             return null;
         }

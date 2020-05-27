@@ -149,6 +149,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            System.out.println("socket timed out");
        } catch (SocketException e) {
            System.out.println("DISCONNECTED FROM THE SERVER");
+           Client.scanner.close();
        } catch (ClassNotFoundException | ClassCastException | IOException exception) {
            System.out.println("invalid stream from server");
        }finally {

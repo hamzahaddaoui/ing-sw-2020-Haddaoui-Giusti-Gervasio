@@ -51,8 +51,8 @@ public class WaitingList extends ControlState {
      * Prepares the String to print to the user
      */
     @Override
-    public void error() {
-        System.out.println(computeView());
+    public String error() {
+        return "You are in the waiting list, wait to join a match!";
     }
 
 }

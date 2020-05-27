@@ -38,7 +38,8 @@ public class GettingPlayersNum extends ControlState {
             return message;
         }
         else {
-            error();
+            View.setError(true);
+            View.print();
             DataBase.setActiveInput(true);
             return null;
         }

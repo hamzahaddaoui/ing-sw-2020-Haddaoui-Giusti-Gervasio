@@ -147,7 +147,7 @@ public class PlacingWorkers extends ControlState {
     @Override
     public String error() {
         DataBase.setActiveInput(true);
-        return ("Position is not available or incorrect\n");
+        return ("Position is not available or incorrect\n") + computeView();
     }
 
     /**

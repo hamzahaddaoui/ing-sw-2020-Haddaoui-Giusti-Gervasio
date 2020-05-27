@@ -20,7 +20,6 @@ public class DataBase {
 
     static private boolean viewer;
     static private boolean disconnectedUser;
-    static private boolean online = true;
 
     static private int playerNumber;
     static private String godCard;
@@ -321,13 +320,5 @@ public class DataBase {
 
     public static void setDisconnectedUser(boolean disconnectedUser) {
         DataBase.disconnectedUser = disconnectedUser;
-    }
-
-    public static boolean isOnline() {
-        return online;
-    }
-
-    public static void setOnline(boolean online) {
-        DataBase.online = online;
     }
 }

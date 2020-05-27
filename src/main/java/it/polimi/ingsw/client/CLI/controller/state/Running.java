@@ -133,8 +133,9 @@ public class Running extends ControlState {
      * Sets Active Input true
      */
     @Override
-    public void error() {
+    public String error() {
         DataBase.setActiveInput(true);
+        return "Wrong input";
     }
 
     /**
@@ -191,7 +192,8 @@ public class Running extends ControlState {
                 if (DataBase.getTurnState()==TurnState.IDLE)
                     DataBase.setTurnState(TurnState.MOVE);
                 View.doUpdate();
-                System.out.println(computeView());
+                View.setRefresh(true);
+                View.print();
                 DataBase.setActiveInput(true);
                 return true;
             }

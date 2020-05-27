@@ -99,7 +99,8 @@ public class SelectingSpecialCommand extends ControlState {
             View.print();
         }
         else{
-            System.out.println(computeView());
+            View.setRefresh(true);
+            View.print();
         }
 
     }
@@ -142,11 +143,10 @@ public class SelectingSpecialCommand extends ControlState {
      * Called if there is an error on the message, it announces that the input is incorrect and it prints the computeView method
      */
     @Override
-    public void error() {
-        System.out.println("Input wrong\n");
+    public String error() {
         DataBase.setGodCard(null);
         DataBase.setActiveInput(true);
-        System.out.println(computeView());
+        return "Wrong input\n" +
+                computeView();
     }
-
 }

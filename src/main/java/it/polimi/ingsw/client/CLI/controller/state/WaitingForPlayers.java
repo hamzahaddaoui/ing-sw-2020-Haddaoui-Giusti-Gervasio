@@ -25,7 +25,8 @@ public class WaitingForPlayers extends ControlState {
     @Override
     public MessageEvent computeInput(String input) {
         DataBase.setActiveInput(true);
-        error();
+        View.setError(true);
+        View.print();
         return null;
     }
 
@@ -69,7 +70,7 @@ public class WaitingForPlayers extends ControlState {
      * Prints error announcement to the user
      */
     @Override
-    public void error() {
-        System.out.println("Please wait\n");
+    public String error() {
+        return "Please wait\n";
     }
 }

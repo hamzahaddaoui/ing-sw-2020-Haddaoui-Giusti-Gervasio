@@ -168,7 +168,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         return outputD.toString();
     }
 
-
+    /**
+     * Method that shows the situation of the cells
+     * @return
+     */
 
     static String getBillboardPlayersAndHeights() {
         StringBuilder output = new StringBuilder();

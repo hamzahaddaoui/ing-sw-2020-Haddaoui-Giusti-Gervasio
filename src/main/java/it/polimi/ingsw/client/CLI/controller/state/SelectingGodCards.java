@@ -61,8 +61,7 @@ public class SelectingGodCards extends ControlState {
                 }
                 else{
                     View.setError(true);
-                    System.out.println(computeView());
-                    View.setError(false);
+                    View.print();
                 }
         }
         else{
@@ -101,7 +100,8 @@ public class SelectingGodCards extends ControlState {
             View.print();
         }
         else{
-            System.out.println(computeView());
+            View.setRefresh(true);
+            View.print();
         }
 
     }
@@ -149,10 +149,9 @@ public class SelectingGodCards extends ControlState {
      * Called if there is an error on the message, it announces that the input is incorrect and print the computeView method
      */
     @Override
-    public void error() {
-        System.out.println("Input wrong\n");
+    public String error() {
         DataBase.setActiveInput(true);
-        System.out.println(computeView());
+        return "Wrong input\n" +
+                computeView();
     }
-
 }
