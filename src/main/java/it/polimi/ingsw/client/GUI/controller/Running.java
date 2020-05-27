@@ -337,7 +337,7 @@ public class Running extends State{
                     }
 
                     if (getBillboardStatus().get(position).getPlayerID() != 0){
-                        Platform.runLater(() -> getIslandLoader().moveWorker(positionToPoint(position), positionToPoint(position)));
+                        getIslandLoader().moveUp(positionToPoint(position));
                     }
                 }
                 if (getBillboardStatus().get(position).isDome() != billboardStatus.get(position).isDome()){

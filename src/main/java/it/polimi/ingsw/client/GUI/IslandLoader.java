@@ -943,6 +943,23 @@ public class IslandLoader{
     public void setCellHeight(Point2D point, int height){
         boardCells.replace(point, height);
     }
+
+    public void moveUp(Point2D point){
+        Optional<Group> optionalWorker =  workers.keySet().stream()
+                .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(point))
+                .findAny();
+
+        if (!optionalWorker.isPresent()){
+            System.out.println("worker non trovato");
+            return;
+        }
+
+        Group worker = optionalWorker.get();
+
+        worker.setTranslateY(cellHeight.get(boardCells.get(point)+1));
+        workers.replace(worker, new Point3D(workers.get(worker).getX(), cellHeight.get(boardCells.get(point)+1) , workers.get(worker).getY()));
+
+    }
 }
 
 
