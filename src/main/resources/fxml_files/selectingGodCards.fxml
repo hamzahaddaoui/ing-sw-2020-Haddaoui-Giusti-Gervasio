@@ -34,7 +34,7 @@
             </Label>
          </top>
          <bottom>
-            <HBox prefHeight="146.0" prefWidth="1200.0" spacing="20.0" BorderPane.alignment="CENTER">
+            <HBox prefHeight="146.0" prefWidth="1200.0" spacing="5.0" BorderPane.alignment="CENTER">
                <children>
                   <ToggleButton fx:id="Apollo" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Apollo">
                      <effect>

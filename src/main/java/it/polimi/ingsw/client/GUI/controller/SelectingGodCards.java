@@ -141,30 +141,30 @@ public class SelectingGodCards extends State {
         String card = ((Node) event.getSource()).getId();
         ToggleButton button =  buttonStringMap.get(card);
 
-        button.setStyle("-fx-scale-x: 1.07;\n" +
+        /*button.setStyle("-fx-scale-x: 1.07;\n" +
                         "-fx-scale-y: 1.07;\n" +
                         "-fx-scale-z: 1.07;\n" +
                         "-fx-border-color: yellow;\n" +
-                        "-fx-border-width: 450%;");
+                        "-fx-border-width: 450%;");*/
 
         if (button.isSelected()) {
             if (Database.getSelectedGodCards().size() == Database.getPlayersNum()) {
                 ToggleButton removeButton = buttonStringMap.get(Database.removeSelectedGodCard());
                 removeButton.setSelected(false);
-                removeButton.setStyle("-fx-scale-x: 1.00;\n" +
+                /*removeButton.setStyle("-fx-scale-x: 1.00;\n" +
                                       "-fx-scale-y: 1.00;\n" +
                                       "    -fx-scale-z: 1.00;\n" +
                                       "    -fx-border-color: transparent;\n" +
-                                      "    -fx-border-width: 0%;");
+                                      "    -fx-border-width: 0%;");*/
             }
             Database.addSelectedGodCard(card);
         }
         else{
-            button.setStyle("-fx-scale-x: 1.00;\n" +
+            /*button.setStyle("-fx-scale-x: 1.00;\n" +
                                   "-fx-scale-y: 1.00;\n" +
                                   "    -fx-scale-z: 1.00;\n" +
                                   "    -fx-border-color: transparent;\n" +
-                                  "    -fx-border-width: 0%;");
+                                  "    -fx-border-width: 0%;");*/
             Database.removeSelectedGodCard(card);
         }
         System.out.println("selected cards: " + Database.getSelectedGodCards());

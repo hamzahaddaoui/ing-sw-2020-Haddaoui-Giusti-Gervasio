@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.Button?>
 
-<AnchorPane fx:id="paneSC" cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../css_files/selectingGodCards.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.SelectingGodCards">
+<AnchorPane fx:id="paneSC" cacheHint="SPEED" maxHeight="800.0" maxWidth="1200.0" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-CO: #F5F5F5;" stylesheets="@../css_files/selectingGodCards.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.GUI.controller.SelectingGodCards">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
@@ -42,9 +34,9 @@
             </Label>
          </top>
          <bottom>
-            <HBox prefHeight="180.0" prefWidth="1066.0" spacing="20.0" BorderPane.alignment="CENTER">
+            <HBox prefHeight="146.0" prefWidth="1200.0" spacing="5.0" BorderPane.alignment="CENTER">
                <children>
-                  <ToggleButton fx:id="Apollo" graphicTextGap="10.0" mnemonicParsing="false"  onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Apollo">
+                  <ToggleButton fx:id="Apollo" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Apollo">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
@@ -55,7 +47,7 @@
                         <Insets />
                      </HBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="Artemis" graphicTextGap="10.0" mnemonicParsing="false"  onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Artemis">
+                  <ToggleButton fx:id="Artemis" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Artemis">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
@@ -63,7 +55,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ToggleButton>
-                  <ToggleButton fx:id="Athena" graphicTextGap="10.0" mnemonicParsing="false"  onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Athena">
+                  <ToggleButton fx:id="Athena" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Athena">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
@@ -71,7 +63,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ToggleButton>
-                  <ToggleButton fx:id="Atlas" graphicTextGap="10.0" mnemonicParsing="false"  onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Atlas">
+                  <ToggleButton fx:id="Atlas" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Atlas">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
@@ -79,7 +71,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ToggleButton>
-                  <ToggleButton fx:id="Demeter" graphicTextGap="10.0" mnemonicParsing="false"  onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Demeter">
+                  <ToggleButton fx:id="Demeter" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Demeter">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
@@ -87,7 +79,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ToggleButton>
-                  <ToggleButton fx:id="Hephaestus" graphicTextGap="10.0" mnemonicParsing="false"  onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Hephaestus">
+                  <ToggleButton fx:id="Hephaestus" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Hephaestus">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
@@ -95,7 +87,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ToggleButton>
-                  <ToggleButton fx:id="Minotaur" graphicTextGap="10.0" mnemonicParsing="false"  onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Minotaur">
+                  <ToggleButton fx:id="Minotaur" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Minotaur">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>
@@ -112,6 +104,46 @@
                      </cursor>
                   </ToggleButton>
                   <ToggleButton fx:id="Prometheus" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Prometheus">
+                     <effect>
+                        <DropShadow blurType="GAUSSIAN" spread="0.42" />
+                     </effect>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ToggleButton>
+                  <ToggleButton fx:id="Charon" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Charon">
+                     <effect>
+                        <DropShadow blurType="GAUSSIAN" spread="0.42" />
+                     </effect>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ToggleButton>
+                  <ToggleButton fx:id="Eros" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Eros">
+                     <effect>
+                        <DropShadow blurType="GAUSSIAN" spread="0.42" />
+                     </effect>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ToggleButton>
+                  <ToggleButton fx:id="Hestia" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Hestia">
+                     <effect>
+                        <DropShadow blurType="GAUSSIAN" spread="0.42" />
+                     </effect>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ToggleButton>
+                  <ToggleButton fx:id="Triton" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Triton">
+                     <effect>
+                        <DropShadow blurType="GAUSSIAN" spread="0.42" />
+                     </effect>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ToggleButton>
+                  <ToggleButton fx:id="Zeus" graphicTextGap="10.0" mnemonicParsing="false" onMouseEntered="#hoverCard" onMouseExited="#hoverNone" opacity="0.99" prefHeight="217.0" prefWidth="137.0" styleClass="Zeus">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" spread="0.42" />
                      </effect>

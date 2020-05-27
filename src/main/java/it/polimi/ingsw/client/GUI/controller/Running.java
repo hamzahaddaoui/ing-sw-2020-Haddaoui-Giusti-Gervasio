@@ -27,6 +27,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.client.GUI.Database.*;
+
 
 public class Running extends State{
     @FXML StackPane stackPane;
@@ -58,21 +60,21 @@ public class Running extends State{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
 
-        this.addObserver(Database.getNetworkHandler());
-        Database.getNetworkHandler().addObserver(this);
+        this.addObserver(getNetworkHandler());
+        getNetworkHandler().addObserver(this);
 
-        billboardStatus = Database.getBillboardStatus();
-        matchPlayers = Database.getMatchPlayers();
+        billboardStatus = getBillboardStatus();
+        matchPlayers = getMatchPlayers();
 
         //inizializzo gli elementi grafici del layer superiore
         user.getStylesheets().add("/css_files/placingWorkers.css");
-        userPane.setImage(new Image("images/user_" + Database.getMatchColors().get(Database.getPlayerID()) + ".png", 150, 75, false, true));
+        userPane.setImage(new Image("images/user_" + getMatchColors().get(getPlayerID()) + ".png", 150, 75, false, true));
         user.getStyleClass().add("player");
-        user.setText(Database.getNickname());
-        god.setImage(new Image("images/gods_no_back/" + Database.getGodCard() + ".png",120,140,false,true));
+        user.setText(getNickname());
+        god.setImage(new Image("images/gods_no_back/" + getGodCard() + ".png",120,140,false,true));
 
         //inizializzo l'isola
-        Database.setIslandLoader(new IslandLoader());
+        setIslandLoader(new IslandLoader());
         try {
             IslandLoader.start(stackPane);
         } catch (Exception exception) {
@@ -81,7 +83,7 @@ public class Running extends State{
         //inizializzo i giocatori
         for (Position position : billboardStatus.keySet()){
             if (billboardStatus.get(position).getPlayerID() != 0){
-                Database.getIslandLoader().putWorker(positionToPoint(position), Database.getMatchColors().get(billboardStatus.get(position).getPlayerID()));
+                getIslandLoader().putWorker(positionToPoint(position), getMatchColors().get(billboardStatus.get(position).getPlayerID()));
             }
         }
 
@@ -103,15 +105,15 @@ public class Running extends State{
     @Override
     public void sendData(){
         MessageEvent message = new MessageEvent();
-        message.setStartPosition(Database.getStartingPosition());
-        message.setEndPosition(Database.getEndPosition());
+        message.setStartPosition(getStartingPosition());
+        message.setEndPosition(getEndPosition());
         notify(message);
     }
 
     @Override
     public void update(MessageEvent message){
 
-        System.out.println(Database.getNetworkHandler().getObservers());
+        System.out.println(getNetworkHandler().getObservers());
         System.out.println("Message received: "+ message);
 
         if (message.getError()){
@@ -120,8 +122,8 @@ public class Running extends State{
             return;
         }
         else if (message.getPlayerState() == PlayerState.LOST){
-            Database.updateStandardData(message);
-            Database.setBillboardStatus(message.getBillboardStatus());
+            updateStandardData(message);
+            setBillboardStatus(message.getBillboardStatus());
             updateBillboard(true);
 
             System.out.println("LOSER");
@@ -131,28 +133,28 @@ public class Running extends State{
 
         }
         else if (message.getPlayerState() == PlayerState.WIN){
-            Database.updateStandardData(message);
-            Database.setBillboardStatus(message.getBillboardStatus());
+            updateStandardData(message);
+            setBillboardStatus(message.getBillboardStatus());
             updateBillboard(true);
-            Database.getIslandLoader().endAnimation();
+            getIslandLoader().endAnimation();
             System.out.println("WINNER");
             win();
             return;
         }
         else if (message.isFinished()){
             //disconnessione di qualcuno <.<
-            Database.setCurrentState(new userDisconnected());
-            Database.getCurrentState().showPane();
+            setCurrentState(new userDisconnected());
+            getCurrentState().showPane();
             return;
         }
 
 
 
-        Database.updateStandardData(message);
-        Database.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
-        Database.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
-        Database.setWorkersAvailableCells(message.getWorkersAvailableCells());
-        Database.setBillboardStatus(message.getBillboardStatus());
+        updateStandardData(message);
+        setTerminateTurnAvailable(message.getTerminateTurnAvailable());
+        setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
+        setWorkersAvailableCells(message.getWorkersAvailableCells());
+        setBillboardStatus(message.getBillboardStatus());
 
         Platform.runLater(() -> updateBillboard(true));
 
@@ -163,21 +165,21 @@ public class Running extends State{
     public boolean workerClick(Point2D point){
         Position position = pointToPosition(point);
         System.out.println("worker clicked + "+position);
-        System.out.println(Database.getWorkersAvailableCells());
+        System.out.println(getWorkersAvailableCells());
 
-        if (Database.getPlayerState() == PlayerState.IDLE) {
+        if (getPlayerState() == PlayerState.IDLE) {
             System.out.println("PLAYER NOT ACTIVE");
             return false;
         }
-        else if (Database.getWorkersAvailableCells().containsKey(position) && !confirmedStartPosition){
+        else if (getWorkersAvailableCells().containsKey(position) && !confirmedStartPosition){
             System.out.println("PLAYER ACTIVE. SETTED POSITION");
             Platform.runLater(()  -> {
-                if (Database.getTurnState() == TurnState.MOVE)
+                if (getTurnState() == TurnState.MOVE)
                     desc.setText("SELECT the cell where you want to move");
-                if (Database.getTurnState() == TurnState.BUILD)
+                if (getTurnState() == TurnState.BUILD)
                     desc.setText("SELECT the cell where you want to build");
             });
-            Database.setStartingPosition(position);
+            setStartingPosition(position);
             updateLightenedCells();
 
 
@@ -192,15 +194,15 @@ public class Running extends State{
         Position position = pointToPosition(point);
         System.out.println("Click on board/building detected on "+ position);
 
-        if (Database.getPlayerState() == PlayerState.IDLE || Database.getStartingPosition() == null) {
+        if (getPlayerState() == PlayerState.IDLE || getStartingPosition() == null) {
             System.out.println("IDLE OR NOT SELECTED ANY WORKER");
             return;
         }
 
 
 
-        if (Database.getTurnState() == TurnState.MOVE && !moved){
-            if (Database.getWorkersAvailableCells().get(Database.getStartingPosition()).contains(position)){
+        if (getTurnState() == TurnState.MOVE && !moved){
+            if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){
                 confirmedStartPosition = true;
                 moved = true;
                 System.out.println("MOVE OK. SENDING movement...");
@@ -213,21 +215,22 @@ public class Running extends State{
                     billboardStatus.get(getStartingPosition()).setPlayerID(0);
                     updateBillboard(false);
                 }*/
-                Database.setEndPosition(position);
+                setEndPosition(position);
                 sendData();
-                Database.setStartingPosition(position);
+                if (!(getGodCard().equals("Charon") && sFunction))
+                    setStartingPosition(position);
             }
             else if(moved)
                 System.out.println("Already moved");
             else
                 System.out.println("position not contained in available cells");
         }
-        else if (Database.getTurnState() == TurnState.BUILD) {
+        else if (getTurnState() == TurnState.BUILD) {
 
-            if (Database.getWorkersAvailableCells().get(Database.getStartingPosition()).contains(position) && !built) {
+            if (getWorkersAvailableCells().get(getStartingPosition()).contains(position) && !built) {
                 System.out.println("BUILD OK. SENDING build...");
                 built = true;
-                Database.setEndPosition(position);
+                setEndPosition(position);
 
                 resetCells();
 
@@ -252,14 +255,14 @@ public class Running extends State{
 
     public void updateGame(){
         Platform.runLater(()  -> {
-            if (Database.getPlayerState() == PlayerState.ACTIVE){
+            if (getPlayerState() == PlayerState.ACTIVE){
 
                 specialFunctionHandler();
 
-                if (!confirmedStartPosition && Database.getStartingPosition() == null)
+                if (!confirmedStartPosition && getStartingPosition() == null)
                     desc.setText("SELECT A WORKER");
                 else {
-                    switch (Database.getTurnState()) {
+                    switch (getTurnState()) {
                         case MOVE:
                             desc.setText("SELECT the cell where you want to move");
                             moved = false;
@@ -274,11 +277,11 @@ public class Running extends State{
                 }
             }
             else{
-                desc.setText("it's " + Database.getMatchPlayers().get(Database.getCurrentPlayer()) + "'s turn");
+                desc.setText("it's " + getMatchPlayers().get(getCurrentPlayer()) + "'s turn");
 
                 resetCells();
-                Database.setStartingPosition(null);
-                Database.setEndPosition(null);
+                setStartingPosition(null);
+                setEndPosition(null);
                 confirmedStartPosition = false;
 
                 function.setEffect(new Glow(0));
@@ -301,51 +304,51 @@ public class Running extends State{
         Map<Point2D, Point2D> playersMove = new HashMap<>();
 
 
-        if (billboardStatus != Database.getBillboardStatus()){
+        if (billboardStatus != getBillboardStatus()){
             System.out.println("Different billboard");
 
 
-            if (matchPlayers.size() != Database.getMatchPlayers().size()) {
+            if (matchPlayers.size() != getMatchPlayers().size()) {
                 for (int player : matchPlayers.keySet()) {
-                    if (Database.getBillboardStatus().values().stream().noneMatch(cell -> cell.getPlayerID() == player)) {
+                    if (getBillboardStatus().values().stream().noneMatch(cell -> cell.getPlayerID() == player)) {
                         Set<Position> positions = billboardStatus.keySet().stream().filter(pos -> billboardStatus.get(pos).getPlayerID() == player).collect(Collectors.toSet());
                         positions.forEach(pos -> billboardStatus.get(pos).setPlayerID(0));
-                        positions.forEach(pos -> Database.getIslandLoader().removeWorker(positionToPoint(pos)));
+                        positions.forEach(pos -> getIslandLoader().removeWorker(positionToPoint(pos)));
                     }
                 }
             }
 
-            matchPlayers = Database.getMatchPlayers();
+            matchPlayers = getMatchPlayers();
 
-            Set<Position> changedPositions =  Database.getBillboardStatus()
+            Set<Position> changedPositions =  getBillboardStatus()
                     .keySet()
                     .stream()
-                    .filter(position -> ! Database.getBillboardStatus().get(position).equals(billboardStatus.get(position)))
+                    .filter(position -> ! getBillboardStatus().get(position).equals(billboardStatus.get(position)))
                     .collect(Collectors.toSet());
 
 
 
 
             for (Position position : changedPositions){
-                if (Database.getBillboardStatus().get(position).getTowerHeight() != billboardStatus.get(position).getTowerHeight()){
+                if (getBillboardStatus().get(position).getTowerHeight() != billboardStatus.get(position).getTowerHeight()){
                     System.out.println("Different height in "+position);
-                    for(int i = 0; i<(Database.getBillboardStatus().get(position).getTowerHeight() - billboardStatus.get(position).getTowerHeight()); i++){
-                        Database.getIslandLoader().build(positionToPoint(position), false);
+                    for(int i = 0; i<(getBillboardStatus().get(position).getTowerHeight() - billboardStatus.get(position).getTowerHeight()); i++){
+                        getIslandLoader().build(positionToPoint(position), false);
                     }
                 }
-                if (Database.getBillboardStatus().get(position).isDome() != billboardStatus.get(position).isDome()){
+                if (getBillboardStatus().get(position).isDome() != billboardStatus.get(position).isDome()){
                     System.out.println("Different dome in "+position);
-                    Database.getIslandLoader().build(positionToPoint(position), true);
+                    getIslandLoader().build(positionToPoint(position), true);
                 }
-                if (Database.getBillboardStatus().get(position).getPlayerID() != billboardStatus.get(position).getPlayerID()){
+                if (getBillboardStatus().get(position).getPlayerID() != billboardStatus.get(position).getPlayerID()){
                     //positionPlayers.put(Map.of(billboardStatus.get(position).getPlayerID(), getBillboardStatus().get(position).getPlayerID()), position);
                     System.out.println("Different player in "+position);
                     if (billboardStatus.get(position).getPlayerID() == 0) //se la cella era vuota, ed ora è piena
-                        movedInPlayers.put(Database.getBillboardStatus().get(position).getPlayerID(), position);
+                        movedInPlayers.put(getBillboardStatus().get(position).getPlayerID(), position);
                     else {
                         movedOutPlayers.put(billboardStatus.get(position).getPlayerID(), position);
-                        if (Database.getBillboardStatus().get(position).getPlayerID() != 0)
-                            movedInPlayers.put(Database.getBillboardStatus().get(position).getPlayerID(), position);
+                        if (getBillboardStatus().get(position).getPlayerID() != 0)
+                            movedInPlayers.put(getBillboardStatus().get(position).getPlayerID(), position);
                     }
                 }
             }
@@ -363,14 +366,14 @@ public class Running extends State{
 
                 if(playersMove.size() == 1) {
                     System.out.println("SINGLE MOVE");
-                    playersMove.keySet().forEach(startPosition -> Database.getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
+                    playersMove.keySet().forEach(startPosition -> getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));
                 }
                 else{
                     System.out.println("DOUBLE MOVE");
                     Iterator<Point2D> iterator = playersMove.keySet().iterator();
                     Point2D startPos1 = iterator.next();
                     Point2D startPos2 = iterator.next();
-                    Database.getIslandLoader().swapWorkers(startPos1, startPos2, playersMove.get(startPos1), playersMove.get(startPos2));
+                    getIslandLoader().swapWorkers(startPos1, startPos2, playersMove.get(startPos1), playersMove.get(startPos2));
                 }
 
 
@@ -379,7 +382,7 @@ public class Running extends State{
         }
 
         if (bool)
-            billboardStatus = Database.getBillboardStatus();
+            billboardStatus = getBillboardStatus();
     }
 
     public static Position pointToPosition(Point2D point){
@@ -398,14 +401,14 @@ public class Running extends State{
 
 
     public void specialFunctionHandler(){
-        System.out.println(Database.getSpecialFunctionAvailable());
-        System.out.println(Database.isTerminateTurnAvailable());
+        System.out.println(getSpecialFunctionAvailable());
+        System.out.println(isTerminateTurnAvailable());
 
-        if ((Database.getGodCard().equals("Demeter") || Database.getGodCard().equals("Hephaestus")) && Database.isTerminateTurnAvailable()){
+        if ((getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus")) && isTerminateTurnAvailable()){
             function.setVisible(true);
 
             Platform.runLater(() -> {
-                String url = "url(images/specialpow/" + Database.getGodCard() + ".png)";
+                String url = "url(images/specialpow/" + getGodCard() + ".png)";
                 function.setStyle("-fx-background-image: "+url+";\n" +
                                   "-fx-background-size: 70;\n" +
                                   "-fx-background-repeat: no-repeat;\n" +
@@ -442,11 +445,11 @@ public class Running extends State{
         }
 
 
-        else if (Database.getStartingPosition() != null && Database.getSpecialFunctionAvailable() != null && Database.getSpecialFunctionAvailable().containsKey(Database.getStartingPosition()) && Database.getSpecialFunctionAvailable().get(Database.getStartingPosition())){
+        else if (getStartingPosition() != null && getSpecialFunctionAvailable() != null && getSpecialFunctionAvailable().containsKey(getStartingPosition()) && getSpecialFunctionAvailable().get(getStartingPosition())){
             function.setVisible(true);
 
             Platform.runLater(() -> {
-                String url = "url(images/specialpow/" + Database.getGodCard() + ".png)";
+                String url = "url(images/specialpow/" + getGodCard() + ".png)";
                 function.setStyle("-fx-background-image: "+url+";\n" +
                                   "-fx-background-size: 70;\n" +
                                   "-fx-background-repeat: no-repeat;\n" +
@@ -473,9 +476,13 @@ public class Running extends State{
                 System.out.println("SPECIAL FUNCTION"+  sFunction);
                 Platform.runLater(() -> {
                     if (sFunction) {
+                        if (getGodCard().equals("Charon"))
+                            desc.setText("Select the worker that you want to move");
                         function.setEffect(new Glow(0.5));
 
                     } else {
+                        if (getGodCard().equals("Charon"))
+                            desc.setText("SELECT the cell where you want to move");
                         function.setEffect(new Glow(0));
                     }
                 });
@@ -494,20 +501,20 @@ public class Running extends State{
     }
 
     public void updateLightenedCells(){
-        System.out.println("LIGHTNING CELLS: You are on cell " + Database.getStartingPosition());
-        System.out.println("AVAILABLE CELLS -> " + Database.getWorkersAvailableCells().get((Database.getStartingPosition())));
-        Database.getIslandLoader().showCells(null);
-        Database.getIslandLoader().hideArrow();
-        if (Database.getPlayerState() == PlayerState.ACTIVE) {
-            Database.getIslandLoader().showArrow(Database.getMatchColors().get(billboardStatus.get(Database.getStartingPosition()).getPlayerID()), positionToPoint(Database.getStartingPosition()));
-            Database.getIslandLoader().showCells(Database.getWorkersAvailableCells().get(Database.getStartingPosition()));
+        System.out.println("LIGHTNING CELLS: You are on cell " + getStartingPosition());
+        System.out.println("AVAILABLE CELLS -> " + getWorkersAvailableCells().get((getStartingPosition())));
+        getIslandLoader().showCells(null);
+        getIslandLoader().hideArrow();
+        if (getPlayerState() == PlayerState.ACTIVE) {
+            getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(getStartingPosition()).getPlayerID()), positionToPoint(getStartingPosition()));
+            getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
         }
     }
 
     public void resetCells(){
         System.out.println("RESETTED CELLS");
-        Database.getIslandLoader().showCells(null);
-        Database.getIslandLoader().hideArrow();
+        getIslandLoader().showCells(null);
+        getIslandLoader().hideArrow();
     }
 
     public void win(){
@@ -525,7 +532,7 @@ public class Running extends State{
         Platform.runLater(() -> {
             stackPane.getChildren().add(page);
             page.toFront();
-            Database.getStage().show();
+            getStage().show();
         });
     }
 
@@ -543,7 +550,7 @@ public class Running extends State{
         Platform.runLater(() -> {
             stackPane.getChildren().add(page);
             page.toFront();
-            Database.getStage().show();
+            getStage().show();
         });
     }
 
@@ -552,7 +559,7 @@ public class Running extends State{
         Popup popup = new Popup();
         //ImageView imageView = new ImageView(new Image("images/helper/" + getGodCard() + ".png",450,225,true,true));
         final ImageView imgView = new ImageView();
-        Image image = new Image("images/helper/" + Database.getGodCard() + ".png");
+        Image image = new Image("images/helper/" + getGodCard() + ".png");
         imgView.setImage(image);
         imgView.setFitWidth(450);
         imgView.setPreserveRatio(true);
@@ -566,14 +573,14 @@ public class Running extends State{
         popup.setAutoHide(true);
         popup.setHideOnEscape(true);
         popup.setOnShown(e -> {
-            popup.setX(Database.getStage().getX() + Database.getStage().getMaxWidth() - popup.getWidth());
-            popup.setY(Database.getStage().getY() + 22);
+            popup.setX(getStage().getX() + getStage().getMaxWidth() - popup.getWidth());
+            popup.setY(getStage().getY() + 22);
             helper.setVisible(false);
         });
 
         popup.setOnHidden( e -> helper.setVisible(true));
 
-        Platform.runLater(() -> popup.show(Database.getStage()));
+        Platform.runLater(() -> popup.show(getStage()));
     }
 
 

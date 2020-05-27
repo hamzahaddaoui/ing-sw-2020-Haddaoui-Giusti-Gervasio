@@ -15,7 +15,7 @@ import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
 public class CharonDecorator  extends CommandsDecorator {
 
-    Map<Position, Set<Position>> opponentPositions;
+    Map<Position, Set<Position>> opponentPositions = new HashMap<>();
 
     public CharonDecorator(Commands commands){
         this.commands=commands;
@@ -35,7 +35,7 @@ public class CharonDecorator  extends CommandsDecorator {
     public void nextState(Player player) {
         switch(player.getTurnState()){
             case IDLE:
-                opponentPositions = null;
+                opponentPositions = new HashMap<>();
                 player.setUnsetSpecialFunctionAvailable(canMoveOpponent(player));
                 player.setTurnState(MOVE);
                 break;
@@ -57,7 +57,23 @@ public class CharonDecorator  extends CommandsDecorator {
 
     @Override
     public void moveWorker(Position position, Player player){
-        super.moveWorker(position, player);
+        if (!player.hasSpecialFunction())
+            super.moveWorker(position, player);
+        else{
+            Billboard billboard = player.getMatch().getBillboard();
+
+            Player opponent = player.getMatch().getPlayers().stream().filter(p -> p.getID() == billboard.getCells().get(position).getPlayerID()).findFirst().get();
+
+            Worker worker = opponent.getWorkers().stream().filter(w -> w.getPosition().equals(position)).findFirst().get();
+
+            Position finalPos = oppositePos(player.getCurrentWorker().getPosition(), worker.getPosition());
+
+            position.setZ(billboard.getTowerHeight(finalPos));
+
+            billboard.resetPlayer(worker.getPosition());
+            worker.setPosition(finalPos);
+            billboard.setPlayer(finalPos, opponent.getID());
+        }
     }
 
     @Override
@@ -91,6 +107,7 @@ public class CharonDecorator  extends CommandsDecorator {
                 .forEach(position -> opponentPositions.put(position, position.neighbourPositions().stream()
                                 .filter(pos -> billboard.getPlayer(pos) != 0)
                                 .filter(pos -> billboard.getCells().containsKey(oppositePos(position, pos)) && billboard.getPlayer(oppositePos(position, pos)) == 0 )
+                                .filter(pos -> player.getWorkers().stream().map(Worker::getPosition).noneMatch(p -> p.equals(pos)))
                                 .collect(Collectors.toSet())));
 
 
