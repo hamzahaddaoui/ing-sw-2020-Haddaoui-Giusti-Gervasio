@@ -969,7 +969,7 @@ public class IslandLoader{
 
 
         Timeline timeline = new Timeline();
-        KeyValue yKV = new KeyValue(translate.yProperty(),  -Math.abs(cellHeight.get(boardCells.get(point)+1) - cellHeight.get(boardCells.get(point))));
+        KeyValue yKV = new KeyValue(translate.yProperty(),  cellHeight.get(boardCells.get(point)+1) - Math.abs(cellHeight.get(boardCells.get(point))));
         KeyFrame yKF = new KeyFrame(Duration.seconds(0.5), yKV);
         timeline.getKeyFrames().addAll(yKF);
 
