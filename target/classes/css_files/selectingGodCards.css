@@ -12,7 +12,7 @@
 .Apollo {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Apollo.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -20,7 +20,7 @@
 .Artemis {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Artemis.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -28,7 +28,7 @@
 .Athena {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Athena.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -36,7 +36,7 @@
 .Atlas {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Atlas.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -45,28 +45,28 @@
 .Demeter {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Demeter.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
 .Hephaestus {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Hephaestus.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
 .Minotaur {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Minotaur.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
 .Pan {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Pan.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -74,7 +74,47 @@
 .Prometheus {
     -fx-background-color: transparent;
     -fx-background-image: url("../images/gods/Prometheus.png");
-    -fx-background-size: 137;
+    -fx-background-size: 90;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Charon {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Charon.png");
+    -fx-background-size: 90;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Eros {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Eros.png");
+    -fx-background-size: 90;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Hestia {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Hestia.png");
+    -fx-background-size: 90;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Triton {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Triton.png");
+    -fx-background-size: 90;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.Zeus {
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/gods/Zeus.png");
+    -fx-background-size: 90;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -87,7 +127,7 @@
     -fx-scale-z: 1.07;
 }
 
-.cards_select :selected{
+.toggle-button:selected{
     -fx-scale-x: 1.07;
     -fx-scale-y: 1.07;
     -fx-scale-z: 1.07;

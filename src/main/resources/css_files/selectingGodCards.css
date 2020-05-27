@@ -121,14 +121,13 @@
 
 
 
-
 .toggle-button:hover{
     -fx-scale-x: 1.07;
     -fx-scale-y: 1.07;
     -fx-scale-z: 1.07;
 }
 
-.cards_select :selected{
+.toggle-button:selected{
     -fx-scale-x: 1.07;
     -fx-scale-y: 1.07;
     -fx-scale-z: 1.07;

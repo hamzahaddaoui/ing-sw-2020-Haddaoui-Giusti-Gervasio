@@ -62,14 +62,18 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     public void update(MessageEvent message){
         String json = new GsonBuilder().enableComplexMapKeySerialization().create().toJson(message);
 
+        if (!active)
+            return;
+
         new Thread (() -> {
             try {
                 output.reset();
                 output.writeObject(json);
                 output.flush();
             } catch (SocketException e) {
-                connectionError();
-                shutdownAll();
+                active = false;
+                //connectionError();
+                //shutdownAll();
                 System.out.println("server connection closed");
 
             }
@@ -107,18 +111,11 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        catch (ClassNotFoundException | ClassCastException exception) {
            System.out.println("invalid stream from client");
        }
-       catch(EOFException exception) {
-           exception.printStackTrace();
-       }
-       catch(SocketTimeoutException exception) {
+       catch(IOException exception) {
            active = false;
            connectionError();
            shutdownAll();
-           exception.printStackTrace();
-           System.out.println("socket timed out");
-       }
-       catch(IOException exception) {
-           System.out.println("Connection error - Unexpected client disconnection.");
+           System.out.println("Connection error - Check your internet connection.");
        }
    }
 
