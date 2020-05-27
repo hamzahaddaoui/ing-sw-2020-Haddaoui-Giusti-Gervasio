@@ -503,15 +503,19 @@ public class IslandLoader{
 
         switch (boardCells.get(point)) {
             case 0:
+                boardCells.replace(point, 1);
                 buildBlockLevel1(point);
                 break;
             case 1:
+                boardCells.replace(point, 2);
                 buildBlockLevel2(point);
                 break;
             case 2:
+                boardCells.replace(point, 3);
                 buildBlockLevel3(point);
                 break;
             case 3:
+                boardCells.replace(point, 4);
                 buildDome(point);
                 break;
         }
@@ -934,6 +938,10 @@ public class IslandLoader{
             rotate1.setCycleCount(- 1);
             rotate1.play();
         });
+    }
+
+    public void setCellHeight(Point2D point, int height){
+        boardCells.replace(point, height);
     }
 }
 

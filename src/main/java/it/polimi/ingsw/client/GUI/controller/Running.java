@@ -335,6 +335,10 @@ public class Running extends State{
                     for(int i = 0; i<(getBillboardStatus().get(position).getTowerHeight() - billboardStatus.get(position).getTowerHeight()); i++){
                         getIslandLoader().build(positionToPoint(position), false);
                     }
+
+                    if (getBillboardStatus().get(position).getPlayerID() != 0){
+                        Platform.runLater(() -> getIslandLoader().moveWorker(positionToPoint(position), positionToPoint(position)));
+                    }
                 }
                 if (getBillboardStatus().get(position).isDome() != billboardStatus.get(position).isDome()){
                     System.out.println("Different dome in "+position);
