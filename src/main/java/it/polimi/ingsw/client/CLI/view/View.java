@@ -49,7 +49,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                     DataBase.updateStandardData(messageEvent);
                     DataBase.updateControllerState();
                     if (messageEvent.getError()) {
-                        DataBase.getControlState().error();
+                        System.out.println(DataBase.getControlState().error());
                     } else {
                         DataBase.getControlState().updateData(messageEvent);
                     }
@@ -169,10 +169,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Method that shows the situation of the cells
-     * @return
+     * Method that shows the situation of the cells with the player in it and the tower height.
+     *
+     * @return the string of the GameBoard's situation
      */
-
     static String getBillboardPlayersAndHeights() {
         StringBuilder output = new StringBuilder();
 
@@ -268,6 +268,13 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         System.out.println(output.toString());
     }
 
+    /**
+     * Method that shows the key legends with the players of the match.
+     * <p>
+     * Every player is associated with a color.
+     *
+     * @return the string of players, each name with a different color
+     */
     public static synchronized String keyLegend() {
 
         final String ANSI_RESET = "\u001B[0m";
