@@ -127,13 +127,6 @@
     -fx-scale-z: 1.07;
 }
 
-.toggle-button:selected{
-    -fx-scale-x: 1.07;
-    -fx-scale-y: 1.07;
-    -fx-scale-z: 1.07;
-    -fx-border-color: yellow;
-    -fx-border-width: 450%;
-}
 
 #ok_button{
     -fx-pref-height: 300;

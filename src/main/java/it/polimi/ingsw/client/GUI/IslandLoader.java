@@ -503,15 +503,19 @@ public class IslandLoader{
 
         switch (boardCells.get(point)) {
             case 0:
+
                 buildBlockLevel1(point);
                 break;
             case 1:
+
                 buildBlockLevel2(point);
                 break;
             case 2:
+
                 buildBlockLevel3(point);
                 break;
             case 3:
+
                 buildDome(point);
                 break;
         }
@@ -934,6 +938,45 @@ public class IslandLoader{
             rotate1.setCycleCount(- 1);
             rotate1.play();
         });
+    }
+
+    public void setCellHeight(Point2D point, int height){
+        boardCells.replace(point, height);
+    }
+
+    public void moveUp(Point2D point){
+        Optional<Group> optionalWorker =  workers.keySet().stream()
+                .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(point))
+                .findAny();
+
+        if (!optionalWorker.isPresent()){
+            System.out.println("worker non trovato");
+            return;
+        }
+
+        Group worker = optionalWorker.get();
+
+
+        //Point3D prev = new Point3D(Point2DMap.get(point).getX(), cellHeight.get(boardCells.get(point)), Point2DMap.get(point).getY());
+
+        //Point3D next = new Point3D(Point2DMap.get(point).getX(), cellHeight.get(boardCells.get(point)+1), Point2DMap.get(point).getY());
+
+        //Point3D trasl = next.subtract(prev);
+
+        double slope = cellHeight.get(boardCells.get(point)+1) + Math.abs(cellHeight.get(boardCells.get(point)));
+
+        Translate translate = new Translate();
+        worker.getTransforms().add(translate);
+
+
+        Timeline timeline = new Timeline();
+        KeyValue yKV = new KeyValue(translate.yProperty(),  slope);
+        KeyFrame yKF = new KeyFrame(Duration.seconds(0.5), yKV);
+        timeline.getKeyFrames().addAll(yKF);
+
+        timeline.play();
+
+        workers.replace(worker, new Point3D(point.getX(), point.getY(), boardCells.get(point)+1));
     }
 }
 

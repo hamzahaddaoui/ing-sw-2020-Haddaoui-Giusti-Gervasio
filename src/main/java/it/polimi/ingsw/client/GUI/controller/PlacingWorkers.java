@@ -25,7 +25,11 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import static it.polimi.ingsw.client.GUI.Database.*;
 
 public class PlacingWorkers extends State{
 
@@ -62,7 +66,7 @@ public class PlacingWorkers extends State{
     @Override
     public void sendData(){
         MessageEvent message = new MessageEvent();
-        message.setInitializedPositions(Database.getInitializedPositions());
+        message.setInitializedPositions(getInitializedPositions());
         notify(message);
     }
 
@@ -78,43 +82,43 @@ public class PlacingWorkers extends State{
                 lost();
                 return;
             }
-            Database.setCurrentState(new userDisconnected());
-            Database.getCurrentState().showPane();
+            setCurrentState(new userDisconnected());
+            getCurrentState().showPane();
         }
         else {
-            Database.updateStandardData(message);
-            Database.setBillboardStatus(message.getBillboardStatus());
-            if(Database.getMatchState() == MatchState.PLACING_WORKERS){
-                Database.setPlacingAvailableCells(message.getAvailablePlacingCells());
+            updateStandardData(message);
+            setBillboardStatus(message.getBillboardStatus());
+            if(getMatchState() == MatchState.PLACING_WORKERS){
+                setPlacingAvailableCells(message.getAvailablePlacingCells());
             }
-            else if (Database.getMatchState() == MatchState.RUNNING && Database.getPlayerState() == PlayerState.ACTIVE){
-                Database.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
-                Database.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
-                Database.setWorkersAvailableCells(message.getWorkersAvailableCells());
+            else if (getMatchState() == MatchState.RUNNING && getPlayerState() == PlayerState.ACTIVE){
+                setTerminateTurnAvailable(message.getTerminateTurnAvailable());
+                setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
+                setWorkersAvailableCells(message.getWorkersAvailableCells());
             }
             View.updateView();
-            Database.getCurrentState().showPane();
+            getCurrentState().showPane();
             new Thread(()->{
-                Database.getNetworkHandler().removeObserver(this);
-                this.removeObserver(Database.getNetworkHandler());
+                getNetworkHandler().removeObserver(this);
+                this.removeObserver(getNetworkHandler());
             }).start();
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        this.addObserver(Database.getNetworkHandler());
-        Database.getNetworkHandler().addObserver(this);
-        userPane.setImage(new Image("images/user_" + Database.getMatchColors().get(Database.getPlayerID()) + ".png", 150, 75, false, true));
+        this.addObserver(getNetworkHandler());
+        getNetworkHandler().addObserver(this);
+        userPane.setImage(new Image("images/user_" + getMatchColors().get(getPlayerID()) + ".png", 150, 75, false, true));
 
-        int index = 4 - Database.getMatchPlayers().size();
-        for(int player : Database.getMatchPlayers().keySet()){
+        int index = 4 - getMatchPlayers().size();
+        for(int player : getMatchPlayers().keySet()){
             StackPane pane = new StackPane();
             Label text = new Label();
             text.getStylesheets().add("/css_files/placingWorkers.css");
             text.getStyleClass().add("label");
-            ImageView image = new ImageView(new Image("images/" + Database.getMatchColors().get(player) + "_label.png",360,70,false,true));
-            text.setText(Database.getMatchPlayers().get(player));
+            ImageView image = new ImageView(new Image("images/" + getMatchColors().get(player) + "_label.png",360,70,false,true));
+            text.setText(getMatchPlayers().get(player));
             pane.getChildren().add(image);
             pane.getChildren().add(text);
             playerGrid.add(pane,0,index);
@@ -122,12 +126,12 @@ public class PlacingWorkers extends State{
         }
         user.getStylesheets().add("/css_files/placingWorkers.css");
         user.getStyleClass().add("player");
-        user.setText(Database.getNickname());
+        user.setText(getNickname());
 
-        god.setImage(new Image("images/gods_no_back/" + Database.getGodCard() + ".png",120,140,false,true));
+        god.setImage(new Image("images/gods_no_back/" + getGodCard() + ".png",120,140,false,true));
 
-        Database.getBillboardStatus().keySet().stream().filter(position -> Database.getBillboardStatus().get(position).getPlayerID() != 0).forEach(position -> {
-            ImageView worker = new ImageView(new Image("images/" + Database.getMatchColors().get(Database.getBillboardStatus().get(position).getPlayerID()) + ".png" ,38,38, false,true));
+        getBillboardStatus().keySet().stream().filter(position -> getBillboardStatus().get(position).getPlayerID() != 0).forEach(position -> {
+            ImageView worker = new ImageView(new Image("images/" + getMatchColors().get(getBillboardStatus().get(position).getPlayerID()) + ".png" ,38,38, false,true));
             gridPane.add(worker, position.getY(), position.getX());
             GridPane.setHalignment(worker, HPos.CENTER); // To align horizontally in the cell
             GridPane.setValignment(worker, VPos.CENTER);
@@ -136,7 +140,7 @@ public class PlacingWorkers extends State{
 
         gridPane.getChildren().forEach(node -> node.setMouseTransparent(true));
 
-        if (Database.getPlayerState() == PlayerState.ACTIVE){
+        if (getPlayerState() == PlayerState.ACTIVE){
             System.out.println("my turn");
 
             //label.getStylesheets().add("/css_files/placingWorkers.css");
@@ -145,13 +149,19 @@ public class PlacingWorkers extends State{
             desc.setText("Place your workers");
 
             gridPane.getChildren().stream()
-                    .filter(node -> Database.getPlacingAvailableCells().contains(new Position(GridPane.getRowIndex(node), GridPane.getColumnIndex(node))))
+                    .filter(node -> getPlacingAvailableCells().contains(new Position(GridPane.getRowIndex(node), GridPane.getColumnIndex(node))))
                     .forEach(node -> node.setMouseTransparent(false));
 
             gridPane.getChildren().forEach(node -> node.setOnMouseEntered(e->{
                 if (finished)
                     return;
-                ImageView circle = new ImageView(new Image("images/" + Database.getMatchColors().get(Database.getPlayerID()) + "_circle.png" ,38,38, false,true));
+                Integer colIndex = GridPane.getColumnIndex(node);
+                Integer rowIndex = GridPane.getRowIndex(node);
+                if (!getPlacingAvailableCells().contains(new Position(rowIndex, colIndex)))
+                        return;
+
+
+                ImageView circle = new ImageView(new Image("images/" + getMatchColors().get(getPlayerID()) + "_circle.png" ,38,38, false,true));
                 circle.setMouseTransparent(true);
                 circle.setId("circle");
                 gridPane.add(circle, GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
@@ -164,7 +174,7 @@ public class PlacingWorkers extends State{
             }));
         }
         else{
-            desc.setText(Database.getMatchPlayers().get(Database.getCurrentPlayer()) + "'s turn to place the workers");
+            desc.setText(getMatchPlayers().get(getCurrentPlayer()) + "'s turn to place the workers");
         }
     }
 
@@ -174,25 +184,43 @@ public class PlacingWorkers extends State{
     private void chooseCell(MouseEvent event) {
         if (finished)
             return;
+
+
+
         Node source = (Node) event.getSource();
         Integer colIndex = GridPane.getColumnIndex(source);
         Integer rowIndex = GridPane.getRowIndex(source);
-        //source.setOpacity(1);
-        ImageView worker = new ImageView(new Image("images/" + Database.getMatchColors().get(Database.getPlayerID()) + ".png" ,38,38, false,true));
+        Position pos = new Position(rowIndex, colIndex);
+
+        if (!getPlacingAvailableCells().contains(new Position(rowIndex, colIndex)))
+            return;
+
+        ImageView worker = new ImageView(new Image("images/" + getMatchColors().get(getPlayerID()) + ".png" ,38,38, false,true));
         worker.setCursor(Cursor.DEFAULT);
         gridPane.add(worker, colIndex, rowIndex);
         GridPane.setHalignment(worker, HPos.CENTER); // To align horizontally in the cell
         GridPane.setValignment(worker, VPos.CENTER);
 
         source.setMouseTransparent(true);
-        Database.addInitializedPosition(new Position(rowIndex, colIndex));
-        System.out.printf("Mouse clicked cell in [%d, %d]%n", rowIndex, colIndex);
-        System.out.println(Database.getInitializedPositions());
-        if (Database.getInitializedPositions().size() == 1 && Database.getGodCard().equals("Eros")) {
 
+        addInitializedPosition(pos);
+        System.out.printf("Mouse clicked cell in [%d, %d]%n", rowIndex, colIndex);
+        System.out.println(getInitializedPositions());
+        if (getInitializedPositions().size() == 1 && getGodCard().equals("Eros")) {
+            Set<Position> positionSet = new HashSet<>();
+            if(pos.getX() == 0 || pos.getX() == 4){
+                for (int i = 0; i < 5; i++) positionSet.add(new Position((pos.getX()+4)%8, i));
+            }
+            if(pos.getY() == 0 || pos.getY() == 4){
+                for (int i = 0; i < 5; i++) positionSet.add(new Position(i, (pos.getY()+4)%8));
+            }
+
+            setPlacingAvailableCells(positionSet);
         }
 
-        if (Database.getInitializedPositions().size() == 2){
+
+
+        if (getInitializedPositions().size() == 2){
             finished = true;
             System.out.println("Sending data");
             sendData();
@@ -213,7 +241,7 @@ public class PlacingWorkers extends State{
         Platform.runLater(() -> {
             anchorPane.getChildren().add(page);
             page.toFront();
-            Database.getStage().show();
+            getStage().show();
         });
     }
 
