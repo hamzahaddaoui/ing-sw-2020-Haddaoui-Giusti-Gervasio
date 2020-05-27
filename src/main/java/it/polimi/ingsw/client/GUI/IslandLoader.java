@@ -503,19 +503,19 @@ public class IslandLoader{
 
         switch (boardCells.get(point)) {
             case 0:
-                boardCells.replace(point, 1);
+
                 buildBlockLevel1(point);
                 break;
             case 1:
-                boardCells.replace(point, 2);
+
                 buildBlockLevel2(point);
                 break;
             case 2:
-                boardCells.replace(point, 3);
+
                 buildBlockLevel3(point);
                 break;
             case 3:
-                boardCells.replace(point, 4);
+
                 buildDome(point);
                 break;
         }
@@ -963,13 +963,14 @@ public class IslandLoader{
 
         //Point3D trasl = next.subtract(prev);
 
+        double slope = cellHeight.get(boardCells.get(point)+1) - Math.abs(cellHeight.get(boardCells.get(point)));
 
         Translate translate = new Translate();
         worker.getTransforms().add(translate);
 
 
         Timeline timeline = new Timeline();
-        KeyValue yKV = new KeyValue(translate.yProperty(),  cellHeight.get(boardCells.get(point)+1) - Math.abs(cellHeight.get(boardCells.get(point))));
+        KeyValue yKV = new KeyValue(translate.yProperty(),  slope);
         KeyFrame yKF = new KeyFrame(Duration.seconds(0.5), yKV);
         timeline.getKeyFrames().addAll(yKF);
 
