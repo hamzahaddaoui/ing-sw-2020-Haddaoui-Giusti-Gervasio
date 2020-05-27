@@ -50,7 +50,7 @@ public class ZeusDecorator  extends CommandsDecorator {
     @Override
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
         Set<Position> result = super.computeAvailableBuildings(player, worker);
-        if(player.getCurrentWorkerPosition().getZ() < 3)
+        if(player.getCurrentWorker() != null && player.getCurrentWorkerPosition().getZ() < 3)
             result.add(player.getCurrentWorkerPosition());
         return result;
     }
@@ -79,7 +79,13 @@ public class ZeusDecorator  extends CommandsDecorator {
     @Override
     public boolean winningCondition(Player player) {
         Worker worker = player.getCurrentWorker();
-        return worker.getHeightVariation() == 1 && worker.getPosition().getZ() == 3 && positionBuilt != null && worker.getPosition() != positionBuilt;
+        if (worker == null)
+            return false;
+
+        return worker.getHeightVariation() == 1
+               && worker.getPosition().getZ() == 3
+               && positionBuilt != null
+               && worker.getPosition() != positionBuilt;
     }
 
 
