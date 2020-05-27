@@ -971,8 +971,8 @@ public class IslandLoader{
 
 
         Timeline timeline = new Timeline();
-        KeyValue yKV = new KeyValue(translate.yProperty(),  slope);
-        KeyFrame yKF = new KeyFrame(Duration.seconds(0.5), yKV);
+        KeyValue yKV = new KeyValue(translate.yProperty(),  -slope);
+        KeyFrame yKF = new KeyFrame(Duration.seconds(0.3), yKV);
         timeline.getKeyFrames().addAll(yKF);
 
         timeline.play();
