@@ -957,11 +957,11 @@ public class IslandLoader{
         Group worker = optionalWorker.get();
 
 
-        Point3D prev = new Point3D(Point2DMap.get(point).getX(), cellHeight.get(boardCells.get(point)), Point2DMap.get(point).getY());
+        //Point3D prev = new Point3D(Point2DMap.get(point).getX(), cellHeight.get(boardCells.get(point)), Point2DMap.get(point).getY());
 
-        Point3D next = new Point3D(Point2DMap.get(point).getX(), cellHeight.get(boardCells.get(point)+1), Point2DMap.get(point).getY());
+        //Point3D next = new Point3D(Point2DMap.get(point).getX(), cellHeight.get(boardCells.get(point)+1), Point2DMap.get(point).getY());
 
-        Point3D trasl = next.subtract(prev);
+        //Point3D trasl = next.subtract(prev);
 
 
         Translate translate = new Translate();
@@ -969,12 +969,7 @@ public class IslandLoader{
 
 
         Timeline timeline = new Timeline();
-        KeyValue yKV = new KeyValue(translate.yProperty(),  trasl.getY(), new Interpolator() {
-            @Override
-            protected double curve(double t){
-                return - 4 * (t - .5) * (t - .5) + 1;
-            }
-        });
+        KeyValue yKV = new KeyValue(translate.yProperty(),  cellHeight.get(boardCells.get(point)+1) - cellHeight.get(boardCells.get(point)));
         KeyFrame yKF = new KeyFrame(Duration.seconds(0.5), yKV);
         timeline.getKeyFrames().addAll(yKF);
 
