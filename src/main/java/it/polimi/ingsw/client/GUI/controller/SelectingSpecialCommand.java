@@ -69,7 +69,7 @@ public class SelectingSpecialCommand extends State {
         for(String card: Database.getMatchCards()){
             gridPane.getRowConstraints().add(new RowConstraints(180));
             String string = "\"/images/gods_no_back/" + card + ".png\"";
-            ImageView img = new ImageView(new Image("images/gods_no_back/" + card + ".png",150,200,false,true));
+           // ImageView img = new ImageView(new Image("images/gods_no_back/" + card + ".png",150,200,false,true));
             Button button = new Button();
             //button.getStyleClass().add("image");
             buttonSet.add(button);

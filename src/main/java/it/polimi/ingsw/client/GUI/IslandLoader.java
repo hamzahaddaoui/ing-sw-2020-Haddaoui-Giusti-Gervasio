@@ -956,9 +956,36 @@ public class IslandLoader{
 
         Group worker = optionalWorker.get();
 
-        worker.setTranslateY(- (cellHeight.get(boardCells.get(point)+1)-cellHeight.get(boardCells.get(point))));
-        workers.replace(worker, new Point3D(workers.get(worker).getX(), cellHeight.get(boardCells.get(point)+1) , workers.get(worker).getY()));
 
+        Point3D prev = new Point3D(Point2DMap.get(point).getX(), cellHeight.get(boardCells.get(point)), Point2DMap.get(point).getY());
+
+        Point3D next = new Point3D(Point2DMap.get(point).getX(), cellHeight.get(boardCells.get(point)+1), Point2DMap.get(point).getY());
+
+        Point3D trasl = next.subtract(prev);
+
+
+        Translate translate = new Translate();
+        worker.getTransforms().add(translate);
+
+
+        Timeline timeline = new Timeline();
+
+        KeyValue xKV = new KeyValue(translate.xProperty(), trasl.getX());
+        KeyValue zKV = new KeyValue(translate.zProperty(), trasl.getZ());
+        KeyValue yKV = new KeyValue(translate.yProperty(),  - 1, new Interpolator() {
+            @Override
+            protected double curve(double t){
+                return - 4 * (t - .5) * (t - .5) + 1;
+            }
+        });
+        KeyFrame xKF = new KeyFrame(Duration.seconds(0.5), xKV);
+        KeyFrame yKF = new KeyFrame(Duration.seconds(0.5), yKV);
+        KeyFrame zKF = new KeyFrame(Duration.seconds(0.5), zKV);
+        timeline.getKeyFrames().addAll(xKF, yKF, zKF);
+
+        timeline.play();
+
+        workers.replace(worker, new Point3D(point.getX(), point.getY(), boardCells.get(point)+1));
     }
 }
 
