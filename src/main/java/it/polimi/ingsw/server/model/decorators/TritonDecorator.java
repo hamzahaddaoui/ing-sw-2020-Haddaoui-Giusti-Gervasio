@@ -31,7 +31,8 @@ public class TritonDecorator extends CommandsDecorator {
                 Worker currentWorker = player.getCurrentWorker();
                 if (player.hasSpecialFunction() && computeAvailableMovements(player,currentWorker).size()!=0 && isPerimeterSpace(currentWorker.getPosition()))
                     player.setTurnState(TurnState.MOVE);
-                else player.setTurnState(TurnState.BUILD);
+                else
+                    player.setTurnState(TurnState.BUILD);
                 break;
             case BUILD:
                 player.setHasFinished();
@@ -46,9 +47,11 @@ public class TritonDecorator extends CommandsDecorator {
 
         if (isPerimeterSpace(position)) {
             avoidPositions.add(position);
-                Map<Position, Boolean> specialFunctionAvailable = new HashMap<>();
-                specialFunctionAvailable.put(position, true);
-                player.setUnsetSpecialFunctionAvailable(specialFunctionAvailable);
+            Map<Position, Boolean> specialFunctionAvailable = new HashMap<>();
+            specialFunctionAvailable.put(position, true);
+            player.setUnsetSpecialFunctionAvailable(specialFunctionAvailable);
+            if (avoidPositions.size()==16 && computeAvailableMovements(player,player.getCurrentWorker()).size()==0)
+                player.setUnsetSpecialFunctionAvailable(null);
         }
         else player.setUnsetSpecialFunctionAvailable(null);
 

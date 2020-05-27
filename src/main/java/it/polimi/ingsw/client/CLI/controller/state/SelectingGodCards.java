@@ -60,7 +60,7 @@ public class SelectingGodCards extends ControlState {
                     return messageEvent;
                 }
                 else{
-                    View.setError(true);
+                    View.setRefresh(true);
                     View.print();
                 }
         }
