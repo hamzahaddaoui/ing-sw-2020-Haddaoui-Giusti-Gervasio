@@ -964,7 +964,7 @@ public class IslandLoader{
         //Point3D trasl = next.subtract(prev);
 
 
-        double slope = Math.sqrt(Math.pow(cellHeight.get(boardCells.get(point)+1),2) - Math.pow(cellHeight.get(boardCells.get(point)),2));
+        double slope = Math.sqrt(Math.pow(cellHeight.get(boardCells.get(point)-1),2) - Math.pow(cellHeight.get(boardCells.get(point)),2));
 
         Translate translate = new Translate();
         worker.getTransforms().add(translate);
