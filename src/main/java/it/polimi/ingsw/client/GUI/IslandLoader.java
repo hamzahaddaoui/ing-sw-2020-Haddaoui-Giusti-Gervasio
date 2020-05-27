@@ -963,16 +963,29 @@ public class IslandLoader{
 
         //Point3D trasl = next.subtract(prev);
 
+        double slope;
 
-        double slope = Math.sqrt(Math.pow(cellHeight.get(boardCells.get(point)-1),2) - Math.pow(cellHeight.get(boardCells.get(point)),2));
+        switch(boardCells.get(point)){
+            case 1:
+                slope = -1.2;
+                break;
+            case 2:
+                slope = -1.3;
+                break;
+            case 3:
+                slope = -0.8;
+                break;
+            default:
+                return;
+        }
 
         Translate translate = new Translate();
         worker.getTransforms().add(translate);
 
 
         Timeline timeline = new Timeline();
-        KeyValue yKV = new KeyValue(translate.yProperty(),  -slope);
-        KeyFrame yKF = new KeyFrame(Duration.seconds(0.3), yKV);
+        KeyValue yKV = new KeyValue(translate.yProperty(),  slope);
+        KeyFrame yKF = new KeyFrame(Duration.seconds(1), yKV);
         timeline.getKeyFrames().addAll(yKF);
 
         timeline.play();
