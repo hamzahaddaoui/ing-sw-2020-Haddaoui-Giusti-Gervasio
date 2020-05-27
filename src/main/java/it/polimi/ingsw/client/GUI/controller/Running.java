@@ -408,7 +408,7 @@ public class Running extends State{
         System.out.println(getSpecialFunctionAvailable());
         System.out.println(isTerminateTurnAvailable());
 
-        if ((getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus")) && isTerminateTurnAvailable()){
+        if ((getGodCard().equals("Demeter") || getGodCard().equals("Hephaestus") || getGodCard().equals("Hestia") ) && isTerminateTurnAvailable()){
             function.setVisible(true);
 
             Platform.runLater(() -> {
