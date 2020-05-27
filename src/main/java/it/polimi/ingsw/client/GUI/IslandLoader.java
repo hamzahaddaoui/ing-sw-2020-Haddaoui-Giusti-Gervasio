@@ -956,7 +956,7 @@ public class IslandLoader{
 
         Group worker = optionalWorker.get();
 
-        worker.setTranslateY(cellHeight.get(boardCells.get(point)+1)-cellHeight.get(boardCells.get(point)));
+        worker.setTranslateY(- (cellHeight.get(boardCells.get(point)+1)-cellHeight.get(boardCells.get(point))));
         workers.replace(worker, new Point3D(workers.get(worker).getX(), cellHeight.get(boardCells.get(point)+1) , workers.get(worker).getY()));
 
     }
