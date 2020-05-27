@@ -26,6 +26,10 @@ public class Controller extends Observable<MessageEvent> {
     public synchronized void inputListener () {
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            if(!DataBase.isOnline()){
+                scanner.close();
+                return;
+            }
             String input = scanner.nextLine();
             synchronized (DataBase.class){
             if (DataBase.isActiveInput() && (DataBase.getPlayerState() == PlayerState.ACTIVE || DataBase.getPlayerState() == null || DataBase.isViewer())) {
@@ -38,10 +42,11 @@ public class Controller extends Observable<MessageEvent> {
                         }
                 });
             } else {
-                System.out.print("\nPlease wait\n");
+                if(DataBase.isOnline())
+                    System.out.print("\nPlease wait\n");
                 DataBase.setActiveInput(true);
             }
-                notifyAll();
+            notifyAll();
             }
         }
     }

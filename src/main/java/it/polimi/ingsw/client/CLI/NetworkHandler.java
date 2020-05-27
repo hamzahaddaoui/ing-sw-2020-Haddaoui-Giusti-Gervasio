@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.CLI;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.client.CLI.view.DataBase;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;

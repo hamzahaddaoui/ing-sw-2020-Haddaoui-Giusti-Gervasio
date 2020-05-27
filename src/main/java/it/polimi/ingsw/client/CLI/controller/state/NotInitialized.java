@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.CLI.controller.state;
 import it.polimi.ingsw.client.CLI.Client;
 import it.polimi.ingsw.client.CLI.view.DataBase;
 import it.polimi.ingsw.client.CLI.view.View;
+import it.polimi.ingsw.client.GUI.Database;
 import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
@@ -48,6 +49,8 @@ public class NotInitialized extends ControlState{
         DataBase.setMessageReady(true);
 
         if(input.equals("q") || input.equals("Q") ) {
+            DataBase.setActiveInput(false);
+            DataBase.setOnline(false);
             Client.close();
             return null;
         }
@@ -64,11 +67,15 @@ public class NotInitialized extends ControlState{
     public void updateData(MessageEvent message) {
 
         if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST || DataBase.isViewer()){
+            if(message.getWinner() != 0 && DataBase.getMatchPlayers().size()==1){
+                if(DataBase.getPlayerState() != PlayerState.WIN)
+                    System.out.println("The winner is "+ DataBase.getMatchPlayers().get(message.getWinner()));
+            }
             DataBase.setBillboardStatus(message.getBillboardStatus());
             View.doUpdate();
             System.out.println(computeView());
-            if(DataBase.getMatchState() == MatchState.FINISHED)
-                DataBase.resetDataBase();
+            if(message.getWinner() != 0 && DataBase.getMatchPlayers().size()==1){
+                DataBase.resetDataBase();}
             }
 
         DataBase.setActiveInput(true);
@@ -81,12 +88,16 @@ public class NotInitialized extends ControlState{
      */
     @Override
     public String computeView() {
-        if(DataBase.isViewer())
-            return "Viewer mode on. Press 'q' if you want to quit";
+        if(DataBase.isViewer()){
+            if(DataBase.getMatchPlayers().size()==1)
+                return "Viewer mode off. If you want to play again insert your nickname, else press 'q' to disconnect: \n";
+            else
+                return "Viewer mode on. Press 'q' if you want to quit or wait until the end of the game.";
+        }
         if (DataBase.getPlayerState() != null && DataBase.getPlayerState()==PlayerState.WIN)
             return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
-        else if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.LOST)
-            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
+        else if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.LOST){
+            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";}
         else if (DataBase.isDisconnectedUser())
             return "A user has disconnected from the match so the match is over.\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
         else return "\nPress 'q' if you want to quit from SANTORINI.\nTo start a game insert your nickname: ";
