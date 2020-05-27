@@ -39,7 +39,7 @@ public class FirstPlayerAccess extends State {
             if (playerID == 0){
                 MessageEvent message = new MessageEvent();
                 message.setError(true);
-                message.setInfo("Nickname not available.");
+                message.setInfo("Nickname '"+ nickname +"' not available.");
                 notify(List.of(messageEvent.getClientHandler()), basicErrorConfig(message));
                 return false;
             }

@@ -17,6 +17,6 @@ public abstract class ControlState {
 
     public abstract String computeView();
 
-    public abstract void error();
+    public abstract String error();
 }
 

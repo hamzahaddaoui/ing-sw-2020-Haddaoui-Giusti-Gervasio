@@ -304,8 +304,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
             refresh = false;
         }
         if(error){
-            System.out.println("Wrong input");
-            System.out.println(DataBase.getControlState().computeView());
+            System.out.println(DataBase.getControlState().error());
             error = false;
         }
     }

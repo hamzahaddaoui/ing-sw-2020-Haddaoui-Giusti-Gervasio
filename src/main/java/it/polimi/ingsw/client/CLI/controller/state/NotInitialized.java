@@ -73,7 +73,8 @@ public class NotInitialized extends ControlState{
             }
             DataBase.setBillboardStatus(message.getBillboardStatus());
             View.doUpdate();
-            System.out.println(computeView());
+            View.setRefresh(true);
+            View.print();
             if(message.getWinner() != 0 && DataBase.getMatchPlayers().size()==1){
                 DataBase.resetDataBase();}
             }
@@ -107,9 +108,9 @@ public class NotInitialized extends ControlState{
      * Called if there is an error on the message, it announces that the input is incorrect and it prints the computeView method
      */
     @Override
-    public void error() {
+    public String error() {
         DataBase.setActiveInput(true);
-        System.out.println("Nickname already taken!\nInsert a new one or press 'q' to quit disconnect: ");
+        return("Nickname already taken!\nInsert a new one or press 'q' to quit disconnect: ");
     }
 
 }

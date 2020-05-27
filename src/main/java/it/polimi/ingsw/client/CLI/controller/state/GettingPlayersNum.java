@@ -74,8 +74,8 @@ public class GettingPlayersNum extends ControlState {
      *
      */
     @Override
-    public void error() {
-        System.out.println("Incorrect number of players!");
+    public String error() {
         DataBase.setActiveInput(true);
+        return ("Incorrect number of players!");
     }
 }

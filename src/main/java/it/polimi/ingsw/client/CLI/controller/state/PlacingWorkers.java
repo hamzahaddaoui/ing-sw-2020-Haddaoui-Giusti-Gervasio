@@ -50,14 +50,16 @@ public class PlacingWorkers extends ControlState {
                     initializedPosition.add(position);
                     placingPosition.remove(position);
                     if(initializedPosition.size() == 1){
-                        System.out.println(computeView());
+                        View.setRefresh(true);
+                        View.print();
                         DataBase.setMessageReady(false);
                         DataBase.setActiveInput(true);
                         return null;
                     }
                     if (initializedPosition.size() == 2) {
                         messageEvent.setInitializedPositions(initializedPosition);
-                        System.out.println(computeView());
+                        View.setRefresh(true);
+                        View.print();
                         DataBase.setMessageReady(true);
                         DataBase.setPlayerState(PlayerState.IDLE);
                         return messageEvent;
@@ -65,7 +67,8 @@ public class PlacingWorkers extends ControlState {
                 }
             }
         }
-        error();
+        View.setError(true);
+        View.print();
         DataBase.setMessageReady(false);
         DataBase.setActiveInput(true);
         return null;
@@ -108,7 +111,8 @@ public class PlacingWorkers extends ControlState {
             View.print();
         }
         else{
-            System.out.println(computeView());
+            View.setRefresh(true);
+            View.print();
         }
 
     }
@@ -123,7 +127,7 @@ public class PlacingWorkers extends ControlState {
         if(DataBase.getPlayerState() == PlayerState.ACTIVE ){
             int number = 2 - initializedPosition.size();
             if(number == 0)
-                return "Addition done";
+                return "Placing complete";
             else if(number == 1){
                 return "Insert " + number + " worker.\nInsert position XY: \n ";
             }
@@ -141,10 +145,9 @@ public class PlacingWorkers extends ControlState {
      * Called if there is an error on the message, it announces that the input is incorrect and it prints the computeView method
      */
     @Override
-    public void error() {
-        System.out.println("Position is not available or incorrect\n");
+    public String error() {
         DataBase.setActiveInput(true);
-        System.out.println(computeView());
+        return ("Position is not available or incorrect\n");
     }
 
     /**
