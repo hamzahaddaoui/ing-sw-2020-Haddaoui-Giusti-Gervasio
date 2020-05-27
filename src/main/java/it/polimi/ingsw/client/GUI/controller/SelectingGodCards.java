@@ -50,6 +50,13 @@ public class SelectingGodCards extends State {
     @FXML
     private ToggleButton Prometheus;
 
+    @FXML private ToggleButton Charon;
+    @FXML private ToggleButton Eros;
+    @FXML private ToggleButton Hestia;
+    @FXML private ToggleButton Triton;
+    @FXML private ToggleButton Zeus;
+
+
     static Map<String, ToggleButton> buttonStringMap;
 
     @Override
@@ -65,7 +72,14 @@ public class SelectingGodCards extends State {
             put("Hephaestus", Hephaestus);
             put("Minotaur", Minotaur);
             put("Pan", Pan);
-            put("Prometheus",Prometheus);
+            put("Prometheus", Prometheus);
+            put("Charon",Charon);
+            put("Eros", Eros);
+            put("Hestia", Hestia);
+            put("Triton",Triton);
+            put("Zeus", Zeus);
+
+
 
         }});
         if(Database.getPlayerState() != PlayerState.ACTIVE){

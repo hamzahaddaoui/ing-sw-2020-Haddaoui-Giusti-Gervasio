@@ -56,6 +56,36 @@ public enum GodCards {
         Commands apply(Commands commands) {
             return new PrometheusDecorator(commands);
         }
+    },
+    Charon {
+        @Override
+        Commands apply(Commands commands) {
+            return new CharonDecorator(commands);
+        }
+    },
+    Eros {
+        @Override
+        Commands apply(Commands commands) {
+            return new ErosDecorator(commands);
+        }
+    },
+    Hestia {
+        @Override
+        Commands apply(Commands commands) {
+            return new HestiaDecorator(commands);
+        }
+    },
+    Triton {
+        @Override
+        Commands apply(Commands commands) {
+            return new TritonDecorator(commands);
+        }
+    },
+    Zeus {
+        @Override
+        Commands apply(Commands commands) {
+            return new ZeusDecorator(commands);
+        }
     };
 
     /**
