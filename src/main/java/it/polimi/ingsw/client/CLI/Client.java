@@ -9,12 +9,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /*
- * 🟦 blu
- * 🟧 arancio
- * 🟪 viola
- * 🟥 rosso
- * ⬜ bianco
- * 🟩 verde
+ *🟦    blu
+ *🟧    arancio
+ *🟪    viola
+ *🟥    rosso
+ *⬜️    bianco
+ *🟩    verde
+ *⏺    dome
  *
  */
 
