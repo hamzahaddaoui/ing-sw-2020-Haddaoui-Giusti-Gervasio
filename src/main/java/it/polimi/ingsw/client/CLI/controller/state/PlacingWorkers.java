@@ -50,6 +50,8 @@ public class PlacingWorkers extends ControlState {
                     initializedPosition.add(position);
                     placingPosition.remove(position);
                     if(initializedPosition.size() == 1){
+                        if(DataBase.getGodCard() != null && DataBase.getGodCard().toUpperCase().equals("EROS"))
+                            handleErosCase();
                         View.setRefresh(true);
                         View.print();
                         DataBase.setMessageReady(false);
@@ -164,4 +166,65 @@ public class PlacingWorkers extends ControlState {
         else return true;
     }
 
+
+    /**
+     * Method handles the placing action of the God Eros.
+     * The cells that are available for the second worker are just the cells that are along the opposite side of the GameBoard
+     *
+     * In case of corner, available placing cells contains the cells of 2 opposite side
+     */
+    private void handleErosCase(){
+        Position firstWorkerPosition = null;
+        if(!initializedPosition.isEmpty())
+            firstWorkerPosition = initializedPosition.stream().findFirst().get();
+
+        //X -> 0
+        if(firstWorkerPosition.getX() == 0){
+            if(firstWorkerPosition.getY() == 0){
+                DataBase.getPlacingAvailableCells()
+                        .stream()
+                        .filter(pos-> pos.getX() != 0 && pos.getY() != 0)
+                        .forEach(w-> DataBase.getPlacingAvailableCells()
+                                .remove(w));
+            }
+            else if(firstWorkerPosition.getY() == 4){
+                DataBase.getPlacingAvailableCells()
+                        .stream()
+                        .filter(pos-> pos.getX() != 0 && pos.getY() != 4)
+                        .forEach(w-> DataBase.getPlacingAvailableCells()
+                                .remove(w));
+            }
+            else{
+                    DataBase.getPlacingAvailableCells()
+                            .stream()
+                            .filter(pos-> pos.getX() != 4 )
+                            .forEach(w-> DataBase.getPlacingAvailableCells()
+                                    .remove(w));
+            }
+        }
+        //X -> 4
+        else {
+            if(firstWorkerPosition.getY() == 0){
+                DataBase.getPlacingAvailableCells()
+                        .stream()
+                        .filter(pos-> pos.getX() != 4 && pos.getY() != 0)
+                        .forEach(w-> DataBase.getPlacingAvailableCells()
+                                .remove(w));
+            }
+            else if(firstWorkerPosition.getY() == 4){
+                DataBase.getPlacingAvailableCells()
+                        .stream()
+                        .filter(pos-> pos.getX() != 4 && pos.getY() != 4)
+                        .forEach(w-> DataBase.getPlacingAvailableCells()
+                                .remove(w));
+            }
+            else{
+                DataBase.getPlacingAvailableCells()
+                        .stream()
+                        .filter(pos-> pos.getX() != 0 )
+                        .forEach(w-> DataBase.getPlacingAvailableCells()
+                                .remove(w));
+            }
+        }
+    }
 }
