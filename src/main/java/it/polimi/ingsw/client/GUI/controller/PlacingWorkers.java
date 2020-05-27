@@ -188,6 +188,10 @@ public class PlacingWorkers extends State{
         Database.addInitializedPosition(new Position(rowIndex, colIndex));
         System.out.printf("Mouse clicked cell in [%d, %d]%n", rowIndex, colIndex);
         System.out.println(Database.getInitializedPositions());
+        if (Database.getInitializedPositions().size() == 1 && Database.getGodCard().equals("Eros")) {
+
+        }
+
         if (Database.getInitializedPositions().size() == 2){
             finished = true;
             System.out.println("Sending data");
