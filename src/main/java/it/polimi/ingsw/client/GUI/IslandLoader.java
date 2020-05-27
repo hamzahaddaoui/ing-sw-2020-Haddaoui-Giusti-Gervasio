@@ -969,19 +969,14 @@ public class IslandLoader{
 
 
         Timeline timeline = new Timeline();
-
-        KeyValue xKV = new KeyValue(translate.xProperty(), trasl.getX());
-        KeyValue zKV = new KeyValue(translate.zProperty(), trasl.getZ());
-        KeyValue yKV = new KeyValue(translate.yProperty(),  - 1, new Interpolator() {
+        KeyValue yKV = new KeyValue(translate.yProperty(),  trasl.getY(), new Interpolator() {
             @Override
             protected double curve(double t){
                 return - 4 * (t - .5) * (t - .5) + 1;
             }
         });
-        KeyFrame xKF = new KeyFrame(Duration.seconds(0.5), xKV);
         KeyFrame yKF = new KeyFrame(Duration.seconds(0.5), yKV);
-        KeyFrame zKF = new KeyFrame(Duration.seconds(0.5), zKV);
-        timeline.getKeyFrames().addAll(xKF, yKF, zKF);
+        timeline.getKeyFrames().addAll(yKF);
 
         timeline.play();
 
