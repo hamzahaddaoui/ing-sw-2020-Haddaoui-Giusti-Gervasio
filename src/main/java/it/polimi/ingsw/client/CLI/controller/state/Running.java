@@ -71,8 +71,6 @@ public class Running extends ControlState {
             System.out.println(message.getInfo());
         }
 
-        DataBase.setBillboardStatus(message.getBillboardStatus());
-
         if (DataBase.getPlayerState() == PlayerState.LOST ) {
             DataBase.setViewer(true);
             DataBase.setControlState(new NotInitialized());
@@ -91,7 +89,6 @@ public class Running extends ControlState {
                 DataBase.setStartingPosition(null);
             else if (DataBase.isSpecialFunction())
                 DataBase.resetSpecialFunction();
-
 
             View.setRefresh(true);
             View.handler();

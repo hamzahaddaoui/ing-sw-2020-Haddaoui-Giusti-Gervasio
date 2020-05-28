@@ -75,7 +75,7 @@ public class PlacingWorkers extends ControlState {
                         messageEvent.setInitializedPositions(initializedPosition);
                         View.setRefresh(true);
                         DataBase.setMessageReady(true);
-                        //View.handler();
+                        System.out.println("Placing complete");
                         return messageEvent;
                     }
                 }
@@ -134,9 +134,7 @@ public class PlacingWorkers extends ControlState {
     public String computeView() {
         if(DataBase.getPlayerState() == PlayerState.ACTIVE ){
             int number = 2 - initializedPosition.size();
-            if(number == 0)
-                return "Placing complete";
-            else if(number == 1){
+            if(number == 1){
                 return "Insert " + number + " worker.\nInsert position XY: \n ";
             }
             else if(number == 2){

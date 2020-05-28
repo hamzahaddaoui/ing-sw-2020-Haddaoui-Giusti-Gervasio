@@ -70,6 +70,7 @@ public class NotInitialized extends ControlState{
                 System.out.println(message.getInfo());
             }
             DataBase.setBillboardStatus(message.getBillboardStatus());
+            View.setRefresh(true);
             View.handler();
             }
 
