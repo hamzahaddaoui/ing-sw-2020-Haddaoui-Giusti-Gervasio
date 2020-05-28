@@ -9,6 +9,7 @@ import it.polimi.ingsw.utilities.Position;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author giusti-leo
@@ -52,6 +53,19 @@ public class PlacingWorkers extends ControlState {
                     if(initializedPosition.size() == 1){
                         if(DataBase.getGodCard() != null && DataBase.getGodCard().toUpperCase().equals("EROS"))
                             handleErosCase();
+
+                        //AGGIUNTA WORKER ALLA BILLBOARD
+                        DataBase
+                                .getBillboardStatus()
+                                .get(position)
+                                .setPlayerID(DataBase
+                                                .getMatchPlayers()
+                                                .keySet()
+                                                .stream()
+                                                .filter(num -> DataBase.getMatchPlayers().get(num).equals(DataBase.getNickname()))
+                                                .findAny().get());
+
+                        View.doUpdate();
                         View.setRefresh(true);
                         View.print();
                         DataBase.setMessageReady(false);
@@ -181,49 +195,43 @@ public class PlacingWorkers extends ControlState {
         //X -> 0
         if(firstWorkerPosition.getX() == 0){
             if(firstWorkerPosition.getY() == 0){
-                DataBase.getPlacingAvailableCells()
+                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
                         .stream()
-                        .filter(pos-> pos.getX() != 0 && pos.getY() != 0)
-                        .forEach(w-> DataBase.getPlacingAvailableCells()
-                                .remove(w));
+                        .filter(pos-> pos.getX() == 4 || pos.getY() == 4)
+                        .collect(Collectors.toSet()));
             }
             else if(firstWorkerPosition.getY() == 4){
-                DataBase.getPlacingAvailableCells()
+                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
                         .stream()
-                        .filter(pos-> pos.getX() != 0 && pos.getY() != 4)
-                        .forEach(w-> DataBase.getPlacingAvailableCells()
-                                .remove(w));
+                        .filter(pos-> pos.getX() == 4 || pos.getY() == 0)
+                        .collect(Collectors.toSet()));
             }
             else{
-                    DataBase.getPlacingAvailableCells()
+                    DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
                             .stream()
-                            .filter(pos-> pos.getX() != 4 )
-                            .forEach(w-> DataBase.getPlacingAvailableCells()
-                                    .remove(w));
+                            .filter(pos-> pos.getX() == 4 )
+                            .collect(Collectors.toSet()));
             }
         }
         //X -> 4
         else {
             if(firstWorkerPosition.getY() == 0){
-                DataBase.getPlacingAvailableCells()
+                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
                         .stream()
-                        .filter(pos-> pos.getX() != 4 && pos.getY() != 0)
-                        .forEach(w-> DataBase.getPlacingAvailableCells()
-                                .remove(w));
+                        .filter(pos-> pos.getX() == 0 || pos.getY() == 4)
+                        .collect(Collectors.toSet()));
             }
             else if(firstWorkerPosition.getY() == 4){
-                DataBase.getPlacingAvailableCells()
+                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
                         .stream()
-                        .filter(pos-> pos.getX() != 4 && pos.getY() != 4)
-                        .forEach(w-> DataBase.getPlacingAvailableCells()
-                                .remove(w));
+                        .filter(pos-> pos.getX() == 0 || pos.getY() == 0)
+                        .collect(Collectors.toSet()));
             }
             else{
-                DataBase.getPlacingAvailableCells()
+                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
                         .stream()
-                        .filter(pos-> pos.getX() != 0 )
-                        .forEach(w-> DataBase.getPlacingAvailableCells()
-                                .remove(w));
+                        .filter(pos-> pos.getX() == 0 )
+                        .collect(Collectors.toSet()));
             }
         }
     }

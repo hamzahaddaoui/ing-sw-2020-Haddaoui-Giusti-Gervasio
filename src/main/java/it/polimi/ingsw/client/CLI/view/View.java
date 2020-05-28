@@ -72,7 +72,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      */
     public static void visualization(){
         if(DataBase.getMatchState() == MatchState.PLACING_WORKERS ){
-            System.out.println(placingWorkerSituation());
+            if (DataBase.getPlayerState()==PlayerState.ACTIVE)
+                placingWorkerSituationActive();
+            else
+                System.out.println(placingWorkerSituation());
         }
         else if(DataBase.getMatchState() == MatchState.RUNNING && DataBase.getStartingPosition() != null && DataBase.getPlayerState() == PlayerState.ACTIVE){ // visualizzaione delle 3 tabelle
             gameBoardVisualizationActive();
@@ -116,6 +119,46 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         outputA.append("\n");
         outputA.append(keyLegend());
         return outputA.toString();
+    }
+
+    static String getPlacingAvailableCells(Set<Position> cells) {
+        StringBuilder outputB = new StringBuilder();
+
+        Map<Position,Cell> billboardCells = DataBase.getBillboardStatus();
+
+        billboardCells
+                .keySet()
+                .stream()
+                .sorted()
+                .forEach(position -> outputB
+                        .append(cells.contains(position) ? "\u2B1B" : "" )
+                        .append(!cells.contains(position) ? "\u2B1C" : "")
+                        .append((position.getY() == 4) ? "\n" : " "));
+        outputB.append("\n");
+        return outputB.toString();
+    }
+
+    static void placingWorkerSituationActive() {
+        StringBuilder output = new StringBuilder();
+        String billboardStat = placingWorkerSituation();
+        String availableCells = getPlacingAvailableCells(DataBase.getPlacingAvailableCells());
+
+        int q, w;
+        int j, k;
+        int i;
+        for (i = 0, q = 0, j = 0, w = billboardStat.indexOf("\n", 0), k = availableCells.indexOf("\n", 0);
+             i < 5;
+             i++, w = billboardStat.indexOf("\n", q), k = availableCells.indexOf("\n", j)) {
+
+            output.append(billboardStat, q, w);
+            output.append("\t\t\t");
+            output.append(availableCells, j, k);
+            output.append("\n");
+            q = ++ w;
+            j = ++ k;
+        }
+        output.append(keyLegend());
+        System.out.println(output.toString());
     }
 
     /**
