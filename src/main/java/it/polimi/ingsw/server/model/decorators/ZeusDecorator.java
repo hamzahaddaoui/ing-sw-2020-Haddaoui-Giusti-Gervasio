@@ -65,13 +65,13 @@ public class ZeusDecorator  extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        Position workerPosition = player.getCurrentWorkerPosition();
+        Position workerPosition = player.getCurrentWorker().getPosition();
         Worker worker = player.getCurrentWorker();
         Billboard billboard = player.getMatch().getBillboard();
 
         if(position.getY() == workerPosition.getY() && position.getX() == workerPosition.getX()){
             super.build(position, player);
-            positionBuilt = new Position(position.getX(), position.getY(), player.getMatch().getBillboard().getTowerHeight(position)+1);
+            positionBuilt = new Position( position.getX(), position.getY(), billboard.getTowerHeight(position));
             worker.setPosition(positionBuilt);
         }
         else{
