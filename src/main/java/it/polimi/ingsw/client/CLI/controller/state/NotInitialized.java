@@ -71,7 +71,6 @@ public class NotInitialized extends ControlState{
             }
             DataBase.setBillboardStatus(message.getBillboardStatus());
             View.handler();
-
             }
 
         DataBase.setActiveInput(true);

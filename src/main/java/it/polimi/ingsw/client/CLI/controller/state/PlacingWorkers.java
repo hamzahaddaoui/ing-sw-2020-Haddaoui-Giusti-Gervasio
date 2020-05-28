@@ -52,7 +52,7 @@ public class PlacingWorkers extends ControlState {
                     placingPosition.remove(position);
                     if(initializedPosition.size() == 1){
                         if(DataBase.getGodCard() != null && DataBase.getGodCard().toUpperCase().equals("EROS"))
-                            handleErosCase();
+                            handleErosCase(position);
 
                         //AGGIUNTA WORKER ALLA BILLBOARD
                         DataBase
@@ -75,7 +75,7 @@ public class PlacingWorkers extends ControlState {
                         messageEvent.setInitializedPositions(initializedPosition);
                         View.setRefresh(true);
                         DataBase.setMessageReady(true);
-                        View.handler();
+                        //View.handler();
                         return messageEvent;
                     }
                 }
@@ -178,32 +178,21 @@ public class PlacingWorkers extends ControlState {
      * The cells that are available for the second worker are just the cells that are along the opposite side of the GameBoard
      *
      * In case of corner, available placing cells contains the cells of 2 opposite side
+     *
+     * @param position  the position of your first worker placed
      */
-    private void handleErosCase(){
-        Position firstWorkerPosition = null;
+    private void handleErosCase(Position position){
         Set<Position> positionSet = new HashSet<>();
 
-        if(!initializedPosition.isEmpty())
-            firstWorkerPosition = initializedPosition.stream().findFirst().get();
-
-        if( firstWorkerPosition.getX() == 0 || firstWorkerPosition.getX() == 4){
-            for (int i = 0; i < 5; i++) positionSet.add(new Position((firstWorkerPosition.getX()+4)%8, i));
+        if( position.getX() == 0 || position.getX() == 4){
+            for (int i = 0; i < 5; i++) positionSet.add(new Position((position.getX()+4)%8, i));
         }
-        if(firstWorkerPosition.getY() == 0 || firstWorkerPosition.getY() == 4){
-            for (int i = 0; i < 5; i++) positionSet.add(new Position(i, (firstWorkerPosition.getY()+4)%8));
+        if(position.getY() == 0 || position.getY() == 4){
+            for (int i = 0; i < 5; i++) positionSet.add(new Position(i, (position.getY()+4)%8));
         }
-        if(firstWorkerPosition.getX()==0 && firstWorkerPosition.getY()==0)
-            positionSet.stream().filter(pos->pos.getX() == 0 || pos.getY()==0).forEach(positionSet::remove);
-        if(firstWorkerPosition.getX()==4 && firstWorkerPosition.getY()==0)
-            positionSet.stream().filter(pos->pos.getX() == 4 || pos.getY()==0).forEach(positionSet::remove);
-        if(firstWorkerPosition.getX()==0 && firstWorkerPosition.getY()==4)
-            positionSet.stream().filter(pos->pos.getX() == 0 || pos.getY()==4).forEach(positionSet::remove);
-        if(firstWorkerPosition.getX()==4 && firstWorkerPosition.getY()==4)
-            positionSet.stream().filter(pos->pos.getX() == 0 || pos.getY()==0).forEach(positionSet::remove);
 
         positionSet = positionSet.stream().filter(pos-> DataBase.getPlacingAvailableCells().contains(pos)).collect(Collectors.toSet());
         DataBase.setPlacingAvailableCells(positionSet);
-
         }
 
 }

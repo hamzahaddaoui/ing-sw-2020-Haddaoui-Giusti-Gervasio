@@ -27,7 +27,7 @@ public class TritonDecorator extends CommandsDecorator {
                 break;
             case MOVE:
                 Worker currentWorker = player.getCurrentWorker();
-                if (player.hasSpecialFunction() && computeAvailableMovements(player,currentWorker).size()!=0 && isPerimeterSpace(currentWorker.getPosition()))
+                if (player.hasSpecialFunction() && computeAvailableMovements(player,currentWorker).size()!=0 && isPerimeterSpace(player.getCurrentWorkerPosition()))
                     player.setTurnState(TurnState.MOVE);
                 else
                     player.setTurnState(TurnState.BUILD);

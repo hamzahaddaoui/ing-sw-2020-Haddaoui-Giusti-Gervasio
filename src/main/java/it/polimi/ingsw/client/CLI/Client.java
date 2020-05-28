@@ -72,7 +72,6 @@ public class Client {
          {
             try {
                 networkHandler.stop();
-                //scanner.close();
             } catch (IOException e) {
                 e.getMessage();
             }
