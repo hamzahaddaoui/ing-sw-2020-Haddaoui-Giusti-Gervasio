@@ -30,6 +30,14 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>5.5.2</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.interactivemesh.jfx</groupId>
+      <artifactId>modelImporter</artifactId>
+      <version>2.0</version>
+    </dependency>
+
+
   </dependencies>
 
   <name>ing-sw-2020-Haddaoui-Giusti-Gervasio</name>
@@ -90,7 +98,11 @@
           <version>3.0.0</version>
         </plugin>
 
-
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.2.3</version>
+        </plugin>
 
 
       </plugins>
@@ -104,6 +116,41 @@
                   <target>9</target>
               </configuration>
           </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.2.3</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+              <configuration>
+                <filters>
+                  <filter>
+                    <artifact>*:*</artifact>
+                    <excludes>
+                      <exclude>module-info.class</exclude>
+                      <exclude>META-INF/*.SF</exclude>
+                      <exclude>META-INF/*.DSA</exclude>
+                      <exclude>META-INF/*.RSA</exclude>
+                    </excludes>
+                  </filter>
+                </filters>
+                <transformers>
+                  <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                    <manifestEntries>
+                      <Main-Class>it.polimi.ingsw.client.Application</Main-Class>
+                    </manifestEntries>
+                  </transformer>
+                </transformers>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
       </plugins>
   </build>
 </project>
