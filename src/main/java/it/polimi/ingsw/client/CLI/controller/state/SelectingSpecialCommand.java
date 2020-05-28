@@ -50,7 +50,7 @@ public class SelectingSpecialCommand extends ControlState {
         else{
 
             View.setError(true);
-            View.print();
+            View.handler();
             DataBase.setMessageReady(false);
             DataBase.setActiveInput(true);
         }
@@ -70,7 +70,7 @@ public class SelectingSpecialCommand extends ControlState {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
             View.setRefresh(true);
-            View.print();
+            View.handler();
             DataBase.setDisconnectedUser(false);
             return;
         }
@@ -96,11 +96,11 @@ public class SelectingSpecialCommand extends ControlState {
         if(DataBase.getPlayerState() == PlayerState.ACTIVE){
             DataBase.setActiveInput(true);
             View.setRefresh(true);
-            View.print();
+            View.handler();
         }
         else{
             View.setRefresh(true);
-            View.print();
+            View.handler();
         }
 
     }

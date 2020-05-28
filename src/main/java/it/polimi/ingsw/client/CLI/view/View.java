@@ -17,10 +17,6 @@ import java.util.concurrent.Executors;
  *
  */
 
-/*
-    TODO -> MOSTRA POTERI CHE VENGONO PRESI DAGLI USER
- */
-
 public class View extends Observable<String> implements Observer<MessageEvent> {
 
     static ExecutorService executorView = Executors.newSingleThreadExecutor();
@@ -51,7 +47,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                     if (messageEvent.getError()) {
                         System.out.println(DataBase.getControlState().error());
                     } else {
-                        DataBase.getControlState().updateData(messageEvent);
+                            DataBase.getControlState().updateData(messageEvent);
                     }
                     notifyAll();
                 }
@@ -63,8 +59,15 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     /**
      * Method that is called from Controller Classes and it submits visualization method that updates the GameBoard state
      */
-    public static void doUpdate(){
-        executorView.submit(View::visualization);
+
+    public static void handler(){
+            if(!DataBase.isDisconnectedUser() && (DataBase.getMatchState() == MatchState.RUNNING
+                    || DataBase.getMatchState()==MatchState.PLACING_WORKERS
+                    || DataBase.getMatchState() == MatchState.FINISHED))
+                visualization();
+            print();
+            if(DataBase.getMatchState() == MatchState.FINISHED)
+                DataBase.resetDataBase();
     }
 
     /**
@@ -261,7 +264,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      * Method that organizes the the visualization of the tables if the worker is active and it can do his movement
      *
      */
-    public static synchronized void gameBoardVisualizationActive(){
+    public static void gameBoardVisualizationActive(){
         StringBuilder output = new StringBuilder();
         String billboardStat2 = getBillboardPlayersAndHeights();
         String availableMovements = getBillboardStat(DataBase.getWorkersAvailableCells(DataBase.getStartingPosition()),DataBase.getStartingPosition());
@@ -288,7 +291,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      * Method that organize the the visualization of the tables if the worker is active and it has to choose the worker for the turn
      *
      */
-    public static synchronized void gameBoardVisualizationChooseCurrentWorker(){
+    public static void gameBoardVisualizationChooseCurrentWorker(){
         StringBuilder output = new StringBuilder();
         String billboardStat2 = getBillboardPlayersAndHeights();
         String availableMovements = getBillBoardEvidence(DataBase.getWorkersPositions());
@@ -318,7 +321,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      *
      * @return the string of players, each name with a different color
      */
-    public static synchronized String keyLegend() {
+    public static String keyLegend() {
 
         final String ANSI_RESET = "\u001B[0m";
         final String ANSI_BLUE = "\u001B[34m";

@@ -61,12 +61,12 @@ public class SelectingGodCards extends ControlState {
                 }
                 else{
                     View.setRefresh(true);
-                    View.print();
+                    View.handler();
                 }
         }
         else{
             View.setError(true);
-            View.print();
+            View.handler();
         }
         DataBase.setMessageReady(false);
         DataBase.setActiveInput(true);
@@ -87,7 +87,7 @@ public class SelectingGodCards extends ControlState {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
             View.setRefresh(true);
-            View.print();
+            View.handler();
             DataBase.setDisconnectedUser(false);
             return;
         }
@@ -97,11 +97,11 @@ public class SelectingGodCards extends ControlState {
             DataBase.setMatchCards(message.getMatchCards());
             DataBase.setActiveInput(true);
             View.setRefresh(true);
-            View.print();
+            View.handler();
         }
         else{
             View.setRefresh(true);
-            View.print();
+            View.handler();
         }
 
     }

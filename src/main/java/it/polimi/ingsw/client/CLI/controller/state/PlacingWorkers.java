@@ -52,7 +52,7 @@ public class PlacingWorkers extends ControlState {
                     placingPosition.remove(position);
                     if(initializedPosition.size() == 1){
                         if(DataBase.getGodCard() != null && DataBase.getGodCard().toUpperCase().equals("EROS"))
-                            handleErosCase();
+                            handleErosCase(position);
 
                         //AGGIUNTA WORKER ALLA BILLBOARD
                         DataBase
@@ -65,28 +65,26 @@ public class PlacingWorkers extends ControlState {
                                                 .filter(num -> DataBase.getMatchPlayers().get(num).equals(DataBase.getNickname()))
                                                 .findAny().get());
 
-                        View.doUpdate();
                         View.setRefresh(true);
-                        View.print();
                         DataBase.setMessageReady(false);
                         DataBase.setActiveInput(true);
+                        View.handler();
                         return null;
                     }
                     if (initializedPosition.size() == 2) {
                         messageEvent.setInitializedPositions(initializedPosition);
                         View.setRefresh(true);
-                        View.print();
                         DataBase.setMessageReady(true);
-                        DataBase.setPlayerState(PlayerState.IDLE);
+                        System.out.println("Placing complete");
                         return messageEvent;
                     }
                 }
             }
         }
         View.setError(true);
-        View.print();
         DataBase.setMessageReady(false);
         DataBase.setActiveInput(true);
+        View.handler();
         return null;
     }
 
@@ -105,7 +103,7 @@ public class PlacingWorkers extends ControlState {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
             View.setRefresh(true);
-            View.print();
+            View.handler();
             DataBase.setDisconnectedUser(false);
             return;
         }
@@ -119,17 +117,11 @@ public class PlacingWorkers extends ControlState {
             }
         }
 
-        View.doUpdate();
 
-        if(DataBase.getPlayerState() == PlayerState.ACTIVE){
-            DataBase.setActiveInput(true);
-            View.setRefresh(true);
-            View.print();
-        }
-        else{
-            View.setRefresh(true);
-            View.print();
-        }
+        View.setRefresh(true);
+        View.handler();
+        DataBase.setActiveInput(true);
+
 
     }
 
@@ -142,9 +134,7 @@ public class PlacingWorkers extends ControlState {
     public String computeView() {
         if(DataBase.getPlayerState() == PlayerState.ACTIVE ){
             int number = 2 - initializedPosition.size();
-            if(number == 0)
-                return "Placing complete";
-            else if(number == 1){
+            if(number == 1){
                 return "Insert " + number + " worker.\nInsert position XY: \n ";
             }
             else if(number == 2){
@@ -186,53 +176,21 @@ public class PlacingWorkers extends ControlState {
      * The cells that are available for the second worker are just the cells that are along the opposite side of the GameBoard
      *
      * In case of corner, available placing cells contains the cells of 2 opposite side
+     *
+     * @param position  the position of your first worker placed
      */
-    private void handleErosCase(){
-        Position firstWorkerPosition = null;
-        if(!initializedPosition.isEmpty())
-            firstWorkerPosition = initializedPosition.stream().findFirst().get();
+    private void handleErosCase(Position position){
+        Set<Position> positionSet = new HashSet<>();
 
-        //X -> 0
-        if(firstWorkerPosition.getX() == 0){
-            if(firstWorkerPosition.getY() == 0){
-                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
-                        .stream()
-                        .filter(pos-> pos.getX() == 4 || pos.getY() == 4)
-                        .collect(Collectors.toSet()));
-            }
-            else if(firstWorkerPosition.getY() == 4){
-                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
-                        .stream()
-                        .filter(pos-> pos.getX() == 4 || pos.getY() == 0)
-                        .collect(Collectors.toSet()));
-            }
-            else{
-                    DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
-                            .stream()
-                            .filter(pos-> pos.getX() == 4 )
-                            .collect(Collectors.toSet()));
-            }
+        if( position.getX() == 0 || position.getX() == 4){
+            for (int i = 0; i < 5; i++) positionSet.add(new Position((position.getX()+4)%8, i));
         }
-        //X -> 4
-        else {
-            if(firstWorkerPosition.getY() == 0){
-                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
-                        .stream()
-                        .filter(pos-> pos.getX() == 0 || pos.getY() == 4)
-                        .collect(Collectors.toSet()));
-            }
-            else if(firstWorkerPosition.getY() == 4){
-                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
-                        .stream()
-                        .filter(pos-> pos.getX() == 0 || pos.getY() == 0)
-                        .collect(Collectors.toSet()));
-            }
-            else{
-                DataBase.setPlacingAvailableCells(DataBase.getPlacingAvailableCells()
-                        .stream()
-                        .filter(pos-> pos.getX() == 0 )
-                        .collect(Collectors.toSet()));
-            }
+        if(position.getY() == 0 || position.getY() == 4){
+            for (int i = 0; i < 5; i++) positionSet.add(new Position(i, (position.getY()+4)%8));
         }
-    }
+
+        positionSet = positionSet.stream().filter(pos-> DataBase.getPlacingAvailableCells().contains(pos)).collect(Collectors.toSet());
+        DataBase.setPlacingAvailableCells(positionSet);
+        }
+
 }

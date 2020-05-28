@@ -42,7 +42,7 @@ public class Running extends ControlState {
                 return message;}
         }
         View.setError(true);
-        View.print();
+        View.handler();
         DataBase.setActiveInput(true);
         return null;
     }
@@ -56,14 +56,14 @@ public class Running extends ControlState {
      * @param message  is the Network Handler 's message
      */
     @Override
-    public void updateData(MessageEvent message) {
+    public void updateData(MessageEvent message){
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
             View.setRefresh(true);
-            View.print();
+            View.handler();
             DataBase.setDisconnectedUser(false);
             return;
         }
@@ -71,17 +71,14 @@ public class Running extends ControlState {
             System.out.println(message.getInfo());
         }
 
-        DataBase.setBillboardStatus(message.getBillboardStatus());
-
         if (DataBase.getPlayerState() == PlayerState.LOST ) {
             DataBase.setViewer(true);
             DataBase.setControlState(new NotInitialized());
             DataBase.getControlState().updateData(message);
         }
         else {
-
-
             DataBase.setBillboardStatus(message.getBillboardStatus());
+
             if (message.getPlayerState() == PlayerState.ACTIVE) {
                 DataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
                 DataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
@@ -93,9 +90,8 @@ public class Running extends ControlState {
             else if (DataBase.isSpecialFunction())
                 DataBase.resetSpecialFunction();
 
-            View.doUpdate();
             View.setRefresh(true);
-            View.print();
+            View.handler();
         }
     }
 
@@ -191,9 +187,9 @@ public class Running extends ControlState {
                 DataBase.setStartingPosition(position);
                 if (DataBase.getTurnState()==TurnState.IDLE)
                     DataBase.setTurnState(TurnState.MOVE);
-                View.doUpdate();
+
                 View.setRefresh(true);
-                View.print();
+                View.handler();
                 DataBase.setActiveInput(true);
                 return true;
             }
@@ -203,8 +199,13 @@ public class Running extends ControlState {
             message.setStartPosition(startingPosition);
             message.setEndPosition(position);
             DataBase.setMessageReady(true);
-            if (DataBase.getTurnState()==TurnState.MOVE)
-                DataBase.setStartingPosition(position);
+            if (DataBase.getGodCard().equals("Charon") && DataBase.isSpecialFunction()) {
+                DataBase.setPlayerState(PlayerState.IDLE);
+                DataBase.setUnsetSpecialFunction();
+                return true;
+            }
+                if (DataBase.getTurnState()==TurnState.MOVE)
+                    DataBase.setStartingPosition(position);
             DataBase.setPlayerState(PlayerState.IDLE);
             return true;
         }

@@ -20,7 +20,9 @@ import static it.polimi.ingsw.utilities.TurnState.MOVE;
 public class ZeusDecorator  extends CommandsDecorator {
 
     private GodCards card = GodCards.Zeus;
+
     private Position positionBuilt;
+
     public ZeusDecorator(Commands commands){
         this.commands=commands;
     }
@@ -63,8 +65,18 @@ public class ZeusDecorator  extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        positionBuilt = position;
-        super.build(position,player);
+        Position workerPosition = player.getCurrentWorker().getPosition();
+        Worker worker = player.getCurrentWorker();
+        Billboard billboard = player.getMatch().getBillboard();
+
+        if(position.getY() == workerPosition.getY() && position.getX() == workerPosition.getX()){
+            super.build(position, player);
+            positionBuilt = new Position( position.getX(), position.getY(), billboard.getTowerHeight(position));
+            worker.setPosition(positionBuilt);
+        }
+        else{
+            super.build(position,player);
+        }
     }
 
 
@@ -82,10 +94,7 @@ public class ZeusDecorator  extends CommandsDecorator {
         if (worker == null)
             return false;
 
-        return worker.getHeightVariation() == 1
-               && worker.getPosition().getZ() == 3
-               && positionBuilt != null
-               && worker.getPosition() != positionBuilt;
+        return super.winningCondition(player) && positionBuilt == null;
     }
 
 

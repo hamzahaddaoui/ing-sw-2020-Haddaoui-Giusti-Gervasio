@@ -34,7 +34,7 @@ public class WaitingList extends ControlState {
     public void updateData(MessageEvent message) {
         DataBase.setActiveInput(true);
         View.setRefresh(true);
-        View.print();
+        View.handler();
     }
 
     /**

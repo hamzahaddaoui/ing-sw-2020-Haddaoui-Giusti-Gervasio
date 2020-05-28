@@ -90,7 +90,7 @@ public class ErosDecorator  extends CommandsDecorator {
 
     private boolean heightCondition(Worker worker1, Worker worker2){
         if(tree_playerGame){
-            return worker1.getPosition().getZ() == worker2.getPosition().getZ();
+            return worker1.getPosition().getZ() == worker2.getPosition().getZ() && worker2.getPosition().getZ() >= 0;
         }
         else{
             return worker1.getPosition().getZ() == 1 && worker2.getPosition().getZ() == 1;
