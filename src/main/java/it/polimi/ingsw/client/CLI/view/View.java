@@ -79,11 +79,6 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     }
 
     /**
-     * Method is called by Controller state in notInitialized State and it handles the reset of the database.
-     */
-
-
-    /**
      * Depending on the MatchState and PlayerState, it launches various method that create different GameBoard State's visualization
      */
     public static void visualization(){

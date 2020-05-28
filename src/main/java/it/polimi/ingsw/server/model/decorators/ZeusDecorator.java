@@ -20,7 +20,9 @@ import static it.polimi.ingsw.utilities.TurnState.MOVE;
 public class ZeusDecorator  extends CommandsDecorator {
 
     private GodCards card = GodCards.Zeus;
+
     private Position positionBuilt;
+
     public ZeusDecorator(Commands commands){
         this.commands=commands;
     }
@@ -36,7 +38,6 @@ public class ZeusDecorator  extends CommandsDecorator {
                 break;
             case BUILD:
                 player.setHasFinished();
-                positionBuilt = null;
                 break;
         }
     }
@@ -64,13 +65,18 @@ public class ZeusDecorator  extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        positionBuilt = new Position(position.getX(), position.getY(), player.getMatch().getBillboard().getTowerHeight(position)+1);
-        super.build(position,player);
-        if(position == player.getCurrentWorkerPosition()){
-            moveWorker(position,player);
+        Position workerPosition = player.getCurrentWorkerPosition();
+        Worker worker = player.getCurrentWorker();
+        Billboard billboard = player.getMatch().getBillboard();
+
+        if(position.getY() == workerPosition.getY() && position.getX() == workerPosition.getX()){
+            super.build(position, player);
+            positionBuilt = new Position(position.getX(), position.getY(), player.getMatch().getBillboard().getTowerHeight(position)+1);
+            worker.setPosition(positionBuilt);
         }
-
-
+        else{
+            super.build(position,player);
+        }
     }
 
 
@@ -88,7 +94,7 @@ public class ZeusDecorator  extends CommandsDecorator {
         if (worker == null)
             return false;
 
-        return super.winningCondition(player) && worker.getPosition().getX() != positionBuilt.getX() && worker.getPosition().getY() != positionBuilt.getY();
+        return super.winningCondition(player) && positionBuilt == null;
     }
 
 
