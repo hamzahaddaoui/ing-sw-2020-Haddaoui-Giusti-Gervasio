@@ -36,6 +36,7 @@ public class ZeusDecorator  extends CommandsDecorator {
                 break;
             case BUILD:
                 player.setHasFinished();
+                positionBuilt = null;
                 break;
         }
     }
@@ -63,8 +64,13 @@ public class ZeusDecorator  extends CommandsDecorator {
      */
     @Override
     public void build(Position position, Player player) {
-        positionBuilt = position;
+        positionBuilt = new Position(position.getX(), position.getY(), player.getMatch().getBillboard().getTowerHeight(position)+1);
         super.build(position,player);
+        if(position == player.getCurrentWorkerPosition()){
+            moveWorker(position,player);
+        }
+
+
     }
 
 
@@ -82,10 +88,7 @@ public class ZeusDecorator  extends CommandsDecorator {
         if (worker == null)
             return false;
 
-        return worker.getHeightVariation() == 1
-               && worker.getPosition().getZ() == 3
-               && positionBuilt != null
-               && worker.getPosition() != positionBuilt;
+        return super.winningCondition(player) && worker.getPosition().getX() != positionBuilt.getX() && worker.getPosition().getY() != positionBuilt.getY();
     }
 
 

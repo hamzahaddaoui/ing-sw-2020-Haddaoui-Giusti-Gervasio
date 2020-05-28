@@ -51,7 +51,7 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                     if (messageEvent.getError()) {
                         System.out.println(DataBase.getControlState().error());
                     } else {
-                        DataBase.getControlState().updateData(messageEvent);
+                            DataBase.getControlState().updateData(messageEvent);
                     }
                     notifyAll();
                 }
@@ -63,9 +63,25 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
     /**
      * Method that is called from Controller Classes and it submits visualization method that updates the GameBoard state
      */
-    public static void doUpdate(){
-        executorView.submit(View::visualization);
+    public static void handler(){
+        executorView.submit(()-> run());
     }
+
+    public static void run(){
+        synchronized (DataBase.class) {
+            if(DataBase.getMatchState() == MatchState.RUNNING || DataBase.getMatchState()==MatchState.PLACING_WORKERS
+                    || DataBase.getMatchState() == MatchState.FINISHED)
+                visualization();
+            print();
+            if(DataBase.getMatchState() == MatchState.FINISHED)
+                DataBase.resetDataBase();
+        }
+    }
+
+    /**
+     * Method is called by Controller state in notInitialized State and it handles the reset of the database.
+     */
+
 
     /**
      * Depending on the MatchState and PlayerState, it launches various method that create different GameBoard State's visualization

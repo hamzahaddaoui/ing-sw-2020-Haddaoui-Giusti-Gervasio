@@ -66,16 +66,12 @@ public class NotInitialized extends ControlState{
     public void updateData(MessageEvent message) {
 
         if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST || DataBase.isViewer()){
-            if(message.getWinner() != 0 && DataBase.getMatchPlayers().size()==1){
-                if(DataBase.getPlayerState() != PlayerState.WIN)
-                    System.out.println("The winner is "+ DataBase.getMatchPlayers().get(message.getWinner()));
+            if(message.getInfo()!=null && !message.getInfo().equals("Match data update") ){
+                System.out.println(message.getInfo());
             }
             DataBase.setBillboardStatus(message.getBillboardStatus());
-            View.doUpdate();
-            View.setRefresh(true);
-            View.print();
-            if(message.getWinner() != 0 && DataBase.getMatchPlayers().size()==1){
-                DataBase.resetDataBase();}
+            View.handler();
+
             }
 
         DataBase.setActiveInput(true);
@@ -94,7 +90,9 @@ public class NotInitialized extends ControlState{
             else
                 return "Viewer mode on. Press 'q' if you want to quit or wait until the end of the game.";
         }
-        if (DataBase.getPlayerState() != null && DataBase.getPlayerState()==PlayerState.WIN)
+        if(MatchState.FINISHED == DataBase.getMatchState() && DataBase.getPlayerState() != PlayerState.WIN)
+            System.out.println("The winner is "+ DataBase.getMatchPlayers().get(0));
+        if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.WIN)
             return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
         else if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.LOST){
             return "Unlucky! You lost!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";}

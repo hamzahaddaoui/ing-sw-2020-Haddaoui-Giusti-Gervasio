@@ -26,7 +26,7 @@ public class WaitingForPlayers extends ControlState {
     public MessageEvent computeInput(String input) {
         DataBase.setActiveInput(true);
         View.setError(true);
-        View.print();
+        View.handler();
         return null;
     }
 
@@ -42,14 +42,14 @@ public class WaitingForPlayers extends ControlState {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
             View.setRefresh(true);
-            View.print();
+            View.handler();
             DataBase.setDisconnectedUser(false);
             return;
         }
 
         DataBase.setActiveInput(true);
         View.setRefresh(true);
-        View.print();
+        View.handler();
     }
 
     /**

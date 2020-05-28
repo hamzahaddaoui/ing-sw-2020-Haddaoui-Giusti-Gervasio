@@ -39,7 +39,7 @@ public class GettingPlayersNum extends ControlState {
         }
         else {
             View.setError(true);
-            View.print();
+            View.handler();
             DataBase.setActiveInput(true);
             return null;
         }
@@ -56,7 +56,7 @@ public class GettingPlayersNum extends ControlState {
         DataBase.setActiveInput(true);
 
         View.setRefresh(true);
-        View.print();
+        View.handler();
     }
 
     /**

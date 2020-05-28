@@ -42,7 +42,7 @@ public class Running extends ControlState {
                 return message;}
         }
         View.setError(true);
-        View.print();
+        View.handler();
         DataBase.setActiveInput(true);
         return null;
     }
@@ -56,14 +56,14 @@ public class Running extends ControlState {
      * @param message  is the Network Handler 's message
      */
     @Override
-    public void updateData(MessageEvent message) {
+    public void updateData(MessageEvent message){
 
         //CASO DISCONNESSIONE UTENTE
         if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
             View.setRefresh(true);
-            View.print();
+            View.handler();
             DataBase.setDisconnectedUser(false);
             return;
         }
@@ -79,9 +79,8 @@ public class Running extends ControlState {
             DataBase.getControlState().updateData(message);
         }
         else {
-
-
             DataBase.setBillboardStatus(message.getBillboardStatus());
+
             if (message.getPlayerState() == PlayerState.ACTIVE) {
                 DataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
                 DataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
@@ -93,9 +92,9 @@ public class Running extends ControlState {
             else if (DataBase.isSpecialFunction())
                 DataBase.resetSpecialFunction();
 
-            View.doUpdate();
+
             View.setRefresh(true);
-            View.print();
+            View.handler();
         }
     }
 
@@ -191,9 +190,9 @@ public class Running extends ControlState {
                 DataBase.setStartingPosition(position);
                 if (DataBase.getTurnState()==TurnState.IDLE)
                     DataBase.setTurnState(TurnState.MOVE);
-                View.doUpdate();
+
                 View.setRefresh(true);
-                View.print();
+                View.handler();
                 DataBase.setActiveInput(true);
                 return true;
             }
