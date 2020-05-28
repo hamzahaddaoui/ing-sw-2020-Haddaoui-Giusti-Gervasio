@@ -202,8 +202,13 @@ public class Running extends ControlState {
             message.setStartPosition(startingPosition);
             message.setEndPosition(position);
             DataBase.setMessageReady(true);
-            if (DataBase.getTurnState()==TurnState.MOVE)
-                DataBase.setStartingPosition(position);
+            if (DataBase.getGodCard().equals("Charon") && DataBase.isSpecialFunction()) {
+                DataBase.setPlayerState(PlayerState.IDLE);
+                DataBase.setUnsetSpecialFunction();
+                return true;
+            }
+                if (DataBase.getTurnState()==TurnState.MOVE)
+                    DataBase.setStartingPosition(position);
             DataBase.setPlayerState(PlayerState.IDLE);
             return true;
         }

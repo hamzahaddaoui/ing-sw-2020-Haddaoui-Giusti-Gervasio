@@ -91,25 +91,19 @@ public class CharonDecorator  extends CommandsDecorator {
     }
 
     private Map<Position, Boolean> canMoveOpponent(Player player){
-        // trovo i giocatori circostanti per entrambi i worker
-        // verifico che questi giocatori si possano spostare al lato opposto del mio worker selezionato
-        //inserisco le posizioni dei worker nella mappa opponentPositions
         Map<Position, Boolean> returnMap = new HashMap<>();
         Billboard billboard = player.getMatch().getBillboard();
-
-
-        //Map<Positions
-
 
         player.getWorkers()
                 .stream()
                 .map(Worker::getPosition)
                 .forEach(position -> opponentPositions.put(position, position.neighbourPositions().stream()
                                 .filter(pos -> billboard.getPlayer(pos) != 0)
-                                .filter(pos -> billboard.getCells().containsKey(oppositePos(position, pos)) && billboard.getPlayer(oppositePos(position, pos)) == 0 )
+                                .filter(pos -> billboard.getCells().containsKey(oppositePos(position, pos))
+                                               && billboard.getPlayer(oppositePos(position, pos)) == 0
+                                               && !billboard.getDome(oppositePos(position, pos)))
                                 .filter(pos -> player.getWorkers().stream().map(Worker::getPosition).noneMatch(p -> p.equals(pos)))
                                 .collect(Collectors.toSet())));
-
 
         player.getWorkers().stream().map(Worker::getPosition).forEach(position -> returnMap.put(position, !opponentPositions.get(position).isEmpty()));
 

@@ -18,8 +18,6 @@ public class TritonDecorator extends CommandsDecorator {
 
     private Set<Position> avoidPositions;
 
-    //TODO PROBLEMA DI SCONFITTA IN CASO DI GIRO COMPLETO
-
     @Override
     public void nextState(Player player) {
         switch (player.getTurnState()) {
@@ -50,7 +48,7 @@ public class TritonDecorator extends CommandsDecorator {
             Map<Position, Boolean> specialFunctionAvailable = new HashMap<>();
             specialFunctionAvailable.put(position, true);
             player.setUnsetSpecialFunctionAvailable(specialFunctionAvailable);
-            if (avoidPositions.size()==16 && computeAvailableMovements(player,player.getCurrentWorker()).size()==0)
+            if (computeAvailableMovements(player,player.getCurrentWorker()).size()==0)
                 player.setUnsetSpecialFunctionAvailable(null);
         }
         else player.setUnsetSpecialFunctionAvailable(null);
