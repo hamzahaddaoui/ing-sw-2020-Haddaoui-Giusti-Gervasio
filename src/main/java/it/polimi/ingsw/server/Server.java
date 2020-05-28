@@ -46,7 +46,7 @@ public class Server {
         while (true) {
             try {
                 Socket client = socket.accept();
-                client.setSoTimeout(SOCKET_TIMEOUT);
+                //client.setSoTimeout(SOCKET_TIMEOUT);
                 clientHandler = new ClientHandler(client);
 
                 clientHandler.addObserver(controller);  //controller osserva clientHandler (comunicazioni CLIENT_CONTROLLER-SERVER_CONTROLLER)
