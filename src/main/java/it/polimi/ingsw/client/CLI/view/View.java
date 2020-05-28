@@ -61,8 +61,9 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      */
 
     public static void handler(){
-            if(DataBase.getMatchState() == MatchState.RUNNING || DataBase.getMatchState()==MatchState.PLACING_WORKERS
-                    || DataBase.getMatchState() == MatchState.FINISHED || !DataBase.isDisconnectedUser())
+            if(!DataBase.isDisconnectedUser() && (DataBase.getMatchState() == MatchState.RUNNING
+                    || DataBase.getMatchState()==MatchState.PLACING_WORKERS
+                    || DataBase.getMatchState() == MatchState.FINISHED))
                 visualization();
             print();
             if(DataBase.getMatchState() == MatchState.FINISHED)

@@ -90,8 +90,8 @@ public class NotInitialized extends ControlState{
             else
                 return "Viewer mode on. Press 'q' if you want to quit or wait until the end of the game.";
         }
-        if(MatchState.FINISHED == DataBase.getMatchState() && DataBase.getPlayerState() != PlayerState.WIN)
-            System.out.println("The winner is "+ DataBase.getMatchPlayers().get(0));
+        if((MatchState.FINISHED == DataBase.getMatchState() && DataBase.getPlayerState() != PlayerState.WIN) || DataBase.isViewer())
+            System.out.println("The winner is "+ DataBase.getMatchPlayers().values().toString());
         if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.WIN)
             return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
         else if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.LOST){
