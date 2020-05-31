@@ -50,7 +50,7 @@ public class Running extends State{
     boolean built;
     boolean sFunction;
 
-    boolean matchOver;
+    boolean matchOver = false;
 
     @Override
     public void showPane(){
