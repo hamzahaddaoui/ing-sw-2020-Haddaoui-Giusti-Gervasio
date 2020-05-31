@@ -125,14 +125,14 @@ public class Running extends State{
             return;
         }
         else if (message.getPlayerState() == PlayerState.LOST){
-            updateStandardData(message);
-            setBillboardStatus(message.getBillboardStatus());
-            updateBillboard(true);
+
 
             System.out.println("LOSER");
 
             if (!matchOver) {
-                //getIslandLoader().endAnimation();
+                updateStandardData(message);
+                setBillboardStatus(message.getBillboardStatus());
+                updateBillboard(true);
                 matchOver = true;
                 lost();
             }
