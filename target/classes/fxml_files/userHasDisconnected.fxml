@@ -42,7 +42,7 @@
                       <RowConstraints maxHeight="67.71905517578125" minHeight="1.92071533203125" prefHeight="1.92071533203125" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="button1" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#userNewGame" prefHeight="99.0" prefWidth="498.0" text="BACK TO MENU" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <Button fx:id="button1" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#userNewGame" prefHeight="99.0" prefWidth="498.0" styleClass="button1" stylesheets="@../css_files/userHasDisconnected.css" text="BACK TO MENU" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Bangers Regular" size="55.0" />
                            </font>
@@ -50,7 +50,7 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </Button>
-                        <Button fx:id="button2" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#userExit" prefHeight="99.0" prefWidth="498.0" text="EXIT" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                        <Button fx:id="button2" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#userExit" prefHeight="99.0" prefWidth="498.0" styleClass="button2" stylesheets="@../css_files/userHasDisconnected.css" text="EXIT" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Bangers Regular" size="55.0" />
                            </font>
