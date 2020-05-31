@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.GUI.Controller;
 import it.polimi.ingsw.client.GUI.IslandLoader;
-import it.polimi.ingsw.client.GUI.Database;
 import it.polimi.ingsw.utilities.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -37,6 +36,7 @@ public class Running extends State{
     @FXML Label desc;
     @FXML ImageView god;
     @FXML ImageView userPane;
+    @FXML Label finishLabel;
 
     @FXML Button function;
 
@@ -49,6 +49,8 @@ public class Running extends State{
     boolean moved;
     boolean built;
     boolean sFunction;
+
+    boolean matchOver;
 
     @Override
     public void showPane(){
@@ -126,9 +128,17 @@ public class Running extends State{
             setBillboardStatus(message.getBillboardStatus());
             updateBillboard(true);
 
+            if (message.getWinner()!=0){
+                finishLabel.setText(getMatchPlayers().get(message.getWinner()) + " has won!");
+            }
+
             System.out.println("LOSER");
-            //getIslandLoader().endAnimation();
-            lost();
+
+            if (!matchOver) {
+                getIslandLoader().endAnimation();
+                matchOver = true;
+                lost();
+            }
             return;
 
         }
@@ -138,6 +148,7 @@ public class Running extends State{
             updateBillboard(true);
             getIslandLoader().endAnimation();
             System.out.println("WINNER");
+            getNetworkHandler().shutdownAll();
             win();
             return;
         }
@@ -298,7 +309,7 @@ public class Running extends State{
 
     }
 
-    public void updateBillboard(boolean bool){
+    public static void updateBillboard(boolean bool){
         Map<Integer, Position> movedInPlayers = new HashMap<>();
         Map<Integer, Position> movedOutPlayers =  new HashMap<>();
         Map<Point2D, Point2D> playersMove = new HashMap<>();
@@ -587,5 +598,15 @@ public class Running extends State{
         Platform.runLater(() -> popup.show(getStage()));
     }
 
+    @FXML
+    public void userNewGame(MouseEvent mouseEvent){
+        //provare a chiudere conneessione server
+        Controller.userNewGame();
+    }
+
+    @FXML
+    public void userExit(MouseEvent mouseEvent){
+        Controller.exit();
+    }
 
 }

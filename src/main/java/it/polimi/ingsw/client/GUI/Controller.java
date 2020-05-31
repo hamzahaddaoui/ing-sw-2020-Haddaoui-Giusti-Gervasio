@@ -1,9 +1,11 @@
 package it.polimi.ingsw.client.GUI;
 
+import it.polimi.ingsw.client.GUI.controller.StartState;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 
@@ -48,6 +50,12 @@ public class Controller {
         System.exit(0);
     }
 
+    public static void userNewGame(){
+        //provare a chiudere conneessione server
+        Database.wipeData();
+        Database.setCurrentState(new StartState());
+        Database.getCurrentState().showPane();
+    }
 
 
 

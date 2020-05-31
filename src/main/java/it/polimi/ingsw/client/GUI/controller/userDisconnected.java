@@ -41,9 +41,7 @@ public class userDisconnected extends State{
 
     public void userNewGame(MouseEvent mouseEvent){
         //provare a chiudere conneessione server
-        Database.wipeData();
-        Database.setCurrentState(new StartState());
-        Database.getCurrentState().showPane();
+        Controller.userNewGame();
     }
 
     public void userExit(MouseEvent mouseEvent){
