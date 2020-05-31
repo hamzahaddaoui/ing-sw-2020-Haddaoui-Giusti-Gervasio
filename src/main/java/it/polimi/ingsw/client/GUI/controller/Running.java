@@ -51,6 +51,7 @@ public class Running extends State{
     boolean sFunction;
 
     boolean matchOver = false;
+    State finishController;
 
     @Override
     public void showPane(){
@@ -137,6 +138,7 @@ public class Running extends State{
             }
 
             if (getMatchState() == MatchState.FINISHED){
+                ((gameFinish)finishController).finishLabel.setText(message.getMatchPlayers().get(message.getWinner()) + " has won!");
                 getIslandLoader().endAnimation();
                 getNetworkHandler().shutdownAll();
             }
@@ -566,6 +568,7 @@ public class Running extends State{
         Platform.runLater(() -> {
             stackPane.getChildren().add(page);
             page.toFront();
+            finishController = fxmlLoader.getController();
             page.setPickOnBounds(false);
             getStage().show();
         });

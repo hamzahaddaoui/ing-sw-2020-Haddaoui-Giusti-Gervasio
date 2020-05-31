@@ -46,5 +46,4 @@ public class gameFinish extends State {
     public void userExit(MouseEvent mouseEvent){
         Controller.exit();
     }
-
 }
