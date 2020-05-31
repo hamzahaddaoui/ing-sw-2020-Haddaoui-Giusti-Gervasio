@@ -137,6 +137,7 @@ public class Running extends State{
             }
 
             if (getMatchState() == MatchState.FINISHED){
+                getIslandLoader().endAnimation();
                 getNetworkHandler().shutdownAll();
             }
             return;
