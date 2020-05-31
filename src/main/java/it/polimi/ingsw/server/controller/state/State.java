@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.controller.state;
 
-import it.polimi.ingsw.server.ClientHandler;
 import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.utilities.MatchState;
@@ -19,7 +18,7 @@ public abstract class State extends Controller{
     public abstract boolean handleRequest(MessageEvent messageEvent);
     public abstract void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID);
 
-    protected MessageEvent basicMatchConfig(MessageEvent messageEvent, Integer matchID){
+    public static MessageEvent basicMatchConfig(MessageEvent messageEvent, Integer matchID){
         messageEvent.setInfo(getMatchInfo(matchID));
         messageEvent.setMatchID(matchID);
         messageEvent.setMatchState(getMatchState(matchID));
@@ -34,7 +33,7 @@ public abstract class State extends Controller{
         return messageEvent;
     }
 
-    protected MessageEvent basicPlayerConfig(MessageEvent messageEvent, Integer playerID){
+    public static MessageEvent basicPlayerConfig(MessageEvent messageEvent, Integer playerID){
         int matchID = messageEvent.getMatchID();
         messageEvent.setPlayerID(playerID);
         messageEvent.setPlayerState(getPlayerState(matchID, playerID));
@@ -44,7 +43,7 @@ public abstract class State extends Controller{
         return messageEvent;
     }
 
-    protected MessageEvent basicErrorConfig(MessageEvent messageEvent){
+    public MessageEvent basicErrorConfig(MessageEvent messageEvent){
         messageEvent.setError(true);
         return messageEvent;
     }

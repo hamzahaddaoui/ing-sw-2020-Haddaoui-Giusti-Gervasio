@@ -2,6 +2,7 @@ package it.polimi.ingsw.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.server.controller.state.State;
 import it.polimi.ingsw.utilities.*;
 
 import java.io.IOException;
@@ -69,6 +70,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
     @Override
     public void run() {
         System.out.println("Connected to " + client.getInetAddress());
+        lastMessage = null;
         heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT / 2, TimeUnit.MILLISECONDS);
         inputHandler.submit(this::inputHandler);
     }
@@ -86,7 +88,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
     @Override
     public void update(MessageEvent message){
 
-        if (! active || ! message.getPlayerID().equals(this.playerID))
+        if (! active || (message.getPlayerID() != this.playerID))
             return;
 
         String json = new GsonBuilder()
@@ -96,33 +98,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                 .toJson(message, MessageEvent.class);
 
         if (message.getInfo() == null || !message.getInfo().equals("Heartbeat Message")) {
-            System.out.println(message);
-            /*System.out.print("SENDING to player" + message.getPlayerID()+ " - ");
-            if (matchID != 0) {
-                System.out.print(message.getMatchPlayers().get(message.getPlayerID()) + ": CurrentState: "+ message.getPlayerState());
-                if (message.getMatchState() == MatchState.RUNNING)
-                    System.out.println(" - TurnState: " + message.getTurnState());
-                else
-                    System.out.println("");
-
-                System.out.print("Match Players:  ");
-                message.getMatchPlayers().keySet().stream()
-                        .forEach(player -> System.out.println(player + ": " + message.getMatchPlayers().get(player)+ message.getMatchColors().get(player)));
-
-                if (message.getMatchState() == MatchState.PLACING_WORKERS) {
-                    System.out.println("BillboardStatus: " + message.getBillboardStatus() + "\n");
-                    System.out.println("PLACING POSITIONS: " + message.getAvailablePlacingCells());
-                }
-                else if (message.getMatchState() == MatchState.RUNNING && message.getPlayerState() == PlayerState.ACTIVE){
-                    System.out.println("BillboardStatus: " + message.getBillboardStatus() + "\n");
-                    System.out.println("WORKERS AVAILABLE POSITIONS: " + message.getWorkersAvailableCells());
-                    System.out.println("SPECIAL FUNCTION AVAILABILITY: " + message.getSpecialFunctionAvailable());
-                    System.out.println("END TURN AVAILABILITY: " + message.getEndTurn());
-                }
-            }
-            if (message.getWinner()!=0)
-                System.out.println("\nThe winner is: "+message.getMatchPlayers().get(message.getWinner()));*/
-
+            System.out.println("SENT:  " + message);
         }
 
         lastMessage = message;
@@ -150,17 +126,21 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
     public void heartbeatAgent() {
         MessageEvent messageEvent;
         if (active){
-            if (lastMessage != null)
+            if (lastMessage != null) {
                 messageEvent = lastMessage;
+                update(messageEvent);
+                lastMessage = null;
+            }
             else {
                 messageEvent = new MessageEvent();
-                messageEvent.setPlayerID(playerID);
+                messageEvent.setInfo("Heartbeat Message");
+                //messageEvent = State.basicPlayerConfig(State.basicMatchConfig(new MessageEvent(), this.matchID), this.playerID);
+                update(messageEvent);
             }
 
             if (messageEvent.isFinished())
                 return;
 
-            update(messageEvent);
 
             heartbeatService.schedule(this::heartbeatAgent, Server.SOCKET_TIMEOUT/2, TimeUnit.MILLISECONDS);
         }
@@ -184,7 +164,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
                 messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);
 
                 if ((messageEvent.getInfo() == null) || !messageEvent.getInfo().equals("Heartbeat Message")) {
-                    System.out.println(messageEvent);
+                    System.out.println("RECEIVED:  " + messageEvent);
                     messageEvent.setClientHandler(this);
                     notify(messageEvent);
                 }

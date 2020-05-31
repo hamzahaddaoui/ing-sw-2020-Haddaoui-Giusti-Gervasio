@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NetworkHandler extends Observable<MessageEvent> implements Runnable, Observer<MessageEvent> {
     public final static int SOCKET_PORT = 12345;
-    public final static int SOCKET_TIMEOUT = 5000;
+    public final static int SOCKET_TIMEOUT = 10000;
 
     private ScheduledExecutorService heartbeatService = Executors.newSingleThreadScheduledExecutor();
     private ExecutorService inputHandler  = Executors.newSingleThreadScheduledExecutor();;
@@ -96,6 +96,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        try {
            while (active) {
                inputObject = (String) input.readObject();
+               System.out.println(inputObject);
                if (! inputObject.equals(lastJson)){
                    lastJson = inputObject;
                    messageEvent = new Gson().newBuilder().create().fromJson(inputObject, MessageEvent.class);

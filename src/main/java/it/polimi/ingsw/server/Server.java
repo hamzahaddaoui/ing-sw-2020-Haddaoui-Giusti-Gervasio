@@ -14,7 +14,7 @@ public class Server {
     public final static int SOCKET_PORT = 12345;
     public final static int SOCKET_TIMEOUT = 10000;
 
-    static ExecutorService executor = Executors.newCachedThreadPool();
+    static ExecutorService executor = Executors.newFixedThreadPool(100);
     static ServerSocket socket;
     static Controller controller = new Controller();
 
