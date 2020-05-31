@@ -9,7 +9,6 @@ it/polimi/ingsw/server/controller/Controller.class
 it/polimi/ingsw/server/model/GodCards$11.class
 it/polimi/ingsw/client/GUI/IslandLoader$2.class
 it/polimi/ingsw/server/model/decorators/DemeterDecorator.class
-module-info.class
 it/polimi/ingsw/server/controller/state/WaitingForPlayers.class
 it/polimi/ingsw/server/model/GodCards$6.class
 it/polimi/ingsw/client/GUI/controller/Running$1.class

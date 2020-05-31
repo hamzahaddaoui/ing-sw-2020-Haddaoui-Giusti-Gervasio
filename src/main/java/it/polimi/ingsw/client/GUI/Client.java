@@ -12,8 +12,6 @@ public class Client extends Application {
     static private Stage stage;
 
     public static void main(String[] args){
-
-
         Application.launch(args);
     }
 

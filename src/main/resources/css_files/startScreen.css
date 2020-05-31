@@ -3,10 +3,15 @@
     src: url("../fonts/Bangers-Regular.ttf");
 }
 
+
 .root {
     -fx-background-image: url("../images/background_blurred.jpg");
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
+}
+
+.label{
+    -fx-font-family: Bangers;
 }
 
 .button_play {

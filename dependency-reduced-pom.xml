@@ -83,7 +83,7 @@
               <transformers>
                 <transformer>
                   <manifestEntries>
-                    <Main-Class>it.polimi.ingsw.client.Application</Main-Class>
+                    <Main-Class>it.polimi.ingsw.server.Server</Main-Class>
                   </manifestEntries>
                 </transformer>
               </transformers>

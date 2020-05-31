@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static it.polimi.ingsw.client.GUI.Database.getCurrentState;
+import static it.polimi.ingsw.client.GUI.Database.getNetworkHandler;
 import static javafx.scene.control.Alert.AlertType;
 
 public class StartState extends State {
@@ -88,10 +90,12 @@ public class StartState extends State {
     }
 
     public void playButton(MouseEvent mouseEvent){
+        System.out.println("play");
         play();
     }
 
     public void enterPressed(ActionEvent keyEvent){
+        System.out.println("play");
         play();
     }
 
@@ -138,7 +142,7 @@ public class StartState extends State {
             return;
         }
 
-        if (Database.getNetworkHandler() == null){
+        if (getNetworkHandler() == null){
             final ProgressIndicator pi = new ProgressIndicator(-1.0f);
             pi.setStyle(" -fx-progress-color: dodgerblue;");
             pi.setMinWidth(130);
@@ -154,8 +158,8 @@ public class StartState extends State {
             new Thread(() -> {
                 try {
                     Controller.setServer();
-                    this.addObserver(Database.getNetworkHandler());
-                    Database.getNetworkHandler().addObserver(this);
+                    this.addObserver(getNetworkHandler());
+                    getNetworkHandler().addObserver(this);
                     sendData();
                 } catch (IOException exception) {
                     Platform.runLater(() -> {
@@ -197,11 +201,9 @@ public class StartState extends State {
             View.updateView();
 
             Database.getCurrentState().showPane();
-            new Thread(()->{
-                Database.getNetworkHandler().removeObserver(this);
-                this.removeObserver(Database.getNetworkHandler());
-            }).start();
 
+            System.out.println(getNetworkHandler().getObservers());
+            System.out.println(getCurrentState());
         }
     }
 }
