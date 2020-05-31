@@ -9,6 +9,8 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static it.polimi.ingsw.client.GUI.Database.getNetworkHandler;
+
 public class userDisconnected extends State{
     @Override
     public void showPane(){
@@ -32,12 +34,9 @@ public class userDisconnected extends State{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-
+        getNetworkHandler().shutdownAll();
     }
 
-
-    public static void userHasDisconnected(){
-    }
 
     public void userNewGame(MouseEvent mouseEvent){
         //provare a chiudere conneessione server

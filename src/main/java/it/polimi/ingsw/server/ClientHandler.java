@@ -133,6 +133,7 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
             }
             else {
                 messageEvent = new MessageEvent();
+                messageEvent.setPlayerID(this.playerID);
                 messageEvent.setInfo("Heartbeat Message");
                 //messageEvent = State.basicPlayerConfig(State.basicMatchConfig(new MessageEvent(), this.matchID), this.playerID);
                 update(messageEvent);
