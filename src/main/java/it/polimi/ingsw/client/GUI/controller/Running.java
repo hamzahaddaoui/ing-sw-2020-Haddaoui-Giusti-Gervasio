@@ -138,7 +138,7 @@ public class Running extends State{
             }
 
             if (getMatchState() == MatchState.FINISHED){
-                ((gameFinish)finishController).finishLabel.setText(message.getMatchPlayers().get(message.getWinner()) + " has won!");
+                Platform.runLater (() -> ((gameFinish)finishController).finishLabel.setText(message.getMatchPlayers().get(message.getWinner()) + " has won!"));
                 getIslandLoader().endAnimation();
                 getNetworkHandler().shutdownAll();
             }

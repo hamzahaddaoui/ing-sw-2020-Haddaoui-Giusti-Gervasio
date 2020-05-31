@@ -17,15 +17,6 @@
       <Insets />
    </opaqueInsets>
    <BorderPane pickOnBounds="false" prefHeight="800.0" prefWidth="1200.0" styleClass="borderPane" stylesheets="@../css_files/winnerLoser.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <right>
-         <Pane opacity="0.0" pickOnBounds="false" prefHeight="535.0" prefWidth="342.0" BorderPane.alignment="CENTER" />
-      </right>
-      <left>
-         <Pane opacity="0.0" pickOnBounds="false" prefHeight="535.0" prefWidth="342.0" BorderPane.alignment="CENTER" />
-      </left>
-      <center>
-         <Pane pickOnBounds="false" prefHeight="606.0" prefWidth="516.0" BorderPane.alignment="CENTER" />
-      </center>
       <padding>
          <Insets bottom="40.0" />
       </padding>
