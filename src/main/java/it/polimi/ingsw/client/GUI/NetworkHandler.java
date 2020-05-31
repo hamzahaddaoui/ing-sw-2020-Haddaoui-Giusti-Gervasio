@@ -40,7 +40,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         server = new Socket();
         server.connect(new InetSocketAddress(ip, SOCKET_PORT), 5000);
         //server = new Socket(ip, SOCKET_PORT);
-        //server.setSoTimeout(SOCKET_TIMEOUT);
+        server.setSoTimeout(SOCKET_TIMEOUT);
         output = new ObjectOutputStream(server.getOutputStream());
         input = new ObjectInputStream(server.getInputStream());
         System.out.println("Connected to " + server.getInetAddress());
