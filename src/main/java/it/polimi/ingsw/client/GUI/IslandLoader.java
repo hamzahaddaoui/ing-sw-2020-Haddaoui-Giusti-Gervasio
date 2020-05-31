@@ -854,7 +854,7 @@ public class IslandLoader{
         }
 
         Group worker = optionalWorker.get();
-
+        workers.remove(worker);
         Platform.runLater(() -> group.getChildren().remove(worker));
     }
 

@@ -565,6 +565,7 @@ public class Running extends State{
         Platform.runLater(() -> {
             stackPane.getChildren().add(page);
             page.toFront();
+            page.setPickOnBounds(false);
             getStage().show();
         });
     }
