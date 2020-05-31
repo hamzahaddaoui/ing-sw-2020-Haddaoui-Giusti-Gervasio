@@ -5,8 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>it.polimi.ingsw.PSP6</groupId>
-  <artifactId>Santorini</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>ing-sw-2020-Haddaoui-Giusti-Gervasio</artifactId>
+  <version>4.1.0</version>
 
 
   <dependencies>
@@ -37,12 +37,14 @@
       <version>11.0.2</version>
       <classifier>mac</classifier>
     </dependency>
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
       <version>11.0.2</version>
       <classifier>win</classifier>
     </dependency>
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
