@@ -148,8 +148,8 @@ public class Running extends State{
             updateBillboard(true);
             getIslandLoader().endAnimation();
             System.out.println("WINNER");
-            getNetworkHandler().shutdownAll();
             win();
+            getNetworkHandler().shutdownAll();
             return;
         }
         else if (message.isFinished()){
