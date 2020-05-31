@@ -9,10 +9,7 @@ import it.polimi.ingsw.utilities.Observer;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -112,14 +109,17 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            System.out.println("invalid stream from client");
        }
        catch(IOException exception) {
+           if (active) {
+               connectionError();
+               shutdownAll();
+           }
            active = false;
-           connectionError();
-           shutdownAll();
            System.out.println("Connection error - Check your internet connection.");
        }
    }
 
    public void shutdownAll(){
+        active = false;
         heartbeatService.shutdownNow();
         inputHandler.shutdownNow();
         if (server.isConnected()) {
