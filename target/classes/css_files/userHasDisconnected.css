@@ -3,11 +3,11 @@
     src: url("../fonts/Bangers-Regular.ttf");
 }
 
-#borderPane{
+.borderPane{
     -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, blanchedalmond, blue);
 }
 
-#button1{
+.button1{
     -fx-pref-width: 400;
     -fx-pref-height: 100;
     -fx-background-color: transparent;
@@ -18,7 +18,7 @@
     -fx-cursor: hand;
 }
 
-#button2{
+.button2{
     -fx-pref-width: 400;
     -fx-pref-height: 100;
     -fx-background-color: transparent;

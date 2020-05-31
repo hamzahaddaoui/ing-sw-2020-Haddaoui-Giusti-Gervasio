@@ -3,7 +3,7 @@
     src: url("../fonts/Bangers-Regular.ttf");
 }
 
-#borderPane{
+.borderPane{
     -fx-background-color: rgba(153, 221, 255, 0.5);
     -fx-background-radius: 10;
 }
@@ -12,7 +12,7 @@
     -fx-font-size: 120;
 }
 
-#button1{
+.button1{
     -fx-pref-width: 400;
     -fx-pref-height: 100;
     -fx-background-color: transparent;
@@ -23,7 +23,7 @@
     -fx-cursor: hand;
 }
 
-#button2{
+.button2{
     -fx-pref-width: 400;
     -fx-pref-height: 100;
     -fx-background-color: transparent;

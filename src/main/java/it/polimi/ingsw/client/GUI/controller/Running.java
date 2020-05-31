@@ -36,7 +36,7 @@ public class Running extends State{
     @FXML Label desc;
     @FXML ImageView god;
     @FXML ImageView userPane;
-    @FXML Label finishLabel;
+
 
     @FXML Button function;
 
@@ -69,7 +69,7 @@ public class Running extends State{
         matchPlayers = getMatchPlayers();
 
         //inizializzo gli elementi grafici del layer superiore
-        user.getStylesheets().add("/css_files/placingWorkers.css");
+        user.getStylesheets().add("/css_files/running.css");
         userPane.setImage(new Image("images/user_" + getMatchColors().get(getPlayerID()) + ".png", 150, 75, false, true));
         user.getStyleClass().add("player");
         user.setText(getNickname());
@@ -128,16 +128,16 @@ public class Running extends State{
             setBillboardStatus(message.getBillboardStatus());
             updateBillboard(true);
 
-            if (message.getWinner()!=0){
-                finishLabel.setText(getMatchPlayers().get(message.getWinner()) + " has won!");
-            }
-
             System.out.println("LOSER");
 
             if (!matchOver) {
-                getIslandLoader().endAnimation();
+                //getIslandLoader().endAnimation();
                 matchOver = true;
                 lost();
+            }
+
+            if (getMatchState() == MatchState.FINISHED){
+                getNetworkHandler().shutdownAll();
             }
             return;
 

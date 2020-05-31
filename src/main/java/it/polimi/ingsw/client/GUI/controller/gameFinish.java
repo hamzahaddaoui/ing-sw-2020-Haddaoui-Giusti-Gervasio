@@ -1,18 +1,21 @@
 package it.polimi.ingsw.client.GUI.controller;
 
 import it.polimi.ingsw.client.GUI.Controller;
-import it.polimi.ingsw.client.GUI.Database;
 import it.polimi.ingsw.utilities.MessageEvent;
-import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class userDisconnected extends State{
+public class gameFinish extends State {
+    @FXML
+    Label finishLabel;
+
     @Override
     public void showPane(){
-        Platform.runLater(() -> Controller.replaceSceneContent("fxml_files/userHasDisconnected.fxml"));
+
     }
 
     @Override
@@ -35,10 +38,6 @@ public class userDisconnected extends State{
 
     }
 
-
-    public static void userHasDisconnected(){
-    }
-
     public void userNewGame(MouseEvent mouseEvent){
         //provare a chiudere conneessione server
         Controller.userNewGame();
@@ -47,6 +46,5 @@ public class userDisconnected extends State{
     public void userExit(MouseEvent mouseEvent){
         Controller.exit();
     }
-
 
 }

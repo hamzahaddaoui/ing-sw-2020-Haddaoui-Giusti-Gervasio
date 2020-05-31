@@ -120,8 +120,8 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
    }
 
    public void shutdownAll(){
-        heartbeatService.shutdown();
-        inputHandler.shutdown();
+        heartbeatService.shutdownNow();
+        inputHandler.shutdownNow();
         if (server.isConnected()) {
             try {
                 server.close();
