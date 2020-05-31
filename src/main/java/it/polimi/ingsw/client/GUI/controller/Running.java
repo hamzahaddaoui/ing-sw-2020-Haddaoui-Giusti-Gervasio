@@ -125,22 +125,20 @@ public class Running extends State{
             return;
         }
         else if (message.getPlayerState() == PlayerState.LOST){
-
-
             System.out.println("LOSER");
-
+            updateStandardData(message);
+            setBillboardStatus(message.getBillboardStatus());
             if (!matchOver) {
-                updateStandardData(message);
-                setBillboardStatus(message.getBillboardStatus());
                 updateBillboard(true);
                 matchOver = true;
                 lost();
             }
 
             if (getMatchState() == MatchState.FINISHED){
+                getNetworkHandler().shutdownAll();
                 Platform.runLater (() -> ((gameFinish)finishController).finishLabel.setText(message.getMatchPlayers().get(message.getWinner()) + " has won!"));
                 getIslandLoader().endAnimation();
-                getNetworkHandler().shutdownAll();
+
             }
             return;
 
