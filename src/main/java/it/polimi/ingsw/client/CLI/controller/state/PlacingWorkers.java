@@ -102,6 +102,7 @@ public class PlacingWorkers extends ControlState {
         if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
+            DataBase.setActiveInput(false);
             View.setRefresh(true);
             View.handler();
             DataBase.setDisconnectedUser(false);
@@ -120,8 +121,6 @@ public class PlacingWorkers extends ControlState {
 
         View.setRefresh(true);
         View.handler();
-        DataBase.setActiveInput(true);
-
 
     }
 

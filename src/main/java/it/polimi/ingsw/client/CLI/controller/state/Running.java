@@ -62,6 +62,7 @@ public class Running extends ControlState {
         if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
+            DataBase.setActiveInput(false);
             View.setRefresh(true);
             View.handler();
             DataBase.setDisconnectedUser(false);
@@ -83,7 +84,6 @@ public class Running extends ControlState {
                 DataBase.setWorkersAvailableCells(message.getWorkersAvailableCells());
                 DataBase.setTerminateTurnAvailable(message.getTerminateTurnAvailable());
                 DataBase.setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());
-                DataBase.setActiveInput(true);
             }
             else if (DataBase.getStartingPosition()!=null)
                 DataBase.setStartingPosition(null);

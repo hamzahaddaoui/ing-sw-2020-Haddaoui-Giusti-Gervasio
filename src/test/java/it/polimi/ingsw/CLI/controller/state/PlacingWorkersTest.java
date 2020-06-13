@@ -5,7 +5,9 @@ import it.polimi.ingsw.client.CLI.controller.state.ControlState;
 import it.polimi.ingsw.client.CLI.controller.state.PlacingWorkers;
 import it.polimi.ingsw.client.CLI.view.DataBase;
 import it.polimi.ingsw.client.CLI.view.View;
-import it.polimi.ingsw.utilities.*;
+import it.polimi.ingsw.utilities.Cell;
+import it.polimi.ingsw.utilities.PlayerState;
+import it.polimi.ingsw.utilities.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

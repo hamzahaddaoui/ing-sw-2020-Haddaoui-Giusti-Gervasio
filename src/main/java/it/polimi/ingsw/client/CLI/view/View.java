@@ -66,8 +66,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
                     || DataBase.getMatchState() == MatchState.FINISHED))
                 visualization();
             print();
-            if(DataBase.getMatchState() == MatchState.FINISHED)
+            if(DataBase.getMatchState() == MatchState.FINISHED) {
                 DataBase.resetDataBase();
+                DataBase.setActiveInput(false);
+            }
     }
 
     /**

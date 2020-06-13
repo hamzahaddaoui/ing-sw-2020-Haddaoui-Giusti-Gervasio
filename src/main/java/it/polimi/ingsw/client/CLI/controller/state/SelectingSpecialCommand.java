@@ -69,23 +69,12 @@ public class SelectingSpecialCommand extends ControlState {
         if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
+            DataBase.setActiveInput(false);
             View.setRefresh(true);
             View.handler();
             DataBase.setDisconnectedUser(false);
             return;
         }
-
-        if(message.getMatchCards().size() == message.getMatchPlayers().size() && DataBase.getPlayerState() != PlayerState.ACTIVE
-                && !message.getMatchPlayers().get(message.getMatchPlayers().keySet()
-                .stream()
-                .min((Integer i1,Integer i2 ) -> i1.compareTo(i2))
-                .get()).equals(DataBase.getNickname())){
-            System.out.println("For this match the Gods are "+ message.getMatchCards());
-        }
-
-        /*if(message.getInfo()!=null && !message.getInfo().equals("Match data update") && DataBase.getPlayer() != message.getCurrentPlayer() ){
-            System.out.println(message.getInfo());
-        }*/
 
         DataBase.setPlayer(message.getCurrentPlayer());
 
@@ -135,7 +124,11 @@ public class SelectingSpecialCommand extends ControlState {
             }
             return string.toString();}
         else{
-            return DataBase.getMatchPlayers().get(DataBase.getPlayer())  + " is selecting his God for the match ";
+            string.append(DataBase.getMatchPlayers().get(DataBase.getPlayer())  + " is selecting his God for the match from [ " );
+            DataBase.getSelectedGodCards().forEach(card -> string.append(card).append(", "));
+            string.deleteCharAt(string.length()-2);
+            string.append("]");
+            return string.toString();
         }
     }
 

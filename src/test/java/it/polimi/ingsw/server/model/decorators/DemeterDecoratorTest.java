@@ -1,18 +1,21 @@
 package it.polimi.ingsw.server.model.decorators;
 
 
-import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.model.Commands;
+import it.polimi.ingsw.server.model.GodCards;
+import it.polimi.ingsw.server.model.Match;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.utilities.TurnState.IDLE;
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import static it.polimi.ingsw.utilities.TurnState.IDLE;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DemeterDecoratorTest {
 

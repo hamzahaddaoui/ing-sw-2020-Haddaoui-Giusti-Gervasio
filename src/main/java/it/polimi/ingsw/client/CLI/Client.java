@@ -29,6 +29,7 @@ public class Client {
     static View view;
     static Controller controller;
     static Scanner scanner = new Scanner(System.in);
+    static String ip;
 
     /**
      * Main method for the Client.
@@ -46,10 +47,11 @@ public class Client {
 
         try {
             System.out.println("Insert ip address: ('d' or 'default' for the default ip) ");
-            String ip = scanner.next();
+            ip = scanner.next();
             if (ip.equals("d") || ip.equals("default"))
                 ip = "127.0.0.1";
             networkHandler = new NetworkHandler(ip);
+
         } catch (IOException e) {
             System.out.println("SERVER UNREACHABLE");
             return;
@@ -78,6 +80,23 @@ public class Client {
         }
     }
 
+    public static void reconnection() {
+        view = new View();
+        controller = new Controller();
+
+        try {
+            networkHandler = new NetworkHandler(ip);
+        } catch (IOException e) {
+            System.out.println("SERVER UNREACHABLE");
+        }
+
+        networkHandler.addObserver(view);       //view osserva il networkHandler
+        controller.addObserver(networkHandler); //networkHandler osserva il controller
+
+        networkListener.submit(networkHandler);
+        new Thread(View::print).start();
+        inputListener.submit(controller::inputListener);
+    }
 
 }
 

@@ -21,7 +21,7 @@ public class WaitingList extends ControlState {
      */
     @Override
     public MessageEvent computeInput(String input) {
-        DataBase.setActiveInput(true);
+        //DataBase.setActiveInput(true);
         return null;
     }
 
@@ -32,7 +32,7 @@ public class WaitingList extends ControlState {
      */
     @Override
     public void updateData(MessageEvent message) {
-        DataBase.setActiveInput(true);
+        //DataBase.setActiveInput(true);
         View.setRefresh(true);
         View.handler();
     }

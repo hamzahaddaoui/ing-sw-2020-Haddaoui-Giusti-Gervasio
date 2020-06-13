@@ -1,15 +1,19 @@
 package it.polimi.ingsw.server.model.decorators;
 
-import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.model.Commands;
+import it.polimi.ingsw.server.model.GodCards;
+import it.polimi.ingsw.server.model.Match;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.utilities.Position;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PanDecoratorTest {
     Match match;

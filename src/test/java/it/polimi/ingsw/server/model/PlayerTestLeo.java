@@ -1,19 +1,17 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.GodCards;
-import it.polimi.ingsw.server.model.Match;
-import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.decorators.*;
+import it.polimi.ingsw.server.model.decorators.ApolloDecorator;
+import it.polimi.ingsw.server.model.decorators.ArtemisDecorator;
+import it.polimi.ingsw.server.model.decorators.DemeterDecorator;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.support.descriptor.FileSystemSource;
 
-import java.awt.*;
-import java.net.SocketOption;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 

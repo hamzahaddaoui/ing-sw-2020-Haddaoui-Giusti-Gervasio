@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.CLI.view.View;
 import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.PlayerState;
 
+import javax.xml.crypto.Data;
 import java.util.*;
 
 /**
@@ -86,6 +87,7 @@ public class SelectingGodCards extends ControlState {
         if (message.getInfo()!=null && message.getInfo().equals("A user has disconnected from the match. Closing...")) {
             DataBase.setDisconnectedUser(true);
             DataBase.resetDataBase();
+            DataBase.setActiveInput(false);
             View.setRefresh(true);
             View.handler();
             DataBase.setDisconnectedUser(false);
@@ -95,7 +97,6 @@ public class SelectingGodCards extends ControlState {
         //caso SELECTING_GOD_CARDS
         if( DataBase.getPlayerState() == PlayerState.ACTIVE){
             DataBase.setMatchCards(message.getMatchCards());
-            DataBase.setActiveInput(true);
             View.setRefresh(true);
             View.handler();
         }

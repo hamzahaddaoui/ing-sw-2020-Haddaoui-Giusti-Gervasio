@@ -66,6 +66,9 @@ public class NotInitialized extends ControlState{
     public void updateData(MessageEvent message) {
 
         if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST || DataBase.isViewer()){
+            if (DataBase.getMatchState()!=MatchState.FINISHED)
+                DataBase.setActiveInput(true);
+
             if(message.getInfo()!=null && !message.getInfo().equals("Match data update") ){
                 System.out.println(message.getInfo());
             }
@@ -74,7 +77,7 @@ public class NotInitialized extends ControlState{
             View.handler();
             }
 
-        DataBase.setActiveInput(true);
+
     }
 
     /**
@@ -84,20 +87,20 @@ public class NotInitialized extends ControlState{
      */
     @Override
     public String computeView() {
-        if(DataBase.isViewer()){
+        if((MatchState.FINISHED == DataBase.getMatchState() && DataBase.getPlayerState() != PlayerState.WIN))
+            System.out.println("The winner is "+ DataBase.getMatchPlayers().values().toString());
+        if(DataBase.isViewer()) {
             if(DataBase.getMatchPlayers().size()==1)
-                return "Viewer mode off. If you want to play again insert your nickname, else press 'q' to disconnect: \n";
+                return "Viewer mode off. Server is trying to close the connection...\n";
             else
                 return "Viewer mode on. Press 'q' if you want to quit or wait until the end of the game.";
         }
-        if((MatchState.FINISHED == DataBase.getMatchState() && DataBase.getPlayerState() != PlayerState.WIN) || DataBase.isViewer())
-            System.out.println("The winner is "+ DataBase.getMatchPlayers().values().toString());
         if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.WIN)
-            return "Congratulations! You are the winner!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
+            return "Congratulations! You are the winner!\n\nServer is trying to close the connection...";
         else if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.LOST){
-            return "Unlucky! You lost!\n\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";}
+            return "Unlucky! You lost!\n\nServer is trying to close the connection... ";}
         else if (DataBase.isDisconnectedUser())
-            return "A user has disconnected from the match so the match is over.\nIf you want to play again insert your nickname, else press 'q' to disconnect: ";
+            return "A user has disconnected from the match so the match is over.\nServer is trying to close the connection...";
         else return "\nPress 'q' if you want to quit from SANTORINI.\nTo start a game insert your nickname: ";
     }
 

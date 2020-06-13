@@ -4,8 +4,10 @@ import it.polimi.ingsw.utilities.MatchState;
 import it.polimi.ingsw.utilities.PlayerState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class MatchTest {
     Player player1 = new Player(20, "PincoPallino");

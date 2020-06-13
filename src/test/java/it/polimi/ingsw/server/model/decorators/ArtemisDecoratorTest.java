@@ -3,13 +3,14 @@ package it.polimi.ingsw.server.model.decorators;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
 import it.polimi.ingsw.utilities.TurnState;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static it.polimi.ingsw.utilities.TurnState.IDLE;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.HashSet;
 import java.util.Set;
+
+import static it.polimi.ingsw.utilities.TurnState.IDLE;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ArtemisDecoratorTest {
 

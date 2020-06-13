@@ -2,14 +2,15 @@ package it.polimi.ingsw.server.model.decorators;
 
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utilities.Position;
-import static org.junit.jupiter.api.Assertions.*;
-
 import it.polimi.ingsw.utilities.TurnState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ApolloDecoratorTest {
 

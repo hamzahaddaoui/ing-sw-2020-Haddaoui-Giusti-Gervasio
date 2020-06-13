@@ -247,6 +247,8 @@ public class DataBase {
             matchColors = messageEvent.getMatchColors();
         if ((MatchState.SELECTING_SPECIAL_COMMAND != matchState || currentPlayer == 0))
             currentPlayer = messageEvent.getCurrentPlayer();
+
+        activeInput = playerState == PlayerState.ACTIVE;
     }
 
     /**

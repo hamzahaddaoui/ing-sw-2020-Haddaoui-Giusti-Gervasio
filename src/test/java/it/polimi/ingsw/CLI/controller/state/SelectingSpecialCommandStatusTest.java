@@ -1,10 +1,10 @@
 package it.polimi.ingsw.CLI.controller.state;
 
+import it.polimi.ingsw.client.CLI.controller.Controller;
 import it.polimi.ingsw.client.CLI.controller.state.ControlState;
 import it.polimi.ingsw.client.CLI.controller.state.SelectingSpecialCommand;
 import it.polimi.ingsw.client.CLI.view.DataBase;
 import it.polimi.ingsw.client.CLI.view.View;
-import it.polimi.ingsw.client.CLI.controller.Controller;
 import it.polimi.ingsw.utilities.PlayerState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

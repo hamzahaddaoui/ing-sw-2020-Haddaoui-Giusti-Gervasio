@@ -1,5 +1,8 @@
 package it.polimi.ingsw.client.CLI.controller;
 
+import it.polimi.ingsw.client.CLI.Client;
+import it.polimi.ingsw.client.CLI.controller.state.ControlState;
+import it.polimi.ingsw.client.CLI.controller.state.NotInitialized;
 import it.polimi.ingsw.client.CLI.view.DataBase;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
@@ -27,6 +30,18 @@ public class Controller extends Observable<MessageEvent> {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
+                if (DataBase.isActiveInput() && DataBase.getControlState().getClass() == NotInitialized.class) {
+                    if(input.equals("REC")) {
+                        DataBase.resetDataBase();
+                        Client.reconnection();
+                        return;
+                }
+                else if (input.equals("q") || input.equals("Q")) {
+                    System.out.println("CLIENT INPUT CLOSED");
+                    DataBase.setActiveInput(false);
+                    Client.close();
+                    return;
+                } }
             synchronized (DataBase.class){
             if (DataBase.isActiveInput() && (DataBase.getPlayerState() == PlayerState.ACTIVE || DataBase.getPlayerState() == null || DataBase.isViewer())) {
                 DataBase.setActiveInput(false);
@@ -40,7 +55,7 @@ public class Controller extends Observable<MessageEvent> {
             } else {
                 if(!DataBase.isActiveInput())
                     System.out.print("\nPlease wait\n");
-                DataBase.setActiveInput(true);
+                //DataBase.setActiveInput(true);
             }
             notifyAll();
             }

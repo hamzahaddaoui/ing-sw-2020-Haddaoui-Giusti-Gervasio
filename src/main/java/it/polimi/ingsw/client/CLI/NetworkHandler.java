@@ -7,7 +7,6 @@ import it.polimi.ingsw.utilities.MessageEvent;
 import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -33,7 +32,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
     public NetworkHandler(String ip) throws IOException {
         active = true;
         server = new Socket(ip, SOCKET_PORT);
-        //server.setSoTimeout(SOCKET_TIMEOUT);
+        server.setSoTimeout(SOCKET_TIMEOUT);
         output = new ObjectOutputStream(server.getOutputStream());
         input = new ObjectInputStream(server.getInputStream());
     }
@@ -146,7 +145,8 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
                }
            }
        } catch (SocketTimeoutException e) {
-           System.out.println("socket timed out");
+           DataBase.setActiveInput(true);
+           System.out.println("socket connection closed: if you want to try to reconnect type 'REC', else press 'q'.");
        } catch (SocketException e) {
            System.out.println("DISCONNECTED FROM THE SERVER");
            Client.scanner.close();
