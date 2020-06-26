@@ -48,27 +48,37 @@ public class ArtemisDecoratorTest {
 
     @BeforeEach
     void setUp() {
+        match.addPlayer(player2);
         match.setPlayersNum(2);
         godCards.add(GodCards.Apollo);
         godCards.add(GodCards.Artemis);
         match.setCards(godCards);
         player1.setCommands(GodCards.Artemis);
+        player2.setCommands(GodCards.Apollo);
         commands1 = player1.getCommands();
+        commands2 = player2.getCommands();
 
     }
 
     @Test
     public void nextStateCaseSpecialFunctionNotInserted() {
         player1.setWorker(position12);
-        player1.setCurrentWorker(position12);
+        player1.setWorker(position42);
+        player2.setWorker(position44);
+        player2.setWorker(position43);
+        player1.setPlayerState();
+        player1.setTurnState(TurnState.IDLE);
+        commands1.nextState(player1);
+
+
+
         player1.setTurnState(IDLE);
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
+
+        player1.setCurrentWorker(position12);
 
         commands1.nextState(player1);
+
+        assertTrue(player1.getTurnState() == TurnState.MOVE);
         commands1.moveWorker(position11, player1);
         commands1.nextState(player1);
 
@@ -82,13 +92,14 @@ public class ArtemisDecoratorTest {
     @Test
     public void nextStateCaseSpecialFunctionInserted() {
         player1.setWorker(position12);
+        player1.setWorker(position42);
+        player2.setWorker(position44);
+        player2.setWorker(position43);
+        player1.setPlayerState();
         player1.setCurrentWorker(position12);
-        player1.setTurnState(IDLE);
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
+
+        player1.setTurnState(TurnState.IDLE);
+
         assertTrue( player1.getTurnState() == IDLE);
         commands1.nextState(player1);
         assertTrue( player1.getTurnState() == TurnState.MOVE);
@@ -105,13 +116,12 @@ public class ArtemisDecoratorTest {
     public void computeAvailableMovements() {
         player1.setWorker(position33);
         player1.setWorker(position00);
+        player2.setWorker(position01);
+        player2.setWorker(position10);
+
+        player1.setPlayerState();
         player1.setCurrentWorker(position33);
-        player1.setTurnState(IDLE);
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
+        player1.setTurnState(TurnState.IDLE);
 //Init
         Worker worker = player1.getCurrentWorker();
         Set<Position> positionSet0 = commands1.computeAvailableMovements(player1, worker);
@@ -155,7 +165,6 @@ public class ArtemisDecoratorTest {
         assertTrue( positionCheck.containsAll(positionSet2));
         assertTrue( positionSet2.containsAll(positionCheck));
 
-        //System.out.println( player1.getTurnState() );
         commands1.nextState(player1);
 
         assertTrue(player1.getTurnState() == TurnState.BUILD);

@@ -105,6 +105,7 @@ class PlayerTestLeo {
     void testMatch(){
         Position worker, build;
         testPlacing();
+        p1.setTurnState(TurnState.IDLE);
         p1.setPlayerState();
 
         System.out.println("\n-----------------------------------------------------------------------------" +

@@ -103,6 +103,7 @@ public class PlayerTestVasio {
     void testMatch(){
         Position worker, build;
         testPlacing();
+        p1.setTurnState(TurnState.IDLE);
         p1.setPlayerState();
         p = p1;
         System.out.println(getBillboardStat());

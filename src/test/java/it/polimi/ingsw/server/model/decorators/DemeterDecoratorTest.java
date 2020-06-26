@@ -66,14 +66,19 @@ public class DemeterDecoratorTest {
 
     @Test
     public void nextStateJustOneBuild() {
+
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
+        match.nextState();
         player1.setWorker(position12);
+        player1.setWorker(position44);
+        player1.setWorker(position43);
+        player1.setWorker(position42);
+        player1.setPlayerState();
         player1.setCurrentWorker(position12);
         player1.setTurnState(IDLE);
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
-        match.nextState();
 
         commands1.nextState(player1);
 
@@ -108,7 +113,7 @@ public class DemeterDecoratorTest {
         commands1.build(position11,player1);
         player1.setUnsetSpecialFunction(true);
 
-        commands1.nextState(player1);
+        player1.setAvailableCells();
         assertTrue( player1.getTurnState() == TurnState.BUILD);
 
         commands1.build(position01,player1);
@@ -152,14 +157,14 @@ public class DemeterDecoratorTest {
         commands1.build(position11,player1);
         player1.setUnsetSpecialFunction(true);
 
-        commands1.nextState(player1);
+        player1.setAvailableCells();
 
         assertTrue( player1.getTurnState() == TurnState.BUILD);
 
+        Set.clear();
         Set.add(position03);
         Set.add(position02);
         Set.add(position01);
-        Set.add(position11);
         Set.add(position23);
         Set.add(position22);
         Set.add(position21);
