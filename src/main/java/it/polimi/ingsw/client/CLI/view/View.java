@@ -143,6 +143,10 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
         return outputB.toString();
     }
 
+    /*
+
+     */
+
     static void placingWorkerSituationActive() {
         StringBuilder output = new StringBuilder();
         String billboardStat = placingWorkerSituation();

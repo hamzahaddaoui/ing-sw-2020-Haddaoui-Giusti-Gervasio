@@ -6,6 +6,14 @@ import it.polimi.ingsw.utilities.*;
 
 import java.util.*;
 
+/**
+ * @author giusti-leo
+ *
+ * The Database contains all the info about the User and the development of the Game.
+ * This class is updated from the View and from the Controller States
+ *
+ */
+
 public class DataBase {
 
     static private ControlState controlState = new NotInitialized();
