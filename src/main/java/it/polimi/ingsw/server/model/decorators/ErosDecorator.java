@@ -48,9 +48,7 @@ public class ErosDecorator  extends CommandsDecorator {
             });
             return positions;
         }
-        catch(Exception ex){
-            throw new NullPointerException();
-        }
+        catch(Exception ex){throw new NullPointerException();}
     }
 
     @Override
