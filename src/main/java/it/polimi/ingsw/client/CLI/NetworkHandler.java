@@ -145,7 +145,7 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
                }
            }
        } catch (SocketTimeoutException e) {
-           DataBase.setActiveInput(true);
+           Client.rec();
            System.out.println("socket connection closed: if you want to try to reconnect type 'REC', else press 'q'.");
        } catch (SocketException e) {
            System.out.println("DISCONNECTED FROM THE SERVER");

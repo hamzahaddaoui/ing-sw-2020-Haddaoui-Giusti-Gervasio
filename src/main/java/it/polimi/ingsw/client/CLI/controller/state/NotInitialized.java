@@ -65,16 +65,27 @@ public class NotInitialized extends ControlState{
     @Override
     public void updateData(MessageEvent message) {
 
-        if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST || DataBase.isViewer()){
+        if(DataBase.isReconnection()){
+            return;
+        }
+
+        if (DataBase.getPlayerState() == PlayerState.WIN || DataBase.getPlayerState() == PlayerState.LOST){
+
             if (DataBase.getMatchState()!=MatchState.FINISHED)
                 DataBase.setActiveInput(true);
 
             if(message.getInfo()!=null && !message.getInfo().equals("Match data update") ){
                 System.out.println(message.getInfo());
             }
+
             DataBase.setBillboardStatus(message.getBillboardStatus());
             View.setRefresh(true);
             View.handler();
+
+            if(DataBase.isViewer()){
+                Client.close();
+            }
+
             }
 
 
@@ -90,10 +101,7 @@ public class NotInitialized extends ControlState{
         if((MatchState.FINISHED == DataBase.getMatchState() && DataBase.getPlayerState() != PlayerState.WIN))
             System.out.println("The winner is "+ DataBase.getMatchPlayers().values().toString());
         if(DataBase.isViewer()) {
-            if(DataBase.getMatchPlayers().size()==1)
-                return "Viewer mode off. Server is trying to close the connection...\n";
-            else
-                return "Viewer mode on. Press 'q' if you want to quit or wait until the end of the game.";
+            return "Unlucky! You lost. \nPress 'q' if you want to quit or type 'rec' to reconnect\n";
         }
         if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.WIN)
             return "Congratulations! You are the winner!\n\nServer is trying to close the connection...";

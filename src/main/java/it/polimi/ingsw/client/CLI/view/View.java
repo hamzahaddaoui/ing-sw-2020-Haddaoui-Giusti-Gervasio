@@ -17,9 +17,9 @@ import java.util.concurrent.Executors;
  *
  */
 
-public class View extends Observable<String> implements Observer<MessageEvent> {
 
-    static ExecutorService executorView = Executors.newSingleThreadExecutor();
+public class View implements Observer<MessageEvent> {
+
     static ExecutorService executorData = Executors.newSingleThreadExecutor();
 
     private static boolean refresh = true;
@@ -40,18 +40,26 @@ public class View extends Observable<String> implements Observer<MessageEvent> {
      */
     @Override
     public synchronized void update(MessageEvent messageEvent) {
+        synchronized (DataBase.class) {
+            System.out.println("VIEW Update 000");
             executorData.submit(() -> {
-                synchronized (DataBase.class) {
-                    DataBase.updateStandardData(messageEvent);
-                    DataBase.updateControllerState();
-                    if (messageEvent.getError()) {
-                        System.out.println(DataBase.getControlState().error());
-                    } else {
+                System.out.println("VIEW   Thread init");
+                synchronized (View.class) {
+                    synchronized (DataBase.class) {
+                        System.out.println("VIEW   Thread start");
+                        DataBase.updateStandardData(messageEvent);
+                        DataBase.updateControllerState();
+                        if (messageEvent.getError()) {
+                            System.out.println(DataBase.getControlState().error());
+                        } else {
                             DataBase.getControlState().updateData(messageEvent);
+                        }
                     }
-                    notifyAll();
+                    System.out.println("VIEW   Thread end");
                 }
             });
+            System.out.println("VIEW Update 111");
+        }
     }
 
     // From Controller States (VISUALIZATION CHANGES)

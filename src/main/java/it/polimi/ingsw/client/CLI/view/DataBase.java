@@ -19,6 +19,7 @@ public class DataBase {
     static private ControlState controlState = new NotInitialized();
     static private boolean activeInput = true;
     static private boolean messageReady;
+    static private boolean reconnection = false;
 
     static private String nickname;
     static private Map<Integer,String> matchColors;
@@ -78,6 +79,15 @@ public class DataBase {
     }
 
     public static boolean isActiveInput() {return activeInput;}
+
+    public static boolean isReconnection() {
+        return reconnection;
+    }
+
+    public static void setReconnection(boolean reconnection) {
+        DataBase.reconnection = reconnection;
+    }
+
 
     public static boolean isMessageReady() {return messageReady;}
 
@@ -263,7 +273,7 @@ public class DataBase {
      * Depending on Database dates, it compute the next Control state
      */
     static public void updateControllerState() {
-        if (matchState==null || viewer) {
+        if (matchState==null || reconnection) {
             controlState = new NotInitialized();
             return;
         }

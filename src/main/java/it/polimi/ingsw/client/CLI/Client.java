@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.CLI;
 
 import it.polimi.ingsw.client.CLI.controller.Controller;
+import it.polimi.ingsw.client.CLI.view.DataBase;
 import it.polimi.ingsw.client.CLI.view.View;
 
 import java.io.IOException;
@@ -81,6 +82,8 @@ public class Client {
     }
 
     public static void reconnection() {
+        view=null;
+        controller=null;
         view = new View();
         controller = new Controller();
 
@@ -96,6 +99,14 @@ public class Client {
         networkListener.submit(networkHandler);
         new Thread(View::print).start();
         inputListener.submit(controller::inputListener);
+    }
+
+    public static void rec(){
+        synchronized(View.class){
+            synchronized(DataBase.class){
+                DataBase.setReconnection(true);
+            }
+        }
     }
 
 }
