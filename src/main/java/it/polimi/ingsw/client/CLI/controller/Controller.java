@@ -34,10 +34,10 @@ public class Controller extends Observable<MessageEvent> {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
-            System.out.println("Init input iter");
+            //System.out.println("Init input iter");
             synchronized (View.class){
                 synchronized (DataBase.class) {
-                    System.out.println("punto1");
+                    //System.out.println("punto1");
                     if ((DataBase.isActiveInput() && DataBase.getControlState().getClass() == NotInitialized.class) || DataBase.isReconnection()) {
                         if(DataBase.isReconnection() && !input.toUpperCase().equals("REC") && !input.toUpperCase().equals("Q"))
                             System.out.println("Press Q to disconnect or Rec to reconnect");
@@ -56,31 +56,31 @@ public class Controller extends Observable<MessageEvent> {
 
                     if (DataBase.isActiveInput() && (DataBase.getPlayerState() == PlayerState.ACTIVE || DataBase.getPlayerState() == null || DataBase.isViewer())) {
                         DataBase.setActiveInput(false);
-                        System.out.println("INPUT Compute");
+                        //System.out.println("INPUT Compute");
                         executor.submit(() -> {
-                            System.out.println("Thread init");
+                            //System.out.println("Thread init");
                             synchronized (View.class){
                                 synchronized (DataBase.class) {
-                                    System.out.println("Thread Start");
+                                    //System.out.println("Thread Start");
                                     MessageEvent message = DataBase.getControlState().computeInput(input);
                                     if (DataBase.isMessageReady()) {
                                         DataBase.setMessageReady(false);
                                         notify(message);
                                     }
-                                    System.out.println("Thread END");
+                                    //System.out.println("Thread END");
                                 }
                             }
                         });
-                        System.out.println("INPUT ->    end");
+                        //System.out.println("INPUT ->    end");
                     } else {
                         if (!DataBase.isActiveInput())
                             System.out.print("\nPlease wait\n");
                     }
-                    System.out.println("Input iter end");
+                    //System.out.println("Input iter end");
                     //notifyAll();
                 }
             }
-            System.out.println("End input iter");
+            //System.out.println("End input iter");
         }
 
     }

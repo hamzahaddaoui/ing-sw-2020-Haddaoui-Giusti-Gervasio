@@ -75,6 +75,7 @@ public class Client {
          {
             try {
                 networkHandler.stop();
+                System.exit(0);
             } catch (IOException e) {
                 e.getMessage();
             }
