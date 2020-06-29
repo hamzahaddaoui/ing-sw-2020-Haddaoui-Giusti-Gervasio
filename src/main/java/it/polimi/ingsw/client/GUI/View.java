@@ -5,6 +5,9 @@ import it.polimi.ingsw.client.GUI.controller.*;
 
 public class View {
 
+    /**
+     * Updates the current state, based on the database data.
+     */
     static public void updateView() {
         if (Database.getNickname() == null) {
             Database.setCurrentState(new StartState());

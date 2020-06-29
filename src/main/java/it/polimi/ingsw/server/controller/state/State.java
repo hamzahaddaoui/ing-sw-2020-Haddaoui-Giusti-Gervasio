@@ -11,14 +11,26 @@ import java.util.Collections;
 import java.util.List;
 
 import static it.polimi.ingsw.server.Server.getClientHandler;
-import static it.polimi.ingsw.server.Server.main;
 import static it.polimi.ingsw.server.model.GameModel.*;
 
 public abstract class State extends Controller{
+    /**
+     * Handles the request of the client and performs the action (join, select cards, move, etc.)
+     * @param messageEvent The message sent by the user
+     * @return If the request needs a return message to be sent back
+     */
     public abstract boolean handleRequest(MessageEvent messageEvent);
+
+    /**
+     * Creates a return message for the user/users
+     * @param observers The users interested by the return message
+     * @param matchID the ID of the match related to the user who sent the message
+     */
     public abstract void viewNotify(List<Observer<MessageEvent>> observers, Integer matchID);
 
-    public static MessageEvent basicMatchConfig(MessageEvent messageEvent, Integer matchID){
+
+
+    protected static MessageEvent basicMatchConfig(MessageEvent messageEvent, Integer matchID){
         messageEvent.setInfo(getMatchInfo(matchID));
         messageEvent.setMatchID(matchID);
         messageEvent.setMatchState(getMatchState(matchID));
@@ -33,7 +45,7 @@ public abstract class State extends Controller{
         return messageEvent;
     }
 
-    public static MessageEvent basicPlayerConfig(MessageEvent messageEvent, Integer playerID){
+    protected static MessageEvent basicPlayerConfig(MessageEvent messageEvent, Integer playerID){
         int matchID = messageEvent.getMatchID();
         messageEvent.setPlayerID(playerID);
         messageEvent.setPlayerState(getPlayerState(matchID, playerID));
@@ -43,7 +55,7 @@ public abstract class State extends Controller{
         return messageEvent;
     }
 
-    public MessageEvent basicErrorConfig(MessageEvent messageEvent){
+    protected MessageEvent basicErrorConfig(MessageEvent messageEvent){
         messageEvent.setError(true);
         return messageEvent;
     }

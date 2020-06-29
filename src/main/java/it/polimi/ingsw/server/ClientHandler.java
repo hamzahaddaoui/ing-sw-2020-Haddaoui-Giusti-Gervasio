@@ -29,13 +29,6 @@ public class ClientHandler extends Observable<MessageEvent> implements Observer<
     private final ObjectInputStream input;
 
 
-  /*
-  TODO
-  TODO (done) Inserire timeout connessione (heartbeat messages)
-  TODO Inserire AFK timeout. se non fai una mossa entro 1 minuto, hai perso
-  TODO (done) chiusura connessione ondemand
-  */
-
     public Integer getMatchID(){
         return matchID;
     }

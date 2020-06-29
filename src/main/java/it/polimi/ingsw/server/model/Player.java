@@ -125,12 +125,24 @@ public class Player{
         this.match = match;
     }
 
+
+    /**
+     * Applies to a certain player the god power.
+     * The god power is applied through a decorator to the commands class.
+     * @param card the player selected card
+     */
     public void setCommands(GodCards card) {
         selectedCard = true;
         this.commands = card.apply(new BasicCommands());
         match.removeCard(card);
     }
 
+
+    /**
+     * Adds a new worker to the player.
+     * Every player should have 2 and only 2 workers.
+     * @param position the position where to put the new worker
+     */
     public void setWorker(Position position) {
         position.setZ(0);
         workers.add(new Worker(position));
@@ -140,15 +152,18 @@ public class Player{
         }
     }
 
-    public void setCurrentWorker(Position position) throws IllegalArgumentException{
+    /**
+     * Select the current worker of the player.
+     * The current worker is selected via its position.
+     * If no worker is available in that position, no action will be performed
+     * @param position the position where the worker is
+     */
+    public void setCurrentWorker(Position position){
         Optional<Worker> optionalWorker = workers.stream().filter(worker -> worker.getPosition().equals(position)).findAny();
         if (! selectedWorker && optionalWorker.isPresent()){
             currentWorker = optionalWorker.get();
             selectedWorker = true;
-            //commands.notifySpecialFunction(this);
         }
-        else
-            throw new IllegalArgumentException("Can't select worker");
     }
 
     public void setPlayerState(){
@@ -162,7 +177,6 @@ public class Player{
         this.playerState = PlayerState.IDLE;
     }
 
-
     public void win(){
         playerState = PlayerState.WIN;
     }
@@ -171,12 +185,14 @@ public class Player{
         playerState = PlayerState.LOST;
     }
 
-    public void setTurnState(TurnState turnState) throws IllegalStateException{
-        if (playerState != PlayerState.ACTIVE)
-            throw new IllegalStateException("Player is not active");
+    public void setTurnState(TurnState turnState){
         this.turnState = turnState;
     }
 
+    /**
+     * Perform end turn actions.
+     * Resets all the variables related to a certain turn, including the turnState and playerState
+     */
     public void setHasFinished() {
         specialFunction = false;
         currentWorker = null;
@@ -192,6 +208,12 @@ public class Player{
         this.terminateTurnAvailable = true;
     }
 
+    /**
+     * This method calls the function from the command set, related to the current status.
+     * For example, if the state is MOVE, the move function is called.
+     * Then some checks are performed: if the player has won, lost or if he has finished the turn.
+     * @param position position where the players want to move, or want to build.
+     */
     public void playerAction(Position position){
         switch (turnState) {
             case MOVE:
@@ -219,6 +241,10 @@ public class Player{
         return commands.computeAvailablePlacing(this);
     }
 
+    /**
+     * Creates a map from the set of available cells of the workers, and their position
+     * @return  the map of the workers position related to their available cells.
+     */
     public Map<Position,Set<Position>> getWorkersAvailableCells() {
         Map<Position,Set<Position>> positionSetMap = new HashMap<>();
         workers.forEach(worker -> positionSetMap
@@ -226,6 +252,9 @@ public class Player{
         return positionSetMap;
     }
 
+    /**
+     * This method sets the available cells for the workers, in both player states: BUILD and MOVE
+     */
     public void setAvailableCells() {
         workers.forEach(worker -> {
             worker.setAvailableCells(MOVE, commands.computeAvailableMovements(this, worker));

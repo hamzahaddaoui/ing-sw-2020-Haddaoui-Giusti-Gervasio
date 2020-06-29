@@ -29,15 +29,21 @@ public class GameModel extends Observable<MessageEvent> {
         return playersWaitingList.size();
     }
 
+    /**
+     * This method removes a player identified by an ID, from the waiting list
+     * @param ID the ID of the player to remove from the waiting list
+     */
     public static void removePlayerWaitingList(int ID){
         Optional<Player> player = playersWaitingList.stream().filter(p -> p.getID()== ID).findAny();
-        if (player.isPresent()) {
-            playersWaitingList.remove(player.get());
-        }
+        player.ifPresent(playersWaitingList::remove);
 
-        System.out.println(playersWaitingList);
     }
 
+    /**
+     * Returns the list of not initialized matches size.
+     * A not initialized match is a match neither started nor given the number of players.
+     * @return the size of the list of not initialized matches.
+     */
     public static int getNotInitMatchesListSize(){
             return (int) activeMatches
                     .keySet()
@@ -47,6 +53,11 @@ public class GameModel extends Observable<MessageEvent> {
                     .count();
     }
 
+    /**
+     * Returns the initialized matches list size.
+     * An initialized match is a match started (of course with a given players number)
+     * @return the size of the list of initialized matches
+     */
     public static int getInitMatchesListSize(){
         return (int) activeMatches
                 .keySet()
@@ -56,6 +67,10 @@ public class GameModel extends Observable<MessageEvent> {
                 .count();
     }
 
+    /**
+     * Return the ID of the not initialized match (there can be only one not init match)
+     * @return the ID of the not initialized match. If it doesn't exist, the return value is 0
+     */
     public static int getInitMatchID(){
         if (getInitMatchesListSize() != 0)
             return activeMatches
@@ -70,6 +85,12 @@ public class GameModel extends Observable<MessageEvent> {
             return 0;
     }
 
+    /**
+     * Creates a new player instance, and return its ID
+     * The created player is temporarly stored into a initializedPlayers set.
+     * @param nickname the name given by the user to the player
+     * @return the ID of the created player
+     */
     public static int createPlayer(String nickname){
         Player player;
         if (!isNickAvailable(nickname))
@@ -94,7 +115,6 @@ public class GameModel extends Observable<MessageEvent> {
             return progressiveMatchID;
         }
         catch (NullPointerException e){
-            progressiveMatchID--;
             return 0;
         }
     }
@@ -117,6 +137,10 @@ public class GameModel extends Observable<MessageEvent> {
 
     }
 
+    /**
+     * Adds the player stored into the initializedPlayers set, identified by a certain ID, to the waiting list.
+     * @param playerID the requested player to be moved to the waiting list
+     */
     public static void addPlayerToWaitingList(Integer playerID){
         playersWaitingList.addLast(initializedPlayers.remove(playerID));
     }
@@ -130,7 +154,12 @@ public class GameModel extends Observable<MessageEvent> {
         activeMatches.get(matchID).setPlayersNum(playerNum);
     }
 
+    /**
+     * Unstacks the first player from the waiting list, and puts it into the initializedPlayers set temporarly.
+     * @return the ID of the unstacked player
+     */
     public static int unstackPlayer(){
+
         Player player = playersWaitingList.removeFirst();
         initializedPlayers.put(player.getID(), player);
         return player.getID();
@@ -159,10 +188,21 @@ public class GameModel extends Observable<MessageEvent> {
     -------------------------------------------------------------------------------
      */
 
+
+    /**
+     * Method used to get the game cards of the game.
+     *
+     * @return a list with a set of all the game cards.
+     */
     public static Set<String> getGameCards(){
         return Arrays.stream(GodCards.values()).map(Enum::toString).collect(Collectors.toSet());
     }
 
+    /**
+     * Return the match state of a match, given its ID
+     * @param matchID the ID of the interested match
+     * @return the current state of the match
+     */
     public static MatchState getMatchState(Integer matchID){
         try{
             return translateMatchID(matchID).getCurrentState();
@@ -180,7 +220,7 @@ public class GameModel extends Observable<MessageEvent> {
         try{
             return translatePlayerID(translateMatchID(matchID), playerID).getPlayerState();
         }
-        catch (NullPointerException exception){
+        catch (NoSuchElementException exception){
             return null;
         }
     }
@@ -189,7 +229,7 @@ public class GameModel extends Observable<MessageEvent> {
         try{
             return translatePlayerID(translateMatchID(matchID), playerID).getTurnState();
         }
-        catch (NullPointerException exception){
+        catch (NoSuchElementException exception){
             return null;
         }
     }
@@ -295,12 +335,10 @@ public class GameModel extends Observable<MessageEvent> {
     }
 
     public static void setHasFinished(Integer matchID){
-        Match match =  translateMatchID(matchID);
+        Match match = translateMatchID(matchID);
         match.getCurrentPlayer().setHasFinished();
         match.setInfo(match.getCurrentPlayer().toString()+" has terminated the turn");
         match.nextTurn();
-
-
     }
 
     public static void playerTurn(Integer matchID, Position startPosition, Position endPosition){
@@ -347,12 +385,6 @@ public class GameModel extends Observable<MessageEvent> {
         return translateMatchID(matchID).getBillboard().getCells();
     }
 
-    /**
-     * Make a copy of the state of the billboard, made of 3 layers:
-     * first layer for the height of the buildings
-     * second layer for the players (each player has a different number)
-     * third layer for the domes
-     */
     public static Set<String>  getMatchCards(Integer matchID){
         return translateMatchID(matchID)
                 .getCards()
@@ -360,15 +392,6 @@ public class GameModel extends Observable<MessageEvent> {
                 .map(Enum::toString)
                 .collect(Collectors.toSet());
     }
-
-    /*public static Set<Position> getWorkersPosition(Integer matchID){
-        return translateMatchID(matchID)
-                .getCurrentPlayer()
-                .getWorkers()
-                .stream()
-                .map(Worker::getPosition)
-                .collect(Collectors.toSet());
-    }*/
 
     public static Map<Position, Set<Position>> getWorkersAvailableCells(Integer matchID){
         return translateMatchID(matchID).getCurrentPlayer().getWorkersAvailableCells();
@@ -378,13 +401,6 @@ public class GameModel extends Observable<MessageEvent> {
         return translateMatchID(matchID).getCurrentPlayer().getPlacingAvailableCells();
     }
 
-    /*public static int getPlayersConnected(){
-        return progressivePlayerID;
-    }
-
-    public static int getActiveMatches(){
-        return progressiveMatchID;
-    }*/
 
     /*
     -------------------------------------------------------------------------------

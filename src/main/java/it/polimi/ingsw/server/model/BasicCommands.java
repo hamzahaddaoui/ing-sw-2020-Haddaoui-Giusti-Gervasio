@@ -14,6 +14,13 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 
 public class BasicCommands implements Commands {
 
+    /**
+     * method that changes the current state of the player
+     * If the state is IDLE then the player can MOVE
+     * If the state is MOVE then the player can BUILD
+     * If the state is BUILD then the player goes IDLE
+     * @param player the match current player
+     */
     @Override
     public void nextState(Player player) {
         switch(player.getTurnState()){
@@ -44,7 +51,6 @@ public class BasicCommands implements Commands {
         }
     }
 
-
     /**
      * method that allows the stardard player movement
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
@@ -65,6 +71,13 @@ public class BasicCommands implements Commands {
 
     }
 
+    /**
+     * method that allows the standard player build
+     * the player can build with the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
+     * if the position that is selected is free
+     *  @param position   the position that player have inserted, not null
+     * @param player the match current player
+     */
     @Override
     public void build(Position position, Player player) {
         player.getMatch().getBillboard().incrementTowerHeight(position);
@@ -131,17 +144,31 @@ public class BasicCommands implements Commands {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * method that notifies the activation of the special function
+     * @param player the match current player
+     */
     @Override
     public void notifySpecialFunction(Player player){
 
     }
 
+    /**
+     * method that checks if the player has won.
+     * Returns a boolean relative to the winning condition
+     * @param player the match current player
+     */
     @Override
     public boolean winningCondition(Player player) {
         Worker worker = player.getCurrentWorker();
         return worker.getHeightVariation() == 1 && worker.getPosition().getZ() == 3;
     }
 
+    /**
+     * method that checks if the player has lost.
+     * Returns a boolean relative to the losing condition
+     * @param player the match current player
+     */
     @Override
     public boolean losingCondition(Player player){
         Worker currentWorker = player.getCurrentWorker();

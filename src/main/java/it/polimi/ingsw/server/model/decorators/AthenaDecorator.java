@@ -18,6 +18,13 @@ public class AthenaDecorator extends CommandsDecorator {
         this.commands=commands;
     }
 
+    /**
+     * method that changes the current state of the player
+     * If the state is IDLE then the player can MOVE
+     * If the state is MOVE then the player can BUILD
+     * If the state is BUILD then the player goes IDLE
+     * @param player the match current player
+     */
     @Override
     public void nextState(Player player){
         switch(player.getTurnState()){
@@ -37,7 +44,7 @@ public class AthenaDecorator extends CommandsDecorator {
      * method that allows the stardard player movement
      * if the player moves up, the other players aren't allowed to moved up until the next Athena turn
      *
-     * @param position the position where whe worker has to move
+     * @param position the position where the worker has to move
      * @param player the player which is performing the command
      *
      */
@@ -56,6 +63,12 @@ public class AthenaDecorator extends CommandsDecorator {
             match.setMoveUpActive(true);
     }
 
+    /**
+     * Checks if the player has lost.
+     * If the player has lost, the moveUp is reactivated if disabled
+     * @param player the player which is performing the command
+     * @return if the player has lost
+     */
     @Override
     public boolean losingCondition(Player player){
         if (super.losingCondition(player)){

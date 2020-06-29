@@ -136,7 +136,9 @@ public class SelectingGodCards extends State {
     }
 
 
-
+    /**
+     * Adds/removes the card to/from the match deck
+     */
     public void selectedCard(ActionEvent event){
         String card = ((Node) event.getSource()).getId();
         ToggleButton button =  buttonStringMap.get(card);
@@ -170,6 +172,9 @@ public class SelectingGodCards extends State {
         System.out.println("selected cards: " + Database.getSelectedGodCards());
     }
 
+    /**
+     * Shows the card description when the mouse is over the match deck
+     */
     public void hoverCard(MouseEvent mouseEvent){
         String card = ((Node) mouseEvent.getSource()).getId();
         ToggleButton button =  buttonStringMap.get(card);
@@ -177,6 +182,9 @@ public class SelectingGodCards extends State {
         borderPane.setCenter(new ImageView(new Image("images/god_desc/"+card+".png",872,497,false,true)));
     }
 
+    /**
+     * Removes the description when the mouse is over no card
+     */
     public void hoverNone(MouseEvent event){
         Node source= (Node) event.getSource();
         Glow glow=(Glow) source.getEffect();

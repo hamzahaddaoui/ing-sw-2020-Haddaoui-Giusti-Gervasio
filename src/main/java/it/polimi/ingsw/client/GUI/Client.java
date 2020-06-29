@@ -15,32 +15,22 @@ public class Client extends Application {
         Application.launch(args);
     }
 
+    /**
+     * Starting application method.
+     * Sets the windows size and initialize the elements on the screen.
+     * @param stage The stage on which to launch the application
+     */
     @Override
-    public void start(Stage stage) throws IOException{
+    public void start(Stage stage) {
         Database.setStage(stage);
         stage.setTitle("Santorini online");
         stage.setMaxWidth(1200);
         stage.setMaxHeight(800);
         stage.setResizable(false);
 
-
-        //COMMENTATI PER DEBUG. NORMALMENTE SONO QUESTE LE ISTRUZIONI DA RUNNARE
         View.updateView();
         Database.getCurrentState().showPane();
 
-
-        //setCurrentState(new Running());
-        //getCurrentState().showPane();
-
-        /*setPlayerID(3);
-        setMatchPlayers(Map.of(1,"Hamza", 2, "Leo", 3, "Vasio"));
-        setMatchColors(Map.of(1,"Blue", 2, "Orange", 3, "Purple"));
-        setCurrentPlayer(1);
-        setPlayerState(PlayerState.ACTIVE);
-        setMatchCards(new ArrayList<>(Arrays.asList("Atlas", "Pan", "Athena")));
-        setPlacingAvailableCells(Set.of(new Position(0,0),new Position(1,1),new Position(2,2),new Position(3,3),new Position(4,4)));
-        setCurrentState(new PlacingWorkers());
-        getCurrentState().showPane();*/
 
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

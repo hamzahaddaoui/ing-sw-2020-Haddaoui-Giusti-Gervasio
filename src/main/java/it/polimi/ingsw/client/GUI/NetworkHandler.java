@@ -46,6 +46,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         System.out.println("Connected to " + server.getInetAddress());
     }
 
+    /**
+     * Launching method for the network handler thread.
+     * A heartbeat service is instanciated, as well as the input handler.
+     */
     @Override
     public void run() {
         //heartbeatService = Executors.newSingleThreadScheduledExecutor();
@@ -55,6 +59,11 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         active = true;
     }
 
+    /**
+     * Manager of the output connections.
+     * Sends a message to the server.
+     * @param message the message to be sent to the server
+     */
     @Override
     public void update(MessageEvent message){
         String json = new GsonBuilder().enableComplexMapKeySerialization().create().toJson(message);
@@ -81,6 +90,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         }).start();
     }
 
+    /**
+     * Manager of the connection. At a constant rate, a heartbeat message is sent to the server.
+     * The rate at which the messages are sent is SOCKET_TIMEOUT/2
+     */
     public void heartbeatRunnable() {
         MessageEvent msgEvent = new MessageEvent();
         if (active) {
@@ -90,7 +103,11 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         }
     }
 
-   private void inputHandler() {
+    /**
+     * Manager of the input connection, while the connection is active, keeps checking the input stream from the socket.
+     * Whenever a new message is received, the controller is notified.
+     */
+    private void inputHandler() {
        String inputObject;
        MessageEvent messageEvent;
        try {
@@ -119,6 +136,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        }
    }
 
+    /**
+     * Shutdown of all the connection services.
+     * Closes the input and output stream.
+     */
    public void shutdownAll(){
         active = false;
         heartbeatService.shutdownNow();
@@ -132,6 +153,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
         }
    }
 
+    /**
+     * Management of the connection errors from the server.
+     * e.g. Server not sending heartbeat messages anymore, server not reachable.
+     */
    public void connectionError(){
        Database.wipeData();
        Database.setCurrentState(new StartState());
@@ -146,6 +171,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        });
    }
 
+    /**
+     * Manager of the network handler observer. Only one class at time can get updates from the net handler.
+     * @param observer the new observer
+     */
     @Override
     public void addObserver(Observer<MessageEvent> observer){
         List<Observer<MessageEvent>> observers = new ArrayList<>();

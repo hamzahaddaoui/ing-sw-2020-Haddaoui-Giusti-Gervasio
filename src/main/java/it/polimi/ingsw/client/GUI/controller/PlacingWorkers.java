@@ -105,6 +105,10 @@ public class PlacingWorkers extends State{
         }
     }
 
+    /**
+     * Initialization of the GUI; A map is shown, on which the user can select the cell where to put his worker
+     * On the bottom, information about the match is shown, as well as the users (on the left)
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         this.addObserver(getNetworkHandler());
@@ -179,7 +183,10 @@ public class PlacingWorkers extends State{
     }
 
 
-
+    /**
+     * Selecting the cell, adding it to the initializedPositions set.
+     * If the selected cells number is two, then these cells are sent to the server.
+     */
     @FXML
     private void chooseCell(MouseEvent event) {
         if (finished)
@@ -227,6 +234,14 @@ public class PlacingWorkers extends State{
         }
     }
 
+    /**
+     * If the user loses during workers placing.
+     * Rare case! A has lost.
+     *      A A B o o
+     *      C C B o o
+     *      o o o o o
+     *      o o o o o
+     */
     public void lost(){
         Parent page;
         FXMLLoader fxmlLoader = new FXMLLoader();

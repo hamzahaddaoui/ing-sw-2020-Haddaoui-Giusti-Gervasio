@@ -194,7 +194,10 @@ public class SelectingSpecialCommand extends State {
         }
     }
 
-
+    /**
+     * On mouse click, the selected card is set as the user special card
+     * @param event the mouse click on which the method is invoked
+     */
     public void selectedCard(ActionEvent event){
         if (selectedCard)
             return;

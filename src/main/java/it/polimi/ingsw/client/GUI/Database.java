@@ -314,7 +314,10 @@ public class Database {
     //############################################################################################//
     //############################################################################################//
 
-
+    /**
+     * Updates the database from the message, reading the standard data
+     * @param messageEvent the received message, from which to read the message.
+     */
     public static void updateStandardData(MessageEvent messageEvent){
         if (messageEvent.getPlayerID() != playerID && messageEvent.getPlayerID() != 0)
             playerID = messageEvent.getPlayerID();

@@ -48,6 +48,9 @@ public class StartState extends State {
 
     Popup popupIP, popupNick;
 
+    /**
+     * Shows the starting screen animations
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         ScaleTransition rt = new ScaleTransition(Duration.seconds(0.0005), santorini);
@@ -100,6 +103,9 @@ public class StartState extends State {
     }
 
 
+    /**
+     * Starting the game by connecting to the server and sending a game request
+     */
     public void play(){
         Database.setIP(address.getCharacters().toString());
         Database.setNickname(nickname.getCharacters().toString());

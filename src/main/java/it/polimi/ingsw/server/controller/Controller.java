@@ -20,7 +20,15 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
         executor.submit(()->checkInput(messageEvent));
     }
 
-
+    /**
+     * Checks the input and detects which behaviour to execute.
+     * The behaviour on which the message is analyzed is relayed to the match and player state.
+     * If the message is an exit message, then another type of behaviour is activated.
+     * The behaviour consists in two parts:
+     * 1. Analyzing the message and executing the action
+     * 2. Sending a message back to the clients interested by this action
+     * @param messageEvent the message sent by the user
+     */
     public void checkInput(MessageEvent messageEvent){
         State controllerBehaviour;
         ClientHandler clientHandler = messageEvent.getClientHandler();
@@ -36,7 +44,6 @@ public class Controller extends Observable<MessageEvent> implements Observer<Mes
             controllerBehaviour.viewNotify(getObservers(), clientHandler.getMatchID());
         }
     }
-
 
 
     private State getBehaviour(int matchID, int playerID){

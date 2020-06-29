@@ -60,6 +60,9 @@ public class Running extends State{
         });
     }
 
+    /**
+     * Initialization of the screen and the 3D world.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
 
@@ -129,7 +132,7 @@ public class Running extends State{
             updateStandardData(message);
             setBillboardStatus(message.getBillboardStatus());
             if (!matchOver) {
-                updateBillboard(true);
+                updateBillboard();
                 matchOver = true;
                 lost();
             }
@@ -146,7 +149,7 @@ public class Running extends State{
         else if (message.getPlayerState() == PlayerState.WIN){
             updateStandardData(message);
             setBillboardStatus(message.getBillboardStatus());
-            updateBillboard(true);
+            updateBillboard();
             getIslandLoader().endAnimation();
             System.out.println("WINNER");
             win();
@@ -168,12 +171,17 @@ public class Running extends State{
         setWorkersAvailableCells(message.getWorkersAvailableCells());
         setBillboardStatus(message.getBillboardStatus());
 
-        Platform.runLater(() -> updateBillboard(true));
+        Platform.runLater(Running::updateBillboard);
 
         updateGame();
     }
 
-
+    /**
+     * Handles the clicks on the workers.
+     * If the click is allowed, then selects the worker as the current one.
+     * @param point the worker to be selected
+     * @return if the click is allowed
+     */
     public boolean workerClick(Point2D point){
         Position position = pointToPosition(point);
         System.out.println("worker clicked + "+position);
@@ -201,7 +209,11 @@ public class Running extends State{
         return false;
     }
 
-
+    /**
+     * Handles the clicks on the board.
+     * If the click is allowed, then moves/builds in the selected cell.
+     * @param point the point on which the board has been clicked
+     */
     public void boardClick(Point2D point){
         Position position = pointToPosition(point);
         System.out.println("Click on board/building detected on "+ position);
@@ -265,7 +277,7 @@ public class Running extends State{
         }
     }
 
-    public void updateGame(){
+    private void updateGame(){
         Platform.runLater(()  -> {
             if (getPlayerState() == PlayerState.ACTIVE){
 
@@ -310,7 +322,7 @@ public class Running extends State{
 
     }
 
-    public static void updateBillboard(boolean bool){
+    private static void updateBillboard(){
         Map<Integer, Position> movedInPlayers = new HashMap<>();
         Map<Integer, Position> movedOutPlayers =  new HashMap<>();
         Map<Point2D, Point2D> playersMove = new HashMap<>();
@@ -397,17 +409,21 @@ public class Running extends State{
 
         }
 
-        if (bool)
-            billboardStatus = getBillboardStatus();
+        billboardStatus = getBillboardStatus();
     }
 
-    public static Position pointToPosition(Point2D point){
+    private static Position pointToPosition(Point2D point){
         if (point == null)
             return null;
         else
             return new Position((int) point.getX(), (int) point.getY());
     }
 
+    /**
+     * Converts a certain position to the relative 2D point
+     * @param position The position to process
+     * @return the 2D point converted
+     */
     public static Point2D positionToPoint(Position position){
         if (position == null)
             return null;
@@ -415,8 +431,7 @@ public class Running extends State{
             return new Point2D(position.getX(), position.getY());
     }
 
-
-    public void specialFunctionHandler(){
+    private void specialFunctionHandler(){
         System.out.println(getSpecialFunctionAvailable());
         System.out.println(isTerminateTurnAvailable());
 
@@ -516,7 +531,7 @@ public class Running extends State{
         }
     }
 
-    public void updateLightenedCells(){
+    private void updateLightenedCells(){
         System.out.println("LIGHTNING CELLS: You are on cell " + getStartingPosition());
         System.out.println("AVAILABLE CELLS -> " + getWorkersAvailableCells().get((getStartingPosition())));
         getIslandLoader().showCells(null);
@@ -526,14 +541,13 @@ public class Running extends State{
             getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));
         }
     }
-
-    public void resetCells(){
+    private void resetCells(){
         System.out.println("RESETTED CELLS");
         getIslandLoader().showCells(null);
         getIslandLoader().hideArrow();
     }
 
-    public void win(){
+    private void win(){
         AnchorPane page;
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Controller.class.getClassLoader().getResource("fxml_files/winner.fxml")); //potrebbe dare problemi, ma non credo
@@ -552,7 +566,7 @@ public class Running extends State{
         });
     }
 
-    public void lost(){
+    private void lost(){
         Parent page;
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(Controller.class.getClassLoader().getResource("fxml_files/loser.fxml")); //potrebbe dare problemi, ma non credo
@@ -572,7 +586,9 @@ public class Running extends State{
         });
     }
 
-
+    /**
+     * Shows the helper popup on mouse click
+     */
     public void helperClick(MouseEvent event){
         Popup popup = new Popup();
         //ImageView imageView = new ImageView(new Image("images/helper/" + getGodCard() + ".png",450,225,true,true));
@@ -599,17 +615,6 @@ public class Running extends State{
         popup.setOnHidden( e -> helper.setVisible(true));
 
         Platform.runLater(() -> popup.show(getStage()));
-    }
-
-    @FXML
-    public void userNewGame(MouseEvent mouseEvent){
-        //provare a chiudere conneessione server
-        Controller.userNewGame();
-    }
-
-    @FXML
-    public void userExit(MouseEvent mouseEvent){
-        Controller.exit();
     }
 
 }

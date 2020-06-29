@@ -57,6 +57,14 @@ public class CharonDecorator  extends CommandsDecorator {
         }
     }
 
+    /**
+     * method that allows the stardard player movement
+     * if the player has activated the special function, the sellected cell will be relative to the player to move diametrally in the opposite direction relative to the current player
+     *
+     * @param position the position where the worker has to move/the position of the selected player to move
+     * @param player the player which is performing the command
+     *
+     */
     @Override
     public void moveWorker(Position position, Player player){
         if (!player.hasSpecialFunction())
@@ -78,6 +86,12 @@ public class CharonDecorator  extends CommandsDecorator {
         }
     }
 
+    /**
+     * method that show the list of cells that are available for the standard movement of the player
+     *
+     * @param player  is the current player
+     * @return  the list of Position where the worker can move on
+     */
     @Override
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
         if (!player.hasSpecialFunction())

@@ -12,6 +12,10 @@ import java.io.IOException;
 public class Controller {
 
 
+    /**
+     * Replace the current scene content with another one.
+     * @param fxml the scene files to load
+     */
     public static void replaceSceneContent(String fxml) {
         Parent page;
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -37,19 +41,26 @@ public class Controller {
         Database.getStage().show();
     }
 
-    public static boolean setServer() throws IOException {
+    /**
+     * Initialize the server connection.
+     * @throws IOException If no connection have been established.
+     */
+    public static void setServer() throws IOException {
         Database.setNetworkHandler(new NetworkHandler(Database.getIP()));
         new Thread(Database.getNetworkHandler()).start();
-        return true;
     }
 
-
-
+    /**
+     * Close the application
+     */
     public static void exit(){
         Platform.exit();
         System.exit(0);
     }
 
+    /**
+     * Start a new game, wiping out all the data.
+     */
     public static void userNewGame(){
         //provare a chiudere conneessione server
         Database.wipeData();

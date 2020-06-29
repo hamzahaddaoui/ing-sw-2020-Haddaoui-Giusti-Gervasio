@@ -23,6 +23,13 @@ public class AtlasDecorator extends CommandsDecorator {
         this.commands=commands;
     }
 
+    /**
+     * method that changes the current state of the player
+     * If the state is IDLE then the player can MOVE
+     * If the state is MOVE then the player can BUILD
+     * If the state is BUILD then the player goes IDLE
+     * @param player the match current player
+     */
     @Override
     public void nextState(Player player) {
         switch(player.getTurnState()){
@@ -58,8 +65,4 @@ public class AtlasDecorator extends CommandsDecorator {
             super.build(position, player);
     }
 
-    @Override
-    public void notifySpecialFunction(Player player){
-        super.notifySpecialFunction(player);
-    }
 }

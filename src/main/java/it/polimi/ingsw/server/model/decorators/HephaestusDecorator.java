@@ -20,6 +20,13 @@ public class HephaestusDecorator extends CommandsDecorator {
         this.commands = commands;
     }
 
+    /**
+     * method that changes the current state of the player
+     * If the state is IDLE then the player can MOVE
+     * If the state is MOVE then the player can BUILD
+     * If the state is BUILD then the player goes IDLE or BUILD again
+     * @param player the match current player
+     */
     @Override
     public void nextState(Player player) {
         switch (player.getTurnState()) {
@@ -44,6 +51,13 @@ public class HephaestusDecorator extends CommandsDecorator {
         }
     }
 
+    /**
+     * method that allows the standard player build
+     * the player can build with the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard if the position that is selected is free
+     * If the player has already built, it allows a second build in the same position
+     *  @param position   the position that player have inserted, not null
+     * @param player the match current player
+     */
     @Override
     public void build(Position position, Player player) {
         if (firstBuildPosition == null){
@@ -69,10 +83,7 @@ public class HephaestusDecorator extends CommandsDecorator {
             return super.computeAvailableBuildings(player, worker);
         }
         else{
-            if (firstBuildPosition.getZ() < 3)
-                return Collections.singleton(firstBuildPosition);
-            else
-                return null;
+            return Collections.singleton(firstBuildPosition);
         }
 
 

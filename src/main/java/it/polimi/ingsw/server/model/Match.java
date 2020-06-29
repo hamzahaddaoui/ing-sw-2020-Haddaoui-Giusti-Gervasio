@@ -31,6 +31,13 @@ public class Match {
     private int index = 0;
     private Player winner;
 
+    /**
+     * Constructor that instantiates a new match; a game billboard is instantiated too.
+     * The new match, is set on the GETTING_PLAYERS_NUM status
+     * The player that has created the match, is added immediatly and set as the current player.
+     * @param matchID progressive ID given to any existing match
+     * @param matchMaster the player that has created the match
+     */
     public Match(int matchID, Player matchMaster) {
         this.ID = matchID;
         billboard = new Billboard();
@@ -98,27 +105,34 @@ public class Match {
         losers.clear();
     }
 
-    public void setPlayersNum(int playersNum) throws IllegalArgumentException{
-        if (!(playersNum == 2 || playersNum == 3))
-            throw new IllegalArgumentException("players Num must be 2 or 3");
+    /**
+     * This method is used to set the players number of the match.
+     * @param playersNum the number of the players for the match. Can be either 2 or 3
+     */
+    public void setPlayersNum(int playersNum){
         playerNumSetted = true;
         this.playersNum = playersNum;
     }
 
-    public void addPlayer(Player player) throws IllegalStateException {
-        if (playerNumSetted && playersCurrentCount == playersNum)
-            throw new IllegalStateException("Players num reached");
-        else {
-            players.add(player);
-            player.setMatch(this);
-            playersCurrentCount++;
-        }
+    /**
+     * This method is used to add a new player to the match.
+     * The players counter is increased too.
+     * @param player the new player being added to the match.
+     */
+    public void addPlayer(Player player)  {
+        players.add(player);
+        player.setMatch(this);
+        playersCurrentCount++;
     }
 
-    public void removePlayer(Player player) throws NoSuchElementException{
-        if (!players.contains(player)) {
-            throw new NoSuchElementException("Player not found");
-        }
+    /**
+     * This method is used to remove a certain player, that has lost, from the match.
+     * At first, the player is being removed from the billboard, and then removed from the players list
+     * This player then is added to the losers list. In fact, even if this player has lost, it keeps receiving updates from the match.
+     * At last, if there is only one remaining player, this is declared winner.
+     *  @param player the player that has lost
+     */
+    public void removePlayer(Player player) {
         billboard
                 .getCells()
                 .keySet()
@@ -136,7 +150,6 @@ public class Match {
         if (playersCurrentCount == 1){
             currentPlayer = players.get(0); //the remaining player is the winner
             currentPlayer.win();
-            return;
         }
         else if(currentPlayer == player) {    //if the deleted player was the current player
             index--;
@@ -147,6 +160,11 @@ public class Match {
 
     }
 
+    /**
+     * This method is used to check the status of the match.
+     * If a player state is LOST, this is removed.
+     * Otherwise if a player state is WIN, this is declared winner, and the other players are declared losers.
+     */
     public boolean checkPlayers(){
         boolean retVal = false;
         Optional<Player> lostPlayer = players.stream()
@@ -181,10 +199,10 @@ public class Match {
         return retVal;
     }
 
-    public void nextTurn() throws UnsupportedOperationException{
-        if (winner!=null || currentState == MatchState.FINISHED)
-            throw new UnsupportedOperationException("Match is finished!");
-
+    /**
+     * Changes the current player.
+     */
+    public void nextTurn() {
         if (currentPlayer.getPlayerState() == PlayerState.ACTIVE){
             currentPlayer.resetPlayerState();
         }
@@ -193,32 +211,26 @@ public class Match {
         currentPlayer.setPlayerState();
     }
 
-    public void setCards(Set<GodCards> cards) throws IllegalArgumentException {
-        if (cards.size() == playersNum)
-            this.cards = cards;
-        else
-            throw new IllegalArgumentException("Cards not matching players num");
+    public void setCards(Set<GodCards> cards) {
+        this.cards = cards;
     }
 
-    public void removeCard(GodCards card) throws NoSuchElementException {
-        if(!cards.contains(card))
-            throw new NoSuchElementException("Card is not in deck");
-        else
-            cards.remove(card);
+    public void removeCard(GodCards card) {
+        cards.remove(card);
     }
 
-    public void nextState() throws IllegalStateException{
-        if (currentState.equals(MatchState.FINISHED))
-            throw new IllegalStateException("Match is finished");
-
-        else if (currentState.equals(MatchState.PLACING_WORKERS)) {
+    /**
+     * This method is used to change the current state of the match.
+     * The match moves sequentially through the states described here:
+     * GETTING_PLAYERS_NUM -> WAITING_FOR_PLAYERS -> SELECTING_GOD_CARDS -> SELECTING_SPECIAL_COMMAND -> PLACING_WORKERS -> RUNNING -> FINISHED
+     */
+    public void nextState() {
+        if (currentState.equals(MatchState.PLACING_WORKERS)) {
             currentState = currentState.next();
             currentPlayer.setPlayerState();
         }
-
         else
             currentState = currentState.next();
-
     }
 
     public void start(){

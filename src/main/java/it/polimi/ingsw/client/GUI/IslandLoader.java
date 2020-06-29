@@ -90,25 +90,11 @@ public class IslandLoader{
         put(new Point2D(4,4), new Point2D(5.1,5));
     }});
 
-    class SmartGroup extends Group {
-        Rotate r;
-        Transform t = new Rotate();
-
-        void rotateByX(int ang) {
-            r = new Rotate(ang, Rotate.X_AXIS);
-            t = t.createConcatenation(r);
-            this.getTransforms().clear();
-            this.getTransforms().addAll(t);
-        }
-
-        void rotateByY(int ang) {
-            r = new Rotate(ang, Rotate.Y_AXIS);
-            t = t.createConcatenation(r);
-            this.getTransforms().clear();
-            this.getTransforms().addAll(t);
-        }
-    }
-
+    /**
+     * Load an obj file, with its own mesh
+     * @param url the location of the obj file
+     * @return the loaded model Group object
+     */
     private static Group loadModel(URL url) {
         Group modelRoot = new Group();
 
@@ -123,7 +109,11 @@ public class IslandLoader{
     }
 
 
-    public static void start(StackPane stackPane) throws Exception{
+    /**
+     * Initializating the world and all the graphical objects.
+     * @param stackPane The parent pane on which initializing the world
+     */
+    public static void start(StackPane stackPane) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 boardCells.put(new Point2D(i, j), 0);
@@ -494,6 +484,11 @@ public class IslandLoader{
     }
 
 
+    /**
+     * Build a block on a certain point in the billboard
+     * @param point where to build a block
+     * @param dome build a dome, instead of a block
+     */
     public void build(Point2D point, boolean dome){
         if (dome){
             //correggere l'altezza a seconda
@@ -521,6 +516,11 @@ public class IslandLoader{
         }
     }
 
+    /**
+     * Move a worker from a position to another
+     * @param startPos starting position
+     * @param endPos end position
+     */
     public void moveWorker(Point2D startPos, Point2D endPos){
         Optional<Group> optionalWorker =  workers.keySet().stream()
                 .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(startPos))
@@ -627,6 +627,13 @@ public class IslandLoader{
         System.out.println(startPos + "  to  " + workers.get(worker));
     }
 
+    /**
+     * Move two workers at the same time.
+     * @param startPos1 starting position of the 1st worker
+     * @param startPos2 starting position of the 2nd worker
+     * @param endPos1 ending position of the 1st worker
+     * @param endPos2 ending position of the 2nd worker
+     */
     public void swapWorkers(Point2D startPos1, Point2D startPos2, Point2D endPos1, Point2D endPos2){
         Optional<Group> optionalWorker1 = workers.keySet().stream()
                 .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(startPos1))
@@ -843,6 +850,10 @@ public class IslandLoader{
     }
 
 
+    /**
+     * Remove the worker in a certain position from the billboard
+     * @param pos the position on which the worker is situated
+     */
     public void removeWorker(Point2D pos){
         Optional<Group> optionalWorker =  workers.keySet().stream()
                 .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(pos))
@@ -858,6 +869,9 @@ public class IslandLoader{
         Platform.runLater(() -> group.getChildren().remove(worker));
     }
 
+    /**
+     * Start the animation of ending at the end of the game
+     */
     public void endAnimation(){
 
         Timeline timeline = new Timeline(
@@ -881,6 +895,10 @@ public class IslandLoader{
 
     }
 
+    /**
+     * Show a yellow halo on every position of the set
+     * @param positionSet the set of the positions to glow
+     */
     public void showCells(Set<Position> positionSet){
         Platform.runLater( () -> {
             if(cells.size() != 0)
@@ -910,10 +928,18 @@ public class IslandLoader{
 
     }
 
+    /**
+     * Hide the arrow which indicates a certain worker selected
+     */
     public void hideArrow(){
         Platform.runLater(() -> group.getChildren().remove(arrow));
     }
 
+    /**
+     * Shows an arrow on the selected worker
+     * @param color the color of the selected worker
+     * @param point2D the position of the selected worker
+     */
     public void showArrow(String color, Point2D point2D){
         Group temp = loadModel(IslandLoader.class.getClassLoader().getResource("3D_files/arrow_"+color.toLowerCase()+".obj"));
         //arrow.setTranslateX(-arrow.localToScene(arrow.getBoundsInLocal()).getMaxX()+arrow.localToScene(arrow.getBoundsInLocal()).getWidth()/2);
@@ -940,10 +966,10 @@ public class IslandLoader{
         });
     }
 
-    public void setCellHeight(Point2D point, int height){
-        boardCells.replace(point, height);
-    }
-
+    /**
+     * Moves a worker up, in the same position.
+     * @param point where the worker is situated.
+     */
     public void moveUp(Point2D point){
         Optional<Group> optionalWorker =  workers.keySet().stream()
                 .filter(w -> new Point2D(workers.get(w).getX(), workers.get(w).getY()).equals(point))

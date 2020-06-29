@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.decorators.AthenaDecorator;
 import it.polimi.ingsw.server.model.decorators.AtlasDecorator;
+import it.polimi.ingsw.server.model.decorators.CharonDecorator;
 import it.polimi.ingsw.server.model.decorators.HephaestusDecorator;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.Position;
@@ -18,10 +19,10 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Match simulation with 3 gods: Atlas, Athena and Hephaestus
+ * Match simulation with 3 gods: Atlas, Athena and Charon
  */
 
-class PlayerTestHamza {
+class PlayerTestHamza2 {
 
 
     Player p1, p2, p3;
@@ -32,7 +33,7 @@ class PlayerTestHamza {
     void setUp(){
         p1 = new Player(11,"ath");
         p2 = new Player(22,"atl");
-        p3 = new Player(33,"eph");
+        p3 = new Player(33,"cha");
     }
     @Test
     void testInitialConfig(){
@@ -71,18 +72,18 @@ class PlayerTestHamza {
 
         cards.add(GodCards.Athena);
         cards.add(GodCards.Atlas);
-        cards.add(GodCards.Hephaestus);
+        cards.add(GodCards.Charon);
 
         match.setCards(cards);
         match.nextState();
 
         p1.setCommands(GodCards.Athena);
         p2.setCommands(GodCards.Atlas);
-        p3.setCommands(GodCards.Hephaestus);
+        p3.setCommands(GodCards.Charon);
 
         assertTrue(p1.getCommands() instanceof AthenaDecorator);
         assertTrue(p2.getCommands() instanceof AtlasDecorator);
-        assertTrue(p3.getCommands() instanceof HephaestusDecorator);
+        assertTrue(p3.getCommands() instanceof CharonDecorator);
 
         assertEquals(Collections.emptyMap(), p1.getWorkersAvailableCells());
         assertEquals(match.getBillboard().getCells().keySet(), p1.getPlacingAvailableCells());
@@ -153,13 +154,13 @@ class PlayerTestHamza {
             match.checkPlayers();
             //FINE
 
-            //---------turno di efesto------------------------------------------------------
+            //---------turno di caronte------------------------------------------------------
             p = p3;
             //INIZIO TURNO - MI MUOVO
             worker = new Position(4, 4);
             p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            System.out.println("Hephaestus - moves from x=4 y=4 to x=3 y=4\n\n");
+            System.out.println("Charon - moves from x=4 y=4 to x=3 y=4\n\n");
             worker = new Position(3, 4);
             p.playerAction(worker);
             match.checkPlayers();
@@ -167,13 +168,7 @@ class PlayerTestHamza {
             //COSTRUISCO
             build = new Position(3, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            System.out.println("Hephaestus - builds a block in x=3 y=3\n\n");
-            p.playerAction(build);
-            match.checkPlayers();
-
-            build = new Position(3, 3);
-            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            System.out.println("Hephaestus - builds a block in x=3 y=3\n\n");
+            System.out.println("Charon - builds a block in x=3 y=3\n\n");
             p.playerAction(build);
             match.checkPlayers();
 
@@ -223,21 +218,29 @@ class PlayerTestHamza {
             match.checkPlayers();
             //FINE
 
-            //---------turno di efesto------------------------------------------------------
+            //---------turno di caronte------------------------------------------------------
             p = p3;
-            //INIZIO TURNO - MI MUOVO
+            //INIZIO TURNO - MUOVO AVVERSARIO
             worker = new Position(3, 4);
             p.setCurrentWorker(worker);
+            p.setUnsetSpecialFunction(true);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            System.out.println("(move up not active!)\nHephaestus - moves from x=3 y=4 to x=2 y=3\n\n");
+            System.out.println("(move up not active!)\nCharon - moves the enemy in x=2 y=4! (special POWER)\n\n");
+            Position moveEnemy = new Position(2, 4);
+            p.playerAction(moveEnemy);
+            match.checkPlayers();
+
+            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
+            System.out.println("(move up not active!)\nCharon - moves from 3,4 to 2,3\n\n");
             worker = new Position(2, 3);
             p.playerAction(worker);
             match.checkPlayers();
 
+
             //COSTRUISCO
             build = new Position(1, 3);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            System.out.println("Hephaestus - builds a block in x=1 y=3\n\n");
+            System.out.println("Charon - builds a block in x=1 y=3\n\n");
             p.playerAction(build);
             match.checkPlayers();
 
@@ -271,11 +274,11 @@ class PlayerTestHamza {
             //---------turno di atlas------------------------------------------------------
             p = p2;
             //INIZIO TURNO - MI MUOVO
-            worker = new Position(2, 4);
+            worker = new Position(4, 4);
             p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("Atlas - moves from x=2 y=4 to x=1 y=4\n\n");
-            worker = new Position(1,4);
+            worker = new Position(3,3);
             p.playerAction(worker);
             match.checkPlayers();
 
@@ -287,7 +290,7 @@ class PlayerTestHamza {
             match.checkPlayers();
             //FINE
 
-            //---------turno di efesto------------------------------------------------------
+            //---------turno di caronte------------------------------------------------------
             p = p3;
             //INIZIO TURNO - MI MUOVO
             worker = new Position(2, 3);
@@ -305,14 +308,6 @@ class PlayerTestHamza {
             p.playerAction(build);
             match.checkPlayers();
 
-            //COSTRUISCO
-            build = new Position(0, 3);
-            System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-            System.out.println("Hephaestus - builds a block in x=0 y=3\n\n");
-            p.playerAction(build);
-            match.checkPlayers();
-            match.checkPlayers();
-            //FINE
         }
 
         System.out.println("\n-----------------------------------------------------------------------------" +
@@ -341,7 +336,7 @@ class PlayerTestHamza {
             //---------turno di atlas------------------------------------------------------
             p = p2;
             //INIZIO TURNO - MI MUOVO
-            worker = new Position(1, 4);
+            worker = new Position(3, 3);
             p.setCurrentWorker(worker);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("Atlas - moves from x=1 y=4 to x=2 y=4\n\n");
@@ -389,15 +384,12 @@ class PlayerTestHamza {
             //INIZIO TURNO - MI MUOVO
             worker = new Position(1, 0);
             p.setCurrentWorker(worker);
-
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
             System.out.println("Athena - moves from x=1 y=0 to x=2 y=0\n\n");
             worker = new Position(2, 0);
             p.playerAction(worker);
             match.checkPlayers();
 
-            p.getCurrentWorker().setAvailableCells(TurnState.BUILD, Collections.EMPTY_SET);
-            p.getCommands().losingCondition(p);
             //COSTRUISCO
             build = new Position(3, 0);
             System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -434,16 +426,13 @@ class PlayerTestHamza {
             System.out.println("Hephaestus - moves from x=2 y=3 to x=3 y=3\n\n");
             worker = new Position(3, 3);
             p.playerAction(worker);
-            GameModel.getMatchWinner(match.getID());
             if (match.checkPlayers()){
                 System.out.println("MATCH FINISHED - WINNER IS "+p.toString());
             }
-            match.nextState();
-            GameModel.getMatchWinner(match.getID());
         }
+
+
     }
-
-
 
 
 
