@@ -11,7 +11,7 @@ import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
 public class MinotaurDecorator extends CommandsDecorator {
 
-    static final GodCards card = GodCards.Minotaur;
+    static final private GodCards card = GodCards.Minotaur;
 
     public MinotaurDecorator(Commands commands){
         this.commands=commands;

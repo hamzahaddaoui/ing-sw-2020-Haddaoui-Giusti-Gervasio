@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class Controller extends Observable<MessageEvent> {
 
     static ExecutorService executor = Executors.newSingleThreadExecutor();
-    static ExecutorService reconnector = Executors.newSingleThreadExecutor();
+    //static ExecutorService reconnector = Executors.newSingleThreadExecutor();
 
     /**
      * Method handles the input from keyboard and launches the execution of ControllerState. Then, if the message is Ready

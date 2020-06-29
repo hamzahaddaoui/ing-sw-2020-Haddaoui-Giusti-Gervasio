@@ -20,10 +20,10 @@ import java.util.Set;
 
 public class ErosDecorator  extends CommandsDecorator {
 
-    private GodCards card = GodCards.Eros;
+    static final private GodCards card = GodCards.Eros;
 
     private boolean winningCondition;  //true if the current movement is build, else false
-    private boolean tree_playerGame;
+    private boolean three_playerGame;
 
     public ErosDecorator(Commands commands){
         this.commands=commands;
@@ -38,7 +38,7 @@ public class ErosDecorator  extends CommandsDecorator {
      */
     public Set<Position> computeAvailablePlacing(Player player) {
         try{
-            tree_playerGame = player.getMatch().getPlayers().size() == 3;
+            three_playerGame = player.getMatch().getPlayers().size() == 3;
 
             Set<Position> positions = new HashSet<>();
             player.getMatch().getBillboard().getCells().forEach((key,val) -> {
@@ -87,7 +87,7 @@ public class ErosDecorator  extends CommandsDecorator {
     }
 
     private boolean heightCondition(Worker worker1, Worker worker2){
-        if(tree_playerGame){
+        if(three_playerGame){
             return worker1.getPosition().getZ() == worker2.getPosition().getZ() && worker2.getPosition().getZ() >= 0;
         }
         else{

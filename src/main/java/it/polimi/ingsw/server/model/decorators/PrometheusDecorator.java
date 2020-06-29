@@ -18,7 +18,8 @@ import static it.polimi.ingsw.utilities.TurnState.*;
  */
 
 public class PrometheusDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Prometheus;
+
+    static final private GodCards card = GodCards.Prometheus;
 
     public PrometheusDecorator(Commands commands){
         this.commands=commands;
@@ -94,6 +95,7 @@ public class PrometheusDecorator extends CommandsDecorator {
      * Else, it's not a special function and the method returns the basic cells available for movements.
      *
      * @param player  the player who makes the move, not null
+     * @param worker  the current worker of the player, not null
      * @return        the spaces which are available
      */
     @Override

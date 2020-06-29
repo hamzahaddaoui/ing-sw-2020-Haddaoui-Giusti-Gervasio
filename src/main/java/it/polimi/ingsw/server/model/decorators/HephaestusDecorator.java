@@ -11,6 +11,8 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 
 public class HephaestusDecorator extends CommandsDecorator {
 
+    static final private GodCards card = GodCards.Hephaestus;
+
     private Position firstBuildPosition;
     private boolean secondBuildDone;
 

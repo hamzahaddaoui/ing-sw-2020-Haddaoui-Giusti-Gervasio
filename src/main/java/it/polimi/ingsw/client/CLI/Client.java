@@ -82,8 +82,6 @@ public class Client {
     }
 
     public static void reconnection() {
-        view=null;
-        controller=null;
         view = new View();
         controller = new Controller();
 

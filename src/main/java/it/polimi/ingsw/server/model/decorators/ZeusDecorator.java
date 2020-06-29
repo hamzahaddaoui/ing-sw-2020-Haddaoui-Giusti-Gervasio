@@ -19,7 +19,7 @@ import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
 public class ZeusDecorator  extends CommandsDecorator {
 
-    private GodCards card = GodCards.Zeus;
+    static final private GodCards card = GodCards.Zeus;
 
     private Position positionBuilt;
 

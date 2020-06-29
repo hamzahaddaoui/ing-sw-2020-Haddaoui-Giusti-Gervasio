@@ -21,7 +21,7 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 
 public class ArtemisDecorator extends CommandsDecorator {
 
-    static final GodCards card = GodCards.Artemis;
+    static final private GodCards card = GodCards.Artemis;
 
     private Position startingPosition=null;
     private boolean secondMoveDone;

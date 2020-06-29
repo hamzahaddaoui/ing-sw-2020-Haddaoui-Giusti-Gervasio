@@ -18,7 +18,8 @@ import static it.polimi.ingsw.utilities.TurnState.IDLE;
  */
 
 public class DemeterDecorator extends CommandsDecorator {
-    static final GodCards card = GodCards.Demeter;
+
+    static final private GodCards card = GodCards.Demeter;
 
     private Position firstBuildPosition;
     private boolean secondBuildDone;

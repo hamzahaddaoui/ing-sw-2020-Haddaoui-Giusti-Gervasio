@@ -11,13 +11,22 @@ import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
 public class HestiaDecorator extends CommandsDecorator {
 
-    static final GodCards card = GodCards.Hestia;
+    static final private GodCards card = GodCards.Hestia;
 
     public HestiaDecorator(Commands commands) {this.commands=commands;}
 
     private boolean secondBuildDone;
     private Position firstBuildPosition;
 
+    /**
+     * Method that sets the next state of the player.
+     * <p>
+     * If the player has done just one building turn and there are not only perimeter cells
+     * in his available building cells, the method sets true the available end turn and give
+     * the player the chance to build again.
+     *
+     * @param player  the player who makes the turn, not null
+     */
     @Override
     public void nextState(Player player) {
         switch (player.getTurnState()) {
@@ -38,6 +47,17 @@ public class HestiaDecorator extends CommandsDecorator {
         }
     }
 
+    /**
+     * Method that allows the specific building block action of Hestia.
+     * <p>
+     * If it's the first building turn and the position where the player wants to build
+     * is now of level 4 (with dome in it) the method remove that cell from the available
+     * for the second build.
+     * Both the building moves are the standard ones.
+     *
+     * @param player     the player who makes the building move, not null
+     * @param position   the position that player have inserted, not null
+     */
     @Override
     public void build(Position position, Player player) {
         if (firstBuildPosition == null) {
@@ -55,6 +75,16 @@ public class HestiaDecorator extends CommandsDecorator {
         }
     }
 
+    /**
+     * Returns the spaces that are available for building after a check in the billboard.
+     * <p>
+     * If the player has already done the first building turn, the method removes all the
+     * perimeter cells from the available buildings cells.
+     *
+     * @param player  the player who makes the move, not null
+     * @param worker  the current worker of the player, not null
+     * @return        the spaces which are available
+     */
     @Override
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
         if (firstBuildPosition != null) {
@@ -63,6 +93,14 @@ public class HestiaDecorator extends CommandsDecorator {
         else return super.computeAvailableBuildings(player, worker);
     }
 
+    /**
+     * Method that defines if a space is a perimeter one.
+     * <p>
+     * If x or y are between 0 and 4, the method return true; else otherwise.
+     *
+     * @param position  the position you want to define, not nul
+     * @return  true if it's a perimeter one, false otherwise
+     */
     private boolean isPerimeterSpace(Position position) {
         int x = position.getX();
         int y = position.getY();

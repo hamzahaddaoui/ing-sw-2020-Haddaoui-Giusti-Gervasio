@@ -15,6 +15,8 @@ import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
 public class CharonDecorator  extends CommandsDecorator {
 
+    static final private GodCards card = GodCards.Charon;
+
     Map<Position, Set<Position>> opponentPositions = new HashMap<>();
 
     public CharonDecorator(Commands commands){

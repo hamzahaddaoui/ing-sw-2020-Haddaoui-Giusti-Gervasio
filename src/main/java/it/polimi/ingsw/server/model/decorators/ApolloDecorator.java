@@ -20,7 +20,7 @@ import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
 public class ApolloDecorator extends CommandsDecorator {
 
-    private GodCards card = GodCards.Apollo;
+    static final private GodCards card = GodCards.Apollo;
 
     /**
      * decorate the object Command with Apollo's special power

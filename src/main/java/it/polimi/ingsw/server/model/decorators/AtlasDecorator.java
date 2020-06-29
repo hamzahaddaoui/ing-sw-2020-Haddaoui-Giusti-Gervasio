@@ -12,6 +12,8 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 
 public class AtlasDecorator extends CommandsDecorator {
 
+    static final private GodCards card = GodCards.Atlas;
+
     /**
      * decorate the object Command with Atlas's special power
      *

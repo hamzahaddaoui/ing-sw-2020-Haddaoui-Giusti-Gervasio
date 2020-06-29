@@ -7,6 +7,8 @@ import static it.polimi.ingsw.utilities.TurnState.BUILD;
 import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
 public class AthenaDecorator extends CommandsDecorator {
+
+    static final private GodCards card = GodCards.Athena;
     /**
      * decorate the object Command with Athena's special power
      *

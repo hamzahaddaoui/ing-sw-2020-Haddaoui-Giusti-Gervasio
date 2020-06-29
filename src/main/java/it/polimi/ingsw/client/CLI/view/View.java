@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.CLI.view;
 
-import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import it.polimi.ingsw.utilities.PlayerState;
 import it.polimi.ingsw.utilities.*;
@@ -134,6 +133,11 @@ public class View implements Observer<MessageEvent> {
         return outputA.toString();
     }
 
+    /**
+     * Prints the available cells during the placing phase.
+     *
+     * @return  the string of the GameBoard's situation
+     */
     static String getPlacingAvailableCells(Set<Position> cells) {
         StringBuilder outputB = new StringBuilder();
 
@@ -210,7 +214,7 @@ public class View implements Observer<MessageEvent> {
      * @param cells  are the worker' positions of the user
      * @return  cells of the user in the billboard table
      */
-    static String getBillBoardEvidence( Set<Position> cells){
+    static String getBillboardEvidence( Set<Position> cells){
         StringBuilder outputD = new StringBuilder();
 
         Map<Position, Cell> billboardCells = DataBase.getBillboardStatus();
@@ -308,7 +312,7 @@ public class View implements Observer<MessageEvent> {
     public static void gameBoardVisualizationChooseCurrentWorker(){
         StringBuilder output = new StringBuilder();
         String billboardStat2 = getBillboardPlayersAndHeights();
-        String availableMovements = getBillBoardEvidence(DataBase.getWorkersPositions());
+        String availableMovements = getBillboardEvidence(DataBase.getWorkersPositions());
 
         int q, w;
         int j, k;
