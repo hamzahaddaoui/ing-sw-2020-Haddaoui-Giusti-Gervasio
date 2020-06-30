@@ -23,7 +23,7 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) {
         Database.setStage(stage);
-        stage.setTitle("Santorini online");
+        stage.setTitle("Santorini ONLINE");
         stage.setMaxWidth(1200);
         stage.setMaxHeight(800);
         stage.setResizable(false);

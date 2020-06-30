@@ -19,14 +19,6 @@
   </nodes>
   <notes />
   <edges>
-    <edge source="it.polimi.ingsw.server.model.BasicCommands" target="it.polimi.ingsw.server.model.Commands">
-      <point x="-142.66666666666663" y="126.0" />
-      <point x="392.8333333333335" y="686.0" />
-      <point x="430.70157582512275" y="686.0" />
-      <point x="430.70157582512275" y="1776.0" />
-      <point x="813.3000000000001" y="1776.0" />
-      <point x="-171.20000000000005" y="-126.0" />
-    </edge>
     <edge source="it.polimi.ingsw.server.model.CommandsDecorator" target="it.polimi.ingsw.server.model.Commands">
       <point x="-53.5" y="-147.0" />
       <point x="1146.5833333333335" y="2073.0" />
@@ -38,6 +30,14 @@
       <point x="1092.641741322845" y="2422.0" />
       <point x="1307.0833333333335" y="2422.0" />
       <point x="107.0" y="147.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.model.BasicCommands" target="it.polimi.ingsw.server.model.Commands">
+      <point x="-142.66666666666663" y="126.0" />
+      <point x="392.8333333333335" y="686.0" />
+      <point x="430.70157582512275" y="686.0" />
+      <point x="430.70157582512275" y="1776.0" />
+      <point x="813.3000000000001" y="1776.0" />
+      <point x="-171.20000000000005" y="-126.0" />
     </edge>
   </edges>
   <settings layout="Hierarchic Group" zoom="0.07712867506681939" x="857.5" y="2609.0" />
