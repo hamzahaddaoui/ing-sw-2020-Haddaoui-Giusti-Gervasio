@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.server.model</OriginalElement>
+  <nodes>
+    <node x="10.5" y="405.0">it.polimi.ingsw.server.model.BillboardTest</node>
+    <node x="1167.2709079895117" y="44.0">it.polimi.ingsw.server.model.Worker</node>
+    <node x="868.6988095238096" y="3898.0">it.polimi.ingsw.server.model.GameModel</node>
+    <node x="986.0833333333335" y="2098.0">it.polimi.ingsw.server.model.CommandsDecorator</node>
+    <node x="1007.6988095238096" y="5142.0">it.polimi.ingsw.server.model.GameModelTest</node>
+    <node x="981.6988095238096" y="3100.0">it.polimi.ingsw.server.model.Match</node>
+    <node x="770.5000000000001" y="1796.0">it.polimi.ingsw.server.model.Commands</node>
+    <node x="980.191741322845" y="2472.0">it.polimi.ingsw.server.model.decorators</node>
+    <node x="857.0500746561784" y="2594.0">it.polimi.ingsw.server.model.GodCards</node>
+    <node x="1459.0208333333335" y="4293.0">it.polimi.ingsw.server.model.MatchTest</node>
+    <node x="321.5000000000001" y="404.0">it.polimi.ingsw.server.model.BasicCommands</node>
+    <node x="1269.060011381814" y="706.0">it.polimi.ingsw.server.model.Player</node>
+    <node x="72.75" y="0.0">it.polimi.ingsw.server.model.Billboard</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.server.model.BasicCommands" target="it.polimi.ingsw.server.model.Commands">
+      <point x="-142.66666666666663" y="126.0" />
+      <point x="392.8333333333335" y="686.0" />
+      <point x="430.70157582512275" y="686.0" />
+      <point x="430.70157582512275" y="1776.0" />
+      <point x="813.3000000000001" y="1776.0" />
+      <point x="-171.20000000000005" y="-126.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.model.CommandsDecorator" target="it.polimi.ingsw.server.model.Commands">
+      <point x="-53.5" y="-147.0" />
+      <point x="1146.5833333333335" y="2073.0" />
+      <point x="1162.8333333333335" y="2073.0" />
+      <point x="178.33333333333331" y="126.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.model.decorators" target="it.polimi.ingsw.server.model.CommandsDecorator">
+      <point x="25.950000000000045" y="-26.0" />
+      <point x="1092.641741322845" y="2422.0" />
+      <point x="1307.0833333333335" y="2422.0" />
+      <point x="107.0" y="147.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.07712867506681939" x="857.5" y="2609.0" />
+  <SelectedNodes>
+    <node>it.polimi.ingsw.server.model.decorators</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
