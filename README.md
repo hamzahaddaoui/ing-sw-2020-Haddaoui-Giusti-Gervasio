@@ -22,19 +22,19 @@
 
 # File UML
 
-Nella cartella uml sono presenti l'uml iniziale (del model) e un flow diagram che avevamo sviluppato all'inizio del progetto per mostrare i vari stati del gioco.
+Nella cartella deliveries/previous/uml sono presenti l'uml iniziale (del model).
 
-In uml/Final UML sono presenti gli UML finali generati con il tool di IntelliJ. E' presente un UML per ogni classe con attributi e metodi, uno per le dipendenze tra le classi all'interno dei package e uno generico per le dipendenze tra i package.
+In deliveries/final/uml  sono presenti gli UML finali creati, sia in versione dettagliata (uno per il package del Server, uno per il package Client) e una versione riassuntiva.
 
-# JavaDoc
+# JavaDoc e test
 
-I Javadoc generati si trovano nella cartella javadoc.
+I Javadoc generati, così come i report dei test, si trovano nella cartella deliveries/final.
 
 # Lancio file JAR
 
-Doppio click su server.jar e client.jar.
-Per avviare da terminale java -jar server.jar ; java -jar client.jar
-Per avviare la versione testuale del client java -jar client.jar -cli
+Per avviare il Server dell'applicazione è sufficiente fare doppio click su Server.jar, situato nella cartella deliveries/final/jar (oppure digitare da terminale, java -jar Server.jar).
+Per avviare il client dell'applicazione in versione GUI, è sufficiente fare doppio click su Client.jar, situato nella medesima cartella del Server.
+Per avviare il client in versione CLI, è necessario da terminale digitare java -jar Client.jar -cli
 
 
 <!--
