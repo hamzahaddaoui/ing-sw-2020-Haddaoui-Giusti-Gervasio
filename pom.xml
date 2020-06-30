@@ -175,7 +175,7 @@
                 <transformers>
                   <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                     <manifestEntries>
-                      <Main-Class>it.polimi.ingsw.server.Server</Main-Class>
+                      <Main-Class>it.polimi.ingsw.client.Application</Main-Class>
                     </manifestEntries>
                   </transformer>
                 </transformers>
