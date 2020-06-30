@@ -1,0 +1,500 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GameModel</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GameModel (it.polimi.ingsw.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (15/ 50)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40,1%
+  </span>
+  <span class="absValue">
+    (59/ 147)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.utilities.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.Observable;
+<i>5</i>&nbsp;import java.util.*;
+<i>6</i>&nbsp;import java.util.stream.Collectors;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * Main model class: represents the facade of the entire model package
+<i>10</i>&nbsp; * All user-useful model classes are accessible from the methods listed here.
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;
+<b class="nc"><i>13</i>&nbsp;public class GameModel extends Observable&lt;MessageEvent&gt; {</b>
+<i>14</i>&nbsp;    private static int progressivePlayerID;
+<i>15</i>&nbsp;    private static int progressiveMatchID;
+<b class="fc"><i>16</i>&nbsp;    private static final Map&lt;Integer, Player&gt; initializedPlayers = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>17</i>&nbsp;    private static final LinkedList&lt;Player&gt; playersWaitingList = new LinkedList&lt;&gt;();</b>
+<b class="fc"><i>18</i>&nbsp;    private static final Map&lt;Integer, Match&gt; activeMatches = new HashMap&lt;&gt;(); //id match, match</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;   //gestire multithreading.
+<i>21</i>&nbsp;    //synchronized(GameModel.class)
+<i>22</i>&nbsp;    //blocking queue??
+<i>23</i>&nbsp;    //immutable objects?
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /*
+<i>27</i>&nbsp;    -------------------------------------------------------------------------------
+<i>28</i>&nbsp;    -----------------------MULTIPLAYER MANAGEMENT----------------------------------
+<i>29</i>&nbsp;    -------------------------------------------------------------------------------
+<i>30</i>&nbsp;     */
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    public static int getPlayersWaitingListSize(){
+<b class="fc"><i>33</i>&nbsp;        return playersWaitingList.size();</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    public static int getNotInitMatchesListSize(){
+<b class="fc"><i>37</i>&nbsp;            return (int) activeMatches</b>
+<b class="fc"><i>38</i>&nbsp;                    .keySet()</b>
+<b class="fc"><i>39</i>&nbsp;                    .stream()</b>
+<b class="fc"><i>40</i>&nbsp;                    .map(activeMatches::get)</b>
+<b class="fc"><i>41</i>&nbsp;                    .filter(match -&gt; !match.isStarted() &amp;&amp; (match.getPlayersNum() == 0))</b>
+<b class="fc"><i>42</i>&nbsp;                    .count();</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    public static int getInitMatchesListSize(){
+<b class="fc"><i>46</i>&nbsp;        return (int) activeMatches</b>
+<b class="fc"><i>47</i>&nbsp;                .keySet()</b>
+<b class="fc"><i>48</i>&nbsp;                .stream()</b>
+<b class="fc"><i>49</i>&nbsp;                .map(activeMatches::get)</b>
+<b class="fc"><i>50</i>&nbsp;                .filter(match -&gt; !match.isStarted() &amp;&amp; (match.getPlayersNum() != 0))</b>
+<b class="fc"><i>51</i>&nbsp;                .count();</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * Checks if the match waiting to start has a certain nickname available.
+<i>56</i>&nbsp;     *
+<i>57</i>&nbsp;     * @param nickname contains the nickname choosen by the user
+<i>58</i>&nbsp;     * @return false if the nickname is not available, true otherwise
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;    public static boolean isNickAvailable(String nickname){
+<b class="fc"><i>61</i>&nbsp;        return playersWaitingList</b>
+<b class="fc"><i>62</i>&nbsp;                       .stream()</b>
+<b class="fc"><i>63</i>&nbsp;                       .noneMatch(player -&gt; player.toString()</b>
+<b class="nc"><i>64</i>&nbsp;                               .equals(nickname))</b>
+<i>65</i>&nbsp;               &amp;&amp;
+<i>66</i>&nbsp;               activeMatches
+<b class="fc"><i>67</i>&nbsp;                       .keySet()</b>
+<b class="fc"><i>68</i>&nbsp;                       .stream()</b>
+<b class="fc"><i>69</i>&nbsp;                       .map(activeMatches::get)</b>
+<b class="fc"><i>70</i>&nbsp;                       .filter(match -&gt; !match.isStarted())</b>
+<b class="fc"><i>71</i>&nbsp;                       .noneMatch(match -&gt; match.getPlayers()</b>
+<b class="nc"><i>72</i>&nbsp;                               .stream().anyMatch(player -&gt; player.toString()</b>
+<b class="nc"><i>73</i>&nbsp;                                       .equals(nickname)));</b>
+<i>74</i>&nbsp;    }
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    public static Integer getInitMatchID(){
+<i>77</i>&nbsp;        //sostituire con exception
+<b class="fc"><i>78</i>&nbsp;        if (getInitMatchesListSize() != 0)</b>
+<b class="fc"><i>79</i>&nbsp;            return activeMatches</b>
+<b class="fc"><i>80</i>&nbsp;                    .keySet()</b>
+<b class="fc"><i>81</i>&nbsp;                    .stream()</b>
+<b class="fc"><i>82</i>&nbsp;                    .map(activeMatches::get)</b>
+<b class="fc"><i>83</i>&nbsp;                    .filter(match -&gt; !match.isStarted() &amp;&amp; (match.getPlayersNum() != 0))</b>
+<b class="fc"><i>84</i>&nbsp;                    .findFirst()</b>
+<b class="fc"><i>85</i>&nbsp;                    .get()</b>
+<b class="fc"><i>86</i>&nbsp;                    .getID();</b>
+<i>87</i>&nbsp;        else
+<b class="fc"><i>88</i>&nbsp;            return null;</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    public static int createPlayer(String nickname){
+<i>92</i>&nbsp;        Player player;
+<b class="fc"><i>93</i>&nbsp;        progressivePlayerID++;</b>
+<b class="fc"><i>94</i>&nbsp;        player = new Player(progressivePlayerID, nickname);</b>
+<b class="fc"><i>95</i>&nbsp;        initializedPlayers.put(progressivePlayerID, player);</b>
+<b class="fc"><i>96</i>&nbsp;        return progressivePlayerID;</b>
+<i>97</i>&nbsp;    }
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    public static void removeInitPlayer(Integer playerID){
+<b class="nc"><i>100</i>&nbsp;        initializedPlayers.remove(playerID);</b>
+<b class="nc"><i>101</i>&nbsp;    }</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    /**
+<i>104</i>&nbsp;     * Creates a new instance of match, with an assigned unique ID
+<i>105</i>&nbsp;     */
+<i>106</i>&nbsp;    public synchronized static int createMatch(Integer playerID){
+<i>107</i>&nbsp;        try{
+<b class="fc"><i>108</i>&nbsp;            progressiveMatchID++;</b>
+<b class="fc"><i>109</i>&nbsp;            activeMatches.put(progressiveMatchID,</b>
+<b class="fc"><i>110</i>&nbsp;                    new Match(progressiveMatchID, initializedPlayers.remove(playerID)));</b>
+<b class="fc"><i>111</i>&nbsp;                    return progressiveMatchID;</b>
+<i>112</i>&nbsp;        }
+<b class="fc"><i>113</i>&nbsp;        catch (NullPointerException e){</b>
+<b class="fc"><i>114</i>&nbsp;            progressiveMatchID--;</b>
+<b class="fc"><i>115</i>&nbsp;            return 0;</b>
+<i>116</i>&nbsp;        }
+<i>117</i>&nbsp;    }
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    /**
+<i>120</i>&nbsp;     * Add a player to the &quot;waiting to start&quot; match
+<i>121</i>&nbsp;     *
+<i>122</i>&nbsp;     * @param playerID the ID of the player associated with that nickname and the waiting to start match
+<i>123</i>&nbsp;     */
+<i>124</i>&nbsp;    public static void addPlayerToMatch(Integer matchID, Integer playerID){
+<b class="fc"><i>125</i>&nbsp;        translateMatchID(matchID).addPlayer(initializedPlayers.remove(playerID));</b>
+<b class="fc"><i>126</i>&nbsp;    }</b>
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;    public static void addPlayerToWaitingList(Integer playerID){
+<b class="fc"><i>129</i>&nbsp;        playersWaitingList.addLast(initializedPlayers.remove(playerID));</b>
+<b class="fc"><i>130</i>&nbsp;    }</b>
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    /**
+<i>133</i>&nbsp;     * Changes the number of the players of the &quot;waiting to start&quot; match
+<i>134</i>&nbsp;     *
+<i>135</i>&nbsp;     * @param playerNum the number of players wanted for the &quot;waiting to start&quot; match
+<i>136</i>&nbsp;     */
+<i>137</i>&nbsp;    public static void setMatchPlayersNum(Integer matchID, int playerNum){
+<b class="fc"><i>138</i>&nbsp;        activeMatches.get(matchID).setPlayersNum(playerNum);</b>
+<b class="fc"><i>139</i>&nbsp;    }</b>
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    public static Integer unstackPlayer(){
+<b class="fc"><i>142</i>&nbsp;        Player player = playersWaitingList.removeFirst();</b>
+<b class="fc"><i>143</i>&nbsp;        initializedPlayers.put(player.getID(), player);</b>
+<b class="fc"><i>144</i>&nbsp;        return player.getID();</b>
+<i>145</i>&nbsp;    }
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;    /**
+<i>148</i>&nbsp;     * Checks if the required number of the players for the starting match is reached
+<i>149</i>&nbsp;     *
+<i>150</i>&nbsp;     * @return true if the number of players is reached
+<i>151</i>&nbsp;     */
+<i>152</i>&nbsp;    public static boolean isNumReached(Integer matchID){
+<b class="fc"><i>153</i>&nbsp;        return activeMatches.get(matchID).isNumReached();</b>
+<i>154</i>&nbsp;    }
+<i>155</i>&nbsp;
+<i>156</i>&nbsp;    /**
+<i>157</i>&nbsp;     * Starts the &quot;waiting to start&quot; match
+<i>158</i>&nbsp;     */
+<i>159</i>&nbsp;    public synchronized static void startMatch(Integer matchID){
+<b class="fc"><i>160</i>&nbsp;        activeMatches.get(matchID).start();</b>
+<b class="fc"><i>161</i>&nbsp;    }</b>
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;
+<i>164</i>&nbsp;    /*
+<i>165</i>&nbsp;    -------------------------------------------------------------------------------
+<i>166</i>&nbsp;    -----------------------MATCH MANAGEMENT----------------------------------------
+<i>167</i>&nbsp;    -------------------------------------------------------------------------------
+<i>168</i>&nbsp;     */
+<i>169</i>&nbsp;
+<i>170</i>&nbsp;    public static Set&lt;String&gt; getGameCards(){
+<b class="nc"><i>171</i>&nbsp;        return Arrays.stream(GodCards.values()).map(Enum::toString).collect(Collectors.toSet());</b>
+<i>172</i>&nbsp;    }
+<i>173</i>&nbsp;
+<i>174</i>&nbsp;    public static MatchState getMatchState(Integer matchID){
+<i>175</i>&nbsp;        try{
+<b class="nc"><i>176</i>&nbsp;            return translateMatchID(matchID).getCurrentState();</b>
+<i>177</i>&nbsp;        }
+<b class="nc"><i>178</i>&nbsp;        catch (NullPointerException exception){</b>
+<b class="nc"><i>179</i>&nbsp;            return null;</b>
+<i>180</i>&nbsp;        }
+<i>181</i>&nbsp;    }
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;    public static void nextMatchState(Integer matchID){
+<i>184</i>&nbsp;        try{
+<b class="nc"><i>185</i>&nbsp;            translateMatchID(matchID).nextState();</b>
+<i>186</i>&nbsp;        }
+<b class="nc"><i>187</i>&nbsp;        catch (NullPointerException ignored){}</b>
+<b class="nc"><i>188</i>&nbsp;    }</b>
+<i>189</i>&nbsp;
+<i>190</i>&nbsp;    public static PlayerState getPlayerState(Integer matchID, Integer playerID){
+<i>191</i>&nbsp;        try{
+<b class="nc"><i>192</i>&nbsp;            return translatePlayerID(translateMatchID(matchID), playerID).getPlayerState();</b>
+<i>193</i>&nbsp;        }
+<b class="nc"><i>194</i>&nbsp;        catch (NullPointerException exception){</b>
+<b class="nc"><i>195</i>&nbsp;            return null;</b>
+<i>196</i>&nbsp;        }
+<i>197</i>&nbsp;    }
+<i>198</i>&nbsp;
+<i>199</i>&nbsp;    public static TurnState getPlayerTurn(Integer matchID, Integer playerID){
+<i>200</i>&nbsp;        try{
+<b class="nc"><i>201</i>&nbsp;            return translatePlayerID(translateMatchID(matchID), playerID).getTurnState();</b>
+<i>202</i>&nbsp;        }
+<b class="nc"><i>203</i>&nbsp;        catch (NullPointerException exception){</b>
+<b class="nc"><i>204</i>&nbsp;            return null;</b>
+<i>205</i>&nbsp;        }
+<i>206</i>&nbsp;    }
+<i>207</i>&nbsp;
+<i>208</i>&nbsp;    /**
+<i>209</i>&nbsp;     * Make the next player gain the control of the match, by passing the turn
+<i>210</i>&nbsp;     *
+<i>211</i>&nbsp;     * @param matchID selected match
+<i>212</i>&nbsp;     */
+<i>213</i>&nbsp;    public static void nextMatchTurn(Integer matchID){
+<i>214</i>&nbsp;        try{
+<b class="nc"><i>215</i>&nbsp;            translateMatchID(matchID).nextTurn();</b>
+<i>216</i>&nbsp;        }
+<b class="nc"><i>217</i>&nbsp;        catch (NullPointerException ignored){}</b>
+<b class="nc"><i>218</i>&nbsp;    }</b>
+<i>219</i>&nbsp;
+<i>220</i>&nbsp;    public static Integer getMatchWinner(Integer matchID){
+<b class="nc"><i>221</i>&nbsp;        if (getMatchState(matchID) == MatchState.FINISHED) {</b>
+<b class="nc"><i>222</i>&nbsp;            return translateMatchID(matchID).getWinner().getID();</b>
+<i>223</i>&nbsp;        }
+<b class="nc"><i>224</i>&nbsp;        else return null;</b>
+<i>225</i>&nbsp;    }
+<i>226</i>&nbsp;
+<i>227</i>&nbsp;    public static void deleteMatch(Integer matchID){
+<b class="nc"><i>228</i>&nbsp;        activeMatches.remove(matchID);</b>
+<b class="nc"><i>229</i>&nbsp;    }</b>
+<i>230</i>&nbsp;
+<i>231</i>&nbsp;    public static void removeLosers(Integer matchID){
+<b class="nc"><i>232</i>&nbsp;        translateMatchID(matchID).resetLosers();</b>
+<b class="nc"><i>233</i>&nbsp;    }</b>
+<i>234</i>&nbsp;
+<i>235</i>&nbsp;
+<i>236</i>&nbsp;    /*
+<i>237</i>&nbsp;    -------------------------------------------------------------------------------
+<i>238</i>&nbsp;    -----------------------CARDS MANAGEMENT----------------------------------------
+<i>239</i>&nbsp;    -------------------------------------------------------------------------------
+<i>240</i>&nbsp;     */
+<i>241</i>&nbsp;    public synchronized static void setMatchCards(Integer matchID, Set&lt;String&gt; cards){
+<i>242</i>&nbsp;        Set&lt;GodCards&gt; godCards;
+<b class="nc"><i>243</i>&nbsp;        Match match = translateMatchID(matchID);</b>
+<i>244</i>&nbsp;
+<b class="nc"><i>245</i>&nbsp;         godCards = cards</b>
+<b class="nc"><i>246</i>&nbsp;                .stream()</b>
+<b class="nc"><i>247</i>&nbsp;                .map(GodCards::valueOf)</b>
+<b class="nc"><i>248</i>&nbsp;                .collect(Collectors.toSet());</b>
+<i>249</i>&nbsp;
+<b class="nc"><i>250</i>&nbsp;        match.setCards(godCards);</b>
+<b class="nc"><i>251</i>&nbsp;    }</b>
+<i>252</i>&nbsp;
+<i>253</i>&nbsp;    /**
+<i>254</i>&nbsp;     *  Link the current player of the selected match, to the specified GodCard.
+<i>255</i>&nbsp;     *
+<i>256</i>&nbsp;     * @param matchID selected match
+<i>257</i>&nbsp;     * @param card special card selected by the current user
+<i>258</i>&nbsp;     */
+<i>259</i>&nbsp;    public static void selectPlayerCard(Integer matchID, String card){
+<b class="nc"><i>260</i>&nbsp;        translateMatchID(matchID).getCurrentPlayer().setCommands(GodCards.valueOf(card));</b>
+<b class="nc"><i>261</i>&nbsp;    }</b>
+<i>262</i>&nbsp;
+<i>263</i>&nbsp;    public static boolean hasSelectedCard(Integer matchID){
+<b class="nc"><i>264</i>&nbsp;        return translateMatchID(matchID).getCurrentPlayer().hasSelectedCard();</b>
+<i>265</i>&nbsp;    }
+<i>266</i>&nbsp;
+<i>267</i>&nbsp;
+<i>268</i>&nbsp;    /*
+<i>269</i>&nbsp;    -------------------------------------------------------------------------------
+<i>270</i>&nbsp;    -----------------------PLACING MANAGEMENT--------------------------------------
+<i>271</i>&nbsp;    -------------------------------------------------------------------------------
+<i>272</i>&nbsp;     */
+<i>273</i>&nbsp;    public static void placeWorker(Integer matchID, Position position){
+<b class="nc"><i>274</i>&nbsp;        translateMatchID(matchID).getCurrentPlayer().setWorker(position);</b>
+<b class="nc"><i>275</i>&nbsp;    }</b>
+<i>276</i>&nbsp;
+<i>277</i>&nbsp;    public static boolean hasPlacedWorkers(Integer matchID){
+<b class="nc"><i>278</i>&nbsp;        return translateMatchID(matchID).getCurrentPlayer().hasPlacedWorkers();</b>
+<i>279</i>&nbsp;    }
+<i>280</i>&nbsp;
+<i>281</i>&nbsp;    /*
+<i>282</i>&nbsp;    -------------------------------------------------------------------------------
+<i>283</i>&nbsp;    -----------------------GAME MANAGEMENT-----------------------------------------
+<i>284</i>&nbsp;    -------------------------------------------------------------------------------
+<i>285</i>&nbsp;     */
+<i>286</i>&nbsp;    public static boolean isTerminateTurnAvailable(Integer matchID){
+<b class="nc"><i>287</i>&nbsp;        return translateMatchID(matchID).getCurrentPlayer().isTerminateTurnAvailable();</b>
+<i>288</i>&nbsp;    }
+<i>289</i>&nbsp;
+<i>290</i>&nbsp;    public static Map&lt;Position, Boolean&gt;  isSpecialFunctionAvailable(Integer matchID){
+<b class="nc"><i>291</i>&nbsp;        return translateMatchID(matchID).getCurrentPlayer().isSpecialFunctionAvailable();</b>
+<i>292</i>&nbsp;    }
+<i>293</i>&nbsp;
+<i>294</i>&nbsp;    public static void setUnsetSpecialFunction(Integer matchID, boolean specialFunction){
+<b class="nc"><i>295</i>&nbsp;        translateMatchID(matchID).getCurrentPlayer().setUnsetSpecialFunction(specialFunction);</b>
+<b class="nc"><i>296</i>&nbsp;    }</b>
+<i>297</i>&nbsp;
+<i>298</i>&nbsp;    public static void setHasFinished(Integer matchID){
+<b class="nc"><i>299</i>&nbsp;        translateMatchID(matchID).getCurrentPlayer().setHasFinished();</b>
+<b class="nc"><i>300</i>&nbsp;        translateMatchID(matchID).nextTurn();</b>
+<b class="nc"><i>301</i>&nbsp;    }</b>
+<i>302</i>&nbsp;
+<i>303</i>&nbsp;    public static void playerTurn(Integer matchID, Position startPosition, Position endPosition){
+<b class="nc"><i>304</i>&nbsp;        Match match = translateMatchID(matchID);</b>
+<b class="nc"><i>305</i>&nbsp;        Player player = match.getCurrentPlayer();</b>
+<i>306</i>&nbsp;
+<b class="nc"><i>307</i>&nbsp;        if (!player.hasSelectedWorker())</b>
+<b class="nc"><i>308</i>&nbsp;            player.setCurrentWorker(startPosition);</b>
+<b class="nc"><i>309</i>&nbsp;        player.playerAction(endPosition);</b>
+<i>310</i>&nbsp;
+<b class="nc"><i>311</i>&nbsp;        match.checkPlayers();</b>
+<b class="nc"><i>312</i>&nbsp;    }</b>
+<i>313</i>&nbsp;
+<i>314</i>&nbsp;    public static PlayerState getCurrentPlayerState(Integer matchID){
+<b class="nc"><i>315</i>&nbsp;        return translateMatchID(matchID).getCurrentPlayer().getPlayerState();</b>
+<i>316</i>&nbsp;    }
+<i>317</i>&nbsp;
+<i>318</i>&nbsp;
+<i>319</i>&nbsp;    /*
+<i>320</i>&nbsp;    -------------------------------------------------------------------------------
+<i>321</i>&nbsp;    -----------------------VIEW FUNCTIONS-----------------------------------------
+<i>322</i>&nbsp;    -------------------------------------------------------------------------------
+<i>323</i>&nbsp;     */
+<i>324</i>&nbsp;
+<i>325</i>&nbsp;    public static Map&lt;Integer, String&gt; getMatchLosers(Integer matchID){
+<b class="nc"><i>326</i>&nbsp;        return translateMatchID(matchID).getLosers().stream()</b>
+<b class="nc"><i>327</i>&nbsp;                .collect(Collectors.toMap(Player::getID, Player::toString));</b>
+<i>328</i>&nbsp;    }
+<i>329</i>&nbsp;
+<i>330</i>&nbsp;    public static Map&lt;Integer, String&gt; getMatchPlayers(Integer matchID){
+<b class="nc"><i>331</i>&nbsp;        return translateMatchID(matchID).getAllPlayers().stream()</b>
+<b class="nc"><i>332</i>&nbsp;                .collect(Collectors.toMap(Player::getID, Player::toString));</b>
+<i>333</i>&nbsp;    }
+<i>334</i>&nbsp;
+<i>335</i>&nbsp;    public static Map&lt;Position, Cell&gt; getBillboardStatus (Integer matchID){
+<b class="nc"><i>336</i>&nbsp;        return translateMatchID(matchID).getBillboard().getCells();</b>
+<i>337</i>&nbsp;    }
+<i>338</i>&nbsp;
+<i>339</i>&nbsp;    /**
+<i>340</i>&nbsp;     * Make a copy of the state of the billboard, made of 3 layers:
+<i>341</i>&nbsp;     * first layer for the height of the buildings
+<i>342</i>&nbsp;     * second layer for the players (each player has a different number)
+<i>343</i>&nbsp;     * third layer for the domes
+<i>344</i>&nbsp;     */
+<i>345</i>&nbsp;    public static Set&lt;String&gt;  getMatchCards(Integer matchID){
+<b class="nc"><i>346</i>&nbsp;        return translateMatchID(matchID)</b>
+<b class="nc"><i>347</i>&nbsp;                .getCards()</b>
+<b class="nc"><i>348</i>&nbsp;                .stream()</b>
+<b class="nc"><i>349</i>&nbsp;                .map(Enum::toString)</b>
+<b class="nc"><i>350</i>&nbsp;                .collect(Collectors.toSet());</b>
+<i>351</i>&nbsp;    }
+<i>352</i>&nbsp;
+<i>353</i>&nbsp;    public static Set&lt;Position&gt; getWorkersPosition(Integer matchID){
+<b class="nc"><i>354</i>&nbsp;        return translateMatchID(matchID)</b>
+<b class="nc"><i>355</i>&nbsp;                .getCurrentPlayer()</b>
+<b class="nc"><i>356</i>&nbsp;                .getWorkers()</b>
+<b class="nc"><i>357</i>&nbsp;                .stream()</b>
+<b class="nc"><i>358</i>&nbsp;                .map(Worker::getPosition)</b>
+<b class="nc"><i>359</i>&nbsp;                .collect(Collectors.toSet());</b>
+<i>360</i>&nbsp;    }
+<i>361</i>&nbsp;
+<i>362</i>&nbsp;    public static Map&lt;Position, Set&lt;Position&gt;&gt; getWorkersAvailableCells(Integer matchID){
+<b class="nc"><i>363</i>&nbsp;        return translateMatchID(matchID).getCurrentPlayer().getWorkersAvailableCells();</b>
+<i>364</i>&nbsp;    }
+<i>365</i>&nbsp;
+<i>366</i>&nbsp;    public static Set&lt;Position&gt; getPlacingAvailableCells(Integer matchID){
+<b class="nc"><i>367</i>&nbsp;        return translateMatchID(matchID).getCurrentPlayer().getPlacingAvailableCells();</b>
+<i>368</i>&nbsp;    }
+<i>369</i>&nbsp;
+<i>370</i>&nbsp;    public static int getPlayersConnected(){
+<b class="nc"><i>371</i>&nbsp;        return progressivePlayerID;</b>
+<i>372</i>&nbsp;    }
+<i>373</i>&nbsp;
+<i>374</i>&nbsp;    public static int getActiveMatches(){
+<b class="nc"><i>375</i>&nbsp;        return progressiveMatchID;</b>
+<i>376</i>&nbsp;    }
+<i>377</i>&nbsp;
+<i>378</i>&nbsp;    /*
+<i>379</i>&nbsp;    -------------------------------------------------------------------------------
+<i>380</i>&nbsp;    -----------------------PRIVATE FUNCTIONS-----------------------------------------
+<i>381</i>&nbsp;    -------------------------------------------------------------------------------
+<i>382</i>&nbsp;     */
+<i>383</i>&nbsp;
+<i>384</i>&nbsp;
+<i>385</i>&nbsp;    /**
+<i>386</i>&nbsp;     * Translates the matchID to the related instance of match
+<i>387</i>&nbsp;     * @param matchID id of the match whose instance is requested
+<i>388</i>&nbsp;     * @return the instance of match related to the matchID
+<i>389</i>&nbsp;     */
+<i>390</i>&nbsp;    private static Match translateMatchID (Integer matchID){
+<b class="fc"><i>391</i>&nbsp;        return activeMatches</b>
+<b class="fc"><i>392</i>&nbsp;                .get(matchID);</b>
+<i>393</i>&nbsp;    }
+<i>394</i>&nbsp;
+<i>395</i>&nbsp;    /**
+<i>396</i>&nbsp;     * Translates the playerID to the related instance of player
+<i>397</i>&nbsp;     * @param match instance of match joined by the player
+<i>398</i>&nbsp;     * @param playerID id of the player whose instance is requested
+<i>399</i>&nbsp;     * @return the instance of player related to the playerID
+<i>400</i>&nbsp;     */
+<i>401</i>&nbsp;    private static Player translatePlayerID (Match match, Integer playerID){
+<b class="nc"><i>402</i>&nbsp;        if (match == null)</b>
+<b class="nc"><i>403</i>&nbsp;            return playersWaitingList</b>
+<b class="nc"><i>404</i>&nbsp;                    .stream()</b>
+<b class="nc"><i>405</i>&nbsp;                    .filter(player -&gt; player.getID() == playerID)</b>
+<b class="nc"><i>406</i>&nbsp;                    .findAny()</b>
+<b class="nc"><i>407</i>&nbsp;                    .get();</b>
+<i>408</i>&nbsp;        else
+<b class="nc"><i>409</i>&nbsp;            return match</b>
+<b class="nc"><i>410</i>&nbsp;                .getAllPlayers()</b>
+<b class="nc"><i>411</i>&nbsp;                .stream()</b>
+<b class="nc"><i>412</i>&nbsp;                .filter(player -&gt; player.getID()==playerID)</b>
+<b class="nc"><i>413</i>&nbsp;                .findAny().get();</b>
+<i>414</i>&nbsp;    }
+<i>415</i>&nbsp;
+<i>416</i>&nbsp;}
+<i>417</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-27 21:11</div>
+</div>
+</body>
+</html>

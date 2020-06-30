@@ -1,0 +1,120 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CardinalDirection</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.utilities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CardinalDirection (it.polimi.ingsw.utilities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CardinalDirection</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,4%
+  </span>
+  <span class="absValue">
+    (17/ 18)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.utilities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.HashMap;
+<i>4</i>&nbsp;import java.util.Map;
+<i>5</i>&nbsp;
+<b class="fc"><i>6</i>&nbsp;public enum CardinalDirection {</b>
+<b class="fc"><i>7</i>&nbsp;    NORTH (180.0),</b>
+<b class="fc"><i>8</i>&nbsp;    WEST (-90.0),</b>
+<b class="fc"><i>9</i>&nbsp;    EAST(90.0),</b>
+<b class="fc"><i>10</i>&nbsp;    SOUTH(0.0),</b>
+<b class="fc"><i>11</i>&nbsp;    NORTHEAST(135.0),</b>
+<b class="fc"><i>12</i>&nbsp;    SOUTHEAST(45.0),</b>
+<b class="fc"><i>13</i>&nbsp;    NORTHWEST(-135.0),</b>
+<b class="fc"><i>14</i>&nbsp;    SOUTHWEST(-45.0);</b>
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    double angle;
+<b class="fc"><i>17</i>&nbsp;    private static Map&lt;Double, CardinalDirection&gt; map = new HashMap&lt;&gt;();</b>
+<i>18</i>&nbsp;
+<b class="fc"><i>19</i>&nbsp;    CardinalDirection(double angle){</b>
+<b class="fc"><i>20</i>&nbsp;        this.angle = angle;</b>
+<b class="fc"><i>21</i>&nbsp;    }</b>
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    public double getAngle() {
+<b class="nc"><i>24</i>&nbsp;        return angle;</b>
+<i>25</i>&nbsp;    }
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    static {
+<b class="fc"><i>28</i>&nbsp;        for (CardinalDirection cardinalDirection : CardinalDirection.values()) {</b>
+<b class="fc"><i>29</i>&nbsp;            map.put(cardinalDirection.angle, cardinalDirection);</b>
+<i>30</i>&nbsp;        }
+<b class="fc"><i>31</i>&nbsp;    }</b>
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public static CardinalDirection valueOf(double angle) {
+<b class="fc"><i>35</i>&nbsp;        return (CardinalDirection) map.get(angle);</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-07 13:21</div>
+</div>
+</body>
+</html>
