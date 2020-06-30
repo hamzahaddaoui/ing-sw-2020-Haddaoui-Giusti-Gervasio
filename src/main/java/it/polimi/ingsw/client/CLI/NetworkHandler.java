@@ -148,9 +148,10 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
            System.out.println("socket connection closed: if you want to try to reconnect type 'REC', else press 'q'.");
        } catch (SocketException e) {
            System.out.println("DISCONNECTED FROM THE SERVER");
-           Client.scanner.close();
+           Client.close();
        } catch (ClassNotFoundException | ClassCastException | IOException exception) {
            System.out.println("invalid stream from server");
+           Client.close();
        }finally {
            try {
                stop();

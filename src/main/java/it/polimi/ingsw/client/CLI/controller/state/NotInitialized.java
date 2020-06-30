@@ -28,7 +28,7 @@ public class NotInitialized extends ControlState{
 
         if(DataBase.isViewer() &&(!input.equals("q") && !input.equals("Q"))){
             DataBase.setActiveInput(true);
-            System.out.println("\nYou can only disconnect by pressing 'q' or continue Viewer Mode\n");
+            System.out.println("\nYou can only disconnect by pressing 'q'\n");
             return null;
         }
         if(input.equals("")){
@@ -101,7 +101,7 @@ public class NotInitialized extends ControlState{
         if((MatchState.FINISHED == DataBase.getMatchState() && DataBase.getPlayerState() != PlayerState.WIN))
             System.out.println("The winner is "+ DataBase.getMatchPlayers().values().toString());
         if(DataBase.isViewer()) {
-            return "Unlucky! You lost. \nPress 'q' if you want to quit or type 'rec' to reconnect\n";
+            return "Unlucky! You lost.\nYou will be disconnected from the Server\n";
         }
         if (DataBase.getPlayerState() != null && DataBase.getPlayerState() == PlayerState.WIN)
             return "Congratulations! You are the winner!\n\nServer is trying to close the connection...";

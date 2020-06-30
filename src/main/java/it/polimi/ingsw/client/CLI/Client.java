@@ -82,6 +82,11 @@ public class Client {
         }
     }
 
+    /*
+    Try the reconnection to the Server, reset the observers and observable links.
+    This method reopen the inputListener
+    Used when the User press 'Rec'
+     */
     public static void reconnection() {
         view = new View();
         controller = new Controller();
@@ -100,6 +105,9 @@ public class Client {
         inputListener.submit(controller::inputListener);
     }
 
+    /**
+     * Method called by the current Control State when a player wants to quit from the game.
+     */
     public static void rec(){
         synchronized(View.class){
             synchronized(DataBase.class){

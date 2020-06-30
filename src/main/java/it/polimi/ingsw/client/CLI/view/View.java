@@ -40,12 +40,9 @@ public class View implements Observer<MessageEvent> {
     @Override
     public synchronized void update(MessageEvent messageEvent) {
         synchronized (DataBase.class) {
-            //System.out.println("VIEW Update 000");
             executorData.submit(() -> {
-                //System.out.println("VIEW   Thread init");
                 synchronized (View.class) {
                     synchronized (DataBase.class) {
-                        //System.out.println("VIEW   Thread start");
                         DataBase.updateStandardData(messageEvent);
                         DataBase.updateControllerState();
                         if (messageEvent.getError()) {
@@ -54,10 +51,8 @@ public class View implements Observer<MessageEvent> {
                             DataBase.getControlState().updateData(messageEvent);
                         }
                     }
-                    //System.out.println("VIEW   Thread end");
                 }
             });
-            //System.out.println("VIEW Update 111");
         }
     }
 
