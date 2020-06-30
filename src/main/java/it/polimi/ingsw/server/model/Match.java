@@ -225,7 +225,13 @@ public class Match {
      * GETTING_PLAYERS_NUM -> WAITING_FOR_PLAYERS -> SELECTING_GOD_CARDS -> SELECTING_SPECIAL_COMMAND -> PLACING_WORKERS -> RUNNING -> FINISHED
      */
     public void nextState() {
-        if (currentState.equals(MatchState.PLACING_WORKERS)) {
+        if (currentState.equals(MatchState.SELECTING_SPECIAL_COMMAND)){
+            //commentare per test!
+            //Collections.shuffle(players);
+            //nextTurn();
+            currentState = currentState.next();
+        }
+        else if (currentState.equals(MatchState.PLACING_WORKERS)) {
             currentState = currentState.next();
             currentPlayer.setPlayerState();
         }

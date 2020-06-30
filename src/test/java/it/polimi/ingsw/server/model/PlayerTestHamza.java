@@ -91,6 +91,7 @@ class PlayerTestHamza {
     @Test
     void testPlacing(){
         testSelectingCard();
+
         p1.setWorker(new Position(0,0));
         p1.setWorker(new Position(0,1));
         assertTrue(p1.hasPlacedWorkers());

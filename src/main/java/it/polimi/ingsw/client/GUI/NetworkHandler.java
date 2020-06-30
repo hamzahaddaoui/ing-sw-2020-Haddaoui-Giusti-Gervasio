@@ -160,6 +160,12 @@ public class NetworkHandler extends Observable<MessageEvent> implements Runnable
        Database.wipeData();
        Database.setCurrentState(new StartState());
        Database.getCurrentState().showPane();
+       try {
+           input.close();
+           output.close();
+       } catch (IOException exception) {
+           exception.printStackTrace();
+       }
 
        Platform.runLater(() -> {
            Alert alert = new Alert(Alert.AlertType.ERROR);

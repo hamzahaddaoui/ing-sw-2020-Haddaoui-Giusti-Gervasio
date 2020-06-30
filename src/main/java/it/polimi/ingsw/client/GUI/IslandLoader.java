@@ -323,6 +323,12 @@ public class IslandLoader{
         ((Running) Database.getCurrentState()).boardClick(point);
     }
 
+    /**
+     * Creates an object (worker) and position it on a certain position on the board.
+     * The worker generated is of a certain color (BLUE, ORANGE, PURPLE)
+     * @param point Where to put the worker
+     * @param color the color of the worker
+     */
     public void putWorker(Point2D point, String color){
         if (boardCells.get(point) == 4)
             return;

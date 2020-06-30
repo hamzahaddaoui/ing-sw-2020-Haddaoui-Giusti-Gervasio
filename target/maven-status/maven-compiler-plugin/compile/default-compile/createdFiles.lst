@@ -15,7 +15,6 @@ it/polimi/ingsw/client/GUI/controller/Running$1.class
 it/polimi/ingsw/client/GUI/IslandLoader$9.class
 it/polimi/ingsw/client/GUI/Client.class
 it/polimi/ingsw/server/controller/state/Running.class
-it/polimi/ingsw/client/GUI/IslandLoader$SmartGroup.class
 it/polimi/ingsw/client/GUI/Controller.class
 it/polimi/ingsw/server/model/GodCards$3.class
 it/polimi/ingsw/server/model/GodCards$14.class
@@ -37,7 +36,6 @@ it/polimi/ingsw/server/model/decorators/CharonDecorator.class
 it/polimi/ingsw/client/GUI/IslandLoader$10.class
 it/polimi/ingsw/server/model/BasicCommands.class
 it/polimi/ingsw/client/CLI/view/View.class
-it/polimi/ingsw/client/GUI/UpdateHandler.class
 it/polimi/ingsw/server/model/decorators/ZeusDecorator$1.class
 it/polimi/ingsw/client/GUI/controller/WaitingForPlayers.class
 it/polimi/ingsw/server/model/decorators/ZeusDecorator.class

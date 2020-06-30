@@ -161,6 +161,7 @@ public class StartState extends State {
             dataBox = startScreen.getCenter();
             startScreen.setCenter(pi);
 
+            System.out.println("Trying to connect to the server...");
             new Thread(() -> {
                 try {
                     Controller.setServer();
