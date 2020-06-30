@@ -22,7 +22,7 @@
 
 # File UML
 
-Nella cartella deliveries/previous/uml sono presenti l'uml iniziale (del model).
+Nella cartella deliveries/previous/uml è presente l'uml iniziale (del model).
 
 In deliveries/final/uml  sono presenti gli UML finali creati, sia in versione dettagliata (uno per il package del Server, uno per il package Client) e una versione riassuntiva.
 
