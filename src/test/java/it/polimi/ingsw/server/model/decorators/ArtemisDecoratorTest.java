@@ -145,8 +145,6 @@ public class ArtemisDecoratorTest {
         commands1.moveWorker(position23, player1);
         Set<Position> positionSet1 = commands1.computeAvailableMovements(player1, worker);
 
-        // positionSet1.stream().forEach(w -> System.out.println(w));
-
         assertTrue( !positionSet1.contains(position33));
 
         Set<Position> positionSet2 = commands1.computeAvailableMovements(player1, worker);
@@ -158,9 +156,6 @@ public class ArtemisDecoratorTest {
         positionCheck.add(position24);
         positionCheck.add(position32);
         positionCheck.add(position34);
-
-        //positionCheck.stream().forEach(w -> System.out.println( " --- " + w +  " --- " ));
-        //positionSet2.stream().forEach(w -> System.out.println( " * " + w +  " * " ));
 
         assertTrue( positionCheck.containsAll(positionSet2));
         assertTrue( positionSet2.containsAll(positionCheck));

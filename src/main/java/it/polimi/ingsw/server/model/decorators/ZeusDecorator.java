@@ -27,6 +27,13 @@ public class ZeusDecorator  extends CommandsDecorator {
         this.commands=commands;
     }
 
+
+    /**
+     * This method compute the next state of the player.
+     * This is similar to the Basic Command method but it reset the positionBuilt in the IDLE State.
+     *
+     * @param player  is the current player
+     */
     public void nextState(Player player) {
         switch (player.getTurnState()) {
             case IDLE:

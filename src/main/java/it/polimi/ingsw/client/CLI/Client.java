@@ -82,7 +82,7 @@ public class Client {
         }
     }
 
-    /*
+    /**
     Try the reconnection to the Server, reset the observers and observable links.
     This method reopen the inputListener
     Used when the User press 'Rec'
