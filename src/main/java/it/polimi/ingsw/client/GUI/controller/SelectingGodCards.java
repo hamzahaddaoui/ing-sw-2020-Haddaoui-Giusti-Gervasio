@@ -84,7 +84,7 @@ public class SelectingGodCards extends State {
         }});
         if(Database.getPlayerState() != PlayerState.ACTIVE){
             Label text = new Label();
-            text.getStylesheets().add("/css_files/SelectingGodCards.css");
+            text.getStylesheets().add("/css_files/selectingGodCards.css");
             text.getStyleClass().add("label_idle");
             text.setText(Database.getMatchPlayers().get(Database.getCurrentPlayer()) + " is selecting the cards for the match...");
             VBox vbox = new VBox(text);
