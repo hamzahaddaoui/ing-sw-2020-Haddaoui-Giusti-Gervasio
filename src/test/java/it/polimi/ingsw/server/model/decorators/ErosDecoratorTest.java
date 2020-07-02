@@ -57,6 +57,9 @@ class ErosDecoratorTest {
 
     }
 
+    /**
+     * @return  the list of cells that are along the boarder of the Billboard
+     */
     private List<Position> positionList (){
         List <Position> positions = new ArrayList<>();
         for(int i=0; 0<= i && i< 5; i++ )
@@ -64,9 +67,12 @@ class ErosDecoratorTest {
                 if((i== 0 || i== 4)||(j==0 || j==4))
                     positions.add(new Position(i,j));
         return positions;
-
     }
 
+
+    /**
+     * This method tests the compute available cells
+     */
     @Test
     void placing(){
         assertThrows( Exception.class, ()-> commands1.computeAvailablePlacing(player1));
@@ -86,6 +92,7 @@ class ErosDecoratorTest {
         assertTrue(positions.containsAll(player1.getPlacingAvailableCells()));
 
     }
+
 
     @Test
     void winningMatch2Players(){
@@ -129,7 +136,6 @@ class ErosDecoratorTest {
 
         assertTrue(player1.getTurnState() == TurnState.BUILD);
 
-        //player1.getWorkers().stream().forEach(w->System.out.println(w.getPosition()));
         player1.setHasFinished();
         player1.setPlayerState();
         player1.setTurnState(TurnState.IDLE);

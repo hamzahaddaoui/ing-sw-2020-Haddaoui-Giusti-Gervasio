@@ -62,9 +62,15 @@ class ZeusDecoratorTest {
         commands2=player2.getCommands();
     }
 
+    /**
+     * This mathod contains the tests of winning conditions, build, computeAvailableBuildings.
+     * ComputeAvailableBuildingTest-> special case (if the Worker is on the ThirdLevel it can build over him).
+     * WinningCondition-> special case (if the Worker is on the SecondLevel it can win by forcing himself to the ThirdLevel).
+     * Build-> specialCase (the worker can build on his block)
+     */
     @Test
     void mainTurn() {
-        assertFalse(commands1.winningCondition(player1));
+        assertFalse(commands1.winningCondition(player1)); //winningConditionTest-> if the player is not placed
         player1.setWorker(position12);
         player1.setWorker(position00);
         player2.setWorker(position13);
@@ -81,7 +87,7 @@ class ZeusDecoratorTest {
         player1.setCurrentWorker(position12);  //level 0
         Set<Position> SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
 
-        assertTrue(SetCheck.contains(position12));
+        assertTrue(SetCheck.contains(position12));  //ComputeAvailableBuildingTest-> standardCase
 
         player1.getCommands().build(position12,player1);
 
@@ -101,13 +107,13 @@ class ZeusDecoratorTest {
         //level 1
         SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
 
-        assertTrue(SetCheck.contains(position12));
+        assertTrue(SetCheck.contains(position12));//ComputeAvailableBuildingTest
 
         player1.getCommands().build(position12,player1);
 
-        assertTrue(player1.getCurrentWorkerPosition().getZ()==2);
-        assertTrue(player1.getMatch().getBillboard().getTowerHeight(position12) ==2);
-        assertFalse(player1.getCommands().winningCondition(player1));
+        assertTrue(player1.getCurrentWorkerPosition().getZ()==2);//Build-> specialCase (the worker can build on his block)
+        assertTrue(player1.getMatch().getBillboard().getTowerHeight(position12) ==2);//Build-> specialCase (the worker can build on his block)
+        assertFalse(player1.getCommands().winningCondition(player1));//winningConditionTest-> standard case
 
         player1.setTurnState(TurnState.IDLE);
         commands1.nextState(player1);
@@ -121,13 +127,13 @@ class ZeusDecoratorTest {
         //level 2
         SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
 
-        assertTrue(SetCheck.contains(position12));
+        assertTrue(SetCheck.contains(position12));//ComputeAvailableBuildingTest-> standardCase
 
         player1.getCommands().build(position12,player1);
 
-        assertTrue(player1.getCurrentWorkerPosition().getZ()==3);
-        assertTrue(player1.getMatch().getBillboard().getTowerHeight(position12) == 3);
-        assertFalse(player1.getCommands().winningCondition(player1));
+        assertTrue(player1.getCurrentWorkerPosition().getZ()==3);//Build-> specialCase (the worker can build on his block)
+        assertTrue(player1.getMatch().getBillboard().getTowerHeight(position12) == 3);//Build-> specialCase (the worker can build on his block)
+        assertFalse(player1.getCommands().winningCondition(player1)); //winningConditionTest-> special case (if the player is not placed)
 
         player1.setTurnState(TurnState.IDLE);
         commands1.nextState(player1);
@@ -141,7 +147,7 @@ class ZeusDecoratorTest {
         //level 3
         SetCheck=commands1.computeAvailableBuildings(player1,player1.getCurrentWorker());
 
-        assertFalse(SetCheck.contains(position12));
+        assertFalse(SetCheck.contains(position12));//ComputeAvailableBuildingTest-> special case (if the Worker is on the SecondLevel it can win by forcing himself to the ThirdLevel).
 
         assertTrue(player1.getCurrentWorkerPosition().getZ()==3);
         assertTrue(player1.getMatch().getBillboard().getTowerHeight(position12) == 3);

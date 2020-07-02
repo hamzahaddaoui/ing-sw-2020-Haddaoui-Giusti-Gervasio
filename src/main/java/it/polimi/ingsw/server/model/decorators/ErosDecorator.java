@@ -51,6 +51,16 @@ public class ErosDecorator  extends CommandsDecorator {
         catch(Exception ex){throw new NullPointerException();}
     }
 
+    /**
+     * This method computes if a worker has won.
+     * Eros can win as normal GodCard by arriving from a second floor cell to a third from cell or
+     * he can win by 'using' his special power.
+     * You win if one of your Workers moves to a space neighboring your other worker and both
+     * are on the first level (or the same level in a 3-player game)"
+     *
+     * @param player  is the current player
+     * @return  true if he won, false if he didn't
+     */
     @Override
     public boolean winningCondition(Player player) {
         Worker worker1 = player.getCurrentWorker();
@@ -67,12 +77,25 @@ public class ErosDecorator  extends CommandsDecorator {
         }
     }
 
+    /**
+     * This method reset the winning condition before doing the standard  building movement
+     *
+     * @param position  is the position where the player want to build in
+     * @param player  is the current player
+     */
     @Override
     public void build(Position position, Player player) {
         winningCondition = false;
         super.build(position,player);
     }
 
+    /**
+     * This method compute the standard movement.
+     * Than it compute if the workers are neighbour and set the winning condition.
+     *
+     * @param position  is the position where the worker moves to
+     * @param player  is the current player
+     */
     @Override
     public void moveWorker(Position position, Player player) {
         super.moveWorker(position, player);
@@ -86,6 +109,15 @@ public class ErosDecorator  extends CommandsDecorator {
         }
     }
 
+    /**
+     * This method divides 2_matches_condition and 3_matches_condition.
+     * This method is used in the winningCondition.
+     *
+     * @param worker1  first worker
+     * @param worker2  second worker
+     * @return  If it is 3_matches_condition , returns true if workers are both on the same level.
+     * If it is 2_matches_condition , returns true if workers are both on the first level.
+     */
     private boolean heightCondition(Worker worker1, Worker worker2){
         if(three_playerGame){
             return worker1.getPosition().getZ() == worker2.getPosition().getZ() && worker2.getPosition().getZ() >= 0;

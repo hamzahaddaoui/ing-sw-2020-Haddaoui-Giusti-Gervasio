@@ -78,6 +78,7 @@ public class View implements Observer<MessageEvent> {
      * Depending on the MatchState and PlayerState, it launches various method that create different GameBoard State's visualization
      */
     public static void visualization(){
+        System.out.println("\n");
         if(DataBase.getMatchState() == MatchState.PLACING_WORKERS ){
             if (DataBase.getPlayerState()==PlayerState.ACTIVE)
                 placingWorkerSituationActive();
@@ -153,10 +154,6 @@ public class View implements Observer<MessageEvent> {
         outputB.append("\n");
         return outputB.toString();
     }
-
-    /*
-
-     */
 
     static void placingWorkerSituationActive() {
         StringBuilder output = new StringBuilder();

@@ -9,6 +9,7 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 
 /**
  * @author hamzahaddaoui, giusti-leo
+ *
  * Basic move and build commands for a generic worker, with no special power associated
  */
 
@@ -19,6 +20,7 @@ public class BasicCommands implements Commands {
      * If the state is IDLE then the player can MOVE
      * If the state is MOVE then the player can BUILD
      * If the state is BUILD then the player goes IDLE
+     *
      * @param player the match current player
      */
     @Override
@@ -55,7 +57,8 @@ public class BasicCommands implements Commands {
      * method that allows the stardard player movement
      * the player can move the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
-     *  @param position   the position that player have inserted, not null
+     *
+     * @param position   the position that player have inserted, not null
      * @param player the match current player
      */
     @Override
@@ -75,6 +78,7 @@ public class BasicCommands implements Commands {
      * method that allows the standard player build
      * the player can build with the selected Worker into one of the (up to) 8 neighboring spaces of the Billboard
      * if the position that is selected is free
+     *
      *  @param position   the position that player have inserted, not null
      * @param player the match current player
      */
@@ -108,6 +112,7 @@ public class BasicCommands implements Commands {
      * method that show the list of cells that are available for the standard movement of the player
      *
      * @param player  is the current player
+     * @param worker  is the current worker
      * @return  the list of Position where the worker can move on
      */
     public Set<Position> computeAvailableMovements(Player player, Worker worker) {
@@ -131,6 +136,7 @@ public class BasicCommands implements Commands {
      * method that show the list of cells that are available for the standard building action of the player
      *
      * @param player  is the current player
+     * @param worker  is the current worker
      * @return  the list of Position where the worker can build on
      */
     public Set<Position> computeAvailableBuildings(Player player, Worker worker) {
@@ -146,6 +152,7 @@ public class BasicCommands implements Commands {
 
     /**
      * method that notifies the activation of the special function
+     *
      * @param player the match current player
      */
     @Override
@@ -156,6 +163,7 @@ public class BasicCommands implements Commands {
     /**
      * method that checks if the player has won.
      * Returns a boolean relative to the winning condition
+     *
      * @param player the match current player
      */
     @Override
@@ -167,6 +175,7 @@ public class BasicCommands implements Commands {
     /**
      * method that checks if the player has lost.
      * Returns a boolean relative to the losing condition
+     *
      * @param player the match current player
      */
     @Override

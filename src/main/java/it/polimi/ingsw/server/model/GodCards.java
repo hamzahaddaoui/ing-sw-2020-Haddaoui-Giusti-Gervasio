@@ -2,6 +2,10 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.decorators.*;
 
+/**
+ * This is the enum class of the GodCards of the Game
+ */
+
 public enum GodCards {
     Apollo {
         @Override
