@@ -1,7 +1,10 @@
 # Prova Finale Ingegneria del Software 2020
 # Gioco Santorini (Cranio Creations)
 
+![](image.png)
+
 ## Gruppo PSP06
+
 
 
 - ###   10583761   Hamza Haddaoui ([@hamzahaddaoui](https://github.com/hamzahaddaoui))<br>hamza.haddaoui@mail.polimi.it
