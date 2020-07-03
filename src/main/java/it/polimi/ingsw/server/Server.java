@@ -38,6 +38,13 @@ public class Server {
         return clientSocket.get(playerID);
     }
 
+    /**
+     * This method tries to create the socket. Than it creates the clientHandler and it creates the relationships of observation.
+     * Controller observes the clientHandler (CLIENT_CONTROLLER->SERVER_CONTROLLER)
+     * and ClientHandler observers the Controller ( CONTROLLER->VIEW)
+     *
+     * @param args
+     */
     public static void main(String[] args){
         ClientHandler clientHandler;
 
