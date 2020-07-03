@@ -34,7 +34,7 @@ I Javadoc generati, così come i report dei test, si trovano nella cartella deli
 
 Per avviare il Server dell'applicazione è sufficiente fare doppio click su Server.jar, situato nella cartella deliveries/final/jar (oppure digitare da terminale, "java -jar Server.jar").
 
-Per avviare il client dell'applicazione in versione GUI, è sufficiente fare doppio click su Client.jar, situato nella medesima cartella del Server.
+Per avviare il client dell'applicazione in versione GUI, è sufficiente fare doppio click su Client.jar, situato nella medesima cartella del Server (oppure digitare da terminale, "java -jar Client.jar").
 
 Per avviare il client in versione CLI, è necessario da terminale digitare "java -jar Client.jar -cli"
 
