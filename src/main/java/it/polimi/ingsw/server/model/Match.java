@@ -228,9 +228,10 @@ public class Match {
      */
     public void nextState() {
         if (currentState.equals(MatchState.SELECTING_SPECIAL_COMMAND)){
-            //commentare per test!
+            //commentare per test!----
             //Collections.shuffle(players);
             //nextTurn();
+            //------------------------
             currentState = currentState.next();
         }
         else if (currentState.equals(MatchState.PLACING_WORKERS)) {
