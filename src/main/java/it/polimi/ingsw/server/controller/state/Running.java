@@ -8,6 +8,13 @@ import java.util.List;
 
 import static it.polimi.ingsw.server.model.GameModel.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller class that manages the running state of the match.
+ * Checks if the input is correct; if the positions inserted is not available an error is thrown.
+ */
+
 public class Running extends State{
     @Override
     public boolean handleRequest(MessageEvent messageEvent) {

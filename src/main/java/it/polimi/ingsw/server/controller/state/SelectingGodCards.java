@@ -9,6 +9,14 @@ import java.util.Set;
 
 import static it.polimi.ingsw.server.model.GameModel.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller class that manages the selecting god cards for the match state.
+ * Checks if the cards number is equal to the players number, and if all the cards are valid.
+ *
+ */
+
 public class SelectingGodCards extends State {
     @Override
     public boolean handleRequest(MessageEvent messageEvent){

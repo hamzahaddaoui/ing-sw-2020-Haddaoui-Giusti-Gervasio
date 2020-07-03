@@ -9,6 +9,14 @@ import java.util.List;
 import static it.polimi.ingsw.server.Server.getClientHandler;
 import static it.polimi.ingsw.server.model.GameModel.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller class that manages the getting player num state input.
+ * Checks wheteher the input number is 2 or 3. Otherwise is rejected.
+ * The input can only be submitted by the master player.
+ */
+
 public class GettingPlayersNum extends State{
     @Override
     public boolean handleRequest(MessageEvent messageEvent){

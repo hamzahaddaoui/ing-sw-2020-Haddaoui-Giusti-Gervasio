@@ -133,7 +133,7 @@ public class WaitingForPlayers extends State {
 
     }
 
-    void goOn(){
+    private void goOn(){
         new Thread(()->{
             Database.getNetworkHandler().removeObserver(this);
             this.removeObserver(Database.getNetworkHandler());

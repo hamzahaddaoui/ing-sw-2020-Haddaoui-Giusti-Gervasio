@@ -7,6 +7,12 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/*
+* author: hamzahaddaoui
+*
+* Testing of the position utilities
+*
+ */
 
 class PositionTest {
     Position position;

@@ -9,7 +9,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
+/*
  * @author: hamzahaddaoui
  *
  * Simulates all the possible action performed during a match, and checks whether or not, the actions are made correctly.
