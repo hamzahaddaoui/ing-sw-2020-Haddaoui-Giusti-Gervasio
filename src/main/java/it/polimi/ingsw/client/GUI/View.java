@@ -3,6 +3,12 @@ package it.polimi.ingsw.client.GUI;
 import it.polimi.ingsw.client.GUI.controller.*;
 import it.polimi.ingsw.client.GUI.controller.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Defines which is the View state to show up to the user, based on matchState
+ */
+
 public class View {
 
     /**

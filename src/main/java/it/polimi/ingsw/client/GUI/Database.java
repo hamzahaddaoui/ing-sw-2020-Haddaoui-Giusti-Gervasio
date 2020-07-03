@@ -7,6 +7,13 @@ import javafx.stage.Stage;
 
 import java.util.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Local version of the Server data.
+ * Keeps all the updated useful data from the model, to make decisions.
+ */
+
 public class Database {
     static private Stage stage;
     static private Scene scene;

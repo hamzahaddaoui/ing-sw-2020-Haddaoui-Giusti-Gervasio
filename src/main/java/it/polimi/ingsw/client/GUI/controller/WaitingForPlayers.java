@@ -24,6 +24,12 @@ import java.util.ResourceBundle;
 
 import static it.polimi.ingsw.client.GUI.View.updateView;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Control/View class. Manages the waiting state, to start the match.
+ */
+
 public class WaitingForPlayers extends State {
 
     @FXML

@@ -9,6 +9,12 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.utilities.TurnState.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Redefinition of methods related to the Hephaestus power.
+ */
+
 public class HephaestusDecorator extends CommandsDecorator {
 
     static final private GodCards card = GodCards.Hephaestus;

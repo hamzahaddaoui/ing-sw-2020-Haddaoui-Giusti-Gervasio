@@ -1,5 +1,12 @@
 package it.polimi.ingsw.utilities;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Cells definition. Each cell has a tower height (0 to 3), a dome (T/F) and a player (0, or !=0)
+ *
+ */
+
 public class Cell implements Comparable{
     private int towerHeight;
     private boolean dome;

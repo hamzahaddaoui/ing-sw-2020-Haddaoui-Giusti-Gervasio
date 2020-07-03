@@ -6,7 +6,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Main model class: represents the facade of the entire model package
+ * @author: hamzahaddaoui
+ * Main model class: represents the FACADE of the entire model package
  * All user-useful model classes are accessible from the methods listed here.
  */
 

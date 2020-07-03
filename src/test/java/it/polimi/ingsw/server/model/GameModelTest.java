@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.server.model.GameModel.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Test the FACADE GAME MODEL with some operations, like creating matches, players.
+ * Just checking if the setters and getters work properly.
+ */
+
 class GameModelTest {
 
 

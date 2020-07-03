@@ -30,6 +30,13 @@ import static it.polimi.ingsw.client.GUI.Database.getCurrentState;
 import static it.polimi.ingsw.client.GUI.Database.getNetworkHandler;
 import static javafx.scene.control.Alert.AlertType;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Control/View class. Initial state. Shows the splash screen.
+ * Submits data to the server when the play button is pressed.
+ */
+
 public class StartState extends State {
 
 

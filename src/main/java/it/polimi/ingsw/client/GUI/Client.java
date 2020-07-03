@@ -8,6 +8,14 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
+
+/**
+ * @author: hamzahaddaoui
+ *
+ * Entry point of the client GUI application
+ */
+
+
 public class Client extends Application {
     static private Stage stage;
 

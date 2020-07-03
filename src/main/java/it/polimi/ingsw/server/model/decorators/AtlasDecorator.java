@@ -10,6 +10,12 @@ import java.util.Map;
 
 import static it.polimi.ingsw.utilities.TurnState.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Redefinition of methods related to the Atlas power.
+ */
+
 public class AtlasDecorator extends CommandsDecorator {
 
     static final private GodCards card = GodCards.Atlas;

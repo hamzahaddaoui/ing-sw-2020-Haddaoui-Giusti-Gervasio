@@ -17,6 +17,12 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author giusti-leo
+ *
+ * Eros Commands Decorator Tests
+ *
+ */
 class ErosDecoratorTest {
     Commands commands1,commands2, commands3;
     Player player1 = new Player(1,"leo");
@@ -71,7 +77,7 @@ class ErosDecoratorTest {
 
 
     /**
-     * This method tests the compute available cells
+     * This method tests that the available cells for the first workers are only along the boarder
      */
     @Test
     void placing(){
@@ -93,7 +99,9 @@ class ErosDecoratorTest {
 
     }
 
-
+    /**
+     * winningMatch2Players tests the condition where a player win by moving his player in a cell neighbour to his other worker and they are both on the first level
+     */
     @Test
     void winningMatch2Players(){
         match.addPlayer(player2);
@@ -154,7 +162,9 @@ class ErosDecoratorTest {
         assertTrue(player1.getCommands().winningCondition(player1));
 
     }
-
+    /**
+     * winningMatch3Players tests the condition where a player win by moving his player in a cell neighbour to his other worker and they are both on the same level
+     */
     @Test
     void winningMatch3Players(){
         match.addPlayer(player2);

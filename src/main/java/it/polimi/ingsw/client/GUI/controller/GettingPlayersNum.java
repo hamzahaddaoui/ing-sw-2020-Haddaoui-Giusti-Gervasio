@@ -10,6 +10,13 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Control/View class. Based on the state where the main player (who has created the match) has to decide the number of players.
+ * */
+
+
 public class GettingPlayersNum extends State {
 
     boolean selected = false;

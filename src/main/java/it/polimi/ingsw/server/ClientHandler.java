@@ -12,7 +12,13 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.*;
 
-
+/**
+ * @author: hamzahaddaoui
+ *
+ * Client connection handler. Manages the IO connection to the client.
+ * Keeps game info about the client (MatchID, PlayerID).
+ * Responsible of keeping the connection alive, by pinging regularly the server.
+ */
 
 public class ClientHandler extends Observable<MessageEvent> implements Observer<MessageEvent>, Runnable {
     private final ExecutorService outputTaskQueue = Executors.newSingleThreadExecutor();

@@ -16,9 +16,11 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @author Vasio1298
+ * @author giusti-leo
+ *
+ * Zeus Commands Decorator Tests
+ *
  */
-
 class ZeusDecoratorTest {
     Commands commands1,commands2;
     Player player1 = new Player(1,"leo");
