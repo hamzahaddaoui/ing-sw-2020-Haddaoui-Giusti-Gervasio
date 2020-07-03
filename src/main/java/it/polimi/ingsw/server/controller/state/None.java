@@ -5,6 +5,14 @@ import it.polimi.ingsw.utilities.Observer;
 
 import java.util.List;
 
+
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller class related to NO state. Does nothing.
+ */
+
+
 public class None extends State {
     @Override
     public boolean handleRequest(MessageEvent messageEvent){

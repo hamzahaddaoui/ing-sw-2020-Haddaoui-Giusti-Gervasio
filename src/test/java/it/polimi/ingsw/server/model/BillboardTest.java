@@ -10,7 +10,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
+/*
  * @author: hamzahaddaoui
  *
  * Test of the billboard functions, to manipulate the billboard.

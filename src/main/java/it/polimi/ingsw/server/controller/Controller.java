@@ -12,6 +12,13 @@ import java.util.concurrent.Executors;
 
 import static it.polimi.ingsw.server.model.GameModel.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Main functions of the application CONTROL (checking input + updating data)
+ *
+ */
+
 public class Controller extends Observable<MessageEvent> implements Observer<MessageEvent> {
     static ExecutorService executor = Executors.newCachedThreadPool();
 
