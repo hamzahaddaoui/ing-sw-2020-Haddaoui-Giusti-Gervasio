@@ -49,9 +49,4 @@ public class Client extends Application {
             }
         });
     }
-
-
-    //TODO Transizioni tra schermate
-    //TODO Restrictions on nickname input (lenght and characters)
-
 }
