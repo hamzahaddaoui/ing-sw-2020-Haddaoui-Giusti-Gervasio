@@ -12,6 +12,15 @@ import java.util.Set;
 import static it.polimi.ingsw.server.Server.addClientSocket;
 import static it.polimi.ingsw.server.model.GameModel.*;
 
+
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller class that manages the first player access.
+ * Checks if the input nickname is available
+ */
+
+
 public class FirstPlayerAccess extends State {
 
 

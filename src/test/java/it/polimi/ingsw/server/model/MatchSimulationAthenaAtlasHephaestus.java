@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
+/*
  * @author: hamzahaddaoui
  *
  * Test class of a match, from the beginning to the winning of a player, using three cards:

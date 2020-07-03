@@ -11,6 +11,13 @@ import java.util.Set;
 
 import static it.polimi.ingsw.server.model.GameModel.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller class that manages the placing workers state inputs by the users.
+ * Checks if the positions inserted are available or not
+ */
+
 public class PlacingWorkers extends State {
 
 

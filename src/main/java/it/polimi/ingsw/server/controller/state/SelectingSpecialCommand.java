@@ -9,6 +9,13 @@ import java.util.List;
 import static it.polimi.ingsw.server.model.GameModel.*;
 import static it.polimi.ingsw.server.model.GameModel.nextMatchState;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller class that manages the selecting command inputs by the users.
+ * Checks if the card selected is available.
+ */
+
 public class SelectingSpecialCommand extends State {
     @Override
     public boolean handleRequest(MessageEvent messageEvent){
