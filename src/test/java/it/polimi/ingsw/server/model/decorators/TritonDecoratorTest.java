@@ -12,6 +12,10 @@ import static it.polimi.ingsw.utilities.TurnState.BUILD;
 import static it.polimi.ingsw.utilities.TurnState.IDLE;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Vasio1298
+ */
+
 class TritonDecoratorTest {
 
     Player p1 = new Player(1,"vasio");

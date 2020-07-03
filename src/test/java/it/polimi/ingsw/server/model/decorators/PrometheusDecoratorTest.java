@@ -11,6 +11,10 @@ import java.util.Set;
 import static it.polimi.ingsw.utilities.TurnState.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Vasio1298
+ */
+
 class PrometheusDecoratorTest {
 
     Player p1 = new Player(1,"vasio");

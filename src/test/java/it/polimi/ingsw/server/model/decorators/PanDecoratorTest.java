@@ -15,6 +15,10 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * @author Vasio1298
+ */
+
 class PanDecoratorTest {
     Match match;
     Player player;

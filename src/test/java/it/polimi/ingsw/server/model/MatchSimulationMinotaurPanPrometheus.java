@@ -15,6 +15,10 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Vasio1298
+ */
+
 public class MatchSimulationMinotaurPanPrometheus {
     Player p1, p2, p3;
     Player p;
@@ -42,7 +46,6 @@ public class MatchSimulationMinotaurPanPrometheus {
         assertFalse(p1.hasSpecialFunction());
         assertFalse(p1.hasFinished());
         assertFalse(p1.isTerminateTurnAvailable());
-        //assertTrue(p1.isSpecialFunctionAvailable().isEmpty());
     }
 
     @Test
@@ -105,6 +108,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         testPlacing();
         p1.setTurnState(TurnState.IDLE);
         p1.setPlayerState();
+        //First move of Prometheus, active special function: build -> move -> buid
         p = p1;
         System.out.println(getBillboardStat());
         worker = new Position(2, 0); p.setCurrentWorker(worker);
@@ -117,6 +121,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         p.playerAction(worker); match.checkPlayers();
         build = new Position(4,1); p.playerAction(build);
         match.checkPlayers();
+        //First move of Pan, normal move
         p = p2; System.out.println(getBillboardStat());
         worker = new Position(2,2); p.setCurrentWorker(worker);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -124,6 +129,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         match.checkPlayers();
         build = new Position(1,3); p.playerAction(build);
         match.checkPlayers();
+        //First move of Minotaur, normal move
         p = p3; System.out.println(getBillboardStat());
         worker = new Position(3,1); p.setCurrentWorker(worker);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -131,6 +137,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         match.checkPlayers();
         build = new Position(3,1); p.playerAction(build);
         match.checkPlayers();
+        //Second move of Prometheus, active special function: build -> move -> build
         p = p1; System.out.println(getBillboardStat());
         worker = new Position(0,0); p.setCurrentWorker(worker);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -141,6 +148,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         match.checkPlayers();
         build = new Position(1,0); p.playerAction(build);
         match.checkPlayers();
+        //Second move of Pan, normal move
         p = p2; System.out.println(getBillboardStat());
         worker = new Position(2,3); p.setCurrentWorker(worker);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -148,6 +156,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         match.checkPlayers();
         build = new Position(1,2); p.playerAction(build);
         match.checkPlayers();
+        //Second move of Minotaur, moves into an opponent Worker space and moves him too
         p = p3; System.out.println(getBillboardStat());
         worker = new Position(3,2); p.setCurrentWorker(worker);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -155,6 +164,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         match.checkPlayers();
         build = new Position(2,1); p.playerAction(build);
         match.checkPlayers();
+        //Third move of Prometheus, normal move
         p = p1; System.out.println(getBillboardStat());
         worker = new Position(3,0); p.setCurrentWorker(worker);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -162,6 +172,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         match.checkPlayers();
         build = new Position(3,0); p.playerAction(worker);
         match.checkPlayers();
+        //Third move of Pan, normal move
         p = p2; System.out.println(getBillboardStat());
         worker = new Position(0,1); p.setCurrentWorker(worker);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -169,6 +180,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         match.checkPlayers();
         build = new Position(0,1); p.playerAction(build);
         match.checkPlayers();
+        //Third move of Minotaur, moves into an opponent Worker space and moves him too
         p = p3; System.out.println(getBillboardStat());
         worker = new Position(2,2); p.setCurrentWorker(worker);
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
@@ -176,6 +188,7 @@ public class MatchSimulationMinotaurPanPrometheus {
         match.checkPlayers();
         build = new Position(2,2); p.playerAction(build);
         match.checkPlayers();
+        //Fourth move of Prometheus, active special function: build -> move -> build
         p = p1; System.out.println(getBillboardStat());
         worker = new Position(1,1); p.setCurrentWorker(worker);
         p.setUnsetSpecialFunction(true);

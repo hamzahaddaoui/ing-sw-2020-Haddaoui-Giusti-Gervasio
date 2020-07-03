@@ -12,6 +12,10 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Vasio1298
+ */
+
 class MinotaurDecoratorTest {
 
     Set<GodCards> testingCards = new HashSet<GodCards>();
