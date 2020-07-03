@@ -86,6 +86,7 @@ public class Client {
             networkHandler = new NetworkHandler(ip);
         } catch (IOException e) {
             System.out.println("SERVER UNREACHABLE");
+            close();
         }
 
         networkHandler.addObserver(view);       //view osserva il networkHandler
