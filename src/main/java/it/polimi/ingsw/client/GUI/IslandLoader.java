@@ -47,7 +47,7 @@ public class IslandLoader{
     //posizione ideale dei worker nella mappa
     private static Map<Group, Point3D> workers = new HashMap<>();
 
-    static SequentialTransition sequentialTransition ;
+    static SequentialTransition sequentialTransition;
 
     static Group group;
     static Set<Group> cells = new HashSet<>();
