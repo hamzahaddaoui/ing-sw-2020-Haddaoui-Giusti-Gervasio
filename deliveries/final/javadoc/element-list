@@ -1,0 +1,13 @@
+it.polimi.ingsw.client
+it.polimi.ingsw.client.CLI
+it.polimi.ingsw.client.CLI.controller
+it.polimi.ingsw.client.CLI.controller.state
+it.polimi.ingsw.client.CLI.view
+it.polimi.ingsw.client.GUI
+it.polimi.ingsw.client.GUI.controller
+it.polimi.ingsw.server
+it.polimi.ingsw.server.controller
+it.polimi.ingsw.server.controller.state
+it.polimi.ingsw.server.model
+it.polimi.ingsw.server.model.decorators
+it.polimi.ingsw.utilities
