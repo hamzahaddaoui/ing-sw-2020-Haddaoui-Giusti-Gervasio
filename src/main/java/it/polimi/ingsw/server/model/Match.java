@@ -9,6 +9,8 @@ import java.util.*;
 /**
  * @author hamzahaddaoui
  *
+ * Class related to a match. Linked to a certain billboard, and a list of players.
+ * The match moves through a list of predefined state, from the INITIALIZED to FINISH.
  */
 public class Match {
     private final int ID;

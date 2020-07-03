@@ -6,7 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * @author: hamzahaddaoui
+ *
+ * Class that defines a worker, and all of its properties.
+ * The worker has a position, has its own available cells, which it can move or build.
+ * It has also a height variation defined by the last move made.
+ */
 
 public class Worker{
     private Position position;

@@ -5,6 +5,12 @@ import it.polimi.ingsw.utilities.Observable;
 import it.polimi.ingsw.utilities.Observer;
 import javafx.fxml.Initializable;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Abstract STATE class. All the state classes inherit from this one.
+ */
+
 public abstract class State extends Observable<MessageEvent> implements Observer<MessageEvent>, Initializable {
     /**
      * Initialize the pane of the current state

@@ -6,6 +6,12 @@ import it.polimi.ingsw.utilities.Position;
 import static it.polimi.ingsw.utilities.TurnState.BUILD;
 import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Redefinition of methods related to the Athena power.
+ */
+
 public class AthenaDecorator extends CommandsDecorator {
 
     static final private GodCards card = GodCards.Athena;

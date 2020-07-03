@@ -13,6 +13,12 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.utilities.TurnState.BUILD;
 import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Redefinition of methods related to the Charon power.
+ */
+
 public class CharonDecorator  extends CommandsDecorator {
 
     static final private GodCards card = GodCards.Charon;

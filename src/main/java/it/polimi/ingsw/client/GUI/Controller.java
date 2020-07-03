@@ -9,6 +9,12 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Main functions of the application control (exit, new game, set server and change scene content)
+ */
+
 public class Controller {
 
 

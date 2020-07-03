@@ -32,6 +32,13 @@ import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Control/View class. Manages the GUI view of showing the cards and descriptions.
+ * Manages the selection of the user card and the submission to the server.
+ */
+
 public class SelectingSpecialCommand extends State {
 
     @FXML

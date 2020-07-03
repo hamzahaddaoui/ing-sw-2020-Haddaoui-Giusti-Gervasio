@@ -21,6 +21,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Manager of the connection between the client and the server.
+ * Manages the IO connection, as well as the keep-alive function (detects whether the server has been shutted off)
+ */
+
 public class NetworkHandler extends Observable<MessageEvent> implements Runnable, Observer<MessageEvent> {
     public final static int SOCKET_PORT = 12345;
     public final static int SOCKET_TIMEOUT = 10000;

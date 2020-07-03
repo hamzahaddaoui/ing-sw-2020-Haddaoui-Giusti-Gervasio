@@ -9,6 +9,12 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller/View class. Manages the state on which the game has finished and the user has to decide if starting a new game, or exiting.
+ */
+
 public class gameFinish extends State {
     @FXML
     Label finishLabel;

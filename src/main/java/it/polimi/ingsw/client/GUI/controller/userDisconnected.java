@@ -11,6 +11,11 @@ import java.util.ResourceBundle;
 
 import static it.polimi.ingsw.client.GUI.Database.getNetworkHandler;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Control/View class. Manages the disconnection of a certain user. Shows the screen, and let the user decide what to do
+ */
 public class userDisconnected extends State{
     @Override
     public void showPane(){

@@ -9,7 +9,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * @author: hamzahaddaoui
+ *
+ * Main class of the Server-side of the application.
+ * Handles all the connection, and for each one, instantiates a ClientHandler, which manages the IO connection with the client.
+ *
+ */
 public class Server {
     public final static int SOCKET_PORT = 12345;
     public final static int SOCKET_TIMEOUT = 10000;

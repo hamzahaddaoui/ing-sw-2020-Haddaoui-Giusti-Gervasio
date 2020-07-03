@@ -2,6 +2,7 @@ package it.polimi.ingsw.utilities;
 import java.util.*;
 
 import com.google.gson.Gson;
+
 /**
  * @author hamzahaddaoui
  * Class for managining 2D points on a natural numbers xy plane

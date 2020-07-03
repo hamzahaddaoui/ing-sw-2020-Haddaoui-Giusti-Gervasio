@@ -4,6 +4,13 @@ import it.polimi.ingsw.utilities.Position;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Class related to the match billboard.
+ * An instance of billboard have ROWS*COLOUMNS n° of cells.
+ *
+ */
 public class Billboard {
 
     static final int ROWS = 5;

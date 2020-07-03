@@ -9,7 +9,9 @@ import java.util.*;
 import static it.polimi.ingsw.utilities.TurnState.*;
 
 /**
- * Class managing the instance of a certain user, liked to a match.
+ * @author: hamzahaddaoui
+ * Class managing the instance of a certain user, linked to a match.
+ * The user has properties (commands, playerstate and turnstate) and is linked also to his workers.
  */
 
 public class Player{

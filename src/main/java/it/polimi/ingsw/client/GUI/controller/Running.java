@@ -28,6 +28,13 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.client.GUI.Database.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Main control/view class of the game
+ * Manages the gameplay in the running status of the match.
+ * Handles the losing and winning of a player.
+ * */
 
 public class Running extends State{
     @FXML StackPane stackPane;

@@ -23,6 +23,13 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * 3D graphics class manager. Creates objects and the enviroment.
+ * Adds dynamically objects, move workers and build stuff.
+ */
+
 public class IslandLoader{
 
     private static double anchorX, anchorY;

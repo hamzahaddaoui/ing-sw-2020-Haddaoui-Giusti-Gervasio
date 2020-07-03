@@ -31,6 +31,12 @@ import java.util.Set;
 
 import static it.polimi.ingsw.client.GUI.Database.*;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Controller/View class. Manage the placing worker state, the GUI initialization, as well as the control of the buttons/click/mouse hover
+ * */
+
 public class PlacingWorkers extends State{
 
     @FXML

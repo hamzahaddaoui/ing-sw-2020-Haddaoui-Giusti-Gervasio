@@ -15,6 +15,13 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * @author: hamzahaddaoui
+ *
+ * Control/View class. Manages the waiting list state of a user.
+ * Waits until a match is created.
+ */
+
 public class WaitingList extends State{
 
     @FXML
