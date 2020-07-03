@@ -1,0 +1,132 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GettingPlayersNum</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.controller.state</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GettingPlayersNum (it.polimi.ingsw.server.controller.state)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GettingPlayersNum</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 18)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.controller.state;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.ClientHandler;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.MessageEvent;
+<i>5</i>&nbsp;import it.polimi.ingsw.utilities.Observer;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import static it.polimi.ingsw.server.Server.getClientHandler;
+<i>10</i>&nbsp;import static it.polimi.ingsw.server.model.GameModel.*;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * @author: hamzahaddaoui
+<i>14</i>&nbsp; *
+<i>15</i>&nbsp; * Controller class that manages the getting player num state input.
+<i>16</i>&nbsp; * Checks wheteher the input number is 2 or 3. Otherwise is rejected.
+<i>17</i>&nbsp; * The input can only be submitted by the master player.
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;
+<b class="nc"><i>20</i>&nbsp;public class GettingPlayersNum extends State{</b>
+<i>21</i>&nbsp;    @Override
+<i>22</i>&nbsp;    public boolean handleRequest(MessageEvent messageEvent){
+<b class="nc"><i>23</i>&nbsp;        ClientHandler clientHandler = messageEvent.getClientHandler();</b>
+<b class="nc"><i>24</i>&nbsp;        int matchID = clientHandler.getMatchID();</b>
+<b class="nc"><i>25</i>&nbsp;        int playerID = clientHandler.getPlayerID();</b>
+<i>26</i>&nbsp;
+<b class="nc"><i>27</i>&nbsp;        int playersNum = messageEvent.getPlayersNum();</b>
+<b class="nc"><i>28</i>&nbsp;        if (!(playersNum == 2 || playersNum == 3)){</b>
+<b class="nc"><i>29</i>&nbsp;            notify(List.of(messageEvent.getClientHandler()), basicErrorConfig((basicPlayerConfig(basicMatchConfig(new MessageEvent(), matchID), playerID))));</b>
+<b class="nc"><i>30</i>&nbsp;            return false;</b>
+<i>31</i>&nbsp;        }
+<i>32</i>&nbsp;
+<b class="nc"><i>33</i>&nbsp;        setMatchPlayersNum(matchID, playersNum);</b>
+<b class="nc"><i>34</i>&nbsp;        nextMatchState(matchID);</b>
+<i>35</i>&nbsp;
+<b class="nc"><i>36</i>&nbsp;        while ((getPlayersWaitingListSize() != 0) &amp;&amp; !isNumReached(matchID)) {</b>
+<b class="nc"><i>37</i>&nbsp;            int opponentID = unstackPlayer();</b>
+<b class="nc"><i>38</i>&nbsp;            addPlayerToMatch(matchID, opponentID);</b>
+<b class="nc"><i>39</i>&nbsp;            getClientHandler(opponentID).setMatchID(matchID);</b>
+<b class="nc"><i>40</i>&nbsp;        }</b>
+<i>41</i>&nbsp;
+<b class="nc"><i>42</i>&nbsp;        checkMatchStart(matchID);</b>
+<b class="nc"><i>43</i>&nbsp;        return true;</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    @Override
+<i>47</i>&nbsp;    public void viewNotify(List&lt;Observer&lt;MessageEvent&gt;&gt; observers, Integer matchID){
+<b class="nc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

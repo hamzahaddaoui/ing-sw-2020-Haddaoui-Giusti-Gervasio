@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Client</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.CLI</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Client (it.polimi.ingsw.client.CLI)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Client</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 46)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.CLI;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.client.CLI.controller.Controller;
+<i>4</i>&nbsp;import it.polimi.ingsw.client.CLI.view.DataBase;
+<i>5</i>&nbsp;import it.polimi.ingsw.client.CLI.view.View;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.io.IOException;
+<i>8</i>&nbsp;import java.util.Scanner;
+<i>9</i>&nbsp;import java.util.concurrent.ExecutorService;
+<i>10</i>&nbsp;import java.util.concurrent.Executors;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * @author Vasio1298
+<i>14</i>&nbsp; *
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;
+<b class="nc"><i>17</i>&nbsp;public class Client {</b>
+<b class="nc"><i>18</i>&nbsp;    static ExecutorService inputListener = Executors.newSingleThreadExecutor();</b>
+<b class="nc"><i>19</i>&nbsp;    static ExecutorService networkListener = Executors.newSingleThreadExecutor();</b>
+<i>20</i>&nbsp;    static NetworkHandler networkHandler;
+<i>21</i>&nbsp;    static View view;
+<i>22</i>&nbsp;    static Controller controller;
+<b class="nc"><i>23</i>&nbsp;    static Scanner scanner = new Scanner(System.in);</b>
+<i>24</i>&nbsp;    static String ip;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Main method for the Client.
+<i>28</i>&nbsp;     * &lt;p&gt;
+<i>29</i>&nbsp;     * The method asks at the user the server&#39;s ip and then instantiate the Network Handler socket.
+<i>30</i>&nbsp;     * Then it assigns observer/observable roles and start a thread for the Network Handler,
+<i>31</i>&nbsp;     * a thread for the print method of the View and a thread for the Controller.
+<i>32</i>&nbsp;     *
+<i>33</i>&nbsp;     *
+<i>34</i>&nbsp;     * @param args   an array of command-line arguments for the application
+<i>35</i>&nbsp;     */
+<i>36</i>&nbsp;    public static void main(String[] args) {
+<b class="nc"><i>37</i>&nbsp;        view = new View();</b>
+<b class="nc"><i>38</i>&nbsp;        controller = new Controller();</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;        try {
+<b class="nc"><i>41</i>&nbsp;            System.out.println(&quot;Insert ip address: (&#39;d&#39; or &#39;default&#39; for the default ip) &quot;);</b>
+<b class="nc"><i>42</i>&nbsp;            ip = scanner.next();</b>
+<b class="nc"><i>43</i>&nbsp;            if (ip.equals(&quot;d&quot;) || ip.equals(&quot;default&quot;))</b>
+<b class="nc"><i>44</i>&nbsp;                ip = &quot;127.0.0.1&quot;;</b>
+<b class="nc"><i>45</i>&nbsp;            networkHandler = new NetworkHandler(ip);</b>
+<i>46</i>&nbsp;
+<b class="nc"><i>47</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>48</i>&nbsp;            System.out.println(&quot;SERVER UNREACHABLE&quot;);</b>
+<b class="nc"><i>49</i>&nbsp;            return;</b>
+<b class="nc"><i>50</i>&nbsp;        }</b>
+<b class="nc"><i>51</i>&nbsp;        System.out.println(&quot;CONNECTED&quot;);</b>
+<i>52</i>&nbsp;
+<b class="nc"><i>53</i>&nbsp;        networkHandler.addObserver(view);       //view osserva il networkHandler</b>
+<b class="nc"><i>54</i>&nbsp;        controller.addObserver(networkHandler); //networkHandler osserva il controller</b>
+<i>55</i>&nbsp;
+<b class="nc"><i>56</i>&nbsp;        networkListener.submit(networkHandler);</b>
+<b class="nc"><i>57</i>&nbsp;        new Thread(View::print).start();</b>
+<b class="nc"><i>58</i>&nbsp;        inputListener.submit(controller::inputListener);</b>
+<b class="nc"><i>59</i>&nbsp;    }</b>
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    /**
+<i>63</i>&nbsp;     * Method called by the current Control State when a player wants to quit from the game.
+<i>64</i>&nbsp;     */
+<i>65</i>&nbsp;    public static void close() {
+<i>66</i>&nbsp;         {
+<i>67</i>&nbsp;            try {
+<b class="nc"><i>68</i>&nbsp;                networkHandler.stop();</b>
+<b class="nc"><i>69</i>&nbsp;                System.exit(0);</b>
+<b class="nc"><i>70</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>71</i>&nbsp;                e.getMessage();</b>
+<b class="nc"><i>72</i>&nbsp;            }</b>
+<i>73</i>&nbsp;        }
+<b class="nc"><i>74</i>&nbsp;    }</b>
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    /**
+<i>77</i>&nbsp;    Try the reconnection to the Server, reset the observers and observable links.
+<i>78</i>&nbsp;    This method reopen the inputListener
+<i>79</i>&nbsp;    Used when the User press &#39;Rec&#39;
+<i>80</i>&nbsp;     */
+<i>81</i>&nbsp;    public static void reconnection() {
+<b class="nc"><i>82</i>&nbsp;        view = new View();</b>
+<b class="nc"><i>83</i>&nbsp;        controller = new Controller();</b>
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;        try {
+<b class="nc"><i>86</i>&nbsp;            networkHandler = new NetworkHandler(ip);</b>
+<b class="nc"><i>87</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>88</i>&nbsp;            System.out.println(&quot;SERVER UNREACHABLE&quot;);</b>
+<b class="nc"><i>89</i>&nbsp;        }</b>
+<i>90</i>&nbsp;
+<b class="nc"><i>91</i>&nbsp;        networkHandler.addObserver(view);       //view osserva il networkHandler</b>
+<b class="nc"><i>92</i>&nbsp;        controller.addObserver(networkHandler); //networkHandler osserva il controller</b>
+<i>93</i>&nbsp;
+<b class="nc"><i>94</i>&nbsp;        networkListener.submit(networkHandler);</b>
+<b class="nc"><i>95</i>&nbsp;        new Thread(View::print).start();</b>
+<b class="nc"><i>96</i>&nbsp;        inputListener.submit(controller::inputListener);</b>
+<b class="nc"><i>97</i>&nbsp;    }</b>
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    /**
+<i>100</i>&nbsp;     * Method called by the current Control State when a player wants to quit from the game.
+<i>101</i>&nbsp;     */
+<i>102</i>&nbsp;    public static void rec(){
+<b class="nc"><i>103</i>&nbsp;        synchronized(View.class){</b>
+<b class="nc"><i>104</i>&nbsp;            synchronized(DataBase.class){</b>
+<b class="nc"><i>105</i>&nbsp;                DataBase.setReconnection(true);</b>
+<b class="nc"><i>106</i>&nbsp;            }</b>
+<b class="nc"><i>107</i>&nbsp;        }</b>
+<b class="nc"><i>108</i>&nbsp;    }</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;}
+<i>111</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

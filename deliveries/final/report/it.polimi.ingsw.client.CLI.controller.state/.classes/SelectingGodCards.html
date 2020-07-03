@@ -1,0 +1,241 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SelectingGodCards</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.CLI.controller.state</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SelectingGodCards (it.polimi.ingsw.client.CLI.controller.state)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SelectingGodCards</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 72)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.CLI.controller.state;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.client.CLI.view.DataBase;
+<i>4</i>&nbsp;import it.polimi.ingsw.client.CLI.view.View;
+<i>5</i>&nbsp;import it.polimi.ingsw.utilities.MessageEvent;
+<i>6</i>&nbsp;import it.polimi.ingsw.utilities.PlayerState;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import javax.xml.crypto.Data;
+<i>9</i>&nbsp;import java.util.*;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;/**
+<i>12</i>&nbsp; * @author giusti-leo
+<i>13</i>&nbsp; *
+<i>14</i>&nbsp; * SelectingGodCards is a state of the Controller and it handles the selection of GodCards for the Match
+<i>15</i>&nbsp; *
+<i>16</i>&nbsp; */
+<i>17</i>&nbsp;
+<b class="nc"><i>18</i>&nbsp;public class SelectingGodCards extends ControlState {</b>
+<i>19</i>&nbsp;
+<b class="nc"><i>20</i>&nbsp;    MessageEvent messageEvent = new MessageEvent();</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /**
+<i>23</i>&nbsp;     * It analyzes input from Controller.
+<i>24</i>&nbsp;     * If the input is correct, it deletes the god Card from the MatchCards List and it adds GodCard to the SelectedGodCards
+<i>25</i>&nbsp;     * If the size of SelectedGodCards is equals to PlayersNumber, it prepares the message for NetworkHandler
+<i>26</i>&nbsp;     * If the input is not correct, it prints an advice
+<i>27</i>&nbsp;     *
+<i>28</i>&nbsp;     * @param input  is the GodCard if it is correct
+<i>29</i>&nbsp;     * @return  true is PlayersNumber is equal to SelectedGodCards&#39; size, else false
+<i>30</i>&nbsp;     */
+<i>31</i>&nbsp;    @Override
+<i>32</i>&nbsp;    public MessageEvent computeInput(String input) {
+<b class="nc"><i>33</i>&nbsp;        if(DataBase.getSelectedGodCards().size() == 0){</b>
+<b class="nc"><i>34</i>&nbsp;            messageEvent = new MessageEvent();</b>
+<i>35</i>&nbsp;        }
+<i>36</i>&nbsp;
+<b class="nc"><i>37</i>&nbsp;        if(DataBase.getSelectedGodCards().size() &gt; DataBase.getPlayerNumber())</b>
+<b class="nc"><i>38</i>&nbsp;            throw new IllegalArgumentException(&quot;Errore di scambio tra stati&quot;);</b>
+<i>39</i>&nbsp;
+<b class="nc"><i>40</i>&nbsp;        if(DataBase.getMatchCards().stream().anyMatch(string -&gt; (string.toUpperCase()).equals(input.toUpperCase()))</b>
+<b class="nc"><i>41</i>&nbsp;                &amp;&amp; !DataBase.getSelectedGodCards().contains(input.toUpperCase())){</b>
+<i>42</i>&nbsp;
+<b class="nc"><i>43</i>&nbsp;                DataBase.getSelectedGodCards().add(DataBase</b>
+<b class="nc"><i>44</i>&nbsp;                        .getMatchCards()</b>
+<b class="nc"><i>45</i>&nbsp;                        .stream()</b>
+<b class="nc"><i>46</i>&nbsp;                        .filter(w-&gt; w.toUpperCase().equals(input.toUpperCase()))</b>
+<b class="nc"><i>47</i>&nbsp;                        .findFirst()</b>
+<b class="nc"><i>48</i>&nbsp;                        .get());</b>
+<i>49</i>&nbsp;
+<b class="nc"><i>50</i>&nbsp;                DataBase.getMatchCards().remove(DataBase</b>
+<b class="nc"><i>51</i>&nbsp;                        .getMatchCards()</b>
+<b class="nc"><i>52</i>&nbsp;                        .stream()</b>
+<b class="nc"><i>53</i>&nbsp;                        .filter(w-&gt; w.toUpperCase().equals(input.toUpperCase()))</b>
+<b class="nc"><i>54</i>&nbsp;                        .findFirst()</b>
+<b class="nc"><i>55</i>&nbsp;                        .get());</b>
+<i>56</i>&nbsp;
+<b class="nc"><i>57</i>&nbsp;                if(DataBase.getSelectedGodCards().size() == DataBase.getPlayerNumber()){</b>
+<b class="nc"><i>58</i>&nbsp;                    messageEvent.setMatchCards(DataBase.getSelectedGodCards());</b>
+<b class="nc"><i>59</i>&nbsp;                    DataBase.setMessageReady(true);</b>
+<b class="nc"><i>60</i>&nbsp;                    DataBase.setPlayerState(PlayerState.IDLE);</b>
+<b class="nc"><i>61</i>&nbsp;                    return messageEvent;</b>
+<i>62</i>&nbsp;                }
+<i>63</i>&nbsp;                else{
+<b class="nc"><i>64</i>&nbsp;                    View.setRefresh(true);</b>
+<b class="nc"><i>65</i>&nbsp;                    View.handler();</b>
+<i>66</i>&nbsp;                }
+<i>67</i>&nbsp;        }
+<i>68</i>&nbsp;        else{
+<b class="nc"><i>69</i>&nbsp;            View.setError(true);</b>
+<b class="nc"><i>70</i>&nbsp;            View.handler();</b>
+<i>71</i>&nbsp;        }
+<b class="nc"><i>72</i>&nbsp;        DataBase.setMessageReady(false);</b>
+<b class="nc"><i>73</i>&nbsp;        DataBase.setActiveInput(true);</b>
+<b class="nc"><i>74</i>&nbsp;        return null;</b>
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    /**
+<i>78</i>&nbsp;     * it contains Disconnection case.
+<i>79</i>&nbsp;     * if PlayerState is equals to Active it saves on DataBase the MatchCards for the selection of match&#39;s gods
+<i>80</i>&nbsp;     *
+<i>81</i>&nbsp;     * @param message  is the Network Handler &#39;s message
+<i>82</i>&nbsp;     */
+<i>83</i>&nbsp;    @Override
+<i>84</i>&nbsp;    public void updateData(MessageEvent message) {
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;        //CASO DISCONNESSIONE UTENTE
+<b class="nc"><i>87</i>&nbsp;        if (message.getInfo()!=null &amp;&amp; message.getInfo().equals(&quot;A user has disconnected from the match. Closing...&quot;)) {</b>
+<b class="nc"><i>88</i>&nbsp;            DataBase.setDisconnectedUser(true);</b>
+<b class="nc"><i>89</i>&nbsp;            DataBase.resetDataBase();</b>
+<b class="nc"><i>90</i>&nbsp;            DataBase.setActiveInput(false);</b>
+<b class="nc"><i>91</i>&nbsp;            View.setRefresh(true);</b>
+<b class="nc"><i>92</i>&nbsp;            View.handler();</b>
+<b class="nc"><i>93</i>&nbsp;            DataBase.setDisconnectedUser(false);</b>
+<b class="nc"><i>94</i>&nbsp;            return;</b>
+<i>95</i>&nbsp;        }
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;        //caso SELECTING_GOD_CARDS
+<b class="nc"><i>98</i>&nbsp;        if( DataBase.getPlayerState() == PlayerState.ACTIVE){</b>
+<b class="nc"><i>99</i>&nbsp;            DataBase.setMatchCards(message.getMatchCards());</b>
+<b class="nc"><i>100</i>&nbsp;            View.setRefresh(true);</b>
+<b class="nc"><i>101</i>&nbsp;            View.handler();</b>
+<i>102</i>&nbsp;        }
+<i>103</i>&nbsp;        else{
+<b class="nc"><i>104</i>&nbsp;            View.setRefresh(true);</b>
+<b class="nc"><i>105</i>&nbsp;            View.handler();</b>
+<i>106</i>&nbsp;        }
+<i>107</i>&nbsp;
+<b class="nc"><i>108</i>&nbsp;    }</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    /**
+<i>111</i>&nbsp;     * Depending on the Database&#39;s state, compute different String to print
+<i>112</i>&nbsp;     *
+<i>113</i>&nbsp;     * @return  String to print on view
+<i>114</i>&nbsp;     */
+<i>115</i>&nbsp;    @Override
+<i>116</i>&nbsp;    public String computeView() {
+<b class="nc"><i>117</i>&nbsp;        int number = DataBase.getMatchPlayers().size() - DataBase.getSelectedGodCards().size();</b>
+<b class="nc"><i>118</i>&nbsp;        StringBuilder string = new StringBuilder();</b>
+<b class="nc"><i>119</i>&nbsp;        List&lt;String&gt; players = new ArrayList&lt;&gt;(DataBase.getMatchPlayers().values());</b>
+<i>120</i>&nbsp;
+<b class="nc"><i>121</i>&nbsp;        if (players.size() == 2 &amp;&amp; DataBase.getSelectedGodCards().isEmpty() &amp;&amp; !View.getError()) {</b>
+<b class="nc"><i>122</i>&nbsp;            players.remove(DataBase.getNickname());</b>
+<b class="nc"><i>123</i>&nbsp;            string.append(&quot;Your opponent is (&quot; + players.get(0) + &quot;)\n&quot;);</b>
+<i>124</i>&nbsp;        }
+<b class="nc"><i>125</i>&nbsp;        else if (players.size()==3 &amp;&amp; DataBase.getSelectedGodCards().isEmpty() &amp;&amp; !View.getError()) {</b>
+<b class="nc"><i>126</i>&nbsp;            players.remove(DataBase.getNickname());</b>
+<b class="nc"><i>127</i>&nbsp;            string.append(&quot;Your opponents are (&quot; + players.get(0) + &quot;, &quot; + players.get(1) + &quot;)\n&quot;);</b>
+<i>128</i>&nbsp;        }
+<i>129</i>&nbsp;
+<b class="nc"><i>130</i>&nbsp;        if(PlayerState.ACTIVE == DataBase.getPlayerState()){</b>
+<b class="nc"><i>131</i>&nbsp;            if(View.getError()){</b>
+<b class="nc"><i>132</i>&nbsp;                string.append(&quot;Select other &quot;+ number +&quot; God Cards from [ &quot;);</b>
+<b class="nc"><i>133</i>&nbsp;                DataBase.getMatchCards().stream().forEach(card -&gt; string.append(card +&quot;, &quot;));</b>
+<b class="nc"><i>134</i>&nbsp;                string.deleteCharAt(string.length()-2);</b>
+<b class="nc"><i>135</i>&nbsp;                string.append(&quot;]&quot;);</b>
+<b class="nc"><i>136</i>&nbsp;            } else if (View.getRefresh()) {</b>
+<b class="nc"><i>137</i>&nbsp;                string.append(&quot;Select &quot; + number + &quot; God Cards from [ &quot;);</b>
+<b class="nc"><i>138</i>&nbsp;                DataBase.getMatchCards().stream().forEach(card -&gt; string.append(card + &quot;, &quot;));</b>
+<b class="nc"><i>139</i>&nbsp;                string.deleteCharAt(string.length() - 2);</b>
+<b class="nc"><i>140</i>&nbsp;                string.append(&quot;]&quot;);</b>
+<i>141</i>&nbsp;            }
+<i>142</i>&nbsp;        }
+<i>143</i>&nbsp;        else{
+<b class="nc"><i>144</i>&nbsp;            string.append(DataBase.getMatchPlayers().get(DataBase.getPlayer()) + &quot; is selecting the cards for the match &quot;);</b>
+<i>145</i>&nbsp;        }
+<b class="nc"><i>146</i>&nbsp;        return string.toString();</b>
+<i>147</i>&nbsp;    }
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;    /**
+<i>150</i>&nbsp;     * Called if there is an error on the message, it announces that the input is incorrect and print the computeView method
+<i>151</i>&nbsp;     */
+<i>152</i>&nbsp;    @Override
+<i>153</i>&nbsp;    public String error() {
+<b class="nc"><i>154</i>&nbsp;        DataBase.setActiveInput(true);</b>
+<b class="nc"><i>155</i>&nbsp;        return &quot;Wrong input\n&quot; +</b>
+<b class="nc"><i>156</i>&nbsp;                computeView();</b>
+<i>157</i>&nbsp;    }
+<i>158</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

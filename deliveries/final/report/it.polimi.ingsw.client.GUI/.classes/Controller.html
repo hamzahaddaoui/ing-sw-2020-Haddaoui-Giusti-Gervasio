@@ -1,0 +1,162 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Controller</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.GUI</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Controller (it.polimi.ingsw.client.GUI)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Controller</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.GUI;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.client.GUI.controller.StartState;
+<i>4</i>&nbsp;import javafx.application.Platform;
+<i>5</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>6</i>&nbsp;import javafx.scene.Parent;
+<i>7</i>&nbsp;import javafx.scene.Scene;
+<i>8</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.io.IOException;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * @author: hamzahaddaoui
+<i>14</i>&nbsp; *
+<i>15</i>&nbsp; * Main functions of the application control (exit, new game, set server and change scene content)
+<i>16</i>&nbsp; */
+<i>17</i>&nbsp;
+<b class="nc"><i>18</i>&nbsp;public class Controller {</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /**
+<i>22</i>&nbsp;     * Replace the current scene content with another one.
+<i>23</i>&nbsp;     * @param fxml the scene files to load
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    public static void replaceSceneContent(String fxml) {
+<i>26</i>&nbsp;        Parent page;
+<b class="nc"><i>27</i>&nbsp;        FXMLLoader fxmlLoader = new FXMLLoader();</b>
+<b class="nc"><i>28</i>&nbsp;        fxmlLoader.setLocation(Controller.class.getClassLoader().getResource(fxml)); //potrebbe dare problemi, ma non credo</b>
+<i>29</i>&nbsp;        try {
+<b class="nc"><i>30</i>&nbsp;            page = fxmlLoader.load();</b>
+<b class="nc"><i>31</i>&nbsp;        } catch (IOException exception) {</b>
+<b class="nc"><i>32</i>&nbsp;            System.out.println(&quot;Failed to load fxml file.&quot;);</b>
+<b class="nc"><i>33</i>&nbsp;            exception.printStackTrace();</b>
+<b class="nc"><i>34</i>&nbsp;            return;</b>
+<b class="nc"><i>35</i>&nbsp;        }</b>
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;
+<b class="nc"><i>38</i>&nbsp;        Scene scene = new Scene(page);</b>
+<b class="nc"><i>39</i>&nbsp;        Database.setScene(scene);</b>
+<b class="nc"><i>40</i>&nbsp;        Database.setCurrentState(fxmlLoader.getController());</b>
+<i>41</i>&nbsp;
+<b class="nc"><i>42</i>&nbsp;        Database.getStage().setScene(scene);</b>
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;        //MAGARI QUI VA LA TRANSIZIONE
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;
+<b class="nc"><i>47</i>&nbsp;        Database.getStage().show();</b>
+<b class="nc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Initialize the server connection.
+<i>52</i>&nbsp;     * @throws IOException If no connection have been established.
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    public static void setServer() throws IOException {
+<b class="nc"><i>55</i>&nbsp;        Database.setNetworkHandler(new NetworkHandler(Database.getIP()));</b>
+<b class="nc"><i>56</i>&nbsp;        new Thread(Database.getNetworkHandler()).start();</b>
+<b class="nc"><i>57</i>&nbsp;    }</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    /**
+<i>60</i>&nbsp;     * Close the application
+<i>61</i>&nbsp;     */
+<i>62</i>&nbsp;    public static void exit(){
+<b class="nc"><i>63</i>&nbsp;        Platform.exit();</b>
+<b class="nc"><i>64</i>&nbsp;        System.exit(0);</b>
+<b class="nc"><i>65</i>&nbsp;    }</b>
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    /**
+<i>68</i>&nbsp;     * Start a new game, wiping out all the data.
+<i>69</i>&nbsp;     */
+<i>70</i>&nbsp;    public static void userNewGame(){
+<i>71</i>&nbsp;        //provare a chiudere conneessione server
+<b class="nc"><i>72</i>&nbsp;        Database.wipeData();</b>
+<b class="nc"><i>73</i>&nbsp;        Database.setCurrentState(new StartState());</b>
+<b class="nc"><i>74</i>&nbsp;        Database.getCurrentState().showPane();</b>
+<b class="nc"><i>75</i>&nbsp;    }</b>
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

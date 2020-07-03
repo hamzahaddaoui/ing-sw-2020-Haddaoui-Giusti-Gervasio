@@ -1,0 +1,226 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: HestiaDecorator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model.decorators</a> ]
+</div>
+
+<h1>Coverage Summary for Class: HestiaDecorator (it.polimi.ingsw.server.model.decorators)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HestiaDecorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (27/ 27)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">HestiaDecorator$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (28/ 28)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model.decorators;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.model.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.Position;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.Set;
+<i>7</i>&nbsp;import java.util.stream.Collectors;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import static it.polimi.ingsw.utilities.TurnState.BUILD;
+<i>10</i>&nbsp;import static it.polimi.ingsw.utilities.TurnState.MOVE;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * @author Vasio1298
+<i>14</i>&nbsp; *
+<i>15</i>&nbsp; * Hestia Commands Decorator
+<i>16</i>&nbsp; * Description: &quot;Your Worker may build one additional time, but this cannot be on a perimeter space&quot;
+<i>17</i>&nbsp; * Differente methods from Basic Commands: nextState, build, computeAvailableBuildings
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;public class HestiaDecorator extends CommandsDecorator {
+<i>21</i>&nbsp;
+<b class="fc"><i>22</i>&nbsp;    static final private GodCards card = GodCards.Hestia;</b>
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;    public HestiaDecorator(Commands commands) {this.commands=commands;}</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    private boolean secondBuildDone;
+<i>27</i>&nbsp;    private Position firstBuildPosition;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * Method that sets the next state of the player.
+<i>31</i>&nbsp;     * &lt;p&gt;
+<i>32</i>&nbsp;     * If the player has done just one building turn and there are not only perimeter cells
+<i>33</i>&nbsp;     * in his available building cells, the method sets true the available end turn and give
+<i>34</i>&nbsp;     * the player the chance to build again.
+<i>35</i>&nbsp;     *
+<i>36</i>&nbsp;     * @param player  the player who makes the turn, not null
+<i>37</i>&nbsp;     */
+<i>38</i>&nbsp;    @Override
+<i>39</i>&nbsp;    public void nextState(Player player) {
+<b class="fc"><i>40</i>&nbsp;        switch (player.getTurnState()) {</b>
+<i>41</i>&nbsp;            case IDLE:
+<b class="fc"><i>42</i>&nbsp;                firstBuildPosition = null;</b>
+<b class="fc"><i>43</i>&nbsp;                secondBuildDone = false;</b>
+<b class="fc"><i>44</i>&nbsp;                player.setTurnState(MOVE);</b>
+<b class="fc"><i>45</i>&nbsp;                break;</b>
+<i>46</i>&nbsp;            case MOVE:
+<b class="fc"><i>47</i>&nbsp;                player.setTurnState(BUILD);</b>
+<b class="fc"><i>48</i>&nbsp;                break;</b>
+<i>49</i>&nbsp;            case BUILD:
+<b class="fc"><i>50</i>&nbsp;                if (losingCondition(player) || secondBuildDone || player.getCurrentWorker().getAvailableCells(BUILD).stream().allMatch(this::isPerimeterSpace))</b>
+<b class="fc"><i>51</i>&nbsp;                    player.setHasFinished();</b>
+<i>52</i>&nbsp;                else
+<b class="fc"><i>53</i>&nbsp;                    player.setTerminateTurnAvailable();</b>
+<i>54</i>&nbsp;                break;
+<i>55</i>&nbsp;        }
+<b class="fc"><i>56</i>&nbsp;    }</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * Method that allows the specific building block action of Hestia.
+<i>60</i>&nbsp;     * &lt;p&gt;
+<i>61</i>&nbsp;     * If it&#39;s the first building turn and the position where the player wants to build
+<i>62</i>&nbsp;     * is now of level 4 (with dome in it) the method remove that cell from the available
+<i>63</i>&nbsp;     * for the second build.
+<i>64</i>&nbsp;     * Both the building moves are the standard ones.
+<i>65</i>&nbsp;     *
+<i>66</i>&nbsp;     * @param player     the player who makes the building move, not null
+<i>67</i>&nbsp;     * @param position   the position that player have inserted, not null
+<i>68</i>&nbsp;     */
+<i>69</i>&nbsp;    @Override
+<i>70</i>&nbsp;    public void build(Position position, Player player) {
+<b class="fc"><i>71</i>&nbsp;        if (firstBuildPosition == null) {</b>
+<i>72</i>&nbsp;
+<b class="fc"><i>73</i>&nbsp;            firstBuildPosition = position;</b>
+<i>74</i>&nbsp;
+<b class="fc"><i>75</i>&nbsp;            super.build(position,player);</b>
+<i>76</i>&nbsp;
+<b class="fc"><i>77</i>&nbsp;            if (player.getMatch().getBillboard().getDome(firstBuildPosition))</b>
+<b class="fc"><i>78</i>&nbsp;                player.getCurrentWorker().getAvailableCells(BUILD).remove(firstBuildPosition);</b>
+<i>79</i>&nbsp;        }
+<i>80</i>&nbsp;        else {
+<b class="fc"><i>81</i>&nbsp;            secondBuildDone = true;</b>
+<b class="fc"><i>82</i>&nbsp;            super.build(position,player);</b>
+<i>83</i>&nbsp;        }
+<b class="fc"><i>84</i>&nbsp;    }</b>
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    /**
+<i>87</i>&nbsp;     * Returns the spaces that are available for building after a check in the billboard.
+<i>88</i>&nbsp;     * &lt;p&gt;
+<i>89</i>&nbsp;     * If the player has already done the first building turn, the method removes all the
+<i>90</i>&nbsp;     * perimeter cells from the available buildings cells.
+<i>91</i>&nbsp;     *
+<i>92</i>&nbsp;     * @param player  the player who makes the move, not null
+<i>93</i>&nbsp;     * @param worker  the current worker of the player, not null
+<i>94</i>&nbsp;     * @return        the spaces which are available
+<i>95</i>&nbsp;     */
+<i>96</i>&nbsp;    @Override
+<i>97</i>&nbsp;    public Set&lt;Position&gt; computeAvailableBuildings(Player player, Worker worker) {
+<b class="fc"><i>98</i>&nbsp;        if (firstBuildPosition != null) {</b>
+<b class="fc"><i>99</i>&nbsp;            return super.computeAvailableBuildings(player, worker).stream().filter(position -&gt; !isPerimeterSpace(position)).collect(Collectors.toSet());</b>
+<i>100</i>&nbsp;        }
+<b class="fc"><i>101</i>&nbsp;        else return super.computeAvailableBuildings(player, worker);</b>
+<i>102</i>&nbsp;    }
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    /**
+<i>105</i>&nbsp;     * Method that defines if a space is a perimeter one.
+<i>106</i>&nbsp;     * &lt;p&gt;
+<i>107</i>&nbsp;     * If x or y are between 0 and 4, the method return true; else otherwise.
+<i>108</i>&nbsp;     *
+<i>109</i>&nbsp;     * @param position  the position you want to define, not nul
+<i>110</i>&nbsp;     * @return  true if it&#39;s a perimeter one, false otherwise
+<i>111</i>&nbsp;     */
+<i>112</i>&nbsp;    private boolean isPerimeterSpace(Position position) {
+<b class="fc"><i>113</i>&nbsp;        int x = position.getX();</b>
+<b class="fc"><i>114</i>&nbsp;        int y = position.getY();</b>
+<b class="fc"><i>115</i>&nbsp;        return x == 0 || x == 4 || y == 0 || y == 4;</b>
+<i>116</i>&nbsp;    }
+<i>117</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

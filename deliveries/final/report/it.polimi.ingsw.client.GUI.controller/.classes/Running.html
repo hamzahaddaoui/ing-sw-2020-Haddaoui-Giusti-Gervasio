@@ -1,0 +1,736 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Running</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.GUI.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Running (it.polimi.ingsw.client.GUI.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Running</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 36)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 341)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Running$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 37)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 342)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.GUI.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.client.GUI.Controller;
+<i>4</i>&nbsp;import it.polimi.ingsw.client.GUI.IslandLoader;
+<i>5</i>&nbsp;import it.polimi.ingsw.utilities.*;
+<i>6</i>&nbsp;import javafx.application.Platform;
+<i>7</i>&nbsp;import javafx.fxml.FXML;
+<i>8</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>9</i>&nbsp;import javafx.geometry.Point2D;
+<i>10</i>&nbsp;import javafx.scene.Cursor;
+<i>11</i>&nbsp;import javafx.scene.Parent;
+<i>12</i>&nbsp;import javafx.scene.control.Alert;
+<i>13</i>&nbsp;import javafx.scene.control.Button;
+<i>14</i>&nbsp;import javafx.scene.control.Label;
+<i>15</i>&nbsp;import javafx.scene.effect.Glow;
+<i>16</i>&nbsp;import javafx.scene.image.Image;
+<i>17</i>&nbsp;import javafx.scene.image.ImageView;
+<i>18</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>19</i>&nbsp;import javafx.scene.layout.AnchorPane;
+<i>20</i>&nbsp;import javafx.scene.layout.BorderPane;
+<i>21</i>&nbsp;import javafx.scene.layout.StackPane;
+<i>22</i>&nbsp;import javafx.stage.Popup;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;import java.io.IOException;
+<i>25</i>&nbsp;import java.net.URL;
+<i>26</i>&nbsp;import java.util.*;
+<i>27</i>&nbsp;import java.util.stream.Collectors;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;import static it.polimi.ingsw.client.GUI.Database.*;
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;/**
+<i>32</i>&nbsp; * @author: hamzahaddaoui
+<i>33</i>&nbsp; *
+<i>34</i>&nbsp; * Main control/view class of the game
+<i>35</i>&nbsp; * Manages the gameplay in the running status of the match.
+<i>36</i>&nbsp; * Handles the losing and winning of a player.
+<i>37</i>&nbsp; * */
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;public class Running extends State{</b>
+<i>40</i>&nbsp;    @FXML StackPane stackPane;
+<i>41</i>&nbsp;    @FXML BorderPane borderPane;
+<i>42</i>&nbsp;    @FXML Label user;
+<i>43</i>&nbsp;    @FXML Label desc;
+<i>44</i>&nbsp;    @FXML ImageView god;
+<i>45</i>&nbsp;    @FXML ImageView userPane;
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    @FXML Button function;
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @FXML Button helper;
+<i>51</i>&nbsp;
+<b class="nc"><i>52</i>&nbsp;    static private Map&lt;Position, Cell&gt; billboardStatus = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>53</i>&nbsp;    static private Map&lt;Integer, String&gt; matchPlayers = new HashMap&lt;&gt;();</b>
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    boolean confirmedStartPosition;
+<i>56</i>&nbsp;    boolean moved;
+<i>57</i>&nbsp;    boolean built;
+<i>58</i>&nbsp;    boolean sFunction;
+<i>59</i>&nbsp;
+<b class="nc"><i>60</i>&nbsp;    boolean matchOver = false;</b>
+<i>61</i>&nbsp;    State finishController;
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    @Override
+<i>64</i>&nbsp;    public void showPane(){
+<b class="nc"><i>65</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>66</i>&nbsp;            Controller.replaceSceneContent(&quot;fxml_files/running.fxml&quot;);</b>
+<b class="nc"><i>67</i>&nbsp;        });</b>
+<b class="nc"><i>68</i>&nbsp;    }</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * Initialization of the screen and the 3D world.
+<i>72</i>&nbsp;     */
+<i>73</i>&nbsp;    @Override
+<i>74</i>&nbsp;    public void initialize(URL url, ResourceBundle resourceBundle){
+<i>75</i>&nbsp;
+<b class="nc"><i>76</i>&nbsp;        this.addObserver(getNetworkHandler());</b>
+<b class="nc"><i>77</i>&nbsp;        getNetworkHandler().addObserver(this);</b>
+<i>78</i>&nbsp;
+<b class="nc"><i>79</i>&nbsp;        billboardStatus = getBillboardStatus();</b>
+<b class="nc"><i>80</i>&nbsp;        matchPlayers = getMatchPlayers();</b>
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;        //inizializzo gli elementi grafici del layer superiore
+<b class="nc"><i>83</i>&nbsp;        user.getStylesheets().add(&quot;/css_files/running.css&quot;);</b>
+<b class="nc"><i>84</i>&nbsp;        userPane.setImage(new Image(&quot;images/user_&quot; + getMatchColors().get(getPlayerID()) + &quot;.png&quot;, 150, 75, false, true));</b>
+<b class="nc"><i>85</i>&nbsp;        user.getStyleClass().add(&quot;player&quot;);</b>
+<b class="nc"><i>86</i>&nbsp;        user.setText(getNickname());</b>
+<b class="nc"><i>87</i>&nbsp;        god.setImage(new Image(&quot;images/gods_no_back/&quot; + getGodCard() + &quot;.png&quot;,120,140,false,true));</b>
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;        //inizializzo l&#39;isola
+<b class="nc"><i>90</i>&nbsp;        setIslandLoader(new IslandLoader());</b>
+<i>91</i>&nbsp;        try {
+<b class="nc"><i>92</i>&nbsp;            IslandLoader.start(stackPane);</b>
+<b class="nc"><i>93</i>&nbsp;        } catch (Exception exception) {</b>
+<b class="nc"><i>94</i>&nbsp;            exception.printStackTrace();</b>
+<b class="nc"><i>95</i>&nbsp;        }</b>
+<i>96</i>&nbsp;        //inizializzo i giocatori
+<b class="nc"><i>97</i>&nbsp;        for (Position position : billboardStatus.keySet()){</b>
+<b class="nc"><i>98</i>&nbsp;            if (billboardStatus.get(position).getPlayerID() != 0){</b>
+<b class="nc"><i>99</i>&nbsp;                getIslandLoader().putWorker(positionToPoint(position), getMatchColors().get(billboardStatus.get(position).getPlayerID()));</b>
+<i>100</i>&nbsp;            }
+<b class="nc"><i>101</i>&nbsp;        }</b>
+<i>102</i>&nbsp;
+<b class="nc"><i>103</i>&nbsp;        updateGame();</b>
+<i>104</i>&nbsp;
+<b class="nc"><i>105</i>&nbsp;    }</b>
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    @Override
+<i>108</i>&nbsp;    public void showError(){
+<b class="nc"><i>109</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>110</i>&nbsp;            Alert alert = new Alert(Alert.AlertType.ERROR);</b>
+<b class="nc"><i>111</i>&nbsp;            alert.setHeaderText(&quot;Server error&quot;);</b>
+<b class="nc"><i>112</i>&nbsp;            alert.setContentText(&quot;Error from the server&quot;);</b>
+<b class="nc"><i>113</i>&nbsp;            alert.showAndWait();</b>
+<b class="nc"><i>114</i>&nbsp;        });</b>
+<i>115</i>&nbsp;
+<b class="nc"><i>116</i>&nbsp;    }</b>
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    @Override
+<i>119</i>&nbsp;    public void sendData(){
+<b class="nc"><i>120</i>&nbsp;        MessageEvent message = new MessageEvent();</b>
+<b class="nc"><i>121</i>&nbsp;        message.setStartPosition(getStartingPosition());</b>
+<b class="nc"><i>122</i>&nbsp;        message.setEndPosition(getEndPosition());</b>
+<b class="nc"><i>123</i>&nbsp;        notify(message);</b>
+<b class="nc"><i>124</i>&nbsp;    }</b>
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    @Override
+<i>127</i>&nbsp;    public void update(MessageEvent message){
+<i>128</i>&nbsp;
+<b class="nc"><i>129</i>&nbsp;        System.out.println(getNetworkHandler().getObservers());</b>
+<b class="nc"><i>130</i>&nbsp;        System.out.println(&quot;Message received: &quot;+ message);</b>
+<i>131</i>&nbsp;
+<b class="nc"><i>132</i>&nbsp;        if (message.getError()){</b>
+<b class="nc"><i>133</i>&nbsp;            System.out.println(message);</b>
+<b class="nc"><i>134</i>&nbsp;            showError();</b>
+<b class="nc"><i>135</i>&nbsp;            return;</b>
+<i>136</i>&nbsp;        }
+<b class="nc"><i>137</i>&nbsp;        else if (message.getPlayerState() == PlayerState.LOST){</b>
+<b class="nc"><i>138</i>&nbsp;            System.out.println(&quot;LOSER&quot;);</b>
+<b class="nc"><i>139</i>&nbsp;            updateStandardData(message);</b>
+<b class="nc"><i>140</i>&nbsp;            setBillboardStatus(message.getBillboardStatus());</b>
+<b class="nc"><i>141</i>&nbsp;            if (!matchOver) {</b>
+<b class="nc"><i>142</i>&nbsp;                updateBillboard();</b>
+<b class="nc"><i>143</i>&nbsp;                matchOver = true;</b>
+<b class="nc"><i>144</i>&nbsp;                lost();</b>
+<i>145</i>&nbsp;            }
+<i>146</i>&nbsp;
+<b class="nc"><i>147</i>&nbsp;            if (getMatchState() == MatchState.FINISHED){</b>
+<b class="nc"><i>148</i>&nbsp;                getNetworkHandler().shutdownAll();</b>
+<b class="nc"><i>149</i>&nbsp;                Platform.runLater (() -&gt; ((gameFinish)finishController).finishLabel.setText(message.getMatchPlayers().get(message.getWinner()) + &quot; has won!&quot;));</b>
+<b class="nc"><i>150</i>&nbsp;                getIslandLoader().endAnimation();</b>
+<i>151</i>&nbsp;
+<i>152</i>&nbsp;            }
+<b class="nc"><i>153</i>&nbsp;            return;</b>
+<i>154</i>&nbsp;
+<i>155</i>&nbsp;        }
+<b class="nc"><i>156</i>&nbsp;        else if (message.getPlayerState() == PlayerState.WIN){</b>
+<b class="nc"><i>157</i>&nbsp;            updateStandardData(message);</b>
+<b class="nc"><i>158</i>&nbsp;            setBillboardStatus(message.getBillboardStatus());</b>
+<b class="nc"><i>159</i>&nbsp;            updateBillboard();</b>
+<b class="nc"><i>160</i>&nbsp;            getIslandLoader().endAnimation();</b>
+<b class="nc"><i>161</i>&nbsp;            System.out.println(&quot;WINNER&quot;);</b>
+<b class="nc"><i>162</i>&nbsp;            win();</b>
+<b class="nc"><i>163</i>&nbsp;            getNetworkHandler().shutdownAll();</b>
+<b class="nc"><i>164</i>&nbsp;            return;</b>
+<i>165</i>&nbsp;        }
+<b class="nc"><i>166</i>&nbsp;        else if (message.isFinished()){</b>
+<i>167</i>&nbsp;            //disconnessione di qualcuno &lt;.&lt;
+<b class="nc"><i>168</i>&nbsp;            setCurrentState(new userDisconnected());</b>
+<b class="nc"><i>169</i>&nbsp;            getCurrentState().showPane();</b>
+<b class="nc"><i>170</i>&nbsp;            return;</b>
+<i>171</i>&nbsp;        }
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;
+<i>174</i>&nbsp;
+<b class="nc"><i>175</i>&nbsp;        updateStandardData(message);</b>
+<b class="nc"><i>176</i>&nbsp;        setTerminateTurnAvailable(message.getTerminateTurnAvailable());</b>
+<b class="nc"><i>177</i>&nbsp;        setSpecialFunctionAvailable(message.getSpecialFunctionAvailable());</b>
+<b class="nc"><i>178</i>&nbsp;        setWorkersAvailableCells(message.getWorkersAvailableCells());</b>
+<b class="nc"><i>179</i>&nbsp;        setBillboardStatus(message.getBillboardStatus());</b>
+<i>180</i>&nbsp;
+<b class="nc"><i>181</i>&nbsp;        Platform.runLater(Running::updateBillboard);</b>
+<i>182</i>&nbsp;
+<b class="nc"><i>183</i>&nbsp;        updateGame();</b>
+<b class="nc"><i>184</i>&nbsp;    }</b>
+<i>185</i>&nbsp;
+<i>186</i>&nbsp;    /**
+<i>187</i>&nbsp;     * Handles the clicks on the workers.
+<i>188</i>&nbsp;     * If the click is allowed, then selects the worker as the current one.
+<i>189</i>&nbsp;     * @param point the worker to be selected
+<i>190</i>&nbsp;     * @return if the click is allowed
+<i>191</i>&nbsp;     */
+<i>192</i>&nbsp;    public boolean workerClick(Point2D point){
+<b class="nc"><i>193</i>&nbsp;        Position position = pointToPosition(point);</b>
+<b class="nc"><i>194</i>&nbsp;        System.out.println(&quot;worker clicked + &quot;+position);</b>
+<b class="nc"><i>195</i>&nbsp;        System.out.println(getWorkersAvailableCells());</b>
+<i>196</i>&nbsp;
+<b class="nc"><i>197</i>&nbsp;        if (getPlayerState() == PlayerState.IDLE) {</b>
+<b class="nc"><i>198</i>&nbsp;            System.out.println(&quot;PLAYER NOT ACTIVE&quot;);</b>
+<b class="nc"><i>199</i>&nbsp;            return false;</b>
+<i>200</i>&nbsp;        }
+<b class="nc"><i>201</i>&nbsp;        else if (getWorkersAvailableCells().containsKey(position) &amp;&amp; !confirmedStartPosition){</b>
+<b class="nc"><i>202</i>&nbsp;            System.out.println(&quot;PLAYER ACTIVE. SETTED POSITION&quot;);</b>
+<b class="nc"><i>203</i>&nbsp;            Platform.runLater(()  -&gt; {</b>
+<b class="nc"><i>204</i>&nbsp;                if (getTurnState() == TurnState.MOVE)</b>
+<b class="nc"><i>205</i>&nbsp;                    desc.setText(&quot;SELECT the cell where you want to move&quot;);</b>
+<b class="nc"><i>206</i>&nbsp;                if (getTurnState() == TurnState.BUILD)</b>
+<b class="nc"><i>207</i>&nbsp;                    desc.setText(&quot;SELECT the cell where you want to build&quot;);</b>
+<b class="nc"><i>208</i>&nbsp;            });</b>
+<b class="nc"><i>209</i>&nbsp;            setStartingPosition(position);</b>
+<b class="nc"><i>210</i>&nbsp;            updateLightenedCells();</b>
+<i>211</i>&nbsp;
+<i>212</i>&nbsp;
+<b class="nc"><i>213</i>&nbsp;            specialFunctionHandler();</b>
+<b class="nc"><i>214</i>&nbsp;            return true;</b>
+<i>215</i>&nbsp;        }
+<b class="nc"><i>216</i>&nbsp;        return false;</b>
+<i>217</i>&nbsp;    }
+<i>218</i>&nbsp;
+<i>219</i>&nbsp;    /**
+<i>220</i>&nbsp;     * Handles the clicks on the board.
+<i>221</i>&nbsp;     * If the click is allowed, then moves/builds in the selected cell.
+<i>222</i>&nbsp;     * @param point the point on which the board has been clicked
+<i>223</i>&nbsp;     */
+<i>224</i>&nbsp;    public void boardClick(Point2D point){
+<b class="nc"><i>225</i>&nbsp;        Position position = pointToPosition(point);</b>
+<b class="nc"><i>226</i>&nbsp;        System.out.println(&quot;Click on board/building detected on &quot;+ position);</b>
+<i>227</i>&nbsp;
+<b class="nc"><i>228</i>&nbsp;        if (getPlayerState() == PlayerState.IDLE || getStartingPosition() == null) {</b>
+<b class="nc"><i>229</i>&nbsp;            System.out.println(&quot;IDLE OR NOT SELECTED ANY WORKER&quot;);</b>
+<b class="nc"><i>230</i>&nbsp;            return;</b>
+<i>231</i>&nbsp;        }
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;
+<i>234</i>&nbsp;
+<b class="nc"><i>235</i>&nbsp;        if (getTurnState() == TurnState.MOVE &amp;&amp; !moved){</b>
+<b class="nc"><i>236</i>&nbsp;            if (getWorkersAvailableCells().get(getStartingPosition()).contains(position)){</b>
+<b class="nc"><i>237</i>&nbsp;                confirmedStartPosition = true;</b>
+<b class="nc"><i>238</i>&nbsp;                moved = true;</b>
+<b class="nc"><i>239</i>&nbsp;                System.out.println(&quot;MOVE OK. SENDING movement...&quot;);</b>
+<i>240</i>&nbsp;
+<b class="nc"><i>241</i>&nbsp;                resetCells();</b>
+<i>242</i>&nbsp;
+<i>243</i>&nbsp;                /*if (billboardStatus.get(position).getPlayerID() == 0) {
+<i>244</i>&nbsp;                    //getIslandLoader().moveWorker(positionToPoint(getStartingPosition()), point);
+<i>245</i>&nbsp;                    billboardStatus.get(position).setPlayerID(getPlayerID());
+<i>246</i>&nbsp;                    billboardStatus.get(getStartingPosition()).setPlayerID(0);
+<i>247</i>&nbsp;                    updateBillboard(false);
+<i>248</i>&nbsp;                }*/
+<b class="nc"><i>249</i>&nbsp;                setEndPosition(position);</b>
+<b class="nc"><i>250</i>&nbsp;                sendData();</b>
+<b class="nc"><i>251</i>&nbsp;                if (!(getGodCard().equals(&quot;Charon&quot;) &amp;&amp; sFunction))</b>
+<b class="nc"><i>252</i>&nbsp;                    setStartingPosition(position);</b>
+<i>253</i>&nbsp;            }
+<b class="nc"><i>254</i>&nbsp;            else if(moved)</b>
+<b class="nc"><i>255</i>&nbsp;                System.out.println(&quot;Already moved&quot;);</b>
+<i>256</i>&nbsp;            else
+<b class="nc"><i>257</i>&nbsp;                System.out.println(&quot;position not contained in available cells&quot;);</b>
+<i>258</i>&nbsp;        }
+<b class="nc"><i>259</i>&nbsp;        else if (getTurnState() == TurnState.BUILD) {</b>
+<i>260</i>&nbsp;
+<b class="nc"><i>261</i>&nbsp;            if (getWorkersAvailableCells().get(getStartingPosition()).contains(position) &amp;&amp; !built) {</b>
+<b class="nc"><i>262</i>&nbsp;                System.out.println(&quot;BUILD OK. SENDING build...&quot;);</b>
+<b class="nc"><i>263</i>&nbsp;                built = true;</b>
+<b class="nc"><i>264</i>&nbsp;                setEndPosition(position);</b>
+<i>265</i>&nbsp;
+<b class="nc"><i>266</i>&nbsp;                resetCells();</b>
+<i>267</i>&nbsp;
+<i>268</i>&nbsp;                /*if(!getGodCard().equals(&quot;Atlas&quot;)){
+<i>269</i>&nbsp;                    getIslandLoader().build(point, false);
+<i>270</i>&nbsp;                    int towerHeight = billboardStatus.get(position).getTowerHeight();
+<i>271</i>&nbsp;                    if (towerHeight &lt; 3)
+<i>272</i>&nbsp;                        billboardStatus.get(position).setTowerHeight(towerHeight + 1);
+<i>273</i>&nbsp;                    else
+<i>274</i>&nbsp;                        billboardStatus.get(position).setDome(true);
+<i>275</i>&nbsp;
+<i>276</i>&nbsp;                    updateBillboard(false);
+<i>277</i>&nbsp;                }*/
+<b class="nc"><i>278</i>&nbsp;                sendData();</b>
+<i>279</i>&nbsp;            }
+<b class="nc"><i>280</i>&nbsp;            else if(built)</b>
+<b class="nc"><i>281</i>&nbsp;                System.out.println(&quot;Already built&quot;);</b>
+<i>282</i>&nbsp;            else
+<b class="nc"><i>283</i>&nbsp;                System.out.println(&quot;position not contained in available cells&quot;);</b>
+<i>284</i>&nbsp;        }
+<b class="nc"><i>285</i>&nbsp;    }</b>
+<i>286</i>&nbsp;
+<i>287</i>&nbsp;    private void updateGame(){
+<b class="nc"><i>288</i>&nbsp;        Platform.runLater(()  -&gt; {</b>
+<b class="nc"><i>289</i>&nbsp;            if (getPlayerState() == PlayerState.ACTIVE){</b>
+<i>290</i>&nbsp;
+<b class="nc"><i>291</i>&nbsp;                specialFunctionHandler();</b>
+<i>292</i>&nbsp;
+<b class="nc"><i>293</i>&nbsp;                if (!confirmedStartPosition &amp;&amp; getStartingPosition() == null)</b>
+<b class="nc"><i>294</i>&nbsp;                    desc.setText(&quot;SELECT A WORKER&quot;);</b>
+<i>295</i>&nbsp;                else {
+<b class="nc"><i>296</i>&nbsp;                    switch (getTurnState()) {</b>
+<i>297</i>&nbsp;                        case MOVE:
+<b class="nc"><i>298</i>&nbsp;                            desc.setText(&quot;SELECT the cell where you want to move&quot;);</b>
+<b class="nc"><i>299</i>&nbsp;                            moved = false;</b>
+<b class="nc"><i>300</i>&nbsp;                            updateLightenedCells();</b>
+<b class="nc"><i>301</i>&nbsp;                            break;</b>
+<i>302</i>&nbsp;                        case BUILD:
+<b class="nc"><i>303</i>&nbsp;                            desc.setText(&quot;SELECT the cell where you want to build&quot;);</b>
+<b class="nc"><i>304</i>&nbsp;                            built = false;</b>
+<b class="nc"><i>305</i>&nbsp;                            updateLightenedCells();</b>
+<i>306</i>&nbsp;
+<i>307</i>&nbsp;                    }
+<i>308</i>&nbsp;                }
+<i>309</i>&nbsp;            }
+<i>310</i>&nbsp;            else{
+<b class="nc"><i>311</i>&nbsp;                desc.setText(&quot;it&#39;s &quot; + getMatchPlayers().get(getCurrentPlayer()) + &quot;&#39;s turn&quot;);</b>
+<i>312</i>&nbsp;
+<b class="nc"><i>313</i>&nbsp;                resetCells();</b>
+<b class="nc"><i>314</i>&nbsp;                setStartingPosition(null);</b>
+<b class="nc"><i>315</i>&nbsp;                setEndPosition(null);</b>
+<b class="nc"><i>316</i>&nbsp;                confirmedStartPosition = false;</b>
+<i>317</i>&nbsp;
+<b class="nc"><i>318</i>&nbsp;                function.setEffect(new Glow(0));</b>
+<b class="nc"><i>319</i>&nbsp;                function.setVisible(false);</b>
+<i>320</i>&nbsp;
+<b class="nc"><i>321</i>&nbsp;                moved = false;</b>
+<b class="nc"><i>322</i>&nbsp;                built = false;</b>
+<i>323</i>&nbsp;
+<b class="nc"><i>324</i>&nbsp;                sFunction = false;</b>
+<i>325</i>&nbsp;            }
+<b class="nc"><i>326</i>&nbsp;        });</b>
+<i>327</i>&nbsp;
+<i>328</i>&nbsp;
+<i>329</i>&nbsp;
+<b class="nc"><i>330</i>&nbsp;    }</b>
+<i>331</i>&nbsp;
+<i>332</i>&nbsp;    private static void updateBillboard(){
+<b class="nc"><i>333</i>&nbsp;        Map&lt;Integer, Position&gt; movedInPlayers = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>334</i>&nbsp;        Map&lt;Integer, Position&gt; movedOutPlayers =  new HashMap&lt;&gt;();</b>
+<b class="nc"><i>335</i>&nbsp;        Map&lt;Point2D, Point2D&gt; playersMove = new HashMap&lt;&gt;();</b>
+<i>336</i>&nbsp;
+<i>337</i>&nbsp;
+<b class="nc"><i>338</i>&nbsp;        if (billboardStatus != getBillboardStatus()){</b>
+<b class="nc"><i>339</i>&nbsp;            System.out.println(&quot;Different billboard&quot;);</b>
+<i>340</i>&nbsp;
+<i>341</i>&nbsp;
+<b class="nc"><i>342</i>&nbsp;            if (matchPlayers.size() != getMatchPlayers().size()) {</b>
+<b class="nc"><i>343</i>&nbsp;                for (int player : matchPlayers.keySet()) {</b>
+<b class="nc"><i>344</i>&nbsp;                    if (getBillboardStatus().values().stream().noneMatch(cell -&gt; cell.getPlayerID() == player)) {</b>
+<b class="nc"><i>345</i>&nbsp;                        Set&lt;Position&gt; positions = billboardStatus.keySet().stream().filter(pos -&gt; billboardStatus.get(pos).getPlayerID() == player).collect(Collectors.toSet());</b>
+<b class="nc"><i>346</i>&nbsp;                        positions.forEach(pos -&gt; billboardStatus.get(pos).setPlayerID(0));</b>
+<b class="nc"><i>347</i>&nbsp;                        positions.forEach(pos -&gt; getIslandLoader().removeWorker(positionToPoint(pos)));</b>
+<i>348</i>&nbsp;                    }
+<b class="nc"><i>349</i>&nbsp;                }</b>
+<i>350</i>&nbsp;            }
+<i>351</i>&nbsp;
+<b class="nc"><i>352</i>&nbsp;            matchPlayers = getMatchPlayers();</b>
+<i>353</i>&nbsp;
+<b class="nc"><i>354</i>&nbsp;            Set&lt;Position&gt; changedPositions =  getBillboardStatus()</b>
+<b class="nc"><i>355</i>&nbsp;                    .keySet()</b>
+<b class="nc"><i>356</i>&nbsp;                    .stream()</b>
+<b class="nc"><i>357</i>&nbsp;                    .filter(position -&gt; ! getBillboardStatus().get(position).equals(billboardStatus.get(position)))</b>
+<b class="nc"><i>358</i>&nbsp;                    .collect(Collectors.toSet());</b>
+<i>359</i>&nbsp;
+<i>360</i>&nbsp;
+<i>361</i>&nbsp;
+<i>362</i>&nbsp;
+<b class="nc"><i>363</i>&nbsp;            for (Position position : changedPositions){</b>
+<b class="nc"><i>364</i>&nbsp;                if (getBillboardStatus().get(position).getTowerHeight() != billboardStatus.get(position).getTowerHeight()){</b>
+<b class="nc"><i>365</i>&nbsp;                    System.out.println(&quot;Different height in &quot;+position);</b>
+<b class="nc"><i>366</i>&nbsp;                    for(int i = 0; i&lt;(getBillboardStatus().get(position).getTowerHeight() - billboardStatus.get(position).getTowerHeight()); i++){</b>
+<b class="nc"><i>367</i>&nbsp;                        getIslandLoader().build(positionToPoint(position), false);</b>
+<i>368</i>&nbsp;                    }
+<i>369</i>&nbsp;
+<b class="nc"><i>370</i>&nbsp;                    if (getBillboardStatus().get(position).getPlayerID() != 0){</b>
+<b class="nc"><i>371</i>&nbsp;                        getIslandLoader().moveUp(positionToPoint(position));</b>
+<i>372</i>&nbsp;                    }
+<i>373</i>&nbsp;                }
+<b class="nc"><i>374</i>&nbsp;                if (getBillboardStatus().get(position).isDome() != billboardStatus.get(position).isDome()){</b>
+<b class="nc"><i>375</i>&nbsp;                    System.out.println(&quot;Different dome in &quot;+position);</b>
+<b class="nc"><i>376</i>&nbsp;                    getIslandLoader().build(positionToPoint(position), true);</b>
+<i>377</i>&nbsp;                }
+<b class="nc"><i>378</i>&nbsp;                if (getBillboardStatus().get(position).getPlayerID() != billboardStatus.get(position).getPlayerID()){</b>
+<i>379</i>&nbsp;                    //positionPlayers.put(Map.of(billboardStatus.get(position).getPlayerID(), getBillboardStatus().get(position).getPlayerID()), position);
+<b class="nc"><i>380</i>&nbsp;                    System.out.println(&quot;Different player in &quot;+position);</b>
+<b class="nc"><i>381</i>&nbsp;                    if (billboardStatus.get(position).getPlayerID() == 0) //se la cella era vuota, ed ora è piena</b>
+<b class="nc"><i>382</i>&nbsp;                        movedInPlayers.put(getBillboardStatus().get(position).getPlayerID(), position);</b>
+<i>383</i>&nbsp;                    else {
+<b class="nc"><i>384</i>&nbsp;                        movedOutPlayers.put(billboardStatus.get(position).getPlayerID(), position);</b>
+<b class="nc"><i>385</i>&nbsp;                        if (getBillboardStatus().get(position).getPlayerID() != 0)</b>
+<b class="nc"><i>386</i>&nbsp;                            movedInPlayers.put(getBillboardStatus().get(position).getPlayerID(), position);</b>
+<i>387</i>&nbsp;                    }
+<i>388</i>&nbsp;                }
+<b class="nc"><i>389</i>&nbsp;            }</b>
+<i>390</i>&nbsp;
+<i>391</i>&nbsp;
+<i>392</i>&nbsp;
+<b class="nc"><i>393</i>&nbsp;            if (movedOutPlayers.size() != 0){</b>
+<b class="nc"><i>394</i>&nbsp;                System.out.println(&quot;Moved in players: &quot;);</b>
+<b class="nc"><i>395</i>&nbsp;                movedInPlayers.keySet().forEach(player -&gt; System.out.println(&quot;Player &quot;+player +&quot; - Position &quot;+movedInPlayers.get(player)));</b>
+<b class="nc"><i>396</i>&nbsp;                System.out.println(&quot;Moved out players: &quot;);</b>
+<i>397</i>&nbsp;
+<b class="nc"><i>398</i>&nbsp;                movedOutPlayers.keySet().forEach(player -&gt; System.out.println(&quot;Player &quot;+player +&quot; - Position &quot;+movedOutPlayers.get(player)));</b>
+<i>399</i>&nbsp;
+<b class="nc"><i>400</i>&nbsp;                movedOutPlayers.keySet().forEach(ID -&gt; playersMove.put(positionToPoint(movedOutPlayers.get(ID)), positionToPoint(movedInPlayers.get(ID))));</b>
+<i>401</i>&nbsp;
+<b class="nc"><i>402</i>&nbsp;                if(playersMove.size() == 1) {</b>
+<b class="nc"><i>403</i>&nbsp;                    System.out.println(&quot;SINGLE MOVE&quot;);</b>
+<b class="nc"><i>404</i>&nbsp;                    playersMove.keySet().forEach(startPosition -&gt; getIslandLoader().moveWorker(startPosition, playersMove.get(startPosition)));</b>
+<i>405</i>&nbsp;                }
+<i>406</i>&nbsp;                else{
+<b class="nc"><i>407</i>&nbsp;                    System.out.println(&quot;DOUBLE MOVE&quot;);</b>
+<b class="nc"><i>408</i>&nbsp;                    Iterator&lt;Point2D&gt; iterator = playersMove.keySet().iterator();</b>
+<b class="nc"><i>409</i>&nbsp;                    Point2D startPos1 = iterator.next();</b>
+<b class="nc"><i>410</i>&nbsp;                    Point2D startPos2 = iterator.next();</b>
+<b class="nc"><i>411</i>&nbsp;                    getIslandLoader().swapWorkers(startPos1, startPos2, playersMove.get(startPos1), playersMove.get(startPos2));</b>
+<i>412</i>&nbsp;                }
+<i>413</i>&nbsp;
+<i>414</i>&nbsp;
+<i>415</i>&nbsp;            }
+<i>416</i>&nbsp;
+<i>417</i>&nbsp;        }
+<i>418</i>&nbsp;
+<b class="nc"><i>419</i>&nbsp;        billboardStatus = getBillboardStatus();</b>
+<b class="nc"><i>420</i>&nbsp;    }</b>
+<i>421</i>&nbsp;
+<i>422</i>&nbsp;    private static Position pointToPosition(Point2D point){
+<b class="nc"><i>423</i>&nbsp;        if (point == null)</b>
+<b class="nc"><i>424</i>&nbsp;            return null;</b>
+<i>425</i>&nbsp;        else
+<b class="nc"><i>426</i>&nbsp;            return new Position((int) point.getX(), (int) point.getY());</b>
+<i>427</i>&nbsp;    }
+<i>428</i>&nbsp;
+<i>429</i>&nbsp;    /**
+<i>430</i>&nbsp;     * Converts a certain position to the relative 2D point
+<i>431</i>&nbsp;     * @param position The position to process
+<i>432</i>&nbsp;     * @return the 2D point converted
+<i>433</i>&nbsp;     */
+<i>434</i>&nbsp;    public static Point2D positionToPoint(Position position){
+<b class="nc"><i>435</i>&nbsp;        if (position == null)</b>
+<b class="nc"><i>436</i>&nbsp;            return null;</b>
+<i>437</i>&nbsp;        else
+<b class="nc"><i>438</i>&nbsp;            return new Point2D(position.getX(), position.getY());</b>
+<i>439</i>&nbsp;    }
+<i>440</i>&nbsp;
+<i>441</i>&nbsp;    private void specialFunctionHandler(){
+<b class="nc"><i>442</i>&nbsp;        System.out.println(getSpecialFunctionAvailable());</b>
+<b class="nc"><i>443</i>&nbsp;        System.out.println(isTerminateTurnAvailable());</b>
+<i>444</i>&nbsp;
+<b class="nc"><i>445</i>&nbsp;        if ((getGodCard().equals(&quot;Demeter&quot;) || getGodCard().equals(&quot;Hephaestus&quot;) || getGodCard().equals(&quot;Hestia&quot;) ) &amp;&amp; isTerminateTurnAvailable()){</b>
+<b class="nc"><i>446</i>&nbsp;            function.setVisible(true);</b>
+<i>447</i>&nbsp;
+<b class="nc"><i>448</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>449</i>&nbsp;                String url = &quot;url(images/specialpow/&quot; + getGodCard() + &quot;.png)&quot;;</b>
+<b class="nc"><i>450</i>&nbsp;                function.setStyle(&quot;-fx-background-image: &quot;+url+&quot;;\n&quot; +</b>
+<i>451</i>&nbsp;                                  &quot;-fx-background-size: 70;\n&quot; +
+<i>452</i>&nbsp;                                  &quot;-fx-background-repeat: no-repeat;\n&quot; +
+<i>453</i>&nbsp;                                  &quot;-fx-background-position: center;\n&quot; +
+<i>454</i>&nbsp;                                  &quot;-fx-cursor: hand;&quot;);
+<b class="nc"><i>455</i>&nbsp;            });</b>
+<i>456</i>&nbsp;
+<b class="nc"><i>457</i>&nbsp;            function.setOnMouseEntered (mouseOver -&gt; {</b>
+<b class="nc"><i>458</i>&nbsp;                function.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>459</i>&nbsp;                function.scaleXProperty().set(1.1);</b>
+<b class="nc"><i>460</i>&nbsp;                function.scaleYProperty().set(1.1);</b>
+<b class="nc"><i>461</i>&nbsp;                function.scaleZProperty().set(1.1);</b>
+<b class="nc"><i>462</i>&nbsp;            });</b>
+<i>463</i>&nbsp;
+<b class="nc"><i>464</i>&nbsp;            function.setOnMouseExited (mouseOver -&gt; {</b>
+<b class="nc"><i>465</i>&nbsp;                function.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>466</i>&nbsp;                function.scaleXProperty().set(1.0);</b>
+<b class="nc"><i>467</i>&nbsp;                function.scaleYProperty().set(1.0);</b>
+<b class="nc"><i>468</i>&nbsp;                function.scaleZProperty().set(1.0);</b>
+<b class="nc"><i>469</i>&nbsp;            });</b>
+<i>470</i>&nbsp;
+<b class="nc"><i>471</i>&nbsp;            function.setOnMouseReleased(mouseEvent -&gt; {</b>
+<b class="nc"><i>472</i>&nbsp;                System.out.println(&quot;END TURN ACTIVATED&quot;);</b>
+<b class="nc"><i>473</i>&nbsp;                Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>474</i>&nbsp;                    function.setEffect(new Glow(0.5));</b>
+<b class="nc"><i>475</i>&nbsp;                });</b>
+<i>476</i>&nbsp;
+<b class="nc"><i>477</i>&nbsp;                MessageEvent message = new MessageEvent();</b>
+<b class="nc"><i>478</i>&nbsp;                message.setEndTurn(true);</b>
+<b class="nc"><i>479</i>&nbsp;                notify(message);</b>
+<i>480</i>&nbsp;
+<i>481</i>&nbsp;
+<b class="nc"><i>482</i>&nbsp;            });</b>
+<i>483</i>&nbsp;        }
+<i>484</i>&nbsp;
+<i>485</i>&nbsp;
+<b class="nc"><i>486</i>&nbsp;        else if (getStartingPosition() != null &amp;&amp; getSpecialFunctionAvailable() != null &amp;&amp; getSpecialFunctionAvailable().containsKey(getStartingPosition()) &amp;&amp; getSpecialFunctionAvailable().get(getStartingPosition())){</b>
+<b class="nc"><i>487</i>&nbsp;            function.setVisible(true);</b>
+<i>488</i>&nbsp;
+<b class="nc"><i>489</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>490</i>&nbsp;                String url = &quot;url(images/specialpow/&quot; + getGodCard() + &quot;.png)&quot;;</b>
+<b class="nc"><i>491</i>&nbsp;                function.setStyle(&quot;-fx-background-image: &quot;+url+&quot;;\n&quot; +</b>
+<i>492</i>&nbsp;                                  &quot;-fx-background-size: 70;\n&quot; +
+<i>493</i>&nbsp;                                  &quot;-fx-background-repeat: no-repeat;\n&quot; +
+<i>494</i>&nbsp;                                  &quot;-fx-background-position: center;\n&quot; +
+<i>495</i>&nbsp;                                  &quot;-fx-cursor: hand;&quot;);
+<b class="nc"><i>496</i>&nbsp;            });</b>
+<i>497</i>&nbsp;
+<b class="nc"><i>498</i>&nbsp;            function.setOnMouseEntered (mouseOver -&gt; {</b>
+<b class="nc"><i>499</i>&nbsp;                function.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>500</i>&nbsp;                function.scaleXProperty().set(1.1);</b>
+<b class="nc"><i>501</i>&nbsp;                function.scaleYProperty().set(1.1);</b>
+<b class="nc"><i>502</i>&nbsp;                function.scaleZProperty().set(1.1);</b>
+<b class="nc"><i>503</i>&nbsp;            });</b>
+<i>504</i>&nbsp;
+<b class="nc"><i>505</i>&nbsp;            function.setOnMouseExited (mouseOver -&gt; {</b>
+<b class="nc"><i>506</i>&nbsp;                function.setCursor(Cursor.HAND);</b>
+<b class="nc"><i>507</i>&nbsp;                function.scaleXProperty().set(1.0);</b>
+<b class="nc"><i>508</i>&nbsp;                function.scaleYProperty().set(1.0);</b>
+<b class="nc"><i>509</i>&nbsp;                function.scaleZProperty().set(1.0);</b>
+<b class="nc"><i>510</i>&nbsp;            });</b>
+<i>511</i>&nbsp;
+<b class="nc"><i>512</i>&nbsp;            function.setOnMouseReleased(mouseEvent -&gt; {</b>
+<b class="nc"><i>513</i>&nbsp;                sFunction ^= true;</b>
+<b class="nc"><i>514</i>&nbsp;                System.out.println(&quot;SPECIAL FUNCTION&quot;+  sFunction);</b>
+<b class="nc"><i>515</i>&nbsp;                Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>516</i>&nbsp;                    if (sFunction) {</b>
+<b class="nc"><i>517</i>&nbsp;                        if (getGodCard().equals(&quot;Charon&quot;))</b>
+<b class="nc"><i>518</i>&nbsp;                            desc.setText(&quot;Select the worker that you want to move&quot;);</b>
+<b class="nc"><i>519</i>&nbsp;                        function.setEffect(new Glow(0.5));</b>
+<i>520</i>&nbsp;
+<i>521</i>&nbsp;                    } else {
+<b class="nc"><i>522</i>&nbsp;                        if (getGodCard().equals(&quot;Charon&quot;))</b>
+<b class="nc"><i>523</i>&nbsp;                            desc.setText(&quot;SELECT the cell where you want to move&quot;);</b>
+<b class="nc"><i>524</i>&nbsp;                        function.setEffect(new Glow(0));</b>
+<i>525</i>&nbsp;                    }
+<b class="nc"><i>526</i>&nbsp;                });</b>
+<i>527</i>&nbsp;
+<b class="nc"><i>528</i>&nbsp;                MessageEvent message = new MessageEvent();</b>
+<b class="nc"><i>529</i>&nbsp;                message.setSpecialFunction(sFunction);</b>
+<b class="nc"><i>530</i>&nbsp;                notify(message);</b>
+<b class="nc"><i>531</i>&nbsp;                resetCells();</b>
+<b class="nc"><i>532</i>&nbsp;            });</b>
+<i>533</i>&nbsp;        }
+<i>534</i>&nbsp;        else{
+<b class="nc"><i>535</i>&nbsp;            function.setEffect(new Glow(0));</b>
+<b class="nc"><i>536</i>&nbsp;            function.setVisible(false);</b>
+<b class="nc"><i>537</i>&nbsp;            sFunction = false;</b>
+<i>538</i>&nbsp;        }
+<b class="nc"><i>539</i>&nbsp;    }</b>
+<i>540</i>&nbsp;
+<i>541</i>&nbsp;    private void updateLightenedCells(){
+<b class="nc"><i>542</i>&nbsp;        System.out.println(&quot;LIGHTNING CELLS: You are on cell &quot; + getStartingPosition());</b>
+<b class="nc"><i>543</i>&nbsp;        System.out.println(&quot;AVAILABLE CELLS -&gt; &quot; + getWorkersAvailableCells().get((getStartingPosition())));</b>
+<b class="nc"><i>544</i>&nbsp;        getIslandLoader().showCells(null);</b>
+<b class="nc"><i>545</i>&nbsp;        getIslandLoader().hideArrow();</b>
+<b class="nc"><i>546</i>&nbsp;        if (getPlayerState() == PlayerState.ACTIVE) {</b>
+<b class="nc"><i>547</i>&nbsp;            getIslandLoader().showArrow(getMatchColors().get(billboardStatus.get(getStartingPosition()).getPlayerID()), positionToPoint(getStartingPosition()));</b>
+<b class="nc"><i>548</i>&nbsp;            getIslandLoader().showCells(getWorkersAvailableCells().get(getStartingPosition()));</b>
+<i>549</i>&nbsp;        }
+<b class="nc"><i>550</i>&nbsp;    }</b>
+<i>551</i>&nbsp;    private void resetCells(){
+<b class="nc"><i>552</i>&nbsp;        System.out.println(&quot;RESETTED CELLS&quot;);</b>
+<b class="nc"><i>553</i>&nbsp;        getIslandLoader().showCells(null);</b>
+<b class="nc"><i>554</i>&nbsp;        getIslandLoader().hideArrow();</b>
+<b class="nc"><i>555</i>&nbsp;    }</b>
+<i>556</i>&nbsp;
+<i>557</i>&nbsp;    private void win(){
+<i>558</i>&nbsp;        AnchorPane page;
+<b class="nc"><i>559</i>&nbsp;        FXMLLoader fxmlLoader = new FXMLLoader();</b>
+<b class="nc"><i>560</i>&nbsp;        fxmlLoader.setLocation(Controller.class.getClassLoader().getResource(&quot;fxml_files/winner.fxml&quot;)); //potrebbe dare problemi, ma non credo</b>
+<i>561</i>&nbsp;        try {
+<b class="nc"><i>562</i>&nbsp;            page = fxmlLoader.load();</b>
+<b class="nc"><i>563</i>&nbsp;        } catch (IOException exception) {</b>
+<b class="nc"><i>564</i>&nbsp;            System.out.println(&quot;Failed to load fxml file.&quot;);</b>
+<b class="nc"><i>565</i>&nbsp;            exception.printStackTrace();</b>
+<b class="nc"><i>566</i>&nbsp;            return;</b>
+<b class="nc"><i>567</i>&nbsp;        }</b>
+<i>568</i>&nbsp;        //stackPane.getChildren().clear();
+<b class="nc"><i>569</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>570</i>&nbsp;            stackPane.getChildren().add(page);</b>
+<b class="nc"><i>571</i>&nbsp;            page.toFront();</b>
+<b class="nc"><i>572</i>&nbsp;            getStage().show();</b>
+<b class="nc"><i>573</i>&nbsp;        });</b>
+<b class="nc"><i>574</i>&nbsp;    }</b>
+<i>575</i>&nbsp;
+<i>576</i>&nbsp;    private void lost(){
+<i>577</i>&nbsp;        Parent page;
+<b class="nc"><i>578</i>&nbsp;        FXMLLoader fxmlLoader = new FXMLLoader();</b>
+<b class="nc"><i>579</i>&nbsp;        fxmlLoader.setLocation(Controller.class.getClassLoader().getResource(&quot;fxml_files/loser.fxml&quot;)); //potrebbe dare problemi, ma non credo</b>
+<i>580</i>&nbsp;        try {
+<b class="nc"><i>581</i>&nbsp;            page = fxmlLoader.load();</b>
+<b class="nc"><i>582</i>&nbsp;        } catch (IOException exception) {</b>
+<b class="nc"><i>583</i>&nbsp;            System.out.println(&quot;Failed to load fxml file.&quot;);</b>
+<b class="nc"><i>584</i>&nbsp;            exception.printStackTrace();</b>
+<b class="nc"><i>585</i>&nbsp;            return;</b>
+<b class="nc"><i>586</i>&nbsp;        }</b>
+<b class="nc"><i>587</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>588</i>&nbsp;            stackPane.getChildren().add(page);</b>
+<b class="nc"><i>589</i>&nbsp;            page.toFront();</b>
+<b class="nc"><i>590</i>&nbsp;            finishController = fxmlLoader.getController();</b>
+<b class="nc"><i>591</i>&nbsp;            page.setPickOnBounds(false);</b>
+<b class="nc"><i>592</i>&nbsp;            getStage().show();</b>
+<b class="nc"><i>593</i>&nbsp;        });</b>
+<b class="nc"><i>594</i>&nbsp;    }</b>
+<i>595</i>&nbsp;
+<i>596</i>&nbsp;    /**
+<i>597</i>&nbsp;     * Shows the helper popup on mouse click
+<i>598</i>&nbsp;     */
+<i>599</i>&nbsp;    public void helperClick(MouseEvent event){
+<b class="nc"><i>600</i>&nbsp;        Popup popup = new Popup();</b>
+<i>601</i>&nbsp;        //ImageView imageView = new ImageView(new Image(&quot;images/helper/&quot; + getGodCard() + &quot;.png&quot;,450,225,true,true));
+<b class="nc"><i>602</i>&nbsp;        final ImageView imgView = new ImageView();</b>
+<b class="nc"><i>603</i>&nbsp;        Image image = new Image(&quot;images/helper/&quot; + getGodCard() + &quot;.png&quot;);</b>
+<b class="nc"><i>604</i>&nbsp;        imgView.setImage(image);</b>
+<b class="nc"><i>605</i>&nbsp;        imgView.setFitWidth(450);</b>
+<b class="nc"><i>606</i>&nbsp;        imgView.setPreserveRatio(true);</b>
+<b class="nc"><i>607</i>&nbsp;        imgView.setSmooth(true);</b>
+<b class="nc"><i>608</i>&nbsp;        imgView.setCache(true);</b>
+<i>609</i>&nbsp;
+<b class="nc"><i>610</i>&nbsp;        imgView.setOnMouseReleased(e -&gt; popup.hide());</b>
+<i>611</i>&nbsp;        //popup.getStylesheets().add(&quot;/css_files/running.css&quot;);
+<i>612</i>&nbsp;        //imageView.getStyleClass().add(&quot;popup&quot;);
+<b class="nc"><i>613</i>&nbsp;        popup.getContent().add(imgView);</b>
+<b class="nc"><i>614</i>&nbsp;        popup.setAutoHide(true);</b>
+<b class="nc"><i>615</i>&nbsp;        popup.setHideOnEscape(true);</b>
+<b class="nc"><i>616</i>&nbsp;        popup.setOnShown(e -&gt; {</b>
+<b class="nc"><i>617</i>&nbsp;            popup.setX(getStage().getX() + getStage().getMaxWidth() - popup.getWidth());</b>
+<b class="nc"><i>618</i>&nbsp;            popup.setY(getStage().getY() + 22);</b>
+<b class="nc"><i>619</i>&nbsp;            helper.setVisible(false);</b>
+<b class="nc"><i>620</i>&nbsp;        });</b>
+<i>621</i>&nbsp;
+<b class="nc"><i>622</i>&nbsp;        popup.setOnHidden( e -&gt; helper.setVisible(true));</b>
+<i>623</i>&nbsp;
+<b class="nc"><i>624</i>&nbsp;        Platform.runLater(() -&gt; popup.show(getStage()));</b>
+<b class="nc"><i>625</i>&nbsp;    }</b>
+<i>626</i>&nbsp;
+<i>627</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: WaitingForPlayers</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.controller.state</a> ]
+</div>
+
+<h1>Coverage Summary for Class: WaitingForPlayers (it.polimi.ingsw.server.controller.state)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WaitingForPlayers</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.controller.state;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.utilities.MessageEvent;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.Observer;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.List;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import static it.polimi.ingsw.server.model.GameModel.*;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * @author: hamzahaddaoui
+<i>12</i>&nbsp; *
+<i>13</i>&nbsp; * Controller class that manages the waiting state inputs by the users.
+<i>14</i>&nbsp; * No input is permitted in this phase
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;
+<b class="nc"><i>17</i>&nbsp;public class WaitingForPlayers extends State{</b>
+<i>18</i>&nbsp;    @Override
+<i>19</i>&nbsp;    public boolean handleRequest(MessageEvent messageEvent){
+<b class="nc"><i>20</i>&nbsp;        return false;</b>
+<i>21</i>&nbsp;    }
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    @Override
+<i>24</i>&nbsp;    public void viewNotify(List&lt;Observer&lt;MessageEvent&gt;&gt; observers, Integer matchID){
+<b class="nc"><i>25</i>&nbsp;        MessageEvent message = basicMatchConfig(new MessageEvent(), matchID);</b>
+<b class="nc"><i>26</i>&nbsp;        getMatchPlayers(matchID)</b>
+<b class="nc"><i>27</i>&nbsp;                .keySet()</b>
+<b class="nc"><i>28</i>&nbsp;                .forEach(player -&gt; notify(observers, basicPlayerConfig(message, player)));</b>
+<b class="nc"><i>29</i>&nbsp;    }</b>
+<i>30</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

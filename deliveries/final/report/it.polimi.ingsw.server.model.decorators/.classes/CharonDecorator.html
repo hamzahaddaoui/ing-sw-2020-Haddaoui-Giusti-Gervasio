@@ -1,0 +1,249 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CharonDecorator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model.decorators</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CharonDecorator (it.polimi.ingsw.server.model.decorators)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CharonDecorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (49/ 49)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CharonDecorator$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (50/ 50)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model.decorators;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.model.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.Position;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.Collection;
+<i>7</i>&nbsp;import java.util.HashMap;
+<i>8</i>&nbsp;import java.util.Map;
+<i>9</i>&nbsp;import java.util.Set;
+<i>10</i>&nbsp;import java.util.stream.Collector;
+<i>11</i>&nbsp;import java.util.stream.Collectors;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;import static it.polimi.ingsw.utilities.TurnState.BUILD;
+<i>14</i>&nbsp;import static it.polimi.ingsw.utilities.TurnState.MOVE;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;/**
+<i>17</i>&nbsp; * @author: hamzahaddaoui
+<i>18</i>&nbsp; *
+<i>19</i>&nbsp; * Redefinition of methods related to the Charon power.
+<i>20</i>&nbsp; */
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;public class CharonDecorator  extends CommandsDecorator {
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;    static final private GodCards card = GodCards.Charon;</b>
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;    Map&lt;Position, Set&lt;Position&gt;&gt; opponentPositions = new HashMap&lt;&gt;();</b>
+<i>27</i>&nbsp;
+<b class="fc"><i>28</i>&nbsp;    public CharonDecorator(Commands commands){</b>
+<b class="fc"><i>29</i>&nbsp;        this.commands=commands;</b>
+<b class="fc"><i>30</i>&nbsp;    }</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * Method that sets the next state of the player.
+<i>34</i>&nbsp;     * &lt;p&gt;
+<i>35</i>&nbsp;     * If the player sets the special function, from WAIT the turn shifts to BUILD
+<i>36</i>&nbsp;     * then if the player has done just his first building move, the turn shifts to MOVE
+<i>37</i>&nbsp;     * otherwise, the player has finished his turn, sets the boolean and the turn shifts to WAIT.
+<i>38</i>&nbsp;     * Else, the turn follows his standard shifting.
+<i>39</i>&nbsp;     *
+<i>40</i>&nbsp;     * @param player  the player who makes the turn, not null
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    @Override
+<i>43</i>&nbsp;    public void nextState(Player player) {
+<b class="fc"><i>44</i>&nbsp;        switch(player.getTurnState()){</b>
+<i>45</i>&nbsp;            case IDLE:
+<b class="fc"><i>46</i>&nbsp;                opponentPositions = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>47</i>&nbsp;                player.setUnsetSpecialFunctionAvailable(canMoveOpponent(player));</b>
+<b class="fc"><i>48</i>&nbsp;                player.setTurnState(MOVE);</b>
+<b class="fc"><i>49</i>&nbsp;                break;</b>
+<i>50</i>&nbsp;            case MOVE:
+<b class="fc"><i>51</i>&nbsp;                player.setUnsetSpecialFunctionAvailable(null);</b>
+<b class="fc"><i>52</i>&nbsp;                if (player.hasSpecialFunction()){</b>
+<b class="fc"><i>53</i>&nbsp;                    player.setTurnState(MOVE);</b>
+<b class="fc"><i>54</i>&nbsp;                    player.setUnsetSpecialFunction(false);</b>
+<i>55</i>&nbsp;                }
+<i>56</i>&nbsp;                else {
+<b class="fc"><i>57</i>&nbsp;                    player.setTurnState(BUILD);</b>
+<i>58</i>&nbsp;                }
+<b class="fc"><i>59</i>&nbsp;                break;</b>
+<i>60</i>&nbsp;            case BUILD:
+<b class="fc"><i>61</i>&nbsp;                player.setHasFinished();</b>
+<i>62</i>&nbsp;                break;
+<i>63</i>&nbsp;        }
+<b class="fc"><i>64</i>&nbsp;    }</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    /**
+<i>67</i>&nbsp;     * method that allows the stardard player movement
+<i>68</i>&nbsp;     * if the player has activated the special function, the sellected cell will be relative to the player to move diametrally in the opposite direction relative to the current player
+<i>69</i>&nbsp;     *
+<i>70</i>&nbsp;     * @param position the position where the worker has to move/the position of the selected player to move
+<i>71</i>&nbsp;     * @param player the player which is performing the command
+<i>72</i>&nbsp;     *
+<i>73</i>&nbsp;     */
+<i>74</i>&nbsp;    @Override
+<i>75</i>&nbsp;    public void moveWorker(Position position, Player player){
+<b class="fc"><i>76</i>&nbsp;        if (!player.hasSpecialFunction())</b>
+<b class="fc"><i>77</i>&nbsp;            super.moveWorker(position, player);</b>
+<i>78</i>&nbsp;        else{
+<b class="fc"><i>79</i>&nbsp;            Billboard billboard = player.getMatch().getBillboard();</b>
+<i>80</i>&nbsp;
+<b class="fc"><i>81</i>&nbsp;            Player opponent = player.getMatch().getPlayers().stream().filter(p -&gt; p.getID() == billboard.getCells().get(position).getPlayerID()).findFirst().get();</b>
+<i>82</i>&nbsp;
+<b class="fc"><i>83</i>&nbsp;            Worker worker = opponent.getWorkers().stream().filter(w -&gt; w.getPosition().equals(position)).findFirst().get();</b>
+<i>84</i>&nbsp;
+<b class="fc"><i>85</i>&nbsp;            Position finalPos = oppositePos(player.getCurrentWorker().getPosition(), worker.getPosition());</b>
+<i>86</i>&nbsp;
+<b class="fc"><i>87</i>&nbsp;            position.setZ(billboard.getTowerHeight(finalPos));</b>
+<i>88</i>&nbsp;
+<b class="fc"><i>89</i>&nbsp;            billboard.resetPlayer(worker.getPosition());</b>
+<b class="fc"><i>90</i>&nbsp;            worker.setPosition(finalPos);</b>
+<b class="fc"><i>91</i>&nbsp;            billboard.setPlayer(finalPos, opponent.getID());</b>
+<i>92</i>&nbsp;        }
+<b class="fc"><i>93</i>&nbsp;    }</b>
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;    /**
+<i>96</i>&nbsp;     * method that show the list of cells that are available for the standard movement of the player
+<i>97</i>&nbsp;     *
+<i>98</i>&nbsp;     * @param player  is the current player
+<i>99</i>&nbsp;     * @return  the list of Position where the worker can move on
+<i>100</i>&nbsp;     */
+<i>101</i>&nbsp;    @Override
+<i>102</i>&nbsp;    public Set&lt;Position&gt; computeAvailableMovements(Player player, Worker worker) {
+<b class="fc"><i>103</i>&nbsp;        if (!player.hasSpecialFunction())</b>
+<b class="fc"><i>104</i>&nbsp;            return super.computeAvailableMovements(player, worker);</b>
+<i>105</i>&nbsp;        else {
+<b class="fc"><i>106</i>&nbsp;            return opponentPositions.get(worker.getPosition());</b>
+<i>107</i>&nbsp;        }
+<i>108</i>&nbsp;    }
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    @Override
+<i>111</i>&nbsp;    public void notifySpecialFunction(Player player){
+<b class="fc"><i>112</i>&nbsp;        player.setAvailableCells();</b>
+<b class="fc"><i>113</i>&nbsp;    }</b>
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    private Map&lt;Position, Boolean&gt; canMoveOpponent(Player player){
+<b class="fc"><i>116</i>&nbsp;        Map&lt;Position, Boolean&gt; returnMap = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>117</i>&nbsp;        Billboard billboard = player.getMatch().getBillboard();</b>
+<i>118</i>&nbsp;
+<b class="fc"><i>119</i>&nbsp;        player.getWorkers()</b>
+<b class="fc"><i>120</i>&nbsp;                .stream()</b>
+<b class="fc"><i>121</i>&nbsp;                .map(Worker::getPosition)</b>
+<b class="fc"><i>122</i>&nbsp;                .forEach(position -&gt; opponentPositions.put(position, position.neighbourPositions().stream()</b>
+<b class="fc"><i>123</i>&nbsp;                                .filter(pos -&gt; billboard.getPlayer(pos) != 0)</b>
+<b class="fc"><i>124</i>&nbsp;                                .filter(pos -&gt; billboard.getCells().containsKey(oppositePos(position, pos))</b>
+<b class="fc"><i>125</i>&nbsp;                                               &amp;&amp; billboard.getPlayer(oppositePos(position, pos)) == 0</b>
+<b class="fc"><i>126</i>&nbsp;                                               &amp;&amp; !billboard.getDome(oppositePos(position, pos)))</b>
+<b class="fc"><i>127</i>&nbsp;                                .filter(pos -&gt; player.getWorkers().stream().map(Worker::getPosition).noneMatch(p -&gt; p.equals(pos)))</b>
+<b class="fc"><i>128</i>&nbsp;                                .collect(Collectors.toSet())));</b>
+<i>129</i>&nbsp;
+<b class="fc"><i>130</i>&nbsp;        player.getWorkers().stream().map(Worker::getPosition).forEach(position -&gt; returnMap.put(position, !opponentPositions.get(position).isEmpty()));</b>
+<i>131</i>&nbsp;
+<b class="fc"><i>132</i>&nbsp;        return returnMap;</b>
+<i>133</i>&nbsp;    }
+<i>134</i>&nbsp;
+<i>135</i>&nbsp;
+<i>136</i>&nbsp;    private Position oppositePos(Position center, Position position){
+<b class="fc"><i>137</i>&nbsp;        return new Position(2 * center.getX() - position.getX(), 2 * center.getY() - position.getY());</b>
+<i>138</i>&nbsp;    }
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

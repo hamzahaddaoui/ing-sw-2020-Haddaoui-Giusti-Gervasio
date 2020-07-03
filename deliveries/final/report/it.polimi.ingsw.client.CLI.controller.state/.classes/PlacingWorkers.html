@@ -1,0 +1,278 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PlacingWorkers</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.CLI.controller.state</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PlacingWorkers (it.polimi.ingsw.client.CLI.controller.state)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlacingWorkers</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 79)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.CLI.controller.state;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.client.CLI.view.DataBase;
+<i>4</i>&nbsp;import it.polimi.ingsw.client.CLI.view.View;
+<i>5</i>&nbsp;import it.polimi.ingsw.utilities.MatchState;
+<i>6</i>&nbsp;import it.polimi.ingsw.utilities.MessageEvent;
+<i>7</i>&nbsp;import it.polimi.ingsw.utilities.PlayerState;
+<i>8</i>&nbsp;import it.polimi.ingsw.utilities.Position;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.HashSet;
+<i>11</i>&nbsp;import java.util.Set;
+<i>12</i>&nbsp;import java.util.stream.Collectors;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;/**
+<i>15</i>&nbsp; * @author giusti-leo
+<i>16</i>&nbsp; *
+<i>17</i>&nbsp; * PlacingWorkers is a state of the Controller and it handles the placement of Workers in the GameBoard
+<i>18</i>&nbsp; *
+<i>19</i>&nbsp; */
+<i>20</i>&nbsp;
+<b class="nc"><i>21</i>&nbsp;public class PlacingWorkers extends ControlState {</b>
+<i>22</i>&nbsp;
+<b class="nc"><i>23</i>&nbsp;    MessageEvent messageEvent = new MessageEvent();</b>
+<i>24</i>&nbsp;    Position position;
+<b class="nc"><i>25</i>&nbsp;    Set &lt;Position&gt; initializedPosition = new HashSet&lt;&gt;();</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * Analyzes the input String
+<i>29</i>&nbsp;     * If all coordinates are correct and the position selected is contained in PlacingAvailable Cells, method inserts input in DataBase.
+<i>30</i>&nbsp;     * If users select 2 correct position, it prepares the message to send
+<i>31</i>&nbsp;     * If the position is incorrect, it prints error announcement
+<i>32</i>&nbsp;     *
+<i>33</i>&nbsp;     * @param input  is Controller String input
+<i>34</i>&nbsp;     * @return true if the Placing State is done, else false
+<i>35</i>&nbsp;     */
+<i>36</i>&nbsp;    @Override
+<i>37</i>&nbsp;    public MessageEvent computeInput(String input) {
+<b class="nc"><i>38</i>&nbsp;        if(checkMessage(input)){</b>
+<b class="nc"><i>39</i>&nbsp;            Set&lt;Position&gt; placingPosition= DataBase.getPlacingAvailableCells();</b>
+<i>40</i>&nbsp;
+<b class="nc"><i>41</i>&nbsp;            if(placingPosition.size() == 0){</b>
+<b class="nc"><i>42</i>&nbsp;                throw new IllegalArgumentException(&quot;PLACING POSITION IS EMPTY!&quot;);</b>
+<i>43</i>&nbsp;            }
+<i>44</i>&nbsp;
+<b class="nc"><i>45</i>&nbsp;            int x = Character.getNumericValue(input.charAt(0))-1;</b>
+<b class="nc"><i>46</i>&nbsp;            int y = Character.getNumericValue(input.charAt(1))-1;</b>
+<i>47</i>&nbsp;
+<b class="nc"><i>48</i>&nbsp;            if (x &lt;= 4 &amp;&amp; x &gt;= 0 &amp;&amp; y &lt;= 4 &amp;&amp; y &gt;= 0 ){</b>
+<b class="nc"><i>49</i>&nbsp;                position = new Position(x, y);</b>
+<b class="nc"><i>50</i>&nbsp;                if (placingPosition.contains(position)){</b>
+<b class="nc"><i>51</i>&nbsp;                    initializedPosition.add(position);</b>
+<b class="nc"><i>52</i>&nbsp;                    placingPosition.remove(position);</b>
+<b class="nc"><i>53</i>&nbsp;                    if(initializedPosition.size() == 1){</b>
+<b class="nc"><i>54</i>&nbsp;                        if(DataBase.getGodCard() != null &amp;&amp; DataBase.getGodCard().toUpperCase().equals(&quot;EROS&quot;))</b>
+<b class="nc"><i>55</i>&nbsp;                            handleErosCase(position);</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;                        //AGGIUNTA WORKER ALLA BILLBOARD
+<i>58</i>&nbsp;                        DataBase
+<b class="nc"><i>59</i>&nbsp;                                .getBillboardStatus()</b>
+<b class="nc"><i>60</i>&nbsp;                                .get(position)</b>
+<b class="nc"><i>61</i>&nbsp;                                .setPlayerID(DataBase</b>
+<b class="nc"><i>62</i>&nbsp;                                                .getMatchPlayers()</b>
+<b class="nc"><i>63</i>&nbsp;                                                .keySet()</b>
+<b class="nc"><i>64</i>&nbsp;                                                .stream()</b>
+<b class="nc"><i>65</i>&nbsp;                                                .filter(num -&gt; DataBase.getMatchPlayers().get(num).equals(DataBase.getNickname()))</b>
+<b class="nc"><i>66</i>&nbsp;                                                .findAny().get());</b>
+<i>67</i>&nbsp;
+<b class="nc"><i>68</i>&nbsp;                        View.setRefresh(true);</b>
+<b class="nc"><i>69</i>&nbsp;                        DataBase.setMessageReady(false);</b>
+<b class="nc"><i>70</i>&nbsp;                        DataBase.setActiveInput(true);</b>
+<b class="nc"><i>71</i>&nbsp;                        View.handler();</b>
+<b class="nc"><i>72</i>&nbsp;                        return null;</b>
+<i>73</i>&nbsp;                    }
+<b class="nc"><i>74</i>&nbsp;                    if (initializedPosition.size() == 2) {</b>
+<b class="nc"><i>75</i>&nbsp;                        messageEvent.setInitializedPositions(initializedPosition);</b>
+<b class="nc"><i>76</i>&nbsp;                        View.setRefresh(true);</b>
+<b class="nc"><i>77</i>&nbsp;                        DataBase.setMessageReady(true);</b>
+<b class="nc"><i>78</i>&nbsp;                        System.out.println(&quot;Placing complete&quot;);</b>
+<b class="nc"><i>79</i>&nbsp;                        return messageEvent;</b>
+<i>80</i>&nbsp;                    }
+<i>81</i>&nbsp;                }
+<i>82</i>&nbsp;            }
+<i>83</i>&nbsp;        }
+<b class="nc"><i>84</i>&nbsp;        View.setError(true);</b>
+<b class="nc"><i>85</i>&nbsp;        DataBase.setMessageReady(false);</b>
+<b class="nc"><i>86</i>&nbsp;        DataBase.setActiveInput(true);</b>
+<b class="nc"><i>87</i>&nbsp;        View.handler();</b>
+<b class="nc"><i>88</i>&nbsp;        return null;</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    /**
+<i>92</i>&nbsp;     * It contains Disconnection case.
+<i>93</i>&nbsp;     * If PlayerState is equals to Active, it saves on DataBase BillBoard status and Placing Available Cells List
+<i>94</i>&nbsp;     * for the placing State.
+<i>95</i>&nbsp;     * Then, it updates the GameBoard&#39;s visualization and launches computeView method
+<i>96</i>&nbsp;     *
+<i>97</i>&nbsp;     * @param message  is the Network Handler &#39;s message
+<i>98</i>&nbsp;     */
+<i>99</i>&nbsp;    @Override
+<i>100</i>&nbsp;    public void updateData(MessageEvent message) {
+<i>101</i>&nbsp;
+<b class="nc"><i>102</i>&nbsp;        if (message.getInfo()!=null &amp;&amp; message.getInfo().equals(&quot;A user has disconnected from the match. Closing...&quot;)) {</b>
+<b class="nc"><i>103</i>&nbsp;            DataBase.setDisconnectedUser(true);</b>
+<b class="nc"><i>104</i>&nbsp;            DataBase.resetDataBase();</b>
+<b class="nc"><i>105</i>&nbsp;            DataBase.setActiveInput(false);</b>
+<b class="nc"><i>106</i>&nbsp;            View.setRefresh(true);</b>
+<b class="nc"><i>107</i>&nbsp;            View.handler();</b>
+<b class="nc"><i>108</i>&nbsp;            DataBase.setDisconnectedUser(false);</b>
+<b class="nc"><i>109</i>&nbsp;            return;</b>
+<i>110</i>&nbsp;        }
+<i>111</i>&nbsp;
+<b class="nc"><i>112</i>&nbsp;        if(DataBase.getMatchState() == MatchState.PLACING_WORKERS){</b>
+<b class="nc"><i>113</i>&nbsp;            if(message.getBillboardStatus() != DataBase.getBillboardStatus() &amp;&amp; message.getBillboardStatus() != null){</b>
+<b class="nc"><i>114</i>&nbsp;                DataBase.setBillboardStatus(message.getBillboardStatus());</b>
+<i>115</i>&nbsp;            }
+<b class="nc"><i>116</i>&nbsp;            if(message.getAvailablePlacingCells() != DataBase.getPlacingAvailableCells() &amp;&amp; message.getAvailablePlacingCells() != null){</b>
+<b class="nc"><i>117</i>&nbsp;                DataBase.setPlacingAvailableCells(message.getAvailablePlacingCells());</b>
+<i>118</i>&nbsp;            }
+<i>119</i>&nbsp;        }
+<i>120</i>&nbsp;
+<i>121</i>&nbsp;
+<b class="nc"><i>122</i>&nbsp;        View.setRefresh(true);</b>
+<b class="nc"><i>123</i>&nbsp;        View.handler();</b>
+<i>124</i>&nbsp;
+<b class="nc"><i>125</i>&nbsp;    }</b>
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    /**
+<i>128</i>&nbsp;     * Depending on the Database&#39;s state, it computes different String to print
+<i>129</i>&nbsp;     *
+<i>130</i>&nbsp;     * @return  String to print on view
+<i>131</i>&nbsp;     */
+<i>132</i>&nbsp;    @Override
+<i>133</i>&nbsp;    public String computeView() {
+<b class="nc"><i>134</i>&nbsp;        if(DataBase.getPlayerState() == PlayerState.ACTIVE ){</b>
+<b class="nc"><i>135</i>&nbsp;            int number = 2 - initializedPosition.size();</b>
+<b class="nc"><i>136</i>&nbsp;            if(number == 1){</b>
+<b class="nc"><i>137</i>&nbsp;                return &quot;Insert &quot; + number + &quot; worker.\nInsert position XY: \n &quot;;</b>
+<i>138</i>&nbsp;            }
+<b class="nc"><i>139</i>&nbsp;            else if(number == 2){</b>
+<b class="nc"><i>140</i>&nbsp;                return &quot;Insert &quot; + number + &quot; workers.\nInsert position XY:\n&quot;;</b>
+<i>141</i>&nbsp;            }
+<b class="nc"><i>142</i>&nbsp;            else return &quot;INSERIMENTO COMPLETATO&quot;;</b>
+<i>143</i>&nbsp;        }
+<i>144</i>&nbsp;        else{
+<b class="nc"><i>145</i>&nbsp;            return DataBase.getMatchPlayers().get(DataBase.getPlayer()) +&quot; is placing his workers&quot;;</b>
+<i>146</i>&nbsp;        }
+<i>147</i>&nbsp;    }
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;    /**
+<i>150</i>&nbsp;     * Called if there is an error on the message, it announces that the input is incorrect and it prints the computeView method
+<i>151</i>&nbsp;     */
+<i>152</i>&nbsp;    @Override
+<i>153</i>&nbsp;    public String error() {
+<b class="nc"><i>154</i>&nbsp;        DataBase.setActiveInput(true);</b>
+<b class="nc"><i>155</i>&nbsp;        return (&quot;Position is not available or incorrect\n&quot;) + computeView();</b>
+<i>156</i>&nbsp;    }
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    /**
+<i>159</i>&nbsp;     * Checks if the method is correct
+<i>160</i>&nbsp;     *
+<i>161</i>&nbsp;     * @param viewObject  is the input from the Controller
+<i>162</i>&nbsp;     * @return  true if input is correct, else false
+<i>163</i>&nbsp;     */
+<i>164</i>&nbsp;    private boolean checkMessage(String viewObject) {
+<b class="nc"><i>165</i>&nbsp;        if (viewObject.length() != 2) {</b>
+<b class="nc"><i>166</i>&nbsp;            System.out.println(&quot;INPUT INCORRECT&quot;);</b>
+<b class="nc"><i>167</i>&nbsp;            return false;</b>
+<i>168</i>&nbsp;        }
+<b class="nc"><i>169</i>&nbsp;        else return true;</b>
+<i>170</i>&nbsp;    }
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;    /**
+<i>174</i>&nbsp;     * Method handles the placing action of the God Eros.
+<i>175</i>&nbsp;     * The cells that are available for the second worker are just the cells that are along the opposite side of the GameBoard
+<i>176</i>&nbsp;     *
+<i>177</i>&nbsp;     * In case of corner, available placing cells contains the cells of 2 opposite side
+<i>178</i>&nbsp;     *
+<i>179</i>&nbsp;     * @param position  the position of your first worker placed
+<i>180</i>&nbsp;     */
+<i>181</i>&nbsp;    private void handleErosCase(Position position){
+<b class="nc"><i>182</i>&nbsp;        Set&lt;Position&gt; positionSet = new HashSet&lt;&gt;();</b>
+<i>183</i>&nbsp;
+<b class="nc"><i>184</i>&nbsp;        if( position.getX() == 0 || position.getX() == 4){</b>
+<b class="nc"><i>185</i>&nbsp;            for (int i = 0; i &lt; 5; i++) positionSet.add(new Position((position.getX()+4)%8, i));</b>
+<i>186</i>&nbsp;        }
+<b class="nc"><i>187</i>&nbsp;        if(position.getY() == 0 || position.getY() == 4){</b>
+<b class="nc"><i>188</i>&nbsp;            for (int i = 0; i &lt; 5; i++) positionSet.add(new Position(i, (position.getY()+4)%8));</b>
+<i>189</i>&nbsp;        }
+<i>190</i>&nbsp;
+<b class="nc"><i>191</i>&nbsp;        positionSet = positionSet.stream().filter(pos-&gt; DataBase.getPlacingAvailableCells().contains(pos)).collect(Collectors.toSet());</b>
+<b class="nc"><i>192</i>&nbsp;        DataBase.setPlacingAvailableCells(positionSet);</b>
+<b class="nc"><i>193</i>&nbsp;        }</b>
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

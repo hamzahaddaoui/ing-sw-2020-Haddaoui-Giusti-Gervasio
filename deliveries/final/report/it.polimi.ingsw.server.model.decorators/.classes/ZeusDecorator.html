@@ -1,0 +1,219 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ZeusDecorator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.server.model.decorators</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ZeusDecorator (it.polimi.ingsw.server.model.decorators)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ZeusDecorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (29/ 29)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ZeusDecorator$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (30/ 30)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.server.model.decorators;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.model.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.utilities.Position;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.Set;
+<i>7</i>&nbsp;import java.util.stream.Collectors;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import static it.polimi.ingsw.utilities.TurnState.BUILD;
+<i>10</i>&nbsp;import static it.polimi.ingsw.utilities.TurnState.MOVE;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * @author giusti-leo
+<i>14</i>&nbsp; *
+<i>15</i>&nbsp; * Zeus Commands Decorator
+<i>16</i>&nbsp; * Description: &quot;Your worker may build a block under itself&quot;
+<i>17</i>&nbsp; * Differente methods from Basic Commands: computeAvailableBuildings
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;public class ZeusDecorator  extends CommandsDecorator {
+<i>21</i>&nbsp;
+<b class="fc"><i>22</i>&nbsp;    static final private GodCards card = GodCards.Zeus;</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    private Position positionBuilt;
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;    public ZeusDecorator(Commands commands){</b>
+<b class="fc"><i>27</i>&nbsp;        this.commands=commands;</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    /**
+<i>32</i>&nbsp;     * This method compute the next state of the player.
+<i>33</i>&nbsp;     * This is similar to the Basic Command method but it reset the positionBuilt in the IDLE State.
+<i>34</i>&nbsp;     *
+<i>35</i>&nbsp;     * @param player  is the current player
+<i>36</i>&nbsp;     */
+<i>37</i>&nbsp;    public void nextState(Player player) {
+<b class="fc"><i>38</i>&nbsp;        switch (player.getTurnState()) {</b>
+<i>39</i>&nbsp;            case IDLE:
+<b class="fc"><i>40</i>&nbsp;                positionBuilt = null;</b>
+<b class="fc"><i>41</i>&nbsp;                player.setTurnState(MOVE);</b>
+<b class="fc"><i>42</i>&nbsp;                break;</b>
+<i>43</i>&nbsp;            case MOVE:
+<b class="fc"><i>44</i>&nbsp;                player.setTurnState(BUILD);</b>
+<b class="fc"><i>45</i>&nbsp;                break;</b>
+<i>46</i>&nbsp;            case BUILD:
+<b class="fc"><i>47</i>&nbsp;                player.setHasFinished();</b>
+<i>48</i>&nbsp;                break;
+<i>49</i>&nbsp;        }
+<b class="fc"><i>50</i>&nbsp;    }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    /**
+<i>53</i>&nbsp;     * This method computes the available buildings. Zeus can build in his same position.
+<i>54</i>&nbsp;     *
+<i>55</i>&nbsp;     * @param player  is the current player
+<i>56</i>&nbsp;     * @param worker  is the current worker for the turn
+<i>57</i>&nbsp;     * @return  the set of available cells for the building turn
+<i>58</i>&nbsp;     */
+<i>59</i>&nbsp;    @Override
+<i>60</i>&nbsp;    public Set&lt;Position&gt; computeAvailableBuildings(Player player, Worker worker) {
+<b class="fc"><i>61</i>&nbsp;        Set&lt;Position&gt; result = super.computeAvailableBuildings(player, worker);</b>
+<b class="fc"><i>62</i>&nbsp;        if(player.getCurrentWorker() != null &amp;&amp; player.getCurrentWorkerPosition().getZ() &lt; 3)</b>
+<b class="fc"><i>63</i>&nbsp;            result.add(player.getCurrentWorkerPosition());</b>
+<b class="fc"><i>64</i>&nbsp;        return result;</b>
+<i>65</i>&nbsp;    }
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    /**
+<i>68</i>&nbsp;     * This method makes the building action and it saves the position where the current worker build
+<i>69</i>&nbsp;     *
+<i>70</i>&nbsp;     * @param position  is the position that player have inserted
+<i>71</i>&nbsp;     * @param player  is the current player
+<i>72</i>&nbsp;     */
+<i>73</i>&nbsp;    @Override
+<i>74</i>&nbsp;    public void build(Position position, Player player) {
+<b class="fc"><i>75</i>&nbsp;        Position workerPosition = player.getCurrentWorker().getPosition();</b>
+<b class="fc"><i>76</i>&nbsp;        Worker worker = player.getCurrentWorker();</b>
+<b class="fc"><i>77</i>&nbsp;        Billboard billboard = player.getMatch().getBillboard();</b>
+<i>78</i>&nbsp;
+<b class="fc"><i>79</i>&nbsp;        if(position.getY() == workerPosition.getY() &amp;&amp; position.getX() == workerPosition.getX()){</b>
+<b class="fc"><i>80</i>&nbsp;            super.build(position, player);</b>
+<b class="fc"><i>81</i>&nbsp;            positionBuilt = new Position( position.getX(), position.getY(), billboard.getTowerHeight(position));</b>
+<b class="fc"><i>82</i>&nbsp;            worker.setPosition(positionBuilt);</b>
+<i>83</i>&nbsp;        }
+<i>84</i>&nbsp;        else{
+<b class="fc"><i>85</i>&nbsp;            super.build(position,player);</b>
+<i>86</i>&nbsp;        }
+<b class="fc"><i>87</i>&nbsp;    }</b>
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * Standard winning condition method and an addition condition.
+<i>92</i>&nbsp;     * Zeus does not win by forcing itself in the third level cells, so if the worker is on the same cell where he has built
+<i>93</i>&nbsp;     * he does not win
+<i>94</i>&nbsp;     *
+<i>95</i>&nbsp;     * @param player  is the current player
+<i>96</i>&nbsp;     * @return  true if the player has won, false if he does not
+<i>97</i>&nbsp;     */
+<i>98</i>&nbsp;    @Override
+<i>99</i>&nbsp;    public boolean winningCondition(Player player) {
+<b class="fc"><i>100</i>&nbsp;        Worker worker = player.getCurrentWorker();</b>
+<b class="fc"><i>101</i>&nbsp;        if (worker == null)</b>
+<b class="fc"><i>102</i>&nbsp;            return false;</b>
+<i>103</i>&nbsp;
+<b class="fc"><i>104</i>&nbsp;        return super.winningCondition(player) &amp;&amp; positionBuilt == null;</b>
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>

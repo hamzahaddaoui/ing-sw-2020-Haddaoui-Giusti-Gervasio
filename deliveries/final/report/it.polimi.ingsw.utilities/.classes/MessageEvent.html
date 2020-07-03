@@ -1,0 +1,429 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MessageEvent</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.utilities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MessageEvent (it.polimi.ingsw.utilities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MessageEvent</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 60)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 89)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.utilities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.server.ClientHandler;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.util.Map;
+<i>6</i>&nbsp;import java.util.Set;
+<i>7</i>&nbsp;
+<b class="nc"><i>8</i>&nbsp;public class MessageEvent {</b>
+<i>9</i>&nbsp;    private transient ClientHandler clientHandler;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;    private String info;  // contains &quot;NickName&quot; from server to user if there is an error on NickName
+<i>12</i>&nbsp;    //CONTROLLER_TO_CONTROLLER
+<i>13</i>&nbsp;    //CONTROLLER_TO_VIEW
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    private int                             matchID;
+<i>16</i>&nbsp;    private int                             playerID;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    //user to controller
+<i>19</i>&nbsp;    private String                          nickname;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    private int                             playersNum;
+<i>22</i>&nbsp;    private Set&lt;String&gt;                     godCards; //le Carte selezionate in fase di SelectingGodCards del controller
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    private String                          godCard; //Carta Selezionata in fase di SelectionSpecialFunction del controller
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    private Set&lt;Position&gt;                   initializedPositions;   //le 2 posizioni in cui inizializzo i workers
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    private Position                        startPosition;          //il worker che muovo
+<i>29</i>&nbsp;    private Position                        endPosition;            //la posizione finale del worker che voglio muovere
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    private boolean                         endTurn;                //se decido di terminare il turno
+<i>32</i>&nbsp;    private boolean                         specialFunction;        //se decido di attivare la funzione speciale
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    private boolean                         exit;                   //SE l&#39;utente esce. mando prima questo
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    //controller to view
+<i>37</i>&nbsp;    private MatchState                      matchState;
+<i>38</i>&nbsp;    private PlayerState                     playerState;
+<i>39</i>&nbsp;    private TurnState                       turnState;
+<i>40</i>&nbsp;    private boolean                         error;
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    private Set&lt;String&gt;                     matchCards;             //Carte del gioco
+<i>43</i>&nbsp;    private Set&lt;Position&gt;                   availablePlacingCells;
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    private Map&lt;Position, Cell&gt;             billboardStatus;
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    private Map&lt;Position, Set&lt;Position&gt;&gt;    workersAvailableCells;
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    private boolean                         terminateTurnAvailable;
+<i>50</i>&nbsp;    private Map&lt;Position,Boolean&gt;           specialFunctionAvailable; //worker+disponibilità special function -
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    private Map&lt;Integer, String&gt;            matchPlayers;             //i giocatori del gioco -
+<i>53</i>&nbsp;    private Map&lt;Integer, String&gt;            matchColors;
+<i>54</i>&nbsp;    private int                             currentPlayer;
+<i>55</i>&nbsp;    //private int                           activeMatches;
+<i>56</i>&nbsp;    //private int                           playersConnected;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    private int                             winner;                 //chi è il vincitore se il match è finito
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    private boolean                         finished;               //se il match è finito
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    public ClientHandler getClientHandler(){
+<b class="nc"><i>64</i>&nbsp;        return clientHandler;</b>
+<i>65</i>&nbsp;    }
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    public void setClientHandler(ClientHandler clientHandler){
+<b class="nc"><i>68</i>&nbsp;        this.clientHandler = clientHandler;</b>
+<b class="nc"><i>69</i>&nbsp;    }</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    public String getInfo(){
+<b class="nc"><i>72</i>&nbsp;        return info;</b>
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    public void setInfo(String info){
+<b class="nc"><i>76</i>&nbsp;        this.info = info;</b>
+<b class="nc"><i>77</i>&nbsp;    }</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    public Integer getMatchID(){
+<b class="nc"><i>80</i>&nbsp;        return matchID;</b>
+<i>81</i>&nbsp;    }
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    public void setMatchID(Integer matchID){
+<b class="nc"><i>84</i>&nbsp;        this.matchID = matchID;</b>
+<b class="nc"><i>85</i>&nbsp;    }</b>
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;    public Integer getPlayerID(){
+<b class="nc"><i>88</i>&nbsp;        return playerID;</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    public void setPlayerID(Integer playerID){
+<b class="nc"><i>92</i>&nbsp;        this.playerID = playerID;</b>
+<b class="nc"><i>93</i>&nbsp;    }</b>
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;    public String getNickname(){
+<b class="nc"><i>96</i>&nbsp;        return nickname;</b>
+<i>97</i>&nbsp;    }
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    public void setNickname(String nickname){
+<b class="nc"><i>100</i>&nbsp;        this.nickname = nickname;</b>
+<b class="nc"><i>101</i>&nbsp;    }</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    public Integer getPlayersNum(){
+<b class="nc"><i>104</i>&nbsp;        return playersNum;</b>
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    public void setPlayersNum(Integer playersNum){
+<b class="nc"><i>108</i>&nbsp;        this.playersNum = playersNum;</b>
+<b class="nc"><i>109</i>&nbsp;    }</b>
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;    public String getGodCard(){
+<b class="nc"><i>112</i>&nbsp;        return godCard;</b>
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    public void setGodCard(String godCard){
+<b class="nc"><i>116</i>&nbsp;        this.godCard = godCard;</b>
+<b class="nc"><i>117</i>&nbsp;    }</b>
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    public Set&lt;String&gt; getGodCards(){
+<b class="nc"><i>120</i>&nbsp;        return godCards;</b>
+<i>121</i>&nbsp;    }
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    public void setGodCards(Set&lt;String&gt; godCards){
+<b class="nc"><i>124</i>&nbsp;        this.godCards = godCards;</b>
+<b class="nc"><i>125</i>&nbsp;    }</b>
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    public Set&lt;Position&gt; getInitializedPositions(){
+<b class="nc"><i>128</i>&nbsp;        return initializedPositions;</b>
+<i>129</i>&nbsp;    }
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;    public void setInitializedPositions(Set&lt;Position&gt; initializedPositions){
+<b class="nc"><i>132</i>&nbsp;        this.initializedPositions = initializedPositions;</b>
+<b class="nc"><i>133</i>&nbsp;    }</b>
+<i>134</i>&nbsp;
+<i>135</i>&nbsp;    public Position getStartPosition(){
+<b class="nc"><i>136</i>&nbsp;        return startPosition;</b>
+<i>137</i>&nbsp;    }
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;    public void setStartPosition(Position startPosition){
+<b class="nc"><i>140</i>&nbsp;        this.startPosition = startPosition;</b>
+<b class="nc"><i>141</i>&nbsp;    }</b>
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;    public Position getEndPosition(){
+<b class="nc"><i>144</i>&nbsp;        return endPosition;</b>
+<i>145</i>&nbsp;    }
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;    public void setEndPosition(Position endPosition){
+<b class="nc"><i>148</i>&nbsp;        this.endPosition = endPosition;</b>
+<b class="nc"><i>149</i>&nbsp;    }</b>
+<i>150</i>&nbsp;
+<i>151</i>&nbsp;    public Boolean getEndTurn(){
+<b class="nc"><i>152</i>&nbsp;        return endTurn;</b>
+<i>153</i>&nbsp;    }
+<i>154</i>&nbsp;
+<i>155</i>&nbsp;    public void setEndTurn(Boolean endTurn){
+<b class="nc"><i>156</i>&nbsp;        this.endTurn = endTurn;</b>
+<b class="nc"><i>157</i>&nbsp;    }</b>
+<i>158</i>&nbsp;
+<i>159</i>&nbsp;    public Boolean getSpecialFunction(){
+<b class="nc"><i>160</i>&nbsp;        return specialFunction;</b>
+<i>161</i>&nbsp;    }
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;    public void setSpecialFunction(Boolean specialFunction){
+<b class="nc"><i>164</i>&nbsp;        this.specialFunction = specialFunction;</b>
+<b class="nc"><i>165</i>&nbsp;    }</b>
+<i>166</i>&nbsp;
+<i>167</i>&nbsp;    public MatchState getMatchState(){
+<b class="nc"><i>168</i>&nbsp;        return matchState;</b>
+<i>169</i>&nbsp;    }
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;    public void setMatchState(MatchState matchState){
+<b class="nc"><i>172</i>&nbsp;        this.matchState = matchState;</b>
+<b class="nc"><i>173</i>&nbsp;    }</b>
+<i>174</i>&nbsp;
+<i>175</i>&nbsp;    public PlayerState getPlayerState(){
+<b class="nc"><i>176</i>&nbsp;        return playerState;</b>
+<i>177</i>&nbsp;    }
+<i>178</i>&nbsp;
+<i>179</i>&nbsp;    public void setPlayerState(PlayerState playerState){
+<b class="nc"><i>180</i>&nbsp;        this.playerState = playerState;</b>
+<b class="nc"><i>181</i>&nbsp;    }</b>
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;    public TurnState getTurnState(){
+<b class="nc"><i>184</i>&nbsp;        return turnState;</b>
+<i>185</i>&nbsp;    }
+<i>186</i>&nbsp;
+<i>187</i>&nbsp;    public void setTurnState(TurnState turnState){
+<b class="nc"><i>188</i>&nbsp;        this.turnState = turnState;</b>
+<b class="nc"><i>189</i>&nbsp;    }</b>
+<i>190</i>&nbsp;
+<i>191</i>&nbsp;    public Boolean getError(){
+<b class="nc"><i>192</i>&nbsp;        return error;</b>
+<i>193</i>&nbsp;    }
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;    public void setError(Boolean error){
+<b class="nc"><i>196</i>&nbsp;        this.error = error;</b>
+<b class="nc"><i>197</i>&nbsp;    }</b>
+<i>198</i>&nbsp;
+<i>199</i>&nbsp;    public Map&lt;Position, Cell&gt; getBillboardStatus(){
+<b class="nc"><i>200</i>&nbsp;        return billboardStatus;</b>
+<i>201</i>&nbsp;    }
+<i>202</i>&nbsp;
+<i>203</i>&nbsp;    public void setBillboardStatus(Map&lt;Position, Cell&gt; billboardStatus){
+<b class="nc"><i>204</i>&nbsp;        this.billboardStatus = billboardStatus;</b>
+<b class="nc"><i>205</i>&nbsp;    }</b>
+<i>206</i>&nbsp;
+<i>207</i>&nbsp;    public Set&lt;String&gt; getMatchCards(){
+<b class="nc"><i>208</i>&nbsp;        return matchCards;</b>
+<i>209</i>&nbsp;    }
+<i>210</i>&nbsp;
+<i>211</i>&nbsp;    public void setMatchCards(Set&lt;String&gt; matchCards){
+<b class="nc"><i>212</i>&nbsp;        this.matchCards = matchCards;</b>
+<b class="nc"><i>213</i>&nbsp;    }</b>
+<i>214</i>&nbsp;
+<i>215</i>&nbsp;    public Map&lt;Position, Set&lt;Position&gt;&gt; getWorkersAvailableCells(){
+<b class="nc"><i>216</i>&nbsp;        return workersAvailableCells;</b>
+<i>217</i>&nbsp;    }
+<i>218</i>&nbsp;
+<i>219</i>&nbsp;    public void setWorkersAvailableCells(Map&lt;Position, Set&lt;Position&gt;&gt; workersAvailableCells){
+<b class="nc"><i>220</i>&nbsp;        this.workersAvailableCells = workersAvailableCells;</b>
+<b class="nc"><i>221</i>&nbsp;    }</b>
+<i>222</i>&nbsp;
+<i>223</i>&nbsp;    public Set&lt;Position&gt; getAvailablePlacingCells(){
+<b class="nc"><i>224</i>&nbsp;        return availablePlacingCells;</b>
+<i>225</i>&nbsp;    }
+<i>226</i>&nbsp;
+<i>227</i>&nbsp;    public void setAvailablePlacingCells(Set&lt;Position&gt; availablePlacingCells){
+<b class="nc"><i>228</i>&nbsp;        this.availablePlacingCells = availablePlacingCells;</b>
+<b class="nc"><i>229</i>&nbsp;    }</b>
+<i>230</i>&nbsp;
+<i>231</i>&nbsp;    public Boolean getTerminateTurnAvailable(){
+<b class="nc"><i>232</i>&nbsp;        return terminateTurnAvailable;</b>
+<i>233</i>&nbsp;    }
+<i>234</i>&nbsp;
+<i>235</i>&nbsp;    public void setTerminateTurnAvailable(Boolean terminateTurnAvailable){
+<b class="nc"><i>236</i>&nbsp;        this.terminateTurnAvailable = terminateTurnAvailable;</b>
+<b class="nc"><i>237</i>&nbsp;    }</b>
+<i>238</i>&nbsp;
+<i>239</i>&nbsp;    public Map&lt;Position, Boolean&gt; getSpecialFunctionAvailable(){
+<b class="nc"><i>240</i>&nbsp;        return specialFunctionAvailable;</b>
+<i>241</i>&nbsp;    }
+<i>242</i>&nbsp;
+<i>243</i>&nbsp;    public void setSpecialFunctionAvailable(Map&lt;Position, Boolean&gt;  specialFunctionAvailable){
+<b class="nc"><i>244</i>&nbsp;        this.specialFunctionAvailable = specialFunctionAvailable;</b>
+<b class="nc"><i>245</i>&nbsp;    }</b>
+<i>246</i>&nbsp;
+<i>247</i>&nbsp;    public Map&lt;Integer, String&gt; getMatchPlayers(){
+<b class="nc"><i>248</i>&nbsp;        return matchPlayers;</b>
+<i>249</i>&nbsp;    }
+<i>250</i>&nbsp;
+<i>251</i>&nbsp;    public void setMatchPlayers(Map&lt;Integer, String&gt; matchPlayers){
+<b class="nc"><i>252</i>&nbsp;        this.matchPlayers = matchPlayers;</b>
+<b class="nc"><i>253</i>&nbsp;    }</b>
+<i>254</i>&nbsp;
+<i>255</i>&nbsp;    public Map&lt;Integer, String&gt; getMatchColors(){
+<b class="nc"><i>256</i>&nbsp;        return matchColors;</b>
+<i>257</i>&nbsp;    }
+<i>258</i>&nbsp;
+<i>259</i>&nbsp;    public void setMatchColors(Map&lt;Integer, String&gt; matchColors){
+<b class="nc"><i>260</i>&nbsp;        this.matchColors = matchColors;</b>
+<b class="nc"><i>261</i>&nbsp;    }</b>
+<i>262</i>&nbsp;
+<i>263</i>&nbsp;    public int getCurrentPlayer(){
+<b class="nc"><i>264</i>&nbsp;        return currentPlayer;</b>
+<i>265</i>&nbsp;    }
+<i>266</i>&nbsp;
+<i>267</i>&nbsp;    public void setCurrentPlayer(int currentPlayer){
+<b class="nc"><i>268</i>&nbsp;        this.currentPlayer = currentPlayer;</b>
+<b class="nc"><i>269</i>&nbsp;    }</b>
+<i>270</i>&nbsp;
+<i>271</i>&nbsp;    /*public int getActiveMatches(){
+<i>272</i>&nbsp;        return activeMatches;
+<i>273</i>&nbsp;    }
+<i>274</i>&nbsp;
+<i>275</i>&nbsp;    public void setActiveMatches(int activeMatches){
+<i>276</i>&nbsp;        this.activeMatches = activeMatches;
+<i>277</i>&nbsp;    }
+<i>278</i>&nbsp;
+<i>279</i>&nbsp;    public int getPlayersConnected(){
+<i>280</i>&nbsp;        return playersConnected;
+<i>281</i>&nbsp;    }
+<i>282</i>&nbsp;
+<i>283</i>&nbsp;    public void setPlayersConnected(int playersConnected){
+<i>284</i>&nbsp;        this.playersConnected = playersConnected;
+<i>285</i>&nbsp;    }*/
+<i>286</i>&nbsp;
+<i>287</i>&nbsp;    public Integer getWinner(){
+<b class="nc"><i>288</i>&nbsp;        return winner;</b>
+<i>289</i>&nbsp;    }
+<i>290</i>&nbsp;
+<i>291</i>&nbsp;    public void setWinner(Integer winner){
+<b class="nc"><i>292</i>&nbsp;        this.winner = winner;</b>
+<b class="nc"><i>293</i>&nbsp;    }</b>
+<i>294</i>&nbsp;
+<i>295</i>&nbsp;    public boolean isExit(){
+<b class="nc"><i>296</i>&nbsp;        return exit;</b>
+<i>297</i>&nbsp;    }
+<i>298</i>&nbsp;
+<i>299</i>&nbsp;    public void setExit(boolean exit){
+<b class="nc"><i>300</i>&nbsp;        this.exit = exit;</b>
+<b class="nc"><i>301</i>&nbsp;    }</b>
+<i>302</i>&nbsp;
+<i>303</i>&nbsp;    public boolean isFinished(){
+<b class="nc"><i>304</i>&nbsp;        return finished;</b>
+<i>305</i>&nbsp;    }
+<i>306</i>&nbsp;
+<i>307</i>&nbsp;    public void setFinished(boolean finished){
+<b class="nc"><i>308</i>&nbsp;        this.finished = finished;</b>
+<b class="nc"><i>309</i>&nbsp;    }</b>
+<i>310</i>&nbsp;
+<i>311</i>&nbsp;
+<i>312</i>&nbsp;    @Override
+<i>313</i>&nbsp;    public String toString(){
+<b class="nc"><i>314</i>&nbsp;        return &quot;MessageEvent{&quot; +</b>
+<i>315</i>&nbsp;               &quot;clientHandler=&quot; + clientHandler +
+<i>316</i>&nbsp;               &quot;, info=&#39;&quot; + info + &#39;\&#39;&#39; +
+<i>317</i>&nbsp;               &quot;, matchID=&quot; + matchID +
+<i>318</i>&nbsp;               &quot;, playerID=&quot; + playerID +
+<i>319</i>&nbsp;               &quot;, nickname=&#39;&quot; + nickname + &#39;\&#39;&#39; +
+<i>320</i>&nbsp;               &quot;, playersNum=&quot; + playersNum +
+<i>321</i>&nbsp;               &quot;, godCards=&quot; + godCards +
+<i>322</i>&nbsp;               &quot;, godCard=&#39;&quot; + godCard + &#39;\&#39;&#39; +
+<i>323</i>&nbsp;               &quot;, initializedPositions=&quot; + initializedPositions +
+<i>324</i>&nbsp;               &quot;, startPosition=&quot; + startPosition +
+<i>325</i>&nbsp;               &quot;, endPosition=&quot; + endPosition +
+<i>326</i>&nbsp;               &quot;, endTurn=&quot; + endTurn +
+<i>327</i>&nbsp;               &quot;, specialFunction=&quot; + specialFunction +
+<i>328</i>&nbsp;               &quot;, exit=&quot; + exit +
+<i>329</i>&nbsp;               &quot;, matchState=&quot; + matchState +
+<i>330</i>&nbsp;               &quot;, playerState=&quot; + playerState +
+<i>331</i>&nbsp;               &quot;, turnState=&quot; + turnState +
+<i>332</i>&nbsp;               &quot;, error=&quot; + error +
+<i>333</i>&nbsp;               &quot;, matchCards=&quot; + matchCards +
+<i>334</i>&nbsp;               &quot;, availablePlacingCells=&quot; + availablePlacingCells +
+<i>335</i>&nbsp;               &quot;, billboardStatus=&quot; + billboardStatus +
+<i>336</i>&nbsp;               &quot;, workersAvailableCells=&quot; + workersAvailableCells +
+<i>337</i>&nbsp;               &quot;, terminateTurnAvailable=&quot; + terminateTurnAvailable +
+<i>338</i>&nbsp;               &quot;, specialFunctionAvailable=&quot; + specialFunctionAvailable +
+<i>339</i>&nbsp;               &quot;, matchPlayers=&quot; + matchPlayers +
+<i>340</i>&nbsp;               &quot;, matchColors=&quot; + matchColors +
+<i>341</i>&nbsp;               &quot;, currentPlayer=&quot; + currentPlayer +
+<i>342</i>&nbsp;               &quot;, winner=&quot; + winner +
+<i>343</i>&nbsp;               &quot;, finished=&quot; + finished +
+<i>344</i>&nbsp;               &#39;}&#39;;
+<i>345</i>&nbsp;    }
+<i>346</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 15:53</div>
+</div>
+</body>
+</html>
