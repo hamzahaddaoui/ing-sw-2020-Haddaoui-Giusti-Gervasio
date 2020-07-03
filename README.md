@@ -1,7 +1,7 @@
 # Prova Finale Ingegneria del Software 2020
 # Gioco Santorini (Cranio Creations)
 
-![](image.png)
+![](splash_screen.png)
 
 ## Gruppo PSP06
 
