@@ -12,6 +12,17 @@ import java.util.Set;
 import static it.polimi.ingsw.utilities.TurnState.IDLE;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * @author giusti-leo
+ *
+ * Artemis Commands Decorator Tests
+ * nextStateCaseSpecialFunctionNotInserted tests the Move Turn if the current player did not enable the spacial function
+ * nextStateCaseSpecialFunctionInserted tests the Move Turn if the current player did enable the spacial function
+ * computeAvailableMovements tests that in his first movement the current player can move in his neighbooring cells and
+ * in his second movement he can't move his old position
+ *
+ */
+
 public class ArtemisDecoratorTest {
 
     Commands commands1, commands2;

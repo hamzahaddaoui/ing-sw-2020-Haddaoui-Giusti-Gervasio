@@ -12,6 +12,13 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * @author giusti-leo
+ *
+ * Apollo Commands Decorator Tests
+ *
+ */
+
 class ApolloDecoratorTest {
 
     Commands commands1,commands2;
@@ -60,6 +67,9 @@ class ApolloDecoratorTest {
         commands2=player2.getCommands();
     }
 
+    /**
+     * testMoveWorkerChange tests the exchange of the position between 2 differtent workers of different players
+     */
     @Test
     void testMoveWorkerChange() {
         player1.setWorker(position12);
@@ -90,6 +100,9 @@ class ApolloDecoratorTest {
         assertEquals(match.getBillboard().getPlayer(position11),player1.getID());
     }
 
+    /**
+     * testMoveWorkerNonChange tests the standard move
+     */
     @Test
     void testMoveWorkerNonChange() {
 
@@ -104,6 +117,9 @@ class ApolloDecoratorTest {
 
     }
 
+    /**
+     * testComputeAvailableMovements tests that the current worker can move in the cell where there is a enemy
+     */
     @Test
     void testComputeAvailableMovements() {
         player1.setWorker(position12);

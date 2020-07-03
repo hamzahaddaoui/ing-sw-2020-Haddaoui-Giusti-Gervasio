@@ -17,6 +17,13 @@ import java.util.Set;
 import static it.polimi.ingsw.utilities.TurnState.IDLE;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * @author giusti-leo
+ *
+ * Demeter Commands Decorator Tests
+ *
+ */
+
 public class DemeterDecoratorTest {
 
     Commands commands1,commands2;
@@ -64,6 +71,9 @@ public class DemeterDecoratorTest {
         commands2=player2.getCommands();
     }
 
+    /**
+     * nextStateJustOneBuild tests the exchange of the position between 2 differtent workers of different players
+     */
     @Test
     public void nextStateJustOneBuild() {
 
@@ -98,6 +108,9 @@ public class DemeterDecoratorTest {
         assertTrue( player1.getTurnState() == TurnState.IDLE);
     }
 
+    /**
+     * testMoveWorkerNonChange tests the standard move
+     */
     @Test
     public void nextStateSecondBuild() {
         player1.setWorker(position12);
@@ -123,6 +136,9 @@ public class DemeterDecoratorTest {
         assertTrue(player1.getPlayerState() == PlayerState.IDLE);
     }
 
+    /**
+     * testComputeAvailableMovements tests that the current worker can move in the cell where there is a enemy
+     */
     @Test
     public void computeAvailableBuildings() {
         player1.setWorker(position12);
