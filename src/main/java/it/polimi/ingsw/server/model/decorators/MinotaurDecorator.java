@@ -9,6 +9,15 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
+/**
+ * @author Vasio1298
+ *
+ * Minotaur Commands Decorator
+ * Description: "Your Worker may move into an opponent Worker's space, if their Worker can be forced one space straight
+ *               backwards to an unoccupied space at any level"
+ * Differente methods from Basic Commands: moveWorker, computeAvailableMovements
+ */
+
 public class MinotaurDecorator extends CommandsDecorator {
 
     static final private GodCards card = GodCards.Minotaur;
@@ -23,22 +32,6 @@ public class MinotaurDecorator extends CommandsDecorator {
      * If in the selected position there's no player, it does the basic moveWorker function.
      * Else, we store the next position, set the opponent's worker there and then i reset him from the position I
      * chose so i can set my worker there.
-     * <p>
-     * {@link #setNextPosition(Position, Position)}
-     * {@link #findWorker(Position, Player)}
-     * {@link #findOpponentPlayer(Position, Player)}
-     * {@link super#moveWorker(Position, Player)}
-     * {@link Player#setTurnState(TurnState)}
-     * {@link Player#getMatch()}
-     * {@link Player#getCurrentWorker()}
-     * {@link Billboard#getPlayer(Position)}
-     * {@link Billboard#getTowerHeight(Position)}
-     * {@link Billboard#setPlayer(Position, int)}
-     * {@link Billboard#resetPlayer(Position)}
-     * {@link Match#getBillboard()}
-     * {@link Worker#setPosition(Position)}
-     * {@link Position#setZ(int)}
-
      *
      * @param position    the position that player have inserted, not null
      * @param player      the player who is making the move, not null
@@ -103,12 +96,6 @@ public class MinotaurDecorator extends CommandsDecorator {
      * Check the next position of the opponent's worker.
      * <p>
      * Check if the next position is not null and there's no dome or player in it.
-     *
-     * {@link Billboard#getDome(Position)}
-     * {@link Billboard#getPlayer(Position)}
-     * {@link Position#getX()}
-     * {@link Position#getY()}
-     * {@link Position#set(int, int)}
      * 
      * @param opponentPosition  the position of the player opponent's worker, not null
      * @param player            the player who makes the move, not null

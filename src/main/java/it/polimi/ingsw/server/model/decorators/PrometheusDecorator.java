@@ -15,6 +15,10 @@ import static it.polimi.ingsw.utilities.TurnState.*;
 
 /**
  * @author Vasio1298
+ *
+ * Prometheus Commands Decorator
+ * Description: "If your Worker does not move up, it may build both before and after moving"
+ * Differente methods from Basic Commands: nextState, build, computeAvailableMovements, notifySpecialFunction
  */
 
 public class PrometheusDecorator extends CommandsDecorator {
@@ -204,117 +208,4 @@ public class PrometheusDecorator extends CommandsDecorator {
                 .collect(Collectors
                         .toMap(Worker::getPosition, worker -> checkCells(player,worker)));
     }
-
-
-
-
-//OLD VERSION PROMETHEUS
-
-    /*@Override
-    public void nextState(Player player) {
-        switch(player.getTurnState()){
-            case IDLE:
-                hasBuiltBeforeMoving = false;
-                player.setUnsetSpecialFunctionAvailable(canBuildBeforeMove(player));
-                player.setTurnState(MOVE);
-                break;
-            case MOVE:
-                player.setTurnState(BUILD);
-                player.setUnsetSpecialFunctionAvailable(null);
-                break;
-            case BUILD:
-                if (player.hasSpecialFunction() && hasBuiltBeforeMoving) {
-                    player.setTurnState(MOVE);
-                    player.setUnsetSpecialFunctionAvailable(null);
-                }
-                else player.setHasFinished();
-                break;
-        }
-    }*/
-
-    /*@Override
-    public void build(Position position, Player player) {
-        if (player.hasSpecialFunction() && !hasBuiltBeforeMoving) {
-            super.build(position,player);
-            hasBuiltBeforeMoving = true;
-        }
-        else {
-            super.build(position, player);
-            hasBuiltBeforeMoving = false;
-        }
-    }*/
-
-
-
-    /*@Override
-    public Set<Position> computeAvailableMovements(Player player, Worker worker) {
-
-        if (!player.hasSpecialFunction())
-            return super.computeAvailableMovements(player, worker);
-        else {
-            Billboard billboard = player.getMatch().getBillboard();
-            Position currentPosition = player.getCurrentWorker().getPosition();
-
-            return currentPosition
-                    .neighbourPositions()
-                    .stream()
-                    .filter(position -> billboard.getPlayer(position) == 0)
-                    .filter(position -> (billboard.getTowerHeight(position) + 1 <= billboard.getTowerHeight(currentPosition)))
-                    .filter(position -> !billboard.getDome(position))
-                    .collect(Collectors.toSet());
-        }
-    }*/
-
-
-
-    /*@Override
-    public void notifySpecialFunction(Player player){
-        Billboard billboard = player.getMatch().getBillboard();
-        Position avoidPosition;
-        ArrayList<Worker> workers = new ArrayList<>(player.getWorkers());
-        Worker worker;
-
-        if (player.hasSpecialFunction()){
-            //player.setUnsetSpecialFunctionAvailable(null);
-            for (int i=0;i<2;i++) {
-                worker = workers.get(i);
-                if (checkCells(player, worker)) {
-                    Position workerPosition = worker.getPosition();
-                    avoidPosition = worker.getAvailableCells(MOVE).stream()
-                            .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(workerPosition))
-                            .findAny().get();
-
-                    if (billboard.getTowerHeight(avoidPosition) == billboard.getTowerHeight(workerPosition))
-                        worker.getAvailableCells(BUILD).remove(avoidPosition);
-                }
-            }
-            player.setTurnState(BUILD);
-        }
-        else player.setTurnState(MOVE);
-    }*/
-
-
-
-    /*private Map<Position, Boolean> canBuildBeforeMove(Player player){
-        player.setAvailableCells();
-        if (player.getWorkers().stream().allMatch(worker -> checkCells(player,worker)))
-            return null;
-        else return player.getWorkers().stream().collect(Collectors.toMap(Worker::getPosition, worker -> worker.canDoSomething(BUILD) &&
-                !(worker.getAvailableCells(MOVE).size()==1 && checkCells(player,worker))));
-    }*/
-
-
-
-    /*private boolean checkCells(Player player, Worker worker) {
-        Billboard billboard = player.getMatch().getBillboard();
-
-
-        long num = worker.getAvailableCells(MOVE)
-                .stream()
-                .filter(position -> billboard.getTowerHeight(position) <= billboard.getTowerHeight(worker.getPosition()))
-                .count();
-
-        return (num>1) ;
-    }*/
-
 }

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author giusti-leo , Vasio1298
  *
- * SelectingSpecialCommand is a state of the Controller and it handles the selection of Special GodCard for the Match
+ * Controller class is the class that handles the user input.
  *
  */
 

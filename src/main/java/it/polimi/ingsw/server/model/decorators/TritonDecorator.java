@@ -10,6 +10,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @author Vasio1298
+ *
+ * Triton Commands Decorator
+ * Description: "Each time your Worker moves into a perimeter space, it may immediately move again"
+ * Differente methods from Basic Commands: nextState, moveWorker, computeAvailableMovements, notifySpecialFunction
+ */
+
 public class TritonDecorator extends CommandsDecorator {
 
     static final private GodCards card = GodCards.Triton;

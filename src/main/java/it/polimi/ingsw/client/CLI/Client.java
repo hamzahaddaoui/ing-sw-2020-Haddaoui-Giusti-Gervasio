@@ -9,19 +9,10 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-/*
- *🟦    blu
- *🟧    arancio
- *🟪    viola
- *🟥    rosso
- *⬜️ bianco
- *🟩    verde
- *⏺  dome
+/**
+ * @author Vasio1298
  *
  */
-
-
 
 public class Client {
     static ExecutorService inputListener = Executors.newSingleThreadExecutor();

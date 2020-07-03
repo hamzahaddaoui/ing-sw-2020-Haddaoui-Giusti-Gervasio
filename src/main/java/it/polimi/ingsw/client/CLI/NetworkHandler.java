@@ -14,6 +14,12 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.*;
 
+/**
+ * @author Vasio1298
+ *
+ * Network Handler is the class that handles the connection with server.
+ */
+
 public class NetworkHandler extends Observable<MessageEvent> implements Runnable, Observer<MessageEvent> {
     private final static int SOCKET_PORT = 12345;
     private final static int SOCKET_TIMEOUT = 10000;

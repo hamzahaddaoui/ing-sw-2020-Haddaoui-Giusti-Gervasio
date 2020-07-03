@@ -15,7 +15,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PlayerTestVasio {
+public class MatchSimulationMinotaurPanPrometheus {
     Player p1, p2, p3;
     Player p;
     Match match;
@@ -185,8 +185,6 @@ public class PlayerTestVasio {
         worker = new Position(2,0); p.playerAction(worker);
         match.checkPlayers();
         System.out.println(getBillboardStat(p.getWorkersAvailableCells().get(worker)));
-        /*assertTrue(match.getLosers().contains(p));
-        p = p2; System.out.println(getBillboardStat());*/
     }
 
     String getBillboardStat(){

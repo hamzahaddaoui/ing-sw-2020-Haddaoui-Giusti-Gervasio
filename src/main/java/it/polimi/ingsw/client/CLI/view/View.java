@@ -155,6 +155,9 @@ public class View implements Observer<MessageEvent> {
         return outputB.toString();
     }
 
+    /**
+     * Method that organizes the the visualization of the tables if the player is active and where he can place his workers
+     */
     static void placingWorkerSituationActive() {
         StringBuilder output = new StringBuilder();
         String billboardStat = placingWorkerSituation();

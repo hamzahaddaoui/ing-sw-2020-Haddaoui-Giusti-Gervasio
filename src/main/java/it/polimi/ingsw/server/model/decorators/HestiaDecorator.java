@@ -9,6 +9,14 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.utilities.TurnState.BUILD;
 import static it.polimi.ingsw.utilities.TurnState.MOVE;
 
+/**
+ * @author Vasio1298
+ *
+ * Hestia Commands Decorator
+ * Description: "Your Worker may build one additional time, but this cannot be on a perimeter space"
+ * Differente methods from Basic Commands: nextState, build, computeAvailableBuildings
+ */
+
 public class HestiaDecorator extends CommandsDecorator {
 
     static final private GodCards card = GodCards.Hestia;
