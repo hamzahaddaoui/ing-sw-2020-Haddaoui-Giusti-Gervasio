@@ -1,6 +1,8 @@
 # Prova Finale Ingegneria del Software 2020
 # Gioco Santorini (Cranio Creations)
 
+Java implementation of the table game Santorini by Cranio Creations as part of the Bachelor thesis. The highest possible grade has been assigned to this project.
+
 ![](splash_screen.png)
 
 ## Gruppo PSP06
