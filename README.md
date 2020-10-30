@@ -1,17 +1,25 @@
-# Prova Finale Ingegneria del Software 2020
-# Gioco Santorini (Cranio Creations)
+# Final examination of Software Engineering 1 (2020)
+# Santorini GAME - Cranio Creations
+
 
 Java implementation of the table game Santorini by Cranio Creations as part of the Bachelor thesis. The highest possible grade has been assigned to this project.
 
-![](splash_screen.png)
+## Screenshots
 
-##
+### Splash screen
+![](https://github.com/hamzahaddaoui/ing-sw-2020-Haddaoui-Giusti-Gervasio/blob/master/Screenshots/splash_screen.png)
 
-![](screenshot.jpg)
+### Cards selection
+![](https://github.com/hamzahaddaoui/ing-sw-2020-Haddaoui-Giusti-Gervasio/blob/master/Screenshots/Cards_selecting.png)
 
-## Gruppo PSP06
+### Player pieces positioning
+![](https://github.com/hamzahaddaoui/ing-sw-2020-Haddaoui-Giusti-Gervasio/blob/master/Screenshots/Players_Positioning.png)
+
+### Game play
+![](https://github.com/hamzahaddaoui/ing-sw-2020-Haddaoui-Giusti-Gervasio/blob/master/Screenshots/Gameplay.jpg)
 
 
+## Group PSP06
 
 - ###   10583761   Hamza Haddaoui ([@hamzahaddaoui](https://github.com/hamzahaddaoui))<br>hamza.haddaoui@mail.polimi.it
 - ###   10633778    Giusti Leonardo ([@giusti-leo](https://github.com/giusti-leo))<br>giusti.leonardo@mail.polimi.it
@@ -29,27 +37,23 @@ Java implementation of the table game Santorini by Cranio Creations as part of t
 | Advanced Gods | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Undo | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
 
-# File UML
+# UML files
 
-Nella cartella deliveries/previous/uml è presente l'uml iniziale (del model).
+In the deliveries/previous/uml folder there is the initial uml (of the model).
 
-In deliveries/final/uml  sono presenti gli UML finali creati, sia in versione dettagliata (uno per il package del Server, uno per il package Client) e una versione riassuntiva.
+Deliveries/final/uml contains the final UMLs created, both in detailed version (one for the Server package, one for the Client package) and a summary version.
 
-# JavaDoc e test
+# JavaDoc & test
 
-I Javadoc generati, così come i report dei test, si trovano nella cartella deliveries/final.
+The generated Javadocs, as well as the test reports, are located in the deliveries/final folder.
 
-# Lancio file JAR
+# Application launch
 
-Per avviare il Server dell'applicazione è sufficiente fare doppio click su Server.jar, situato nella cartella deliveries/final/jar (oppure digitare da terminale, "java -jar Server.jar").
+The application is multi-platform, so it works properly on MacOS, Windows and Linux.
 
-Per avviare il client dell'applicazione in versione GUI, è sufficiente fare doppio click su Client.jar, situato nella medesima cartella del Server (oppure digitare da terminale, "java -jar Client.jar").
+To start the Server, simply double click on Server.jar, located in the deliveries/final/jar folder (or type "java -jar Server.jar" from the terminal).
 
-Per avviare il client in versione CLI, è necessario da terminale digitare "java -jar Client.jar -cli"
+To start the GUI version of the client, just double click on Client.jar, located in the same folder as the Server (or type "java -jar Client.jar" from the terminal).
 
+To start the client in the CLI version, it is necessary to type "java -jar Client.jar -cli" from the terminal.
 
-<!--
-[![RED](https://placehold.it/15/f03c15/f03c15)](#)
-[![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#)
-[![GREEN](https://placehold.it/15/44bb44/44bb44)](#)
--->
