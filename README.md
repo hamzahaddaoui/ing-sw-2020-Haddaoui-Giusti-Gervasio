@@ -5,6 +5,10 @@ Java implementation of the table game Santorini by Cranio Creations as part of t
 
 ![](splash_screen.png)
 
+##
+
+![](screenshot.jpg)
+
 ## Gruppo PSP06
 
 
