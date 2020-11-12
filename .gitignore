@@ -2,6 +2,3 @@
 .idea/
 out/
 /target/
-*.html linguist-detectable=false
-*.java linguist-detectable=true
-*.jss linguist-detectable=false
