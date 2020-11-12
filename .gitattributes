@@ -1,4 +1,4 @@
-*.java linguist-detectable=true
-*.css linguist-detectable=false
-*.html linguist-detectable=false
-*.htm inguist-detectable=false
+*.css linguist-language=Java
+*.html linguist-language=Java
+*.js linguist-language=Java
+*.zip linguist-language=Java
